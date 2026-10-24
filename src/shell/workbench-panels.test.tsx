@@ -8,7 +8,7 @@ let browser: Window;
 let root: Root;
 let host: HTMLDivElement;
 let renderPanels: (state: WorkbenchTabsState) => ReactNode;
-let scope = 'principal:local:project-a';
+let scope = 'principal:local:base-a';
 const mounts = new Map<string, number>();
 
 function ExamplePage({ name }: { name: string }) {
@@ -23,19 +23,18 @@ beforeAll(async () => {
   for (const name of ['document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'Element', 'Node', 'Event']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser;
   globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('@/features/project/project-resources', () => ({ useProjectResources: () => ({ scopeKey: scope, selectedProject: { id: 'project', name: 'Project' } }) }));
+  mock.module('@/features/knowledge/data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ scopeKey: scope }) }));
   mock.module('@/features/knowledge/knowledge-page', () => ({ KnowledgePage: () => <ExamplePage name="knowledge" /> }));
-  mock.module('@/features/project/members/members-page', () => ({ ProjectMembersPage: () => <ExamplePage name="members" /> }));
-  mock.module('@/features/project/project-workspace-pages', () => ({ ProjectSelectionEmpty: () => null }));
+  mock.module('@/features/knowledge/organization/knowledge-members-page', () => ({ KnowledgeMembersPage: () => <ExamplePage name="members" /> }));
   const { WorkbenchPanels } = await import('./workbench-panels');
-  renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} onNavigate={() => {}} />;
+  renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} />;
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
 });
 beforeEach(async () => {
   await act(async () => root.render(null));
-  scope = 'principal:local:project-a';
+  scope = 'principal:local:base-a';
   mounts.clear();
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); });

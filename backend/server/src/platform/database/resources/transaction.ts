@@ -48,19 +48,7 @@ export async function withKnowledgeBase<T>(
   operation: (db: ResourceTransaction) => Promise<T>,
 ): Promise<T> {
   if (!entityIdSchema.safeParse(knowledgeBaseId).success) throw new TypeError('Invalid knowledge base ID');
-  return withResourceScope(pool, { knowledgeBaseId, projectId: '', sessionId: '', readOnly: false }, operation);
-}
-
-/** Project mutations bind their real resource ID and the verified active identity. */
-export async function withProject<T>(
-  pool: Pool,
-  projectId: string,
-  sessionId: string,
-  operation: (db: ResourceTransaction) => Promise<T>,
-): Promise<T> {
-  if (!entityIdSchema.safeParse(projectId).success) throw new TypeError('Invalid project ID');
-  if (!entityIdSchema.safeParse(sessionId).success) throw new TypeError('Invalid session ID');
-  return withResourceScope(pool, { knowledgeBaseId: '', projectId, sessionId, readOnly: false }, operation);
+  return withResourceScope(pool, { knowledgeBaseId, sessionId: '', readOnly: false }, operation);
 }
 
 /** sessionId must be obtained from a verified server-side auth session, never a request body. */
@@ -70,12 +58,12 @@ export async function withFobIdentity<T>(
   operation: (db: FobIdentityTransaction) => Promise<T>,
 ): Promise<T> {
   if (!entityIdSchema.safeParse(sessionId).success) throw new TypeError('Invalid session ID');
-  return withResourceScope(pool, { knowledgeBaseId: '', projectId: '', sessionId, readOnly: true }, operation);
+  return withResourceScope(pool, { knowledgeBaseId: '', sessionId, readOnly: true }, operation);
 }
 
 async function withResourceScope<T>(
   pool: Pool,
-  scope: { knowledgeBaseId: string; projectId: string; sessionId: string; readOnly: boolean },
+  scope: { knowledgeBaseId: string; sessionId: string; readOnly: boolean },
   operation: (db: ResourceTransaction) => Promise<T>,
 ): Promise<T> {
   const client = await pool.connect();
@@ -89,7 +77,7 @@ async function withResourceScope<T>(
     await client.query(scope.readOnly ? 'BEGIN READ ONLY' : 'BEGIN');
     began = true;
     // Explicitly clear the other scope even on a reused connection.
-    await client.query("SELECT set_config('app.knowledge_base_id', $1, true), set_config('app.project_id', $2, true), set_config('app.auth_session_id', $3, true), set_config('app.read_knowledge_base_id', '', true)", [scope.knowledgeBaseId, scope.projectId, scope.sessionId]);
+    await client.query("SELECT set_config('app.knowledge_base_id', $1, true), set_config('app.auth_session_id', $2, true), set_config('app.read_knowledge_base_id', '', true)", [scope.knowledgeBaseId, scope.sessionId]);
     const db: ResourceTransaction = drizzle(client, { schema: resourceSchema });
     const result = await operation(db);
     if (connectionError) throw connectionError;

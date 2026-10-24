@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { createLocalLibraryStore, localKnowledgeBasesForProject, newLocalDocument } from './local-library';
+import { createLocalLibraryStore, newLocalDocument } from './local-library';
 
 function memoryStorage() {
   const values = new Map<string, string>();
@@ -26,7 +26,7 @@ test('each local document and tag keeps its own real knowledge base identity', (
   const storage = memoryStorage();
   const store = createLocalLibraryStore(storage);
   expect(store.getSnapshot()).toEqual({ bases: [], folders: [], documents: [], tags: [] });
-  store.update(current => ({ ...current, bases: [{ id: 'base-a', name: 'A', projectIds: ['project-a'] }, { id: 'base-b', name: 'B', projectIds: ['project-b'] }], documents: [newLocalDocument('base-a', 'A 的文档'), newLocalDocument('base-b', 'B 的文档')], tags: [{ id: 'tag-a', baseId: 'base-a', name: '研究', pageIds: ['page-a'] }] }));
+  store.update(current => ({ ...current, bases: [{ id: 'base-a', name: 'A' }, { id: 'base-b', name: 'B' }], documents: [newLocalDocument('base-a', 'A 的文档'), newLocalDocument('base-b', 'B 的文档')], tags: [{ id: 'tag-a', baseId: 'base-a', name: '研究', pageIds: ['page-a'] }] }));
   const loaded = createLocalLibraryStore(storage).getSnapshot();
   expect(loaded.documents.filter(doc => doc.baseId === 'base-a').map(doc => doc.title)).toEqual(['A 的文档']);
   expect(loaded.documents.filter(doc => doc.baseId === 'base-b').map(doc => doc.title)).toEqual(['B 的文档']);
@@ -34,21 +34,21 @@ test('each local document and tag keeps its own real knowledge base identity', (
   expect(loaded.tags[0].pageIds).toEqual(['page-a']);
 });
 
-test('local knowledge directory never exposes another project or a missing project scope', () => {
+test('each knowledge base is a standalone workspace without an additional project identity', () => {
   const store = createLocalLibraryStore(memoryStorage());
   store.update((library) => ({ ...library, bases: [
-    { id: 'private-a', name: 'A', projectIds: ['project-a'] },
-    { id: 'private-b', name: 'B', projectIds: ['project-b'] },
-    { id: 'shared', name: 'Shared', projectIds: ['project-a', 'project-b'] },
+    { id: 'private-a', name: 'A' },
+    { id: 'private-b', name: 'B' },
+    { id: 'shared', name: 'Shared' },
   ] }));
-  expect(localKnowledgeBasesForProject(store.getSnapshot(), 'project-a').map((base) => base.id)).toEqual(['private-a', 'shared']);
-  expect(localKnowledgeBasesForProject(store.getSnapshot(), 'project-b').map((base) => base.id)).toEqual(['private-b', 'shared']);
-  expect(localKnowledgeBasesForProject(store.getSnapshot(), null)).toEqual([]);
+  expect(store.getSnapshot().bases.map(base => base.id)).toEqual(['private-a', 'private-b', 'shared']);
+  expect(Object.keys(store.getSnapshot().bases[0])).toEqual(['id', 'name']);
 });
 
-test('unscoped development data is cleared rather than silently granted to a project', () => {
+test('knowledge base content survives loading without any separate project association', () => {
   const storage = memoryStorage();
   storage.setItem('fob.local-library', JSON.stringify({ bases: [{ id: 'unscoped', name: 'Old fixture' }], folders: [], documents: [newLocalDocument('unscoped', 'Old')], tags: [] }));
-  expect(createLocalLibraryStore(storage).getSnapshot()).toEqual({ bases: [], folders: [], documents: [], tags: [] });
-  expect(createLocalLibraryStore(storage).getSnapshot().bases).toEqual([]);
+  const library = createLocalLibraryStore(storage).getSnapshot();
+  expect(library.bases).toEqual([{ id: 'unscoped', name: 'Old fixture' }]);
+  expect(library.documents[0].title).toBe('Old');
 });

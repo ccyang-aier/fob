@@ -2,10 +2,10 @@
 
 import { GearSix, SidebarSimple } from '@phosphor-icons/react';
 import { AccountItem } from '@/features/identity/components/account-item';
-import { ProjectSwitcher } from '@/features/project/project-switcher';
+import { KnowledgeBaseSwitcher } from '@/features/knowledge/knowledge-base-switcher';
+import { KnowledgeNavigationOutlet } from '@/features/knowledge/navigation/system-navigation';
 import { NavButton, type SidebarRowItem } from '@/components/nav-button';
 import { SidebarResizeHandle, useSidebarWidth } from '@/components/sidebar-resize';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -16,14 +16,13 @@ import { workbenchPages, type WorkbenchPage } from './workbench-pages';
 import styles from './sidebar-footer.module.css';
 import layout from './navigation-sidebar.module.css';
 
-export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChange, onProjectChange }: {
+export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChange, onKnowledgeBaseChange }: {
   open: boolean; onCollapse: () => void; onExpand: () => void;
   view: WorkbenchView; onViewChange: (view: WorkbenchView) => void;
-  onProjectChange: () => void;
+  onKnowledgeBaseChange: () => void;
 }) {
   const { t } = useTranslation(messages);
   const { width, dragging, startResize } = useSidebarWidth(272);
-  const primary: WorkbenchPage[] = ['knowledge', 'members'];
   function row(id: WorkbenchPage) {
     const page = workbenchPages[id];
     const item: SidebarRowItem & { id: WorkbenchPage } = { id, label: t(page.label), icon: page.icon };
@@ -32,16 +31,16 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
   }
   return <aside aria-label={t(open ? '主导航' : '主导航（已收起）')} style={{ width: open ? width : 52 }} className={cn('sidebar-material relative flex h-full shrink-0 flex-col', !dragging && 'transition-[width] duration-200 ease-out')}>
     <header className={layout.header} data-compact={!open}>
-      {open && <div className={layout.project}><ProjectSwitcher onSwitch={onProjectChange} /></div>}
+      {open && <div className={layout.switcher}><KnowledgeBaseSwitcher onSwitch={onKnowledgeBaseChange} /></div>}
       <Tooltip>
         <TooltipTrigger asChild><button type="button" className={`fob-action ${layout.toggle}`} aria-label={t(open ? '收起主导航' : '展开主导航')} onClick={open ? onCollapse : onExpand}><SidebarSimple size={18} weight="duotone" /></button></TooltipTrigger>
         <TooltipContent side="bottom">{t(open ? '收起主导航' : '展开主导航')}</TooltipContent>
       </Tooltip>
     </header>
-    <ScrollArea className="min-h-0 flex-1" viewportClassName={open ? 'px-3 pb-4 pt-2' : 'px-1 pb-3 pt-2'}>
-      <nav aria-label={t('项目导航')} className="flex flex-col gap-0.5">{primary.map(row)}</nav>
-    </ScrollArea>
+    <KnowledgeNavigationOutlet hidden={!open} />
+    {!open && <nav aria-label={t('知识库导航')} className="flex-1 px-1 pt-2">{row('knowledge')}</nav>}
     <footer className={cn('flex shrink-0 flex-col gap-0.5 pt-2', open ? 'px-3' : 'px-1')}>
+      <nav aria-label={t('知识库导航')}>{row('members')}</nav>
       <div className={styles.dock} data-compact={!open}>
         <div className={styles.account}><AccountItem compact={!open} /></div>
         {open && <><SidebarThemeSwitch />

@@ -144,8 +144,8 @@ test('local page links and block references retain and open a target in another 
   store.update((current) => ({
     ...current,
     bases: [
-      { id: 'local-a', name: 'A', projectIds: ['project-a'] },
-      { id: 'local-b', name: 'B', projectIds: ['project-b'] },
+      { id: 'local-a', name: 'A' },
+      { id: 'local-b', name: 'B' },
     ],
     documents: [own, target],
   }));

@@ -5,7 +5,7 @@ import { translate } from './i18n/messages';
 import { appearanceMessages } from './i18n/appearance.messages';
 
 /**
- * 外观偏好：主题（浅色 / 深色 / 跟随系统）与字体（界面 / 代码 / 对话）。
+ * 外观偏好：主题（浅色 / 深色 / 跟随系统）与字体（界面 / 代码）。
  * 状态落在 html 的 dataset（主题、字体族）与 CSS 变量（字号）上，
  * 由 globals.css 消费；localStorage 单键持久化，首帧由 layout 内联脚本应用避免闪色。
  */
@@ -133,15 +133,6 @@ export const codeFontOptions: Array<{ id: CodeFontId; label: string; stack: stri
   },
 ];
 
-export const CHAT_FONT_IDS = ['follow', ...UI_FONT_IDS] as const;
-export type ChatFontId = 'follow' | UiFontId;
-
-/** 对话字体与界面字体共享同一字体池，仅额外提供“跟随界面”。 */
-export const chatFontOptions: Array<{ id: ChatFontId; stack: string }> = [
-  { id: 'follow', stack: '' },
-  ...uiFontOptions,
-];
-
 export function getThemePrefLabels(locale: Locale = getLocale()): Record<ThemePref, string> {
   return Object.fromEntries(
     THEME_PREFS.map((id) => [id, translate(appearanceMessages, id, undefined, locale)]),
@@ -164,17 +155,9 @@ export function getCodeFontOptions(locale: Locale = getLocale()) {
           : option.label,
   }));
 }
-export function getChatFontOptions(locale: Locale = getLocale()) {
-  return [
-    { ...chatFontOptions[0], label: translate(appearanceMessages, 'follow', undefined, locale) },
-    ...getUiFontOptions(locale),
-  ];
-}
-
 export const FONT_SIZE_RANGES = {
   ui: { min: 12, max: 16 },
   code: { min: 11, max: 15 },
-  chat: { min: 12, max: 17 },
 } as const;
 
 // ── 偏好模型 ───────────────────────────────────────────────────────
@@ -185,8 +168,6 @@ export type AppearancePrefs = {
   uiFontSize: number;
   codeFont: CodeFontId;
   codeFontSize: number;
-  chatFont: ChatFontId;
-  chatFontSize: number;
 };
 
 export const APPEARANCE_DEFAULTS: AppearancePrefs = {
@@ -195,8 +176,6 @@ export const APPEARANCE_DEFAULTS: AppearancePrefs = {
   uiFontSize: 13,
   codeFont: 'maple',
   codeFontSize: 12,
-  chatFont: 'follow',
-  chatFontSize: 13,
 };
 
 const STORAGE_KEY = 'fob.appearance';
@@ -230,12 +209,6 @@ export function readAppearancePrefs(): AppearancePrefs {
       saved.codeFontSize,
       FONT_SIZE_RANGES.code,
       APPEARANCE_DEFAULTS.codeFontSize,
-    ),
-    chatFont: oneOf(saved.chatFont, CHAT_FONT_IDS, APPEARANCE_DEFAULTS.chatFont),
-    chatFontSize: sizeOf(
-      saved.chatFontSize,
-      FONT_SIZE_RANGES.chat,
-      APPEARANCE_DEFAULTS.chatFontSize,
     ),
   };
 }
@@ -276,7 +249,6 @@ export function applyAppearancePrefs(prefs: AppearancePrefs): void {
   const fontAttrs: Array<[name: string, value: string, isDefault: boolean]> = [
     ['uiFont', prefs.uiFont, prefs.uiFont === 'default'],
     ['codeFont', prefs.codeFont, prefs.codeFont === 'default'],
-    ['chatFont', prefs.chatFont, prefs.chatFont === 'follow'],
   ];
   for (const [name, value, isDefault] of fontAttrs) {
     if (isDefault) delete root.dataset[name];
@@ -284,7 +256,6 @@ export function applyAppearancePrefs(prefs: AppearancePrefs): void {
   }
   root.style.setProperty('--ui-size', `${prefs.uiFontSize}px`);
   root.style.setProperty('--code-size', `${prefs.codeFontSize}px`);
-  root.style.setProperty('--chat-size', `${prefs.chatFontSize}px`);
   ensureSystemListener();
   for (const listener of listeners) listener();
 }

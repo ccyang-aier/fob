@@ -7,8 +7,8 @@ import { knowledgeMessages } from './notification-bell.messages';
  * bridge. While a knowledge knowledgeBase is open it renders the real inbox —
  * unread highlighting, per-item and mark-all read actions, jump-to-page on
  * click — and live updates arrive through the same snapshot the B06 knowledgeBase
- * events invalidate. Without a published knowledgeBase it degrades to an inert
- * bell that simply opens the knowledge workbench, never inventing data.
+ * events invalidate. Without an active team knowledge base the trigger is
+ * unavailable; it never pretends to show browser-local notifications.
  */
 
 import { useMemo, useState } from 'react';
@@ -77,15 +77,15 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
     run();
   };
 
-  // Inert state: no live knowledge knowledgeBase → the bell just opens the workbench.
+  // Browser-local knowledge and missing team selection do not have an inbox.
   if (!snapshot) {
     return (
       <button
         type="button"
         aria-label={knowledgeT('notifications')}
         title={knowledgeT('openAKnowledgeBaseToViewNotifications')}
-        onClick={onOpenWorkbench}
-        className="relative flex size-7 items-center justify-center rounded-[7px] text-[var(--muted-strong)] outline-none transition-colors hover:bg-wash hover:text-[var(--ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+        disabled
+        className="relative flex size-7 cursor-not-allowed items-center justify-center rounded-[7px] text-[var(--muted)] outline-none opacity-60"
       >
         <BellSimple className="size-[15px]" weight="duotone" aria-hidden />
       </button>
@@ -113,7 +113,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
               : knowledgeT('notifications')
           }
           title={knowledgeT('notifications')}
-          className="relative flex size-7 items-center justify-center rounded-[7px] text-[var(--muted-strong)] outline-none transition-colors hover:bg-wash hover:text-[var(--ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] data-[state=open]:bg-wash data-[state=open]:text-[var(--ink)]"
+          className="fob-action relative flex size-7 items-center justify-center rounded-[7px] text-[var(--muted-strong)]"
         >
           <BellSimple
             className={cn('size-[15px]', unreadCount > 0 && 'text-[var(--accent-ink)]')}
@@ -143,9 +143,6 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
               {notificationSubtitle(unreadCount, locale)}
             </p>
           </div>
-          <span className="ml-auto rounded-full border border-[var(--line)] bg-[var(--surface-subtle)] px-2 py-0.5 text-[9px] font-medium text-[var(--muted-strong)]">
-            {knowledgeT('live')}
-          </span>
         </header>
 
         <div className="max-h-[318px] overflow-y-auto p-1.5">
@@ -159,7 +156,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
               role="alert"
             >
               <WarningCircle aria-hidden className="size-3.5" weight="fill" />
-              {knowledgeT('notificationsAreUnavailableRetryingAutomatically')}
+              {knowledgeT('notificationsAreUnavailable')}
             </p>
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-center gap-1.5 px-2.5 py-6 text-center">
@@ -181,7 +178,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
                     v2: row.pageLabel,
                   })}
                   className={cn(
-                    'flex w-full items-start gap-2.5 rounded-[8px] px-2.5 py-2.5 text-left outline-none transition-colors hover:bg-wash focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]',
+                    'fob-menu-item flex w-full items-start gap-2.5 rounded-[8px] px-2.5 py-2.5 text-left outline-none',
                     row.unread && 'bg-[color-mix(in_srgb,var(--accent-soft)_45%,transparent)]',
                     rowPending(row.id) && 'opacity-60',
                   )}
@@ -237,7 +234,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
                       event.stopPropagation();
                       withPending(row.id, () => snapshot.markRead(row.id));
                     }}
-                    className="absolute right-1.5 top-1.5 hidden size-5 items-center justify-center rounded-[5px] text-[var(--muted-strong)] outline-none transition-colors hover:bg-panel hover:text-[var(--ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] group-hover/notice:flex"
+                    className="fob-action absolute right-1.5 top-1.5 hidden size-5 items-center justify-center rounded-[5px] text-[var(--muted-strong)] group-hover/notice:flex"
                   >
                     <Check aria-hidden className="size-3" weight="bold" />
                   </button>
@@ -258,7 +255,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
             snapshot.markAllRead();
           }}
           disabled={unreadCount === 0 || allPending}
-          className="flex h-9 w-full items-center justify-center gap-1.5 border-t border-[var(--line)] bg-[var(--surface-subtle)] text-[10.5px] font-medium text-[var(--accent-ink)] outline-none transition-colors hover:bg-[var(--accent-soft)] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--focus-ring)] disabled:cursor-default disabled:text-[var(--muted)] disabled:hover:bg-[var(--surface-subtle)]"
+          className="fob-action flex h-9 w-full items-center justify-center gap-1.5 border-t border-[var(--line)] text-[10.5px] font-medium text-[var(--accent-ink)] disabled:cursor-default disabled:text-[var(--muted)]"
         >
           <Checks aria-hidden className="size-3" weight="bold" />
           {allPending ? knowledgeT('working') : knowledgeT('markAllAsRead')}

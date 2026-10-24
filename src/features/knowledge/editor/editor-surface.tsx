@@ -1,5 +1,7 @@
 'use client';
 
+import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+
 import { formatDate, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './editor-surface.messages';
 /**
@@ -142,11 +144,12 @@ export function PageEditorSurface({
     editor?.setEditable(view.editable);
   }, [editor, view.editable]);
 
+  const navigationActive = useKnowledgeNavigationActive();
   // L02: a block-reference click that lands on this page reveals the block —
   // a pre-mount navigation consumes its staged highlight, later targets ride
   // the open-target channel (both selection-free).
   useEffect(() => {
-    if (!editor || fixedPane) return undefined;
+    if (!editor || fixedPane || !navigationActive) return undefined;
     const staged = takeStagedBlockHighlight({
       knowledgeBaseId: scope.knowledgeBaseId,
       pageId: scope.pageId,
@@ -160,7 +163,7 @@ export function PageEditorSurface({
       )
         revealBlockInEditor(editor.view, target.blockId);
     });
-  }, [editor, scope.knowledgeBaseId, scope.pageId, fixedPane]);
+  }, [editor, scope.knowledgeBaseId, scope.pageId, fixedPane, navigationActive]);
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);

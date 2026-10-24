@@ -1,4 +1,0 @@
-.standardSidebar,.documentSidebar { display:flex; flex:none; min-height:0; }
-.documentSidebar:not([data-open='true']) { display:none; }
-.sidebarScrim { display:none; }
-@media(max-width:900px) { .documentSidebar { position:absolute; inset:0 auto 0 0; z-index:32; background:var(--panel); border-right:1px solid var(--line); }.sidebarScrim { display:block; position:absolute; inset:0; z-index:31; width:100%; border:0; background:rgb(24 33 49 / 14%); } }

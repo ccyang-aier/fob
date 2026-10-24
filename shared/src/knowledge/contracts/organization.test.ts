@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import { randomUUID } from 'node:crypto';
 import { acceptKnowledgeBaseInvitationInputSchema, createKnowledgeBaseInputSchema, createKnowledgeBaseInvitationInputSchema, changeMemberRoleInputSchema, listOrganizationInputSchema } from './organization';
 import { createTeamspaceInputSchema, teamspaceScopeSchema, updateTeamspaceInputSchema } from './organization';
-import { listKnowledgeBasesInputSchema, updateKnowledgeBaseProjectsInputSchema } from './organization';
+import { listKnowledgeBasesInputSchema } from './organization';
 
 
 test('organization mutations reject injected actor identity and owner invitations', () => {
@@ -31,12 +31,12 @@ test('teamspace inputs preserve null defaults, explicit patches and server-owned
   assert.equal(teamspaceScopeSchema.safeParse({ knowledgeBaseId, teamspaceId: 'invalid' }).success, false);
 });
 
-test('project visibility uses explicit real project IDs and rejects duplicate or injected scope', () => {
-  const knowledgeBaseId = randomUUID(), projectId = randomUUID();
-  assert.deepEqual(createKnowledgeBaseInputSchema.parse({ name: 'Research' }).projectIds, []);
-  assert.deepEqual(createKnowledgeBaseInputSchema.parse({ name: 'Research', projectIds: [projectId] }).projectIds, [projectId]);
-  assert.equal(listKnowledgeBasesInputSchema.parse({ projectId }).projectId, projectId);
-  assert.equal(listKnowledgeBasesInputSchema.safeParse({ projectId: 'global' }).success, false);
-  assert.equal(updateKnowledgeBaseProjectsInputSchema.safeParse({ knowledgeBaseId, projectIds: [projectId, projectId] }).success, false);
-  assert.equal(updateKnowledgeBaseProjectsInputSchema.safeParse({ knowledgeBaseId, projectIds: [], userId: randomUUID() }).success, false);
+test('knowledge-base creation and discovery need no enclosing project or workspace', () => {
+  assert.deepEqual(createKnowledgeBaseInputSchema.parse({ name: 'Research' }), { name: 'Research' });
+  assert.equal(createKnowledgeBaseInputSchema.safeParse({ name: 'Research', projectIds: [randomUUID()] }).success, false);
+  assert.equal(createKnowledgeBaseInputSchema.safeParse({ name: 'Research', projectId: randomUUID() }).success, false);
+  assert.equal(listKnowledgeBasesInputSchema.parse({}).limit, 50);
+  assert.equal(listKnowledgeBasesInputSchema.parse({ cursor: randomUUID(), limit: 10 }).limit, 10);
+  assert.equal(listKnowledgeBasesInputSchema.safeParse({ projectId: randomUUID() }).success, false);
+  assert.equal(listKnowledgeBasesInputSchema.safeParse({ workspaceId: randomUUID() }).success, false);
 });

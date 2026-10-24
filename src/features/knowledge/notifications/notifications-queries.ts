@@ -10,12 +10,13 @@
  * and remote events on one loop.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { knowledgeQueryKeys } from '../data/query-keys';
 import { invalidateKnowledgeQueries } from '../data/query-client';
 import { knowledgeNotificationsApi } from './notifications-api';
-import { publishKnowledgeNotifications } from './notifications-bridge';
+import { createKnowledgeNotificationsPublisher } from './notifications-bridge';
+import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
 
 export function notificationInboxKey(knowledgeBaseId: string) {
   return [...knowledgeQueryKeys.notifications(knowledgeBaseId), 'inbox'] as const;
@@ -71,7 +72,9 @@ export function useMarkAllNotificationsRead(knowledgeBaseId: string) {
  * retracts the snapshot and the bell falls back to its inert state.
  */
 export function useKnowledgeNotificationsBridge(input: { active: boolean; knowledgeBaseId: string | null; openPage: (pageId: string | null) => void }) {
-  const effectiveKnowledgeBaseId = input.active ? input.knowledgeBaseId : null;
+  const navigationActive = useKnowledgeNavigationActive();
+  const [publisher] = useState(createKnowledgeNotificationsPublisher);
+  const effectiveKnowledgeBaseId = input.active && navigationActive ? input.knowledgeBaseId : null;
   const inbox = useKnowledgeNotificationInbox(effectiveKnowledgeBaseId);
   const { mutate: mutateRead } = useMarkNotificationRead(effectiveKnowledgeBaseId ?? 'none');
   const { mutate: mutateAll } = useMarkAllNotificationsRead(effectiveKnowledgeBaseId ?? 'none');
@@ -89,10 +92,10 @@ export function useKnowledgeNotificationsBridge(input: { active: boolean; knowle
   const { data, status } = inbox;
   useEffect(() => {
     if (!effectiveKnowledgeBaseId) {
-      publishKnowledgeNotifications(null);
+      publisher.clear();
       return;
     }
-    publishKnowledgeNotifications({
+    publisher.publish({
       knowledgeBaseId: effectiveKnowledgeBaseId,
       status: status === 'pending' ? 'loading' : status === 'error' ? 'error' : 'ready',
       items: data?.items ?? [],
@@ -101,6 +104,6 @@ export function useKnowledgeNotificationsBridge(input: { active: boolean; knowle
       markAllRead: runMarkAll,
       openPage,
     });
-    return () => publishKnowledgeNotifications(null);
-  }, [effectiveKnowledgeBaseId, data, status, openPage, runMarkRead, runMarkAll]);
+    return publisher.clear;
+  }, [effectiveKnowledgeBaseId, data, status, openPage, runMarkRead, runMarkAll, publisher]);
 }

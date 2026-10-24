@@ -11,6 +11,20 @@ export const newWorkbenchPages: readonly WorkbenchPage[] = ['knowledge'];
 export const workbenchTabId = (instance: number) => `workbench-tab-${instance}`;
 export const workbenchPanelId = (instance: number) => `workbench-panel-${instance}`;
 
+/** Tab routes belong to the knowledge workspace already selected by the shell. */
+export function knowledgeScopedSearch(search: string, currentSearch: string) {
+  const params = new URLSearchParams(search);
+  const current = new URLSearchParams(currentSearch);
+  for (const key of ['knowledgeBase', 'source']) {
+    const value = current.get(key);
+    if (value) params.set(key, value);
+    else params.delete(key);
+  }
+  params.delete('project');
+  const query = params.toString();
+  return query ? `?${query}` : '';
+}
+
 export function createWorkbenchStartup() {
   let consumed = false;
   return { isConsumed: () => consumed, consume: () => { consumed = true; } };
@@ -28,7 +42,13 @@ export function tabTarget(view: WorkbenchPage, search = ''): TabTarget {
 }
 
 export function createWorkbenchTabs(scope: string | null, target: TabTarget): WorkbenchTabsState {
-  return { scope, tabs: [identifyTab(target, target.key, 0)], active: target.key, nextInstance: 1 };
+  return ensureKnowledgeNavigation({ scope, tabs: [identifyTab(target, target.key, 0)], active: target.key, nextInstance: 1 });
+}
+
+/** The primary knowledge navigation remains available from every product page. */
+function ensureKnowledgeNavigation(state: WorkbenchTabsState): WorkbenchTabsState {
+  if (state.tabs.some(tab => tab.view === 'knowledge')) return state;
+  return { ...state, tabs: [{ ...tabTarget('knowledge'), instance: state.nextInstance }, ...state.tabs], nextInstance: state.nextInstance + 1 };
 }
 
 function identifyTab(target: TabTarget, key: string, instance: number): WorkbenchTab {
@@ -61,7 +81,7 @@ export function restoreWorkbenchTabs(scope: string | null, value: unknown): Work
   }
   if (!tabs.length) return null;
   const nextInstance = Math.max(...tabs.map(tab => tab.instance)) + 1;
-  return { scope, tabs: pinnedFirst(tabs), active: tabs.some(tab => tab.key === raw.active) ? raw.active! : tabs[0].key, nextInstance: Math.max(nextInstance, Number.isSafeInteger(raw.nextInstance) ? raw.nextInstance! : 0) };
+  return ensureKnowledgeNavigation({ scope, tabs: pinnedFirst(tabs), active: tabs.some(tab => tab.key === raw.active) ? raw.active! : tabs[0].key, nextInstance: Math.max(nextInstance, Number.isSafeInteger(raw.nextInstance) ? raw.nextInstance! : 0) });
 }
 
 export function openWorkbenchTab(state: WorkbenchTabsState, target: TabTarget): WorkbenchTabsState {
@@ -108,6 +128,6 @@ export function closeWorkbenchTab(state: WorkbenchTabsState, key: string, action
   if (!tabs.length) return { ...state, tabs: [{ ...tabTarget('knowledge'), instance: state.nextInstance }], active: 'knowledge', nextInstance: state.nextInstance + 1 };
   const activeIndex = state.tabs.findIndex(tab => tab.key === state.active);
   const neighbor = state.tabs.slice(0, activeIndex).reverse().find(tab => tabs.includes(tab)) ?? tabs[0];
-  return { ...state, tabs, active: tabs.some(tab => tab.key === state.active) ? state.active : neighbor.key };
+  return ensureKnowledgeNavigation({ ...state, tabs, active: tabs.some(tab => tab.key === state.active) ? state.active : neighbor.key });
 }
 

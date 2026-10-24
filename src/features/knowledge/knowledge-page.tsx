@@ -2,9 +2,6 @@
 
 import { createTranslator, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './knowledge-page.messages';
-
-/** Identity controls access; each knowledge base owns its resource scope. */
-
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { PageSessionNamespace, usePageSessionState } from '@/lib/page-session-state';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,207 +9,74 @@ import { LockSimple, XCircle } from '@phosphor-icons/react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { useIdentity } from '@/features/identity/identity-provider';
-import { useProjectResources } from '@/features/project/project-resources';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import { authErrorCopyFor } from '../identity/auth-errors';
-import {
-  connectKnowledgeBaseEvents,
-  type KnowledgeBaseEvents,
-} from './collaboration/knowledge-base-events';
+import { connectKnowledgeBaseEvents, type KnowledgeBaseEvents } from './collaboration/knowledge-base-events';
 import { CanvasError, CanvasSpinner, CanvasState } from './canvas-states';
 import { useKnowledgeAccessQuery } from './data/hooks';
 import { knowledgeKeysForSegments, knowledgeBaseRootKey } from './data/invalidation';
 import { KnowledgeQueryProvider } from './data/provider';
 import { invalidateKnowledgeQueries } from './data/query-client';
-import {
-  flattenKnowledgeBaseList,
-  useKnowledgeTeamspacesQuery,
-} from './data/catalog-queries';
-import {
-  deriveKnowledgeEntryPhase,
-  knowledgeErrorCodeOf,
-  type KnowledgeQuerySlice,
-} from './entry-state';
+import { flattenKnowledgeBaseList, useKnowledgeTeamspacesQuery } from './data/catalog-queries';
+import { deriveKnowledgeEntryPhase, knowledgeErrorCodeOf, type KnowledgeQuerySlice } from './entry-state';
 import { useKnowledgeNotificationsBridge } from './notifications/notifications-queries';
 import { subscribeOpenPageTarget } from './editor/open-target';
-import {
-  KnowledgeTreeStage,
-  type TreeStageTeamspaceState,
-  type LibraryView,
-} from './navigation/tree-stage';
+import { KnowledgeTreeStage, type TreeStageTeamspaceState, type LibraryView } from './navigation/tree-stage';
 import { CreateTeamspaceDialog } from './navigation/create-teamspace-dialog';
 import { PageTreeSidebar } from './navigation/page-tree-sidebar';
 import { organizationErrorTextOf } from './organization/errors';
 import { useAppAlert } from '@/components/app-alert-provider';
-import { CreateKnowledgeBaseDialog } from './organization/create-knowledge-base-dialog';
 import { LibraryCanvas } from './navigation/library-canvas';
 import { KnowledgePageEditor } from './editor';
 import { KnowledgeWorkbench } from './knowledge-workbench';
-import { useKnowledgeBaseSelection } from './use-knowledge-base-selection';
 import { CreateDocumentDialog, type DocumentCreation } from './navigation/create-document-dialog';
 import { NavigationDialogPortal } from './navigation/navigation-dialog-portal';
 import { usePageTreeOperations } from './navigation/page-operations';
 import { canEditTree } from './navigation/tree-actions';
 import { useCreateTeamspaceMutation } from './organization/hooks';
-import { currentDocumentLinkTarget, documentLink, readDocumentLink } from './editor/document-link';
-import { useProjectKnowledgeDirectory } from './data/use-project-knowledge-directory';
-import type { KnowledgeBaseSummary } from './knowledge-base-header';
+import { currentDocumentLinkTarget } from './editor/document-link';
 import { KnowledgeEmptyState } from './knowledge-empty-state';
+import { useKnowledgeNavigation, useKnowledgeNavigationActive } from './navigation/system-navigation';
+import { updateDocumentNavigation } from './navigation/document-navigation-location';
+import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
+import { useKnowledgeDocumentTarget } from './data/use-knowledge-document-target';
+import { useLocalLibrary } from './local/use-local-library';
+import type { KnowledgeBaseResource } from './knowledge-base';
 
 const knowledgeT = createTranslator(knowledgeMessages);
+const LocalKnowledgeResource = dynamic(() => import('./local/local-knowledge-resource').then(module => module.LocalKnowledgeResource), { ssr: false, loading: () => <CanvasSpinner label={knowledgeT('loadingKnowledgeResources')} /> });
 
-const LocalKnowledgeResource = dynamic(
-  () => import('./local/local-knowledge-resource').then((module) => module.LocalKnowledgeResource),
-  { ssr: false, loading: () => <CanvasSpinner label={knowledgeT('loadingKnowledgeResources')} /> },
-);
-
-export function KnowledgePage({ onOpenSettings }: { onOpenSettings: () => void }) {
-  const { selectedProject, scopeKey } = useProjectResources();
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-  if (!selectedProject) return <CanvasState title={knowledgeT('selectProjectFirst')} />;
-  return (
-    <KnowledgeQueryProvider key={scopeKey}>
-      <KnowledgeResources onOpenSettings={onOpenSettings} />
-    </KnowledgeQueryProvider>
-  );
-}
-
-function KnowledgeResources({
-  onOpenSettings,
-}: {
-  onOpenSettings: () => void;
-}) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-
-  const { selectedProject } = useProjectResources();
-  const target = typeof window === 'undefined' ? null : readDocumentLink(window.location.href);
-  const [chosenBaseId, onSelectBase] = useKnowledgeBaseSelection(`project:${selectedProject!.id}`, target?.knowledgeBaseId);
-  const { knowledgeBases: directory, basesQuery, localStore, localError } = useProjectKnowledgeDirectory();
-  const serverBases = directory.filter((base) => base.source === 'server');
-  const activeBaseId =
-    directory.find((base) => base.id === chosenBaseId)?.id ?? directory[0]?.id ?? null;
-  const activeResource = directory.find((base) => base.id === activeBaseId)?.source ?? selectedProject!.source;
-  const [creating, setCreating] = useState(false);
-  const select = useCallback(
-    (id: string) => {
-      const source = directory.find((base) => base.id === id)?.source;
-      if (!source) return;
-      onSelectBase(id);
-    },
-    [directory, onSelectBase],
-  );
-  useEffect(
-    () =>
-      subscribeOpenPageTarget((target) => {
-        if (!directory.some((base) => base.id === target.knowledgeBaseId)) return;
-        if (target.knowledgeBaseId === activeBaseId) return;
-        // Keep the requested page across the knowledge-base component remount.
-        window.history.replaceState(
-          window.history.state,
-          '',
-          documentLink(window.location.href, { ...target, source: activeResource }),
-        );
-        onSelectBase(target.knowledgeBaseId);
-      }),
-    [activeBaseId, onSelectBase, activeResource, directory],
-  );
-  const shared = {
-    knowledgeBases: directory,
-    onSelectKnowledgeBase: select,
-    onCreateKnowledgeBase: () => setCreating(true),
-    onOpenSettings,
-  };
-  return (
-    <>
-      <PageSessionNamespace key={`${activeResource}:${activeBaseId}`} name={`knowledge:${activeResource}:${activeBaseId}`}>
-      {activeResource === 'local' ? (
-        localStore ? (
-          <LocalKnowledgeResource
-            key={`local:${activeBaseId ?? 'empty'}`}
-            store={localStore}
-            selectedKnowledgeBaseId={activeBaseId}
-            {...shared}
-          />
-        ) : (
-          <UnavailableLocalResource detail={localError ? knowledgeT('unableToReadLocalDocumentsCheckYourBrowser') : null} {...shared} />
-        )
-      ) : (
-        <ServerKnowledgeResource
-          key={`server:${activeBaseId ?? 'empty'}`}
-          activeBaseId={activeBaseId}
-          baseAvailable={serverBases.some((base) => base.id === activeBaseId)}
-          directoryState={{
-            status: basesQuery.isFetchNextPageError
-              ? 'error'
-              : basesQuery.hasNextPage || basesQuery.isFetchingNextPage
-                ? 'pending'
-                : basesQuery.status,
-            errorCode: basesQuery.error ? knowledgeErrorCodeOf(basesQuery.error) : null,
-            count: serverBases.length,
-          }}
-          directoryError={basesQuery.error}
-          retryDirectory={() => void basesQuery.refetch()}
-          {...shared}
-        />
-      )}
-      </PageSessionNamespace>
-      <CreateKnowledgeBaseDialog
-        key={activeResource}
-        open={creating}
-        initialSource={selectedProject?.source ?? 'local'}
-        projectId={selectedProject?.id ?? null}
-        onClose={() => setCreating(false)}
-        onCreateLocal={(name) => {
-          if (!localStore || !selectedProject) throw new Error(knowledgeT('localStorageUnavailable'));
-          const id = crypto.randomUUID();
-          localStore.update((library) => ({ ...library, bases: [...library.bases, { id, name, projectIds: [selectedProject.id] }] }));
-          return id;
-        }}
-        onCreated={(id) => onSelectBase(id)}
-      />
-    </>
-  );
-}
-
-function UnavailableLocalResource({
-  detail,
-  knowledgeBases,
-  onSelectKnowledgeBase,
-  onCreateKnowledgeBase,
-  onOpenSettings,
-}: {
-  detail: string | null;
-  knowledgeBases: readonly KnowledgeBaseSummary[];
-  onSelectKnowledgeBase: (id: string) => void;
-  onCreateKnowledgeBase: () => void;
-  onOpenSettings: () => void;
-}) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-
-  const [collapsed, setCollapsed] = useState(false);
-  return (
-    <KnowledgeWorkbench
-      navigationScope="local:unavailable"
-      sidebar={
-        <PageTreeSidebar
-          collapsed={collapsed}
-          onCollapse={() => setCollapsed(true)}
-          knowledgeBases={knowledgeBases}
-          activeKnowledgeBaseId={null}
-          onSelectKnowledgeBase={onSelectKnowledgeBase}
-          onCreateKnowledgeBase={onCreateKnowledgeBase}
-          onOpenSettings={onOpenSettings}
-          treeArea={null}
-        />
-      }
-      onExpandSidebar={collapsed ? () => setCollapsed(false) : undefined}
-    >
-      <CanvasError
-        title={knowledgeT('unableToOpenLocalKnowledgeBase')}
-        detail={detail ?? knowledgeT('unableToReadBrowserStorage')}
-      />
-    </KnowledgeWorkbench>
-  );
+export function KnowledgePage() {
+  const resources = useKnowledgeBaseResources();
+  const { selectedKnowledgeBase: base, scopeKey, knowledgeBases, openCreateKnowledgeBase } = resources;
+  const local = useLocalLibrary();
+  const navigationActive = useKnowledgeNavigationActive();
+  const { t } = useTranslation(knowledgeMessages);
+  const { openSignIn } = useIdentity();
+  const target = useKnowledgeDocumentTarget(navigationActive);
+  useEffect(() => subscribeOpenPageTarget(request => {
+    if (!navigationActive || request.knowledgeBaseId === base?.id) return;
+    const next = knowledgeBases.find(item => item.id === request.knowledgeBaseId);
+    if (next) updateDocumentNavigation({ ...request, source: next.source });
+  }), [navigationActive, base?.id, knowledgeBases]);
+  if (target.status === 'loading') return <CanvasSpinner label={t('resolvingDocumentKnowledgeBase')} />;
+  if (target.status === 'unavailable') return <CanvasState title={t('documentTargetUnavailable')} hint={t('documentTargetUnavailableHint')} actions={<>
+    {target.signIn ? <Button onClick={() => openSignIn()}>{t('signInToOpenDocument')}</Button> : target.error ? <Button variant="outline" onClick={target.retry}>{t('retry')}</Button> : null}
+    <Button variant="outline" onClick={resources.clearUnavailableSelection}>{t('returnToKnowledgeLibrary')}</Button>
+  </>} />;
+  if (!base) {
+    if (resources.status === 'loading') return <CanvasSpinner label={t('loadingKnowledgeResources')} />;
+    if (resources.error) return <CanvasError title={t('unableToLoadKnowledgeBases')} detail={resources.error} onRetry={() => void resources.refreshKnowledgeBases()} />;
+    if (resources.unavailableSelection) return <CanvasState title={t('unableToAccessThisKnowledgeBase')} hint={t('thisKnowledgeBaseWasRemovedOrYourAccount')} actions={<>
+      {resources.requestedKnowledgeBase?.source === 'server' && resources.principal === 'guest' && <Button onClick={() => openSignIn()}>{t('signInAndContinue')}</Button>}
+      <Button variant="outline" onClick={resources.clearUnavailableSelection}>{t('returnToKnowledgeLibrary')}</Button>
+    </>} />;
+    return <KnowledgeEmptyState onCreate={openCreateKnowledgeBase} />;
+  }
+  return <KnowledgeQueryProvider key={scopeKey}><PageSessionNamespace name={'knowledge:' + base.source + ':' + base.id}>
+    {base.source === 'local' ? local.store ? <LocalKnowledgeResource store={local.store} selectedKnowledgeBaseId={base.id} onCreateKnowledgeBase={openCreateKnowledgeBase} /> : <CanvasError title={t('unableToOpenLocalKnowledgeBase')} detail={local.error ? t('unableToReadBrowserStorage') : t('loadingKnowledgeResources')} /> :
+      <ServerKnowledgeResource activeBaseId={base.id} baseAvailable directoryState={{ status: 'success', count: knowledgeBases.filter(item => item.source === 'server').length, errorCode: null }} directoryError={null} retryDirectory={() => void resources.refreshKnowledgeBases()} knowledgeBases={knowledgeBases} onCreateKnowledgeBase={openCreateKnowledgeBase} />}
+  </PageSessionNamespace></KnowledgeQueryProvider>;
 }
 
 function ServerKnowledgeResource({
@@ -222,23 +86,21 @@ function ServerKnowledgeResource({
   directoryError,
   retryDirectory,
   knowledgeBases,
-  onSelectKnowledgeBase,
   onCreateKnowledgeBase,
-  onOpenSettings,
 }: {
   activeBaseId: string | null;
   baseAvailable: boolean;
   directoryState: KnowledgeQuerySlice;
   directoryError: unknown;
   retryDirectory: () => void;
-  knowledgeBases: readonly KnowledgeBaseSummary[];
-  onSelectKnowledgeBase: (id: string) => void;
+  knowledgeBases: readonly KnowledgeBaseResource[];
   onCreateKnowledgeBase: () => void;
-  onOpenSettings: () => void;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const queryClient = useQueryClient();
+  const { expand: expandSidebar } = useKnowledgeNavigation();
+  const navigationActive = useKnowledgeNavigationActive();
   const { session, refresh, expireSession, openSignIn } = useIdentity();
   const authenticated = session.status === 'authenticated';
   const activeId = authenticated && baseAvailable ? activeBaseId : null;
@@ -297,28 +159,29 @@ function ServerKnowledgeResource({
   const [libraryView, setLibraryView] = usePageSessionState<LibraryView>('view', 'all-documents');
   const [selectedTeamspaceId, setSelectedTeamspaceId] = usePageSessionState<string | null>('folder', null);
   const linkedPage = activeBaseId ? currentDocumentLinkTarget(activeBaseId, 'server')?.pageId ?? null : null;
-  const [selectedPageId, setSelectedPageId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
-  const [editorSidebarOpen, setEditorSidebarOpen] = usePageSessionState('editorSidebar', false);
-  const [sidebarCollapsed, setSidebarCollapsed] = usePageSessionState('sidebar', false);
+  const [selectedPageId, setStoredSelectedPageId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
+  const setSelectedPageId = useCallback((id: string | null) => {
+    setStoredSelectedPageId(id);
+    if (navigationActive) updateDocumentNavigation(id && activeBaseId ? { knowledgeBaseId: activeBaseId, pageId: id, source: 'server' } : null);
+  }, [setStoredSelectedPageId, navigationActive, activeBaseId]);
   const [createTeamspaceOpen, setCreateTeamspaceOpen] = useState(false);
   const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
   const { notify } = useAppAlert();
   const openPage = useCallback(
     (id: string | null) => {
       setSelectedPageId(id);
-      setEditorSidebarOpen(false);
     },
-    [setSelectedPageId, setEditorSidebarOpen],
+    [setSelectedPageId],
   );
   useKnowledgeNotificationsBridge({ active: stageActive, knowledgeBaseId: activeId, openPage });
   useEffect(
     () =>
-      stageActive
+      stageActive && navigationActive
         ? subscribeOpenPageTarget((target) => {
             if (target.knowledgeBaseId === activeId) openPage(target.pageId);
           })
         : undefined,
-    [stageActive, activeId, openPage],
+    [stageActive, activeId, openPage, navigationActive],
   );
   const pageOperations = usePageTreeOperations(activeId, {
     canEdit: canEditTree(accessQuery.data),
@@ -391,7 +254,7 @@ function ServerKnowledgeResource({
         user={session.user}
         knowledgeBaseId={activeId}
         onBack={onBack}
-        onOpenSidebar={() => setEditorSidebarOpen(true)}
+        onOpenSidebar={expandSidebar}
         onCreateDocument={() => setCreateDocumentOpen(true)}
         canCreateDocument={canEditTree(accessQuery.data)}
       />
@@ -487,7 +350,6 @@ function ServerKnowledgeResource({
           setLibraryView('overview');
         }}
         onCreateFolder={() => setCreateTeamspaceOpen(true)}
-        onExpandSidebar={sidebarCollapsed ? () => setSidebarCollapsed(false) : undefined}
         notify={notify}
       />
     );
@@ -497,10 +359,7 @@ function ServerKnowledgeResource({
     <KnowledgeWorkbench
       navigationScope={`server:${authenticated ? session.user.id : 'guest'}:${activeBaseId ?? 'none'}`}
       documentOpen={documentOpen}
-      sidebarOpen={documentOpen && editorSidebarOpen}
       onCloseDocument={closeDocument}
-      onCloseSidebar={() => setEditorSidebarOpen(false)}
-      onExpandSidebar={sidebarCollapsed ? () => setSidebarCollapsed(false) : undefined}
       renderFixedDocument={(document, onClose) =>
         stageActive &&
         document.target.source === 'server' &&
@@ -515,15 +374,6 @@ function ServerKnowledgeResource({
       }
       sidebar={
         <PageTreeSidebar
-          collapsed={documentOpen ? false : sidebarCollapsed}
-          onCollapse={() =>
-            documentOpen ? setEditorSidebarOpen(false) : setSidebarCollapsed(true)
-          }
-          knowledgeBases={knowledgeBases}
-          activeKnowledgeBaseId={activeBaseId}
-          onSelectKnowledgeBase={onSelectKnowledgeBase}
-          onCreateKnowledgeBase={onCreateKnowledgeBase}
-          onOpenSettings={onOpenSettings}
           treeArea={treeArea}
         />
       }

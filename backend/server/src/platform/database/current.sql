@@ -294,12 +294,6 @@ CREATE TABLE "resources"."knowledge_base_invitation" (
 	CONSTRAINT "knowledge_base_invitation_state" CHECK (("resources"."knowledge_base_invitation"."accepted_at" IS NULL OR "resources"."knowledge_base_invitation"."revoked_at" IS NULL) AND ("resources"."knowledge_base_invitation"."accepted_by" IS NULL OR "resources"."knowledge_base_invitation"."accepted_at" IS NOT NULL))
 );
 
-CREATE TABLE "resources"."knowledge_base_project" (
-	"knowledge_base_id" uuid NOT NULL,
-	"project_id" uuid NOT NULL,
-	CONSTRAINT "knowledge_base_project_knowledge_base_id_project_id_pk" PRIMARY KEY("knowledge_base_id","project_id")
-);
-
 CREATE TABLE "resources"."knowledge_base_member" (
 	"knowledge_base_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -419,23 +413,6 @@ CREATE TABLE "resources"."personal_access_token" (
 	CONSTRAINT "personal_access_token_scopes_nonempty" CHECK (cardinality("resources"."personal_access_token"."scopes") > 0)
 );
 
-CREATE TABLE "resources"."project" (
-	"id" uuid PRIMARY KEY NOT NULL,
-	"name" varchar(120) NOT NULL,
-	"created_by" uuid NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "project_name_not_empty" CHECK (length(btrim("resources"."project"."name")) > 0)
-);
-
-CREATE TABLE "resources"."project_member" (
-	"project_id" uuid NOT NULL,
-	"user_id" uuid NOT NULL,
-	"role" "resources"."member_role" NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "project_member_project_id_user_id_pk" PRIMARY KEY("project_id","user_id")
-);
-
 CREATE TABLE "resources"."share_link" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
@@ -509,8 +486,6 @@ ALTER TABLE "resources"."group_member" ADD CONSTRAINT "group_member_membership_f
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_accepted_by_user_id_fk" FOREIGN KEY ("accepted_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."knowledge_base_project" ADD CONSTRAINT "knowledge_base_project_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."knowledge_base_project" ADD CONSTRAINT "knowledge_base_project_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "resources"."project"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_member" ADD CONSTRAINT "knowledge_base_member_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_member" ADD CONSTRAINT "knowledge_base_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."model_credential" ADD CONSTRAINT "model_credential_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
@@ -527,9 +502,6 @@ ALTER TABLE "resources"."page_acl" ADD CONSTRAINT "page_acl_page_fk" FOREIGN KEY
 ALTER TABLE "resources"."page_effective_acl" ADD CONSTRAINT "page_effective_acl_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."personal_access_token" ADD CONSTRAINT "personal_access_token_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."personal_access_token" ADD CONSTRAINT "personal_access_token_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."project" ADD CONSTRAINT "project_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
-ALTER TABLE "resources"."project_member" ADD CONSTRAINT "project_member_project_id_project_id_fk" FOREIGN KEY ("project_id") REFERENCES "resources"."project"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."project_member" ADD CONSTRAINT "project_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
@@ -556,7 +528,6 @@ CREATE INDEX "doc_checkpoint_page_time_idx" ON "resources"."doc_checkpoint" USIN
 CREATE INDEX "group_member_user_idx" ON "resources"."group_member" USING btree ("knowledge_base_id","user_id");
 CREATE UNIQUE INDEX "knowledge_base_invitation_pending_email_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","email") WHERE "resources"."knowledge_base_invitation"."accepted_at" IS NULL AND "resources"."knowledge_base_invitation"."revoked_at" IS NULL;
 CREATE INDEX "knowledge_base_invitation_expiry_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","expires_at");
-CREATE INDEX "knowledge_base_project_project_idx" ON "resources"."knowledge_base_project" USING btree ("project_id","knowledge_base_id");
 CREATE INDEX "member_user_idx" ON "resources"."knowledge_base_member" USING btree ("user_id","knowledge_base_id");
 CREATE INDEX "model_credential_user_idx" ON "resources"."model_credential" USING btree ("user_id");
 CREATE INDEX "notification_user_time_idx" ON "resources"."notification" USING btree ("knowledge_base_id","user_id","created_at");
@@ -575,8 +546,6 @@ CREATE INDEX "page_effective_acl_edit_gin_idx" ON "resources"."page_effective_ac
 CREATE INDEX "page_effective_acl_full_gin_idx" ON "resources"."page_effective_acl" USING gin ("full_principals");
 CREATE INDEX "personal_access_token_hash_idx" ON "resources"."personal_access_token" USING btree ("knowledge_base_id","token_hash");
 CREATE INDEX "personal_access_token_user_idx" ON "resources"."personal_access_token" USING btree ("user_id");
-CREATE INDEX "project_created_by_name_idx" ON "resources"."project" USING btree ("created_by","name");
-CREATE INDEX "project_member_user_idx" ON "resources"."project_member" USING btree ("user_id","project_id");
 CREATE INDEX "share_link_page_idx" ON "resources"."share_link" USING btree ("knowledge_base_id","page_id");
 CREATE INDEX "share_link_token_idx" ON "resources"."share_link" USING btree ("knowledge_base_id","token_hash");
 CREATE INDEX "share_link_created_by_idx" ON "resources"."share_link" USING btree ("created_by");

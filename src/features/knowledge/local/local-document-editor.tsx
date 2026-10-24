@@ -1,5 +1,7 @@
 'use client';
 
+import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-document-editor.messages';
 import { useEffect, useMemo } from 'react';
@@ -55,6 +57,7 @@ export function LocalDocumentEditor({
   onCreateDocument: () => void;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const navigationActive = useKnowledgeNavigationActive();
 
   const extensions = useMemo(
     () => [
@@ -98,7 +101,7 @@ export function LocalDocumentEditor({
       editor.commands.setContent(document.body, { emitUpdate: false });
   }, [editor, document.body]);
   useEffect(() => {
-    if (!editor) return;
+    if (!editor || !navigationActive) return;
     const scope = { knowledgeBaseId, pageId: document.id };
     const staged = takeStagedBlockHighlight(scope);
     if (staged) revealBlockInEditor(editor.view, staged.blockId);
@@ -110,7 +113,7 @@ export function LocalDocumentEditor({
       )
         revealBlockInEditor(editor.view, target.blockId);
     });
-  }, [editor, knowledgeBaseId, document.id]);
+  }, [editor, knowledgeBaseId, document.id, navigationActive]);
 
   return (
     <DocumentEditorFrame

@@ -1,33 +1,33 @@
 'use client';
 
 import { useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { PAGE_SESSION_FLUSH, ProjectUiSessionContext } from '@/lib/page-session-state';
+import { PAGE_SESSION_FLUSH, KnowledgeUiSessionContext } from '@/lib/page-session-state';
 import { pushWorkbenchLocation, replaceWorkbenchLocation } from '@/lib/navigation-history';
 import { closeSettings } from '@/lib/settings-navigation';
 import type { WorkbenchPage } from './workbench-pages';
-import { addWorkbenchTab, closeWorkbenchTab, createWorkbenchStartup, createWorkbenchTabs, findWorkbenchTab, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget, workbenchPanelId, type TabCloseAction, type WorkbenchTab, type WorkbenchTabsState } from './workbench-tabs';
+import { addWorkbenchTab, closeWorkbenchTab, createWorkbenchStartup, createWorkbenchTabs, findWorkbenchTab, knowledgeScopedSearch, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget, workbenchPanelId, type TabCloseAction, type WorkbenchTab, type WorkbenchTabsState } from './workbench-tabs';
 
 const subscribeHydration = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
 
 export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, search: string, restorationReady = true, startup?: ReturnType<typeof createWorkbenchStartup>) {
-  const session = useContext(ProjectUiSessionContext);
+  const session = useContext(KnowledgeUiSessionContext);
   const ready = useSyncExternalStore(subscribeHydration, clientReady, serverReady);
   const boot = ready && restorationReady;
   const requested = tabTarget(view, search);
   const target = requested;
   const [revealRequest, setRevealRequest] = useState(0);
-  const [memory, setMemory] = useState(() => ({ state: createWorkbenchTabs(scope, target), location: search, hydrated: false, hasProject: false, restoreSearch: null as string | null }));
+  const [memory, setMemory] = useState(() => ({ state: createWorkbenchTabs(scope, target), location: search, hydrated: false, hasKnowledgeBase: false, restoreSearch: null as string | null }));
   let current = memory;
   if (boot && (!current.hydrated || current.state.scope !== scope)) {
-    const first = !current.hasProject && !startup?.isConsumed();
+    const first = !current.hasKnowledgeBase && !startup?.isConsumed();
     let restored = restoreWorkbenchTabs(scope, session?.get('tabs', null)) ?? createWorkbenchTabs(scope, first ? target : tabTarget('knowledge'));
     const params = new URLSearchParams(search);
     const explicit = ['view', 'knowledgeBase', 'page', 'block'].some(key => params.has(key));
-    if (first && explicit) restored = openWorkbenchTab(restored, target);
+    if ((first && explicit) || params.has('document')) restored = openWorkbenchTab(restored, target);
     const selected = restored.tabs.find(tab => tab.key === restored.active)!;
-    current = { state: restored, location: search, hydrated: true, hasProject: current.hasProject || scope !== null, restoreSearch: selected.search !== requested.search ? selected.search : null };
+    current = { state: restored, location: search, hydrated: true, hasKnowledgeBase: current.hasKnowledgeBase || scope !== null, restoreSearch: selected.search !== requested.search ? selected.search : null };
   }
   if (boot) {
     if (current.restoreSearch !== null) {
@@ -47,7 +47,7 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
   useEffect(() => {
     if (!boot || restoreSearch === null) return;
     const url = new URL(window.location.href);
-    url.search = restoreSearch ?? target.search;
+    url.search = knowledgeScopedSearch(restoreSearch ?? target.search, url.search);
     replaceWorkbenchLocation(url);
   }, [boot, restoreSearch, target.search]);
   useEffect(() => {
@@ -66,7 +66,7 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
   }
   function navigate(tab: WorkbenchTab, replace = false) {
     const url = new URL(window.location.href);
-    url.search = tab.search;
+    url.search = knowledgeScopedSearch(tab.search, url.search);
     url.hash = '';
     if (replace) replaceWorkbenchLocation(url);
     else {

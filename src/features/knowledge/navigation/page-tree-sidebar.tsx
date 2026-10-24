@@ -5,56 +5,27 @@ import { knowledgeMessages } from './page-tree-sidebar.messages';
 import type { ReactNode } from 'react';
 import { Warning, XCircle } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { KnowledgeBaseHeader, type KnowledgeBaseSummary } from '../knowledge-base-header';
 import { CanvasState, TreeSkeletonRows } from '../canvas-states';
+import { KnowledgeNavigationPortal } from './system-navigation';
 import styles from './knowledge-sidebar.module.css';
 
 export function PageTreeSidebar({
-  collapsed,
-  onCollapse,
-  knowledgeBases,
-  activeKnowledgeBaseId,
-  onSelectKnowledgeBase,
-  onCreateKnowledgeBase,
-  onOpenSettings,
   treeArea,
   footer,
-  createLabel,
 }: {
-  collapsed: boolean;
-  onCollapse: () => void;
-  knowledgeBases: readonly KnowledgeBaseSummary[];
-  activeKnowledgeBaseId: string | null;
-  onSelectKnowledgeBase: (id: string) => void;
-  onCreateKnowledgeBase: () => void;
-  onOpenSettings: () => void;
   treeArea: ReactNode;
   footer?: ReactNode;
-  createLabel?: string;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   return (
-    <aside
+    <KnowledgeNavigationPortal><section
       aria-label={knowledgeT('knowledgeBaseSidebar')}
-      aria-hidden={collapsed}
-      inert={collapsed}
-      data-collapsed={collapsed}
-      className={cn('flex h-full min-h-0 flex-col', styles.sidebar)}
+      className={styles.sidebar}
     >
-      <KnowledgeBaseHeader
-        knowledgeBases={knowledgeBases}
-        activeKnowledgeBaseId={activeKnowledgeBaseId}
-        onSelectKnowledgeBase={onSelectKnowledgeBase}
-        onCollapse={onCollapse}
-        onCreateKnowledgeBase={onCreateKnowledgeBase}
-        onOpenSettings={onOpenSettings}
-        createLabel={createLabel}
-      />
       {treeArea}
       {footer}
-    </aside>
+    </section></KnowledgeNavigationPortal>
   );
 }
 

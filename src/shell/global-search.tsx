@@ -1,28 +1,28 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { MagnifyingGlass, X } from '@phosphor-icons/react';
+import { FileText, MagnifyingGlass, X } from '@phosphor-icons/react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
+import { useIdentity } from '@/features/identity/identity-provider';
+import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
+import { useLocalLibrary } from '@/features/knowledge/local/use-local-library';
+import { requestOpenPageBlock } from '@/features/knowledge/editor/open-target';
+import { searchLocalKnowledge, type KnowledgeSearchHit, type KnowledgeSearchOutcome } from '@/features/knowledge/search/knowledge-search';
+import { searchServerKnowledgeDocuments } from '@/features/knowledge/search/knowledge-search-client';
 import type { WorkbenchView } from './workbench-view';
 import { messages } from './i18n/system-bar.messages';
 import styles from './global-search.module.css';
 
-const searchItems: Array<{ label: keyof typeof messages; detail: keyof typeof messages; view: WorkbenchView }> = [
-  { label: '成员', detail: '管理项目成员', view: 'members' },
-  { label: '知识库', detail: '查看沉淀的知识', view: 'knowledge' },
-  { label: '设置', detail: '调整 Fob 偏好', view: 'settings' },
-];
-
 export function GlobalSearch({ onNavigate, className }: { onNavigate: (view: WorkbenchView) => void; className: string }) {
   const { t } = useTranslation(messages);
+  const { scopeKey } = useKnowledgeBaseResources();
   const [open, setOpen] = useState(false);
   useEffect(() => {
     function shortcut(event: KeyboardEvent) {
       if (!event.defaultPrevented && (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        setOpen(value => !value);
+        event.preventDefault(); setOpen(value => !value);
       }
     }
     window.addEventListener('keydown', shortcut);
@@ -30,52 +30,89 @@ export function GlobalSearch({ onNavigate, className }: { onNavigate: (view: Wor
   }, []);
   return <>
     <Tooltip>
-      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('全局搜索')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={18} weight="duotone" aria-hidden /></button></TooltipTrigger>
-      <TooltipContent side="bottom">{t('全局搜索')} · Ctrl / ⌘ K</TooltipContent>
+      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('搜索知识')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={18} weight="duotone" aria-hidden /></button></TooltipTrigger>
+      <TooltipContent side="bottom">{t('搜索知识')} · Ctrl / ⌘ K</TooltipContent>
     </Tooltip>
-    {open && <SearchDialog onClose={() => setOpen(false)} onNavigate={onNavigate} />}
+    {open && <SearchDialog key={scopeKey ?? 'no-knowledge-base'} onClose={() => setOpen(false)} onNavigate={onNavigate} />}
   </>;
 }
 
+type SearchState = { query: string; phase: 'loading' | 'ready' | 'error'; outcome: KnowledgeSearchOutcome };
+const emptyOutcome: KnowledgeSearchOutcome = { hits: [], incomplete: false };
+
 function SearchDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate: (view: WorkbenchView) => void }) {
-  const { t, locale } = useTranslation(messages);
-  const ref = useRef<HTMLDialogElement>(null);
+  const { t } = useTranslation(messages);
+  const { selectedKnowledgeBase, status } = useKnowledgeBaseResources();
+  const { session } = useIdentity();
+  const local = useLocalLibrary();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const listId = useId();
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(0);
-  const normalized = query.trim().toLocaleLowerCase(locale);
-  const results = searchItems.map(item => ({ ...item, label: t(item.label), detail: t(item.detail) }))
-    .filter(item => `${item.label}${item.detail}`.toLocaleLowerCase(locale).includes(normalized));
+  const [retry, setRetry] = useState(0);
+  const [state, setState] = useState<SearchState>({ query: '', phase: 'ready', outcome: emptyOutcome });
+  const normalized = query.trim();
+  const ready = selectedKnowledgeBase !== null && status === 'ready' && (selectedKnowledgeBase.source === 'local' || session.status === 'authenticated');
+  const pending = ready && normalized.length >= 2 && (state.query !== normalized || state.phase === 'loading');
+  const results = ready && state.query === normalized && !pending ? state.outcome.hits : [];
   const activeIndex = Math.min(selected, Math.max(0, results.length - 1));
+
   useEffect(() => {
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const dialog = ref.current;
-    dialog?.showModal();
-    dialog?.querySelector('input')?.focus({ preventScroll: true });
+    const dialog = dialogRef.current;
+    dialog?.showModal(); dialog?.querySelector('input')?.focus({ preventScroll: true });
     return () => { dialog?.close(); if (previous?.isConnected) previous.focus({ preventScroll: true }); };
   }, []);
-  useEffect(() => { ref.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }); }, [activeIndex, query]);
-  function navigate(view: WorkbenchView) { onClose(); onNavigate(view); }
-  return <dialog ref={ref} className={styles.dialog} aria-label={t('全局搜索')} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
-    <form className={styles.form} onSubmit={event => { event.preventDefault(); if (results[activeIndex]) navigate(results[activeIndex].view); }}>
+
+  useEffect(() => {
+    if (!ready || !selectedKnowledgeBase || normalized.length < 2) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      setState({ query: normalized, phase: 'loading', outcome: emptyOutcome });
+      const search = selectedKnowledgeBase.source === 'local'
+        ? local.error ? Promise.reject(new Error('LOCAL_STORAGE_UNAVAILABLE')) : Promise.resolve(searchLocalKnowledge(local.library, selectedKnowledgeBase, normalized))
+        : searchServerKnowledgeDocuments(selectedKnowledgeBase.id, normalized, controller.signal);
+      void search.then(outcome => {
+        if (!controller.signal.aborted) setState({ query: normalized, phase: 'ready', outcome });
+      }).catch(() => {
+        if (!controller.signal.aborted) setState({ query: normalized, phase: 'error', outcome: emptyOutcome });
+      });
+    }, 200);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [normalized, selectedKnowledgeBase, ready, local.library, local.error, retry]);
+
+  useEffect(() => { dialogRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }); }, [activeIndex, results.length]);
+
+  function openDocument(hit: KnowledgeSearchHit) {
+    onClose(); onNavigate('knowledge');
+    requestAnimationFrame(() => requestOpenPageBlock({ knowledgeBaseId: hit.knowledgeBaseId, pageId: hit.pageId, blockId: hit.blockId }));
+  }
+  const failed = ready && normalized.length >= 2 && state.query === normalized && state.phase === 'error';
+  return <dialog ref={dialogRef} className={styles.dialog} aria-label={t('搜索知识')} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
+    <form className={styles.form} onSubmit={event => { event.preventDefault(); if (results[activeIndex]) openDocument(results[activeIndex]); }}>
       <div className={styles.field}>
         <MagnifyingGlass size={19} weight="duotone" aria-hidden />
-        <input type="search" role="combobox" aria-label={t('全局搜索')} aria-expanded="true" aria-autocomplete="list" aria-controls={listId} aria-activedescendant={results.length ? `${listId}-${activeIndex}` : undefined} placeholder={t('搜索')} value={query} onChange={event => { setQuery(event.target.value); setSelected(0); }} onKeyDown={event => {
+        <input type="search" role="combobox" maxLength={200} aria-label={t('搜索知识')} aria-expanded="true" aria-autocomplete="list" aria-controls={listId} aria-activedescendant={results.length ? `${listId}-${activeIndex}` : undefined} placeholder={t('搜索文档标题和正文')} value={query} onChange={event => { setQuery(event.target.value); setSelected(0); }} onKeyDown={event => {
           if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && results.length) {
-            event.preventDefault();
-            setSelected((activeIndex + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length);
+            event.preventDefault(); setSelected((activeIndex + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length);
           }
         }} />
         <button type="button" className={`fob-action ${styles.close}`} aria-label={t('关闭搜索')} onClick={onClose}><X size={16} aria-hidden /></button>
       </div>
-      <ScrollArea className={styles.results} viewportClassName={styles.resultList} style={{ height: Math.min(360, Math.max(72, results.length * 40 + 12)) }}>
-      <div id={listId} role="listbox" aria-label={t('搜索结果')}>
-        {results.map((item, index) => <button key={item.view} id={`${listId}-${index}`} type="button" role="option" tabIndex={-1} aria-selected={index === activeIndex} data-highlighted={index === activeIndex ? '' : undefined} className={`fob-menu-item ${styles.result}`} onPointerMove={() => setSelected(index)} onMouseDown={event => event.preventDefault()} onClick={() => navigate(item.view)}>
-          <MagnifyingGlass size={15} weight="duotone" aria-hidden /><span className={styles.label}>{item.label}</span><span className={styles.detail}>{item.detail}</span>
-        </button>)}
-        {!results.length && <p className={styles.empty} role="status">{t('没有匹配结果')}</p>}
-      </div>
+      {ready && <p className={styles.scope}>{t('搜索知识库', { name: selectedKnowledgeBase!.name })}</p>}
+      <ScrollArea className={styles.results} viewportClassName={styles.resultList} style={{ height: Math.min(420, Math.max(96, results.length * 68 + 12)) }}>
+        <div id={listId} role="listbox" aria-label={t('搜索结果')} aria-busy={pending}>
+          {results.map((hit, index) => <button key={`${hit.source}:${hit.knowledgeBaseId}:${hit.pageId}`} id={`${listId}-${index}`} type="button" role="option" tabIndex={-1} aria-selected={index === activeIndex} data-highlighted={index === activeIndex ? '' : undefined} className={`fob-menu-item ${styles.result}`} onPointerMove={() => setSelected(index)} onMouseDown={event => event.preventDefault()} onClick={() => openDocument(hit)}>
+            <FileText size={17} aria-hidden /><span className={styles.resultText}><span className={styles.label}>{hit.title}</span>{hit.snippet && <span className={styles.detail}>{hit.snippet}</span>}</span>
+          </button>)}
+        </div>
+        {!ready && <p className={styles.empty} role="status">{t('请先选择知识库')}</p>}
+        {ready && normalized.length < 2 && <p className={styles.empty} role="status">{t('输入至少两个字符开始搜索')}</p>}
+        {pending && <p className={styles.empty} role="status">{t('正在搜索知识')}</p>}
+        {failed && <div className={styles.empty} role="alert"><p>{t('知识搜索暂不可用')}</p><button type="button" className={`fob-action ${styles.retry}`} onClick={() => setRetry(value => value + 1)}>{t('重试')}</button></div>}
+        {ready && normalized.length >= 2 && !pending && !failed && !results.length && <p className={styles.empty} role="status">{t('没有找到相关文档')}</p>}
       </ScrollArea>
+      {state.query === normalized && state.outcome.incomplete && <p className={styles.notice} role="status">{t('部分搜索暂不可用')}</p>}
     </form>
   </dialog>;
 }

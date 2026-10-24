@@ -9,7 +9,7 @@ import type { ResourceTestDatabase } from './resource-test-database';
 
 let database: ResourceTestDatabase;
 let data: Awaited<ReturnType<typeof seedResourceTestData>>;
-const knowledgeTables = resourceTables.filter((table) => !['project', 'project_member'].includes(getTableConfig(table).name));
+const knowledgeTables = resourceTables;
 const scopeColumn = (table: typeof knowledgeBase | typeof resourceTables[number]) => sql.identifier(table === knowledgeBase ? 'id' : 'knowledge_base_id');
 
 function postgresError(error: unknown): { code: string; message: string } | undefined {
@@ -74,7 +74,7 @@ describe('real PostgreSQL resource isolation', () => {
       expect(row.forced, row.name).toBe(true);
       expect(row.expression, row.name).toContain('app.knowledge_base_id');
       expect(row.check, row.name).toBe(row.expression);
-      const policyCounts: Record<string, number> = { knowledge_base: 2, knowledge_base_project: 2, knowledge_base_member: 3, page: 2, page_effective_acl: 2, group_member: 2, backlink: 2 };
+      const policyCounts: Record<string, number> = { knowledge_base: 2, knowledge_base_member: 3, page: 2, page_effective_acl: 2, group_member: 2, backlink: 2 };
       expect(row.policies, row.name).toBe(policyCounts[row.name] ?? 1);
     }
   });

@@ -97,3 +97,18 @@ export async function readLocalAsset(
       reject(request.error ?? new Error(knowledgeT('unableToReadLocalAsset')));
   }, 'readonly');
 }
+
+/** Remove bytes owned by one deleted browser knowledge base, preserving all other bases. */
+export async function removeLocalKnowledgeBaseAssets(knowledgeBaseId: string): Promise<void> {
+  const prefix = `${knowledgeBaseId}:`;
+  await transact<void>((store, resolve, reject) => {
+    const request = store.openKeyCursor(IDBKeyRange.bound(prefix, `${prefix}\uffff`));
+    request.onsuccess = () => {
+      const cursor = request.result;
+      if (!cursor) { resolve(); return; }
+      store.delete(cursor.primaryKey);
+      cursor.continue();
+    };
+    request.onerror = () => reject(request.error ?? new Error(knowledgeT('unableToStoreLocalAssets')));
+  }, 'readwrite');
+}

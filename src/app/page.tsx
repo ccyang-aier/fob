@@ -1,6 +1,6 @@
 import { WorkbenchShell } from "@/shell/workbench-shell"
-import { ProjectResourceProvider } from "@/features/project/project-resources"
+import { KnowledgeBaseProvider } from "@/features/knowledge/data/knowledge-base-resources"
 
 export default function Home() {
-  return <ProjectResourceProvider><WorkbenchShell /></ProjectResourceProvider>
+  return <KnowledgeBaseProvider><WorkbenchShell /></KnowledgeBaseProvider>
 }

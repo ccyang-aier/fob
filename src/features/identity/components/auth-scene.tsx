@@ -12,33 +12,9 @@ import { messages } from './i18n/auth-scene.messages';
 
 import type { ReactNode } from 'react';
 import { MotionConfig, motion } from 'motion/react';
+import { FobMark } from '@/components/fob-mark';
 
 const easeOutSoft = [0.22, 1, 0.36, 1] as const;
-
-function FobMark({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden focusable="false">
-      <rect x="3" y="3" width="26" height="26" rx="9" fill="var(--accent)" />
-      <rect x="3" y="3" width="26" height="26" rx="9" fill="url(#fobAuthMarkSheen)" />
-      <circle cx="16" cy="16" r="5.5" fill="var(--panel)" />
-      <circle cx="16" cy="16" r="2.2" fill="var(--accent)" />
-      <defs>
-        <linearGradient
-          id="fobAuthMarkSheen"
-          x1="4"
-          y1="3"
-          x2="28"
-          y2="30"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#ffffff" stopOpacity="0.28" />
-          <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.04" />
-          <stop offset="1" stopColor="#000000" stopOpacity="0.12" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
-}
 
 export function AuthBrandLockup() {
   const uiText = useTranslation(messages).t;
@@ -49,7 +25,7 @@ export function AuthBrandLockup() {
         <span className="text-[17px] font-semibold tracking-[-0.01em] text-[var(--ink)]">Fob</span>
       </div>
       <p className="text-[12px] text-[var(--muted-strong)]">
-        {uiText('人机协同的 AI Agent 工作台')}
+        {uiText('knowledgeTagline')}
       </p>
     </div>
   );

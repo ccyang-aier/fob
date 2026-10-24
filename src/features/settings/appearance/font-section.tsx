@@ -4,14 +4,13 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/font-section.messages';
 
 /**
- * 字体分区：界面 / 代码 / 对话三个作用域，各自独立选择字体族与基准字号。
+ * 产品字体分区：界面与代码；文档排版在文档自己的个性化设置中管理。
  * 行内示例以当前选择实时渲染（字体族 + 字号），所见即所得。
  */
 
 import { CaretDown, Check, Minus, Plus } from '@phosphor-icons/react';
 
 import {
-  getChatFontOptions,
   getCodeFontOptions,
   FONT_SIZE_RANGES,
   getUiFontOptions,
@@ -46,7 +45,7 @@ export function FontSection({
           size={prefs.uiFontSize}
           range={FONT_SIZE_RANGES.ui}
           onSize={(uiFontSize) => onChange({ uiFontSize })}
-          sample={uiText('Fob 工作台 · 与 Agent 在同一条工作流中协作')}
+          sample={uiText('interfaceSample')}
         />
         <FontRow
           label={uiText('代码字体')}
@@ -56,20 +55,11 @@ export function FontSection({
           size={prefs.codeFontSize}
           range={FONT_SIZE_RANGES.code}
           onSize={(codeFontSize) => onChange({ codeFontSize })}
-          sample={'const plan = await fob.spawn("nova", { mode: "deep" })'}
+          sample={'const page = await knowledge.readPage("research")'}
           mono
         />
-        <FontRow
-          label={uiText('对话字体')}
-          options={getChatFontOptions(locale)}
-          selected={prefs.chatFont}
-          onSelect={(chatFont) => onChange({ chatFont })}
-          size={prefs.chatFontSize}
-          range={FONT_SIZE_RANGES.chat}
-          onSize={(chatFontSize) => onChange({ chatFontSize })}
-          sample={uiText('好的，我先把需求拆解为任务清单，再逐项推进并汇报进度。')}
-        />
       </div>
+      <p className="mt-3 text-[12px] leading-relaxed text-[var(--muted-strong)]">{uiText('documentAppearanceHint')}</p>
     </SettingsSection>
   );
 }

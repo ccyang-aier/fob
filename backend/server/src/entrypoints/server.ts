@@ -10,7 +10,6 @@ import { createFobAuth, createFobAuthRoutes, createSmtpAuthEmailTransport } from
 import { createKnowledgeRequestAuthenticator } from '../modules/knowledge/access';
 import { createVerificationEmailTransport } from '../platform/identity/email';
 import { createKnowledgeOrganizationRoutes, createKnowledgeOrganizationService } from '../modules/knowledge/organization';
-import { createProjectRoutes, createProjectService } from '../modules/projects';
 import { createKnowledgeCatalogRoutes, createKnowledgeCatalogService } from '../modules/knowledge/organization';
 import { teamspacePermissionInvalidator } from '../modules/knowledge/permissions/fence';
 import { createKnowledgeApiRoutes, createKnowledgePatRoutes } from '../modules/knowledge/api';
@@ -75,7 +74,6 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   const socketTickets = createFobSocketTickets();
   app.route('/', createFobAuthRoutes(auth, (context) => context.env.clientAddress as string, socketTickets));
   app.route('/', createKnowledgeOrganizationRoutes(auth, createKnowledgeOrganizationService(pool)));
-  app.route('/', createProjectRoutes(auth, createProjectService(pool)));
   app.route('/', createKnowledgeCatalogRoutes(auth, createKnowledgeCatalogService(pool, { permissions: teamspacePermissionInvalidator })));
   app.route('/', createKnowledgeApiRoutes({ auth, pool }));
   app.route('/', createKnowledgePatRoutes({ auth, pool }));

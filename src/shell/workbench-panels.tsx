@@ -2,30 +2,28 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import { KnowledgePage } from '@/features/knowledge/knowledge-page';
-import { ProjectMembersPage } from '@/features/project/members/members-page';
-import { ProjectSelectionEmpty } from '@/features/project/project-workspace-pages';
-import { useProjectResources } from '@/features/project/project-resources';
+import { KnowledgeNavigationScope } from '@/features/knowledge/navigation/system-navigation';
+import { KnowledgeMembersPage } from '@/features/knowledge/organization/knowledge-members-page';
+import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
 import { PageVisibility } from '@/lib/page-visibility';
 import { PageSessionNamespace } from '@/lib/page-session-state';
 import { usePageScrollRestoration } from '@/lib/use-page-scroll-restoration';
-import type { WorkbenchView } from './workbench-view';
 import { workbenchPanelId, workbenchTabId, type WorkbenchTab } from './workbench-tabs';
 import styles from './workbench-shell.module.css';
 
-export function WorkbenchPanels({ tabs, active, onNavigate }: {
+export function WorkbenchPanels({ tabs, active, navigationOwner = active, onActivateNavigation }: {
   tabs: WorkbenchTab[]; active: string;
-  onNavigate: (view: WorkbenchView) => void;
+  navigationOwner?: string;
+  onActivateNavigation?: (key: string) => void;
 }) {
-  const { selectedProject, scopeKey } = useProjectResources();
+  const { scopeKey } = useKnowledgeBaseResources();
   // Tab order must not move live editor/iframe hosts in the document.
   return tabs.toSorted((a, b) => a.instance - b.instance).map(tab => {
     const visible = tab.key === active;
     // Keep actual DOM/editors mounted: hiding must not destroy collaboration or undo.
-    return <PageSessionNamespace key={`${scopeKey}:${tab.instance}:${tab.revision ?? 0}`} name={`page:${tab.instance}`}><WorkbenchPanel tab={tab} visible={visible}>
-        {!selectedProject || !scopeKey ? <ProjectSelectionEmpty />
-          : tab.view === 'members' ? <ProjectMembersPage />
-          : <KnowledgePage onOpenSettings={() => onNavigate('settings')} />}
-    </WorkbenchPanel></PageSessionNamespace>;
+    return <PageSessionNamespace key={`${scopeKey}:${tab.instance}:${tab.revision ?? 0}`} name={`page:${tab.instance}`}><KnowledgeNavigationScope selected={tab.key === navigationOwner} visible={visible} activate={() => onActivateNavigation?.(tab.key)}><WorkbenchPanel tab={tab} visible={visible}>
+        {tab.view === 'members' ? <KnowledgeMembersPage /> : <KnowledgePage />}
+    </WorkbenchPanel></KnowledgeNavigationScope></PageSessionNamespace>;
   });
 }
 

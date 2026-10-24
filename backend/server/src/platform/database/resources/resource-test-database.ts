@@ -64,7 +64,7 @@ export async function seedResourceTestData(admin: Pool) {
   // The same page/group/etc. UUIDs intentionally occur in both resources. Only the
   // composite knowledgeBase key may distinguish them in joins and foreign keys.
   const ids = {
-    knowledgeBase: randomUUID(), project: randomUUID(), teamspace: randomUUID(), group: randomUUID(), page: randomUUID(), database: randomUUID(), row: randomUUID(),
+    knowledgeBase: randomUUID(), teamspace: randomUUID(), group: randomUUID(), page: randomUUID(), database: randomUUID(), row: randomUUID(),
     checkpoint: randomUUID(), thread: randomUUID(), comment: randomUUID(), task: randomUUID(), usage: randomUUID(),
     notification: randomUUID(), outbox: randomUUID(), pat: randomUUID(), share: randomUUID(), credential: randomUUID(),
   };
@@ -80,12 +80,8 @@ export async function seedResourceTestData(admin: Pool) {
       const { knowledgeBaseId, userId, name } = resource;
       const principal = `user:${userId}` as const;
       await db.insert(authUser).values({ id: userId, name, email: `${userId}@resource.test` });
-      const projectId = randomUUID();
-      await db.insert(tables.project).values({ id: projectId, name, createdBy: userId });
-      await db.insert(tables.projectMember).values({ projectId, userId, role: 'owner' });
       await db.insert(tables.knowledgeBase).values({ id: knowledgeBaseId, name });
       await db.insert(tables.member).values({ knowledgeBaseId, userId, role: 'owner' });
-      await db.insert(tables.knowledgeBaseProject).values({ knowledgeBaseId, projectId });
       await db.insert(tables.knowledgeBaseInvitation).values({
         knowledgeBaseId, id: randomUUID(), email: 'invitee@resource.test', role: 'member', tokenHash: 'd'.repeat(64),
         invitedBy: userId, expiresAt: new Date(Date.now() + 86_400_000),

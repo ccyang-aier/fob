@@ -1,9 +1,9 @@
 # Fob · Fusion One Book
 
-独立的 Web 知识库与协作平台。从 Fouc 复制知识库、编辑器、身份、项目管理、主题设置、布局与小精灵实现；拥有自己的仓库、依赖安装、账号、数据库、存储、开发服务和部署。
+独立的 Web 知识库与协作平台。从 Fouc 复制知识库、编辑器、身份、切换器设计、主题设置、布局与小精灵实现；拥有自己的仓库、依赖安装、账号、数据库、存储、开发服务和部署。
 
 - [产品边界与完整拆分方案](docs/architecture/fob-product-boundaries.md)
-- [实施进度与验证记录](.spec/tasks/fob-extraction.md)
+- [实施进度与验证记录](.spec/tasks/fob-navigation-consolidation.md)
 - [前端开发规则](AI_FRONTEND_RULES.md)
 
 ## 本机开发
@@ -30,7 +30,7 @@ pnpm dev:all
 | S3 / 管理台 | 主机端口 `59010` / `59011`，独立 bucket |
 | Python 媒体服务（单独启动） | `http://127.0.0.1:8920` |
 
-开发服务日志位于 `.runtime/dev/`。`FOB_DEV_WORKER=1` 启动作业消费者；完整媒体解析仍需单独启动 Python 服务，真实 AI 功能仍需配置模型。访客可创建浏览器本机项目及知识库；新产品初始不包含 Fouc 用户账号或知识内容。
+开发服务日志位于 `.runtime/dev/`。`FOB_DEV_WORKER=1` 启动作业消费者；完整媒体解析仍需单独启动 Python 服务，真实 AI 功能仍需配置模型。访客可直接创建浏览器本地知识库；新产品初始不包含 Fouc 用户账号或知识内容。
 
 媒体服务在 `services/media-worker` 中建立自己的 `.venv`，安装该目录 `requirements.txt`（运行）或 `requirements-dev.txt`（测试）后，从仓库根目录运行 `pnpm media:dev`。启动适配只传递媒体配置，复用当前 Fob 的 token 与 S3 origin，不把数据库或模型密钥传入媒体子进程；Windows 的 WSL 存储地址也随当前配置使用。
 
@@ -42,17 +42,16 @@ pnpm dev:all
 src/                       Next.js Web 前端、原布局与基础交互
   features/knowledge/      完整知识库与编辑器
   features/identity/       账号与认证交互
-  features/project/        项目切换、目录与成员界面
   features/settings/       通用、外观、语言与关于
   features/companion/      原小精灵完整实现
   shell/                   导航、顶栏、页签与圆角主容器
 backend/server/            TypeScript/Bun 业务服务、协作、MCP 与作业入口
-shared/                    纯文档语义、协议、项目与资源契约
+shared/                    纯文档语义、协议、知识与资源契约
 services/media-worker/     Python 多模态处理服务
 scripts/                   独立启动、部署初始化与完整性校验
 ```
 
-Fob 没有 Tauri、设备 sidecar 或对 `../fouc` 的源码/依赖链接。两个产品的项目与账号独立；仍沿用 `projectId` 和 `knowledgeBaseId` 资源模型，不新增重复的工作空间实体。项目成员目录保留当前预览实现，服务端项目成员接口独立保留。
+Fob 没有 Tauri、设备 sidecar 或对 `../fouc` 的源码/依赖链接。知识库目录直接作为唯一系统侧栏，正文不再嵌套产品导航；顶部切换器直接选择和管理知识库，库成员和全局偏好位于侧栏底部。一个知识库就是一个工作空间，只使用 `knowledgeBaseId`，不存在额外项目或项目关联。成员页面使用当前知识库的真实成员、分组和权限；本地库明确为浏览器个人资源。
 
 ## 检查与构建
 
@@ -67,7 +66,7 @@ pnpm build
 pnpm server:build
 ```
 
-`architecture:verify` 检查 886 个知识库/小精灵基线文件、已记录的精确 Web 适配，以及无桌面/兄弟产品运行依赖。`.spec/source-baseline.json` 的来源提交仅用于溯源；运行校验不需要 Fouc 仓库。后续正式演进知识库时，应审阅并更新对应适配摘要与哈希，不能删除完整性保护来绕过检查。
+`architecture:verify` 检查 886 个知识库/小精灵基线文件、已记录的精确产品适配及明确删除记录，以及无桌面/兄弟产品运行依赖。`.spec/source-baseline.json` 的来源提交仅用于溯源；运行校验不需要 Fouc 仓库。后续正式演进知识库时，应审阅并更新对应适配摘要与哈希，不能删除完整性保护来绕过检查。
 
 领域测试可通过 `pnpm shared:test`、`pnpm knowledge:test`、`pnpm server:test`、`pnpm test:frontend` 执行；涉及数据库/对象存储的套件需要 Fob 自己的 `.env.fob.local`。原仓库菜单交互测试的已知失败与本次验证范围见任务记录，不能把完整矩阵记为全绿。
 

@@ -24,7 +24,7 @@ export type LocalDocument = {
   indexStatus?: DocumentIndexStatus;
 };
 export type LocalTag = { id: string; baseId: string; name: string; pageIds: string[] };
-export type LocalKnowledgeBase = { id: string; name: string; projectIds: string[] };
+export type LocalKnowledgeBase = { id: string; name: string };
 export type LocalLibrary = {
   bases: LocalKnowledgeBase[];
   folders: { id: string; knowledgeBaseId: string; name: string }[];
@@ -41,9 +41,7 @@ export function createLocalLibraryStore(storage: Pick<Storage, 'getItem' | 'setI
   const stored = storage.getItem(key);
   if (stored) {
     const library = JSON.parse(stored) as LocalLibrary;
-    // Unscoped development content is cleared; it is never assigned to an invented project.
-    if (library.bases.every((base) => Array.isArray(base.projectIds))) snapshot = library;
-    else storage.setItem(key, JSON.stringify(emptyLocalLibrary));
+    snapshot = library;
   }
   const listeners = new Set<() => void>();
   return {
@@ -61,10 +59,6 @@ export function createLocalLibraryStore(storage: Pick<Storage, 'getItem' | 'setI
       for (const listener of listeners) listener();
     },
   };
-}
-
-export function localKnowledgeBasesForProject(library: LocalLibrary, projectId: string | null) {
-  return projectId ? library.bases.filter((base) => base.projectIds.includes(projectId)) : [];
 }
 
 export function newLocalDocument(baseId: string, title: string): LocalDocument {

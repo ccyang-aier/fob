@@ -1,5 +1,16 @@
 import { expect, test } from 'bun:test';
-import { addWorkbenchTab, closeWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget } from './workbench-tabs';
+import { knowledgeScopedSearch, addWorkbenchTab, closeWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget } from './workbench-tabs';
+
+test('members entry and closing a library tab always retain one live knowledge navigation owner', () => {
+  let state = createWorkbenchTabs('scope', tabTarget('members'));
+  expect(state.active).toBe('members');
+  expect(state.tabs.some(tab => tab.view === 'knowledge')).toBe(true);
+  const knowledge = state.tabs.find(tab => tab.view === 'knowledge')!;
+  state = closeWorkbenchTab(state, knowledge.key);
+  expect(state.active).toBe('members');
+  expect(state.tabs.filter(tab => tab.view === 'knowledge').length).toBe(1);
+  expect(state.tabs.find(tab => tab.view === 'knowledge')?.instance).not.toBe(knowledge.instance);
+});
 
 test('knowledge routes retain resource links while settings remain an overlay', () => {
   const target = tabTarget('knowledge', '?view=settings&returnView=knowledge&section=general&kb=library&page=document');
@@ -50,9 +61,19 @@ test('pinning and ordering preserve editor identity and reload only changes its 
   expect(state.tabs[0].revision).toBe(1);
 });
 
-test('restoration rejects other account/project scopes and removed product routes', () => {
+test('restoration rejects other account/knowledge scopes and removed product routes', () => {
   const state = createWorkbenchTabs('account:server:project-a', tabTarget('knowledge'));
   expect(restoreWorkbenchTabs('account:server:project-b', state)).toBeNull();
   expect(restoreWorkbenchTabs(state.scope, { ...state, tabs: [{ ...state.tabs[0], view: 'tasks' }] })).toBeNull();
   expect(restoreWorkbenchTabs(state.scope, state)?.active).toBe('knowledge');
+});
+
+test('tab restoration and members navigation retain the top-selected knowledge workspace', () => {
+  const selected = '?knowledgeBase=base-a&source=local&document=doc-a';
+  expect(new URLSearchParams(knowledgeScopedSearch('', selected)).get('knowledgeBase')).toBe('base-a');
+  expect(new URLSearchParams(knowledgeScopedSearch('?view=members', selected)).get('source')).toBe('local');
+  const params = new URLSearchParams(knowledgeScopedSearch('?knowledgeBase=wrong&source=server&tab=tab%3A2', selected));
+  expect(params.get('knowledgeBase')).toBe('base-a');
+  expect(params.get('source')).toBe('local');
+  expect(params.get('tab')).toBe('tab:2');
 });

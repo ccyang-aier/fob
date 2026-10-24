@@ -1,8 +1,6 @@
 import { defineMessages } from '@/lib/i18n/messages';
 
 export const messages = defineMessages({
-  Agent: ['Agent', 'Agents'],
-  Skills: ['Skills', 'Skills'],
   偏好设置: ['偏好设置', 'Preferences'],
   设置: ['设置', 'Settings'],
   设置分区: ['设置分区', 'Settings sections'],

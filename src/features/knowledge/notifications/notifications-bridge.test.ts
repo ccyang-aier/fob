@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from 'bun:test';
-import { publishKnowledgeNotifications, readKnowledgeNotifications, resetKnowledgeNotificationsBridge, subscribeKnowledgeNotifications } from './notifications-bridge';
+import { createKnowledgeNotificationsPublisher, publishKnowledgeNotifications, readKnowledgeNotifications, resetKnowledgeNotificationsBridge, subscribeKnowledgeNotifications } from './notifications-bridge';
 import { notificationInboxKey, notificationUnreadCountKey } from './notifications-queries';
 import { knowledgeQueryKeys } from '../data/query-keys';
 import { invalidationSegmentsForEvent } from '../collaboration/knowledge-base-events';
@@ -55,6 +55,18 @@ describe('notifications bridge', () => {
     unsubscribe();
     publishKnowledgeNotifications(snapshot());
     expect(calls).toBe(0);
+  });
+
+  test('closing an old tab cannot clear the active tab notification snapshot', () => {
+    const oldTab = createKnowledgeNotificationsPublisher();
+    const activeTab = createKnowledgeNotificationsPublisher();
+    oldTab.publish(snapshot());
+    const active = snapshot({ knowledgeBaseId: '30000000-0000-4000-8000-000000000000', unreadCount: 3 });
+    activeTab.publish(active);
+    oldTab.clear();
+    expect(readKnowledgeNotifications()).toBe(active);
+    activeTab.clear();
+    expect(readKnowledgeNotifications()).toBeNull();
   });
 });
 

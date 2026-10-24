@@ -29,7 +29,7 @@
     "backend:typecheck": "pnpm server:typecheck",
     "backend:test": "pnpm server:test",
     "shared:typecheck": "tsc --noEmit -p shared/tsconfig.json",
-    "shared:test": "bun test --isolate ./shared/src/knowledge ./shared/src/projects",
+    "shared:test": "bun test --isolate ./shared/src/knowledge",
     "knowledge:test": "bun test --isolate ./shared/src/knowledge ./src/features/knowledge ./backend/server/src/modules/knowledge",
     "knowledge:verify": "node scripts/verify-extraction.mjs",
     "architecture:verify": "node scripts/verify-extraction.mjs",

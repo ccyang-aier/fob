@@ -3,16 +3,15 @@ import { defineMessages } from '@/lib/i18n';
 export const knowledgeMessages = defineMessages({
   notifications: ['通知', 'Notifications'],
   openAKnowledgeBaseToViewNotifications: [
-    '打开知识库后可查看通知',
-    'Open a knowledge base to view notifications',
+    '选择团队知识库后可查看通知',
+    'Select a team knowledge base to view notifications',
   ],
   valueUnreadNotifications: ['{v0} 条未读通知', '{v0} unread notifications'],
   oneUnreadNotification: ['{v0} 条未读通知', '{v0} unread notification'],
-  live: ['实时', 'Live'],
   loadingNotifications: ['正在加载通知…', 'Loading notifications…'],
-  notificationsAreUnavailableRetryingAutomatically: [
-    '通知暂时不可用，稍后自动重试',
-    'Notifications are unavailable. Retrying automatically.',
+  notificationsAreUnavailable: [
+    '通知暂时不可用，请稍后重试',
+    'Notifications are unavailable. Try again later.',
   ],
   noNotifications: ['暂无通知', 'No notifications'],
   commentRepliesAndMentionsAppearHereInReal: [

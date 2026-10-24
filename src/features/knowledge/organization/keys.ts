@@ -6,8 +6,6 @@
 
 export const organizationQueryKeys = {
   knowledgeBases: ['organization', 'knowledge-bases'] as const,
-  projectKnowledgeBases: (projectId: string | null, principal: string) => ['organization', 'knowledge-bases', 'project', projectId, principal] as const,
-  knowledgeBaseProjects: (knowledgeBaseId: string) => ['organization', knowledgeBaseId, 'projects'] as const,
   members: (knowledgeBaseId: string) => ['organization', knowledgeBaseId, 'members'] as const,
   groups: (knowledgeBaseId: string) => ['organization', knowledgeBaseId, 'groups'] as const,
   groupMembers: (knowledgeBaseId: string, groupId: string) => ['organization', knowledgeBaseId, 'groups', groupId, 'members'] as const,

@@ -3,12 +3,9 @@ import { entityIdSchema, paginationSchema, permissionLevelSchema, principalSchem
 
 const resourceNameSchema = z.string().trim().min(1).max(120);
 export const knowledgeBaseSchema = z.strictObject({ id: entityIdSchema, name: resourceNameSchema });
-const knowledgeBaseProjectIdsSchema = z.array(entityIdSchema).max(100).refine((ids) => new Set(ids).size === ids.length, { message: 'Project IDs must be unique' });
-export const createKnowledgeBaseInputSchema = knowledgeBaseSchema.pick({ name: true }).extend({ projectIds: knowledgeBaseProjectIdsSchema.default([]) });
+export const createKnowledgeBaseInputSchema = knowledgeBaseSchema.pick({ name: true });
 export const renameKnowledgeBaseInputSchema = knowledgeBaseScopeSchema.extend({ name: resourceNameSchema });
-export const listKnowledgeBasesInputSchema = paginationSchema.extend({ projectId: entityIdSchema.optional() });
-export const knowledgeBaseProjectScopeSchema = knowledgeBaseScopeSchema.extend({ projectIds: knowledgeBaseProjectIdsSchema });
-export const updateKnowledgeBaseProjectsInputSchema = knowledgeBaseProjectScopeSchema;
+export const listKnowledgeBasesInputSchema = paginationSchema;
 export const memberSchema = knowledgeBaseScopeSchema.extend({ userId: entityIdSchema, role: memberRoleSchema });
 export const groupSchema = knowledgeBaseScopeSchema.extend({ id: entityIdSchema, name: resourceNameSchema });
 export const groupMemberSchema = knowledgeBaseScopeSchema.extend({ groupId: entityIdSchema, userId: entityIdSchema });
@@ -58,7 +55,6 @@ export const sessionSummarySchema = z.strictObject({
   user: z.strictObject({ id: entityIdSchema, name: z.string(), email: z.email(), image: z.url().nullable() }), expiresAt: timestampSchema,
 });
 export type KnowledgeBase = z.infer<typeof knowledgeBaseSchema>;
-export type KnowledgeBaseProjectScope = z.infer<typeof knowledgeBaseProjectScopeSchema>;
 export type KnowledgeBaseMember = z.infer<typeof memberSchema>;
 export type KnowledgeBaseMemberSummary = z.infer<typeof knowledgeBaseMemberSummarySchema>;
 export type Group = z.infer<typeof groupSchema>;

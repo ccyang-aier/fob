@@ -15,22 +15,22 @@ function getExamples(locale: Locale) {
   const uiText = createTranslator(messages, locale);
   return [
     {
-      agent: 'Research',
-      task: uiText('梳理 AI 工作台竞品格局'),
-      steps: [uiText('检索公开资料'), uiText('交叉核对关键结论'), uiText('生成结构化报告')],
-      quote: [uiText('你定方向，'), uiText('剩下的路交给 Agent。')],
+      category: 'organize',
+      task: uiText('organizeTask'),
+      steps: [uiText('importResources'), uiText('organizeFolders'), uiText('connectDocuments')],
+      quote: [uiText('organizeQuoteFirst'), uiText('organizeQuoteSecond')],
     },
     {
-      agent: 'Writer',
-      task: uiText('起草产品发布说明'),
-      steps: [uiText('读取产品需求与变更'), uiText('撰写不同语气的草稿'), uiText('提交给你审阅')],
-      quote: [uiText('思考是你的，'), uiText('执行是它的。')],
+      category: 'collaborate',
+      task: uiText('collaborateTask'),
+      steps: [uiText('writeFindings'), uiText('discussComments'), uiText('retainHistory')],
+      quote: [uiText('collaborateQuoteFirst'), uiText('collaborateQuoteSecond')],
     },
     {
-      agent: 'Developer',
-      task: uiText('把想法变成可用的产品'),
-      steps: [uiText('理解需求与设计'), uiText('实现并验证交互'), uiText('交付可审阅的成果')],
-      quote: [uiText('从一个想法，'), uiText('到下一步行动。')],
+      category: 'find',
+      task: uiText('findTask'),
+      steps: [uiText('searchKnowledge'), uiText('readSources'), uiText('citePassages')],
+      quote: [uiText('findQuoteFirst'), uiText('findQuoteSecond')],
     },
   ] as const;
 }
@@ -56,11 +56,11 @@ export function AuthShowcase() {
         <div className={styles.brand}>
           <FobMark compact />
           <b>Fob</b>
-          <span>{uiText('AI工作台')}</span>
+          <span>{uiText('knowledgeCollaboration')}</span>
         </div>
         <div className={styles.example} key={exampleIndex}>
           <div className={styles.exampleHeader}>
-            <span>Agent · {uiText(example.agent)}</span>
+            <span>{uiText(example.category)}</span>
             <span className={styles.exampleLabel}>{uiText('协作示例')}</span>
           </div>
           <p className={styles.exampleTitle}>{example.task}</p>
@@ -96,7 +96,7 @@ export function AuthShowcase() {
         <div className={styles.showcaseFooter}>
           <span className={styles.pages} aria-hidden>
             {examples.map((item, index) => (
-              <i key={item.agent} data-active={index === exampleIndex} />
+              <i key={item.category} data-active={index === exampleIndex} />
             ))}
           </span>
           <span>0{exampleIndex + 1} / 03</span>

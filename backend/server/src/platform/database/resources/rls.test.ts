@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { getTableConfig } from 'drizzle-orm/pg-core';
-import { resourceTables, project, projectMember, knowledgeBase, knowledgeBaseProject } from './schema';
+import { resourceTables, knowledgeBase, member } from './schema';
 import { resourceRlsSql, resourcePoliciesForTable } from './rls';
 
 describe('resource RLS installation definition', () => {
@@ -18,21 +18,20 @@ describe('resource RLS installation definition', () => {
     expect(ddl).not.toContain('ALTER TABLE "auth"');
   });
 
-  test('projects use identity membership and do not depend on a knowledge-base selection', () => {
-    for (const table of [project, projectMember]) {
-      const policies = resourcePoliciesForTable(table);
-      expect(policies.some((policy) => policy.name === 'knowledge_base_scope')).toBe(false);
-      expect(JSON.stringify(policies)).not.toContain('app.knowledge_base_id');
-    }
+  test('every resource is directly knowledge-base scoped and the root uses its own ID', () => {
+    for (const table of resourceTables) expect(resourcePoliciesForTable(table).some((policy) => policy.name === 'knowledge_base_scope')).toBe(true);
     const root = resourcePoliciesForTable(knowledgeBase).find((policy) => policy.name === 'knowledge_base_scope')!;
     expect(root.using).toMatch(/^"id" =/);
   });
 
-  test('project scope visibility requires both project and library membership', () => {
-    const read = resourcePoliciesForTable(knowledgeBaseProject).find((policy) => policy.name === 'own_identity')!;
-    expect(read.command).toBe('SELECT');
-    expect(read.using).toContain('resources.project_member');
-    expect(read.using).toContain('resources.knowledge_base_member');
-    expect(read.using).toContain("app.auth_session_id");
+  test('catalog discovery uses verified identity and direct knowledge-base membership only', () => {
+    const root = resourcePoliciesForTable(knowledgeBase).find((policy) => policy.name === 'own_identity')!;
+    const membership = resourcePoliciesForTable(member).find((policy) => policy.name === 'own_identity')!;
+    expect(root.command).toBe('SELECT');
+    expect(root.using).toContain('resources.knowledge_base_member');
+    expect(root.using).toContain('auth.session');
+    expect(membership.using).toContain('"user_id" =');
+    expect(resourceRlsSql()).not.toContain('project');
+    expect(root.using).toContain("app.auth_session_id");
   });
 });

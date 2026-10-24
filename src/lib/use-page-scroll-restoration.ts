@@ -1,11 +1,11 @@
 'use client';
 
 import { useContext, useEffect, type RefObject } from 'react';
-import { PAGE_SESSION_FLUSH, ProjectUiSessionContext } from './page-session-state';
+import { PAGE_SESSION_FLUSH, KnowledgeUiSessionContext } from './page-session-state';
 
 /** Stable viewport keys survive asynchronous lists, editor mounts and hidden tabs. */
 export function usePageScrollRestoration(ref: RefObject<HTMLElement | null>) {
-  const session = useContext(ProjectUiSessionContext);
+  const session = useContext(KnowledgeUiSessionContext);
   useEffect(() => {
     const root = ref.current;
     if (!root || !session) return;

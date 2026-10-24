@@ -113,7 +113,7 @@ export function ExpandedPrimarySidebar({
   );
 
   return (
-    <aside
+    <nav
       aria-label={t('nav.primary')}
       aria-hidden={collapsed}
       inert={collapsed}
@@ -277,6 +277,6 @@ export function ExpandedPrimarySidebar({
           </SidebarCollapsibleContent>
         </section>
       </div>
-    </aside>
+    </nav>
   );
 }

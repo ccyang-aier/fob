@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react';
-import type { ProjectUiSession } from './project-ui-session';
+import type { KnowledgeUiSession } from './knowledge-ui-session';
 
-export const ProjectUiSessionContext = createContext<ProjectUiSession | null>(null);
+export const KnowledgeUiSessionContext = createContext<KnowledgeUiSession | null>(null);
 export const PAGE_SESSION_FLUSH = 'fob:page-session-flush';
 const PagePrefix = createContext('');
 
@@ -19,7 +19,7 @@ export function usePageScrollKey(key?: string) {
 
 /** React owns live state; IndexedDB uses structured cloning, including Files and Dates. */
 export function usePageSessionState<T>(key: string, initial: T | (() => T), options?: { preferInitial?: boolean }): [T, Dispatch<SetStateAction<T>>] {
-  const session = useContext(ProjectUiSessionContext);
+  const session = useContext(KnowledgeUiSessionContext);
   const prefix = useContext(PagePrefix);
   const storageKey = prefix + key;
   const [value, setValue] = useState<T>(() => {

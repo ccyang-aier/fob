@@ -1,10 +1,13 @@
 'use client';
 
+import { useKnowledgeNavigation, useKnowledgeNavigationActive } from '../navigation/system-navigation';
+
 import { formatDate, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-knowledge-resource.messages';
 /** Local storage is a resource capability, independent of account identity. */
 
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { updateDocumentNavigation } from '../navigation/document-navigation-location';
 import { usePageSessionState } from '@/lib/page-session-state';
 import { FilePlus } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
@@ -42,7 +45,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DotsThree } from '@phosphor-icons/react';
 import { currentDocumentLinkTarget } from '../editor/document-link';
-import type { KnowledgeBaseSummary } from '../knowledge-base-header';
 
 type View = 'all-documents' | 'starred' | 'drafts' | 'trash';
 type Store = ReturnType<typeof createLocalLibraryStore>;
@@ -50,52 +52,49 @@ type Store = ReturnType<typeof createLocalLibraryStore>;
 type LocalKnowledgeResourceProps = {
   store: Store;
   selectedKnowledgeBaseId: string | null;
-  knowledgeBases: readonly KnowledgeBaseSummary[];
-  onSelectKnowledgeBase: (id: string) => void;
   onCreateKnowledgeBase: () => void;
-  onOpenSettings: () => void;
 };
 
 export function LocalKnowledgeResource({
   store,
   selectedKnowledgeBaseId,
-  knowledgeBases,
-  onSelectKnowledgeBase: setBaseId,
   onCreateKnowledgeBase,
-  onOpenSettings,
 }: LocalKnowledgeResourceProps) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { expand: expandSidebar } = useKnowledgeNavigation();
+  const navigationActive = useKnowledgeNavigationActive();
 
   const library = useSyncExternalStore(store.subscribe, store.getSnapshot, () => emptyLocalLibrary);
   const { session, openSignIn } = useIdentity();
   const { t } = useI18n();
-  const visibleIds = useMemo(() => new Set(knowledgeBases.filter((item) => item.source === 'local').map((item) => item.id)), [knowledgeBases]);
-  const base = library.bases.find((item) => item.id === selectedKnowledgeBaseId && visibleIds.has(item.id));
+  const base = library.bases.find((item) => item.id === selectedKnowledgeBaseId);
   const knowledgeBaseId = base?.id ?? '';
   const [view, setView] = usePageSessionState<View>('view', 'all-documents');
   const [folderId, setFolderId] = usePageSessionState<string | null>('folder', null);
   const linkedPage = currentDocumentLinkTarget(knowledgeBaseId, 'local')?.pageId ?? null;
-  const [selectedId, setSelectedId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
-  const [collapsed, setCollapsed] = usePageSessionState('sidebar', false);
-  const [editorSidebarOpen, setEditorSidebarOpen] = usePageSessionState('editorSidebar', false);
+  const [selectedId, setStoredSelectedId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
+  const setSelectedId = useCallback((id: string | null) => {
+    setStoredSelectedId(id);
+    if (navigationActive) updateDocumentNavigation(id ? { knowledgeBaseId, pageId: id, source: 'local' } : null);
+  }, [setStoredSelectedId, navigationActive, knowledgeBaseId]);
   const [activeTagId, setActiveTagId] = usePageSessionState<string | null>('tag', null);
   const [creation, setCreation] = useState<'document' | 'folder' | null>(null);
   const { notify } = useAppAlert();
   useEffect(
     () =>
       subscribeOpenPageTarget((target) => {
+        if (!navigationActive) return;
+        if (target.knowledgeBaseId !== knowledgeBaseId) return;
         const page = store
           .getSnapshot()
           .documents.find(
             (item) =>
               item.baseId === target.knowledgeBaseId && item.id === target.pageId && !item.deleted,
           );
-        if (!page || !visibleIds.has(page.baseId)) return;
-        setBaseId(page.baseId);
+        if (!page) return;
         setSelectedId(page.id);
-        setEditorSidebarOpen(false);
       }),
-    [store, setBaseId, visibleIds, setSelectedId, setEditorSidebarOpen],
+    [store, setSelectedId, navigationActive, knowledgeBaseId],
   );
   const documents = library.documents.filter((item) => item.baseId === base?.id);
   const folders = library.folders.filter((folder) => folder.knowledgeBaseId === base?.id);
@@ -141,7 +140,6 @@ export function LocalKnowledgeResource({
   }
   function openDocument(id: string) {
     setSelectedId(id);
-    setEditorSidebarOpen(false);
   }
   function toggleDocumentTag(tagId: string, documentId: string) {
     write((current) => ({
@@ -183,7 +181,7 @@ export function LocalKnowledgeResource({
           folderName,
           onChange,
           onBack: onClose,
-          onOpenSidebar: () => setEditorSidebarOpen(true),
+          onOpenSidebar: expandSidebar,
           onCreateDocument: () => setCreation('document'),
         };
         return document.file ||
@@ -205,23 +203,8 @@ export function LocalKnowledgeResource({
       }}
       navigationScope={`local:${knowledgeBaseId}:${base?.id ?? 'none'}`}
       documentOpen={Boolean(selected)}
-      sidebarOpen={Boolean(selected) && editorSidebarOpen}
-      onCloseSidebar={() => setEditorSidebarOpen(false)}
       sidebar={
         <PageTreeSidebar
-          collapsed={selected ? false : collapsed}
-          onCollapse={() => (selected ? setEditorSidebarOpen(false) : setCollapsed(true))}
-          knowledgeBases={knowledgeBases}
-          activeKnowledgeBaseId={base?.id ?? null}
-          onSelectKnowledgeBase={(id) => {
-            setBaseId(id);
-            setSelectedId(null);
-            setFolderId(null);
-            setActiveTagId(null);
-            setView('all-documents');
-          }}
-          onCreateKnowledgeBase={onCreateKnowledgeBase}
-          onOpenSettings={onOpenSettings}
           treeArea={
             <LocalLibraryNavigation
               hasKnowledgeBase={Boolean(base)}
@@ -307,7 +290,6 @@ export function LocalKnowledgeResource({
           }
         />
       }
-      onExpandSidebar={collapsed ? () => setCollapsed(false) : undefined}
       overlays={
         <LocalCreationDialog
           kind={creation}
@@ -365,7 +347,7 @@ export function LocalKnowledgeResource({
             folderName={selectedFolderName}
             onChange={(patch) => updateDocument(selected.id, patch)}
             onBack={() => setSelectedId(null)}
-            onOpenSidebar={() => setEditorSidebarOpen(true)}
+            onOpenSidebar={expandSidebar}
             onCreateDocument={() => setCreation('document')}
             attach={(setFile) => (
               <LocalDocumentImport
@@ -387,14 +369,13 @@ export function LocalKnowledgeResource({
             onBack={() => {
               setSelectedId(null);
             }}
-            onOpenSidebar={() => setEditorSidebarOpen(true)}
+            onOpenSidebar={expandSidebar}
             onCreateDocument={() => setCreation('document')}
           />
         )
       ) : view === 'all-documents' ? (
         <DocumentsPage
           key={`${base.id}:${folderId ?? activeTagId ?? 'all'}`}
-          onExpandSidebar={collapsed ? () => setCollapsed(false) : undefined}
           documents={listed.map((item) => ({
             id: item.id,
             title: item.title,

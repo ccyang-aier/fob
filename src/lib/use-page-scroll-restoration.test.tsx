@@ -3,8 +3,8 @@ import { Window } from 'happy-dom';
 import { indexedDB } from 'fake-indexeddb';
 import { act, useRef } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { ProjectUiSession } from './project-ui-session';
-import { PAGE_SESSION_FLUSH, PageSessionNamespace, ProjectUiSessionContext, usePageScrollKey } from './page-session-state';
+import { KnowledgeUiSession } from './knowledge-ui-session';
+import { PAGE_SESSION_FLUSH, PageSessionNamespace, KnowledgeUiSessionContext, usePageScrollKey } from './page-session-state';
 import { usePageScrollRestoration } from './use-page-scroll-restoration';
 
 let browser: Window, root: Root, host: HTMLElement, viewport: HTMLDivElement;
@@ -36,9 +36,9 @@ afterAll(async () => { await act(async () => root.unmount()); await browser.happ
 async function mount(scope: string) {
   await act(async () => root.render(null));
   contentHeight = 100;
-  const session = new ProjectUiSession(scope); await session.loaded;
+  const session = new KnowledgeUiSession(scope); await session.loaded;
   session.set('page:5:scroll:list', { top: 180, left: 0 }, null);
-  await act(async () => root.render(<ProjectUiSessionContext value={session}><PageSessionNamespace name="page:5"><Page /></PageSessionNamespace></ProjectUiSessionContext>));
+  await act(async () => root.render(<KnowledgeUiSessionContext value={session}><PageSessionNamespace name="page:5"><Page /></PageSessionNamespace></KnowledgeUiSessionContext>));
   return session;
 }
 
@@ -51,7 +51,7 @@ test('scroll restoration waits for asynchronous content and saves the actual fin
   viewport.scrollTop = 310;
   viewport.dispatchEvent(new Event('scroll'));
   browser.dispatchEvent(new browser.Event('pagehide'));
-  const reopened = new ProjectUiSession(session.scope); await reopened.loaded;
+  const reopened = new KnowledgeUiSession(session.scope); await reopened.loaded;
   expect(reopened.get('page:5:scroll:list', null)).toEqual({ top: 310, left: 0 });
 });
 

@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { describe, expect, test } from 'bun:test';
 import type { Pool } from 'pg';
-import { ResourceTransactionAbortedError, withFobIdentity, withKnowledgeBase, withProject } from './transaction';
+import { ResourceTransactionAbortedError, withFobIdentity, withKnowledgeBase } from './transaction';
 
 const knowledgeBaseId = '11223344-5566-4788-99aa-bbccddeeff00';
 
@@ -34,8 +34,8 @@ describe('request resource transaction lifecycle', () => {
   test('scope is a parameterized local setting on the borrowed connection', async () => {
     const testConnection = connection(async (command) => ({ command }));
     expect(await withKnowledgeBase(testConnection.pool, knowledgeBaseId, async () => 'committed')).toBe('committed');
-    expect(testConnection.commands).toEqual(['BEGIN', "SELECT set_config('app.knowledge_base_id', $1, true), set_config('app.project_id', $2, true), set_config('app.auth_session_id', $3, true), set_config('app.read_knowledge_base_id', '', true)", 'COMMIT']);
-    expect(testConnection.parameters[1]).toEqual([knowledgeBaseId, '', '']);
+    expect(testConnection.commands).toEqual(['BEGIN', "SELECT set_config('app.knowledge_base_id', $1, true), set_config('app.auth_session_id', $2, true), set_config('app.read_knowledge_base_id', '', true)", 'COMMIT']);
+    expect(testConnection.parameters[1]).toEqual([knowledgeBaseId, '']);
     expect(testConnection.releases).toEqual([false]);
     expect(testConnection.client.listenerCount('error')).toBe(0);
   });
@@ -44,18 +44,8 @@ describe('request resource transaction lifecycle', () => {
     const testConnection = connection(async (command) => ({ command: command === 'BEGIN READ ONLY' ? 'BEGIN' : command }));
     await withFobIdentity(testConnection.pool, knowledgeBaseId, async () => undefined);
     expect(testConnection.commands[0]).toBe('BEGIN READ ONLY');
-    expect(testConnection.parameters[1]).toEqual(['', '', knowledgeBaseId]);
+    expect(testConnection.parameters[1]).toEqual(['', knowledgeBaseId]);
     await expect(withFobIdentity(testConnection.pool, 'bad-session', async () => undefined)).rejects.toThrow('Invalid session ID');
-    expect(testConnection.checkouts()).toBe(1);
-  });
-
-  test('project writes bind the project and verified identity while clearing knowledge-base scope', async () => {
-    const testConnection = connection(async (command) => ({ command }));
-    await withProject(testConnection.pool, knowledgeBaseId, knowledgeBaseId, async () => undefined);
-    expect(testConnection.commands[0]).toBe('BEGIN');
-    expect(testConnection.parameters[1]).toEqual(['', knowledgeBaseId, knowledgeBaseId]);
-    expect(testConnection.releases).toEqual([false]);
-    await expect(withProject(testConnection.pool, knowledgeBaseId, 'invalid-session', async () => undefined)).rejects.toThrow('Invalid session ID');
     expect(testConnection.checkouts()).toBe(1);
   });
 

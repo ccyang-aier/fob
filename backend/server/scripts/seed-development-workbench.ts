@@ -5,7 +5,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import { generateDrizzleJson, generateMigration } from 'drizzle-kit/api';
-import { createDevelopmentKnowledgeBases, developmentId } from '@fob/shared/development-workbench';
+import { createDevelopmentKnowledgeBases } from '@fob/shared/development-workbench';
 import { repairBlockIds } from '@fob/shared/knowledge/schema';
 import { readFobDatabaseConnections, fobDatabaseErrorMessage } from '../src/platform/database/initialize-config';
 import { assertFobApplicationRole } from '../src/platform/database/initialize-role';
@@ -47,13 +47,9 @@ export async function seedDevelopmentWorkbench() {
     if (!adminUser) throw new Error(`Create the built-in admin account before seeding development knowledgeBases: ${adminEmail}`);
     const fixtures = createDevelopmentKnowledgeBases();
     const schema = markdownSchema();
-    const projectId = developmentId(0x50000000, 1);
-    await db.insert(tables.project).values({ id: projectId, name: 'Fob 知识工作台', createdBy: adminUser.id });
-    await db.insert(tables.projectMember).values({ projectId, userId: adminUser.id, role: 'owner' });
     for (const base of fixtures) {
       await db.insert(tables.knowledgeBase).values({ id: base.id, name: base.name });
       await db.insert(tables.member).values({ knowledgeBaseId: base.id, userId: adminUser.id, role: 'owner' });
-      await db.insert(tables.knowledgeBaseProject).values({ knowledgeBaseId: base.id, projectId });
       if (base.folders.length) await db.insert(tables.teamspace).values(base.folders.map((folder) => ({ ...folder, defaultAccess: 'edit' as const })));
       for (const [position, document] of base.documents.entries()) {
         const scope = { knowledgeBaseId: base.id, pageId: document.id };

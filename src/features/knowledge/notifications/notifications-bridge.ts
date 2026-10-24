@@ -28,12 +28,32 @@ export interface KnowledgeNotificationsBridgeSnapshot {
 type Listener = () => void;
 
 let current: KnowledgeNotificationsBridgeSnapshot | null = null;
+let currentOwner: symbol | null = null;
 const listeners = new Set<Listener>();
 
 /** Replaces the snapshot; a stable reference between publishes keeps `useSyncExternalStore` calm. */
 export function publishKnowledgeNotifications(snapshot: KnowledgeNotificationsBridgeSnapshot | null): void {
+  currentOwner = null;
   current = snapshot;
   for (const listener of listeners) listener();
+}
+
+/** A hidden/unmounting tab can retract only the state it actually published. */
+export function createKnowledgeNotificationsPublisher() {
+  const owner = Symbol('knowledge-notifications');
+  return {
+    publish(snapshot: KnowledgeNotificationsBridgeSnapshot) {
+      currentOwner = owner;
+      current = snapshot;
+      for (const listener of listeners) listener();
+    },
+    clear() {
+      if (currentOwner !== owner) return;
+      currentOwner = null;
+      current = null;
+      for (const listener of listeners) listener();
+    },
+  };
 }
 
 export function readKnowledgeNotifications(): KnowledgeNotificationsBridgeSnapshot | null {

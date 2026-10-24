@@ -14,32 +14,15 @@ const verifiedIdentityUser = `(SELECT s.user_id FROM auth.session s
     AND s.expires_at > clock_timestamp() AND u.email_verified IS TRUE)`;
 
 export interface ResourceRlsPolicy {
-  name: 'knowledge_base_scope' | 'project_scope' | 'own_identity' | 'reference_read' | 'backlink_target';
+  name: 'knowledge_base_scope' | 'own_identity' | 'reference_read' | 'backlink_target';
   command: 'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
   using?: string;
   check?: string;
 }
 
-/** Knowledge-base data has a real resource scope; project access uses its own membership. */
+/** Every business resource belongs directly to one knowledge base. */
 export function resourcePoliciesForTable(table: PgTable): ResourceRlsPolicy[] {
   const config = getTableConfig(table);
-  if (config.name === 'project' || config.name === 'project_member') {
-    const projectId = `(SELECT NULLIF(current_setting('app.project_id', true), '')::uuid)`;
-    const predicate = `${config.name === 'project' ? '"id"' : '"project_id"'} = ${projectId}`;
-    const visible = config.name === 'project'
-      ? `EXISTS (SELECT 1 FROM resources.project_member m WHERE m.project_id = project.id AND m.user_id = ${verifiedIdentityUser})`
-      : `"user_id" = ${verifiedIdentityUser}`;
-    return [
-      { name: 'project_scope', command: 'ALL', using: predicate, check: predicate },
-      { name: 'own_identity', command: 'SELECT', using: visible },
-    ];
-  }
-  if (config.name === 'knowledge_base_project') {
-    return [
-      { name: 'knowledge_base_scope', command: 'ALL', using: knowledgeBasePredicate, check: knowledgeBasePredicate },
-      { name: 'own_identity', command: 'SELECT', using: `EXISTS (SELECT 1 FROM resources.project_member pm WHERE pm.project_id = knowledge_base_project.project_id AND pm.user_id = ${verifiedIdentityUser}) AND EXISTS (SELECT 1 FROM resources.knowledge_base_member km WHERE km.knowledge_base_id = knowledge_base_project.knowledge_base_id AND km.user_id = ${verifiedIdentityUser})` },
-    ];
-  }
   const predicate = config.name === 'knowledge_base' ? `"id" = ${currentKnowledgeBase}` : knowledgeBasePredicate;
   const readPredicate = `${config.name === 'knowledge_base' ? '"id"' : '"knowledge_base_id"'} = ${readKnowledgeBase}`;
   const policies: ResourceRlsPolicy[] = [{ name: 'knowledge_base_scope', command: 'ALL', using: predicate, check: predicate }];

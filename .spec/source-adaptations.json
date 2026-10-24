@@ -1,6 +1,174 @@
 {
+  "src/features/knowledge/assets/local-assets.ts": {
+    "reason": "Add scoped local library asset cleanup used by explicit confirmed whole-library deletion; other libraries retain their attachment bytes.",
+    "sha256": "d9db8015940443cea58e5697db126db8accca88a450b7239a720e5cee71d83a7"
+  },
+  "src/features/knowledge/data/catalog-queries.ts": {
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
+    "sha256": "1a04ccb1dd7aa10f1f691a3748ccd95583a408a335f25dd3964da489a894085f"
+  },
   "src/features/knowledge/data/endpoint.test.ts": {
     "reason": "Web-only API endpoint contract: remove desktop IPC test cases, use isolated Fob port 8721, and retain configured-origin/production-failure/scope validation tests.",
     "sha256": "ff5e30ee40f9407a461bd3bab7ad8370deaa5c10cae1ad3a5e2847f3491a4de4"
+  },
+  "src/features/knowledge/data/knowledge-catalog-client.ts": {
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
+    "sha256": "13a0d0ff62fad2ff9c5bb09f8af7d575390efe7c353f837644a0a0bea7a140c6"
+  },
+  "src/features/knowledge/data/use-project-knowledge-directory.test.tsx": {
+    "reason": "Delete project-dependent directory hook/tests; the canonical knowledge-base resource provider owns the membership-only directory and source-qualified selection.",
+    "deleted": true
+  },
+  "src/features/knowledge/data/use-project-knowledge-directory.ts": {
+    "reason": "Delete project-dependent directory hook/tests; the canonical knowledge-base resource provider owns the membership-only directory and source-qualified selection.",
+    "deleted": true
+  },
+  "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.tsx": {
+    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
+    "sha256": "e52073bd87588e1742b0445d35800bd160b3ca5c8582edec4a661af81c9f364a"
+  },
+  "src/features/knowledge/editor/editor-surface.tsx": {
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
+    "sha256": "298a3744c637c2ddc631ea0cb32e57885f83cc285aee8b8bcda598ecbc72a71e"
+  },
+  "src/features/knowledge/knowledge-base-header.messages.ts": {
+    "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
+    "deleted": true
+  },
+  "src/features/knowledge/knowledge-base-header.tsx": {
+    "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
+    "deleted": true
+  },
+  "src/features/knowledge/knowledge-page.messages.ts": {
+    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
+    "sha256": "5bd0b497b33b100e482be4584162518c1239af19b0af7a61aac477a0d70a1664"
+  },
+  "src/features/knowledge/knowledge-page.tsx": {
+    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
+    "sha256": "d148dedefc981f7578aa86da23bedd18b3d7ef286e8410f1e61ae2fb9cb4d083"
+  },
+  "src/features/knowledge/knowledge-workbench.module.css": {
+    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
+    "deleted": true
+  },
+  "src/features/knowledge/knowledge-workbench.tsx": {
+    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
+    "sha256": "48b1dca4616e6a958d7df3e28a963b1916de4b3d52108431c6cf363b7da89ac1"
+  },
+  "src/features/knowledge/local/local-document-editor.instance.test.tsx": {
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
+    "sha256": "ddf0a2c198033c66702e1570e24879aeb9222c094744460c75853140625628ab"
+  },
+  "src/features/knowledge/local/local-document-editor.tsx": {
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
+    "sha256": "15bb1cca6de4ec7616d4572a076d5444fe9d64d82343d6e85d20c1b155e503b7"
+  },
+  "src/features/knowledge/local/local-knowledge-resource.tsx": {
+    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
+    "sha256": "04726aea5ea3c984a02d40787af6b65238b08dd9f331f160107840aa58827db9"
+  },
+  "src/features/knowledge/local/local-library.test.ts": {
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
+    "sha256": "49f5a092c2917e3679f7d2fd4196bda08a1b1b3def57f958f92c1325d874168b"
+  },
+  "src/features/knowledge/local/local-library.ts": {
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
+    "sha256": "a861f538eac4bf2acbf1085a1ca13221bd1a1b08f6c31935cae6ed37219f201f"
+  },
+  "src/features/knowledge/navigation/knowledge-sidebar.module.css": {
+    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
+    "sha256": "dabbcc88094042b06b65bec5e4b0572a157e8a2f4dff328e253b0e23f7675bb6"
+  },
+  "src/features/knowledge/navigation/page-tree-sidebar.tsx": {
+    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
+    "sha256": "b35ebaf0aa0ee1ee4075dab6f0780d3a0517ba60f44a2740ea98630543484bbc"
+  },
+  "src/features/knowledge/notifications/components/notification-bell.messages.ts": {
+    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
+    "sha256": "3fdaba0b0dced758250f18dee0ed8575f18cefe08156123a3c872354370a89bb"
+  },
+  "src/features/knowledge/notifications/components/notification-bell.tsx": {
+    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
+    "sha256": "570af3db3796e83aba57e15bd1dc90c7969b26912bd46f95d86a0d7f193bc81f"
+  },
+  "src/features/knowledge/notifications/notifications-bridge.test.ts": {
+    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
+    "sha256": "de519398cf1b9e6316210ebfdd93871bfc018e519cd25346ed049ee791b1e602"
+  },
+  "src/features/knowledge/notifications/notifications-bridge.ts": {
+    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
+    "sha256": "ee3cc62a305d23a2702882397ac97ad79c8585d8250b6dd16b56272012cdd8cf"
+  },
+  "src/features/knowledge/notifications/notifications-queries.ts": {
+    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
+    "sha256": "42877fb511d029afa2e9732a44133258c2718b97ec8217ded49a0ca3d35aea5a"
+  },
+  "src/features/knowledge/organization/client.test.ts": {
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
+    "sha256": "336cbc44d34ada400e23af4fc42cb96c3183a793a76ded39019810ba8e3537d4"
+  },
+  "src/features/knowledge/organization/create-knowledge-base-dialog.messages.ts": {
+    "reason": "Delete duplicate creation form/messages; top switcher and empty canvas share KnowledgeBaseProvider creation form with direct library ownership.",
+    "deleted": true
+  },
+  "src/features/knowledge/organization/create-knowledge-base-dialog.tsx": {
+    "reason": "Delete duplicate creation form/messages; top switcher and empty canvas share KnowledgeBaseProvider creation form with direct library ownership.",
+    "deleted": true
+  },
+  "src/features/knowledge/organization/keys.ts": {
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
+    "sha256": "1e4c68ce7ddb4271f41971110915fab4dc573b43ee79fc65144c82f864b24a75"
+  },
+  "src/features/knowledge/organization/knowledge-base-projects.messages.ts": {
+    "reason": "Remove project association management/messages; no additional project entity or project-to-library scope exists in Fob.",
+    "deleted": true
+  },
+  "src/features/knowledge/organization/knowledge-base-projects.tsx": {
+    "reason": "Remove project association management/messages; no additional project entity or project-to-library scope exists in Fob.",
+    "deleted": true
+  },
+  "src/features/knowledge/organization/organization-panel.tsx": {
+    "reason": "Manage the top-selected knowledge base members/groups/folders directly; remove nested selection, project guard and duplicate product breadcrumb.",
+    "sha256": "5777ea0327378c80cb8f1bf5a98f8d4347b9d9245fa695b680fcdaf26f516711"
+  },
+  "src/features/knowledge/use-knowledge-base-selection.ts": {
+    "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
+    "deleted": true
+  },
+  "backend/server/src/modules/knowledge/organization/http.ts": {
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
+    "sha256": "81ddaa24653123354426eaa596a55b6d80473ba71bd45dd51fe4646fd7ddf763"
+  },
+  "backend/server/src/modules/knowledge/organization/knowledge-bases.integration.test.ts": {
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
+    "sha256": "20b1ffef9bfd95606a58a901d21348ae0fe07aac1ecfa22b8e2a2d297721ebb3"
+  },
+  "backend/server/src/modules/knowledge/organization/knowledge-bases.ts": {
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
+    "sha256": "b765427c0700505b614dcf1e9688b12024d45eda1c50464ba85211bad00e8b9b"
+  },
+  "backend/server/src/modules/knowledge/organization/members.integration.test.ts": {
+    "reason": "Update knowledge member API fixture for direct KB creation and test actual shared 128KiB write body limit without changing member authorization.",
+    "sha256": "33e556831603dc6d516c974446b4999f315766215d7c36a4f200a64d03656c2f"
+  },
+  "backend/server/src/modules/knowledge/organization/project-scopes.integration.test.ts": {
+    "reason": "Remove project-scope service and tests because Fob has only direct knowledge membership and page ACL; no compatibility route remains.",
+    "deleted": true
+  },
+  "backend/server/src/modules/knowledge/organization/project-scopes.ts": {
+    "reason": "Remove project-scope service and tests because Fob has only direct knowledge membership and page ACL; no compatibility route remains.",
+    "deleted": true
+  },
+  "backend/server/src/modules/knowledge/organization/service.ts": {
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
+    "sha256": "13dde834472096996a56ee00d2ca4f8f218a1012b72eeab29664dff8ed125e36"
+  },
+  "shared/src/knowledge/contracts/organization.test.ts": {
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts.",
+    "sha256": "5751796247370f72ab946af90b9f8964aface89f848eec41d15e0129500794c9"
+  },
+  "shared/src/knowledge/contracts/organization.ts": {
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts.",
+    "sha256": "a678c99ceb68913177bba29d39e9d0dd5aeea4e41d50d3359567d5128238685a"
   }
 }

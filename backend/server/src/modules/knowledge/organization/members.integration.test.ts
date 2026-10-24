@@ -143,7 +143,7 @@ describe('knowledgeBase and identity boundaries over real HTTP/PostgreSQL', () =
     expect((await request('', owner, 'POST', { name: 'Blocked' }, { origin: 'https://evil.test' })).status).toBe(403);
     expect((await fetch(`${server.origin}${base}`, { method: 'POST', headers: { cookie: owner.cookie, 'content-type': 'application/json' }, body: '{}' })).status).toBe(403);
     expect((await request('', owner, 'POST', {}, { 'content-type': 'text/plain' })).status).toBe(415);
-    expect((await request('', owner, 'POST', { name: 'x'.repeat(20_000) })).status).toBe(413);
+    expect((await request('', owner, 'POST', { name: 'x'.repeat(128 * 1_024) })).status).toBe(413);
     expect((await request(`/${main.id}`, owner, 'PATCH', { name: 'Scoped', knowledgeBaseId: other.id })).status).toBe(400);
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, owner, 'PATCH', { role: 'admin', actorUserId: owner.identity.userId })).status).toBe(400);
     const preflight = await request('', undefined, 'OPTIONS', undefined, { 'access-control-request-method': 'POST', 'access-control-request-headers': 'content-type' });
@@ -159,8 +159,9 @@ describe('knowledgeBase and identity boundaries over real HTTP/PostgreSQL', () =
     expect((await request(`/${main.id}`, regular, 'PATCH', { name: 'No authority' })).status).toBe(403);
     expect((await request(`/${main.id}`, guest, 'PATCH', { name: 'No authority' })).status).toBe(403);
     expect((await request(`/${main.id}`, outsider, 'PATCH', { name: 'No membership' })).status).toBe(404);
-    const renamed = await result<Space>(request(`/${main.id}`, admin, 'PATCH', { name: 'Renamed by admin' }));
-    expect(renamed.name).toBe('Renamed by admin');
+    expect((await request(`/${main.id}`, admin, 'PATCH', { name: 'No owner authority' })).status).toBe(403);
+    const renamed = await result<Space>(request(`/${main.id}`, owner, 'PATCH', { name: 'Renamed by owner' }));
+    expect(renamed.name).toBe('Renamed by owner');
     expect((await request(`/${main.id}/members/${owner.identity.userId}`, admin, 'PATCH', { role: 'member' })).status).toBe(403);
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, admin, 'PATCH', { role: 'admin' })).status).toBe(403);
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, regular, 'PATCH', { role: 'owner' })).status).toBe(403);
@@ -377,6 +378,7 @@ describe('group and membership invariants', () => {
   test('a writer waiting for the knowledgeBase lock rechecks its role after an owner demotes it', async () => {
     const space = await create(owner, 'Waiting writer');
     await accept(space, await invite(space, admin, 'admin'), admin);
+    await service.changeMemberRole(owner.identity, { knowledgeBaseId: space.id, userId: admin.identity.userId, role: 'owner' });
     const client = await server.database.admin.connect();
     let outcome: Promise<unknown> | undefined;
     try {

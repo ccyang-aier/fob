@@ -1,7 +1,11 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
-  selectProjectFirst: ['请先选择项目', 'Select a project first'],
+  resolvingDocumentKnowledgeBase: ['正在定位文档所属知识库…', 'Finding the document knowledge base…'],
+  documentTargetUnavailable: ['无法打开这份文档', 'This document is unavailable'],
+  documentTargetUnavailableHint: ['请确认知识库和文档仍可访问，或联系分享者。', 'Check access to the knowledge base and document, or contact the person who shared it.'],
+  signInToOpenDocument: ['登录后打开文档', 'Sign in to open the document'],
+  returnToKnowledgeLibrary: ['返回知识库', 'Return to the library'],
   loadingKnowledgeResources: ['正在加载知识资源', 'Loading knowledge resources'],
   unableToReadLocalDocumentsCheckYourBrowser: [
     '无法读取本机文档，请检查浏览器存储设置。',
