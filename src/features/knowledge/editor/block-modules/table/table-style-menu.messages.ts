@@ -1,0 +1,27 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  sort: ['排序', 'Sort'],
+  ascending: ['升序', 'Ascending'],
+  descending: ['降序', 'Descending'],
+  moveDown: ['下移', 'Move down'],
+  moveUp: ['上移', 'Move up'],
+  delete: ['删除', 'Delete'],
+  alignLeft: ['左对齐', 'Align left'],
+  alignCenter: ['居中对齐', 'Align center'],
+  alignRight: ['右对齐', 'Align right'],
+  tableMenuAnchor: ['表格菜单锚点', 'Table menu anchor'],
+  columnActions: ['列操作', 'Column actions'],
+  rowActions: ['行操作', 'Row actions'],
+  tableActions: ['表格操作', 'Table actions'],
+  alignment: ['对齐', 'Alignment'],
+  background: ['背景', 'Background'],
+  toggleHeader: ['切换标题', 'Toggle header'],
+  insertBefore: ['在之前插入', 'Insert before'],
+  insertAfter: ['在之后插入', 'Insert after'],
+  moveRight: ['右移', 'Move right'],
+  moveLeft: ['左移', 'Move left'],
+  mergeCells: ['合并单元格', 'Merge cells'],
+  splitCells: ['拆分单元格', 'Split cells'],
+  exportCsv: ['导出为 CSV', 'Export CSV'],
+});

@@ -1,0 +1,145 @@
+.row,
+.iconButton,
+.actionButton {
+  transition:
+    color 150ms ease,
+    transform 120ms ease;
+}
+
+.trailing {
+  display: grid;
+  flex-shrink: 0;
+  align-items: center;
+  margin-left: 4px;
+}
+
+.trailing > .actions,
+.trailing > .count {
+  grid-area: 1 / 1;
+  justify-self: end;
+}
+
+.trailing > .actions {
+  position: static;
+  transform: none;
+}
+
+.trailing > .count {
+  margin-left: 0;
+}
+
+.row:hover > .trailing:has(.actions) > .count,
+.row:has(:focus-visible) > .trailing:has(.actions) > .count,
+.trailing:has([aria-expanded="true"]) > .count {
+  visibility: hidden;
+}
+
+.count {
+  padding-right: 2px;
+  min-width: 14px;
+  flex-shrink: 0;
+  margin-left: 4px;
+  text-align: right;
+  font-size: 10.5px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: #8b9093;
+}
+
+.row {
+  position: relative;
+}
+
+.row:hover,
+.row:focus-within {
+  background: var(--sidebar-row-hover);
+  box-shadow: inset 0 0 0 1px var(--sidebar-row-border), var(--sidebar-row-shadow);
+  color: var(--foreground);
+}
+
+.transientRow:not(:hover):focus-within {
+  background: transparent;
+  color: var(--sidebar-text);
+}
+
+.actions {
+  position: absolute;
+  right: 4px;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(2px);
+  transition: visibility 0s linear 120ms, opacity 120ms ease-out, transform 120ms ease-out;
+}
+
+.row:hover .actions,
+.row:has(:focus-visible) .actions,
+.actions[data-starred="true"],
+.actions:has([aria-expanded="true"]) {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(0);
+  transition-delay: 110ms, 110ms, 110ms;
+}
+
+.actions:has([aria-expanded="true"]) {
+  transition-delay: 0ms;
+}
+
+.documentActions { position:static; width:46px; margin-left:6px; }
+.documentLabel { display:block; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; line-height:18px; }
+.documentMenu { width:196px; }
+.documentMenu svg { width:16px; height:16px; color:currentColor; }
+
+@media (prefers-reduced-motion:reduce) {
+  .row,.iconButton,.actionButton,.actions { transition:none; }
+}
+
+.actionButton {
+  display: inline-flex;
+  height: 22px;
+  width: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  color: var(--muted-foreground);
+  outline: none;
+}
+
+.actionButton:hover,
+.actionButton:focus-visible,
+.actionButton[aria-expanded="true"] {
+  background: var(--sidebar-row-hover);
+  color: var(--foreground);
+}
+
+.iconButton:hover,
+.iconButton:focus-visible {
+  background: var(--sidebar-row-hover);
+}
+
+.row[data-selected="true"] {
+  background: var(--sidebar-row-selected);
+  box-shadow: inset 0 0 0 1px var(--sidebar-row-border), var(--sidebar-row-shadow);
+  color: var(--foreground);
+}
+
+.row[data-selected="true"] > svg {
+  color: var(--ink);
+}
+
+.iconButton[data-selected="true"] {
+  background: var(--sidebar-row-selected);
+}
+
+.row:focus-visible,
+.row:has(:focus-visible),
+.iconButton:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--sidebar-row-focus);
+}
+
+.row:active,
+.row:has(button:active),
+.iconButton:active {
+  background: var(--sidebar-row-pressed);
+  transform: scale(0.995);
+}

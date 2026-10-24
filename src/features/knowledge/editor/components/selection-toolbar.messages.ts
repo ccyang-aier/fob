@@ -1,0 +1,25 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  setLink: ['设置链接', 'Set link'],
+  link: ['链接', 'Link'],
+  linkAddress: ['链接地址', 'Link address'],
+  documentLinkUrl: ['正文链接地址', 'Document link URL'],
+  enterAValidSafeLinkAddress: ['请输入有效、安全的链接地址。', 'Enter a valid, safe link address.'],
+  removeLink: ['移除链接', 'Remove link'],
+  apply: ['应用', 'Apply'],
+  selectedTextActions: ['选中文本快捷操作', 'Selected text actions'],
+  headingHValue: ['标题 H{v0}', 'Heading H{v0}'],
+  blockquote: ['引用块', 'Blockquote'],
+  quote: ['引用', 'Quote'],
+  taskList: ['任务列表', 'Task list'],
+  bulletList: ['无序列表', 'Bullet list'],
+  numberedList: ['有序列表', 'Numbered list'],
+  bold: ['加粗', 'Bold'],
+  italic: ['斜体', 'Italic'],
+  strikethrough: ['删除线', 'Strikethrough'],
+  highlight: ['高亮', 'Highlight'],
+  inlineCode: ['行内代码', 'Inline code'],
+  commentOnSelection: ['评论选中内容', 'Comment on selection'],
+  comments: ['评论', 'Comment'],
+});

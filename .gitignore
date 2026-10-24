@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+
+# Next.js
+/next-env.d.ts
+/.next
+/.next-build
+/out
+*.tsbuildinfo
+
+# QA captures
+/.playwright-cli/
+
+# environment
+.env*
+!.env.example
+
+# system
+.DS_Store
+Thumbs.db
+*.log
+
+# Independent backend bundle outputs
+/.runtime/
+/backend/server/dist/
+
+# Python media worker environments and caches
+**/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.runtime/

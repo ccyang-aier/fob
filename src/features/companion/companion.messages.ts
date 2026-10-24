@@ -1,0 +1,55 @@
+import { defineMessages } from '@/lib/i18n/messages';
+
+export const messages = defineMessages({
+  精灵: ['小精灵', 'Companion'],
+  互动: ['和 Feather 互动', 'Interact with Feather'],
+  收起: ['收起精灵工具栏', 'Collapse companion toolbar'],
+  工具栏: ['精灵工具栏', 'Companion toolbar'],
+  表情: ['表情', 'Expressions'],
+  动作: ['动作', 'Actions'],
+  抚摸: ['抚摸小精灵', 'Pet companion'],
+  拖动: ['拖动小精灵', 'Move companion'],
+  心情: ['心情', 'Mood'],
+  饱腹: ['饱腹', 'Fullness'],
+  喂糖: ['喂一颗金平糖 ✦', 'Feed a star candy ✦'],
+  眨眼: ['眨眼', 'Blink'],
+  眨单眼: ['眨单眼', 'Wink'],
+  开心: ['开心', 'Happy'],
+  瞌睡: ['打瞌睡', 'Drowsy'],
+  好奇: ['好奇歪头', 'Curious tilt'],
+  惊讶: ['惊讶', 'Surprised'],
+  害羞: ['害羞', 'Shy'],
+  眩晕: ['眩晕', 'Dizzy'],
+  跳跃: ['跳跃', 'Hop'],
+  炸毛: ['炸毛', 'Poof'],
+  睡眠: ['睡觉', 'Sleep'],
+  '嘿~': ['嘿~', 'Hey~'],
+  '嗯？': ['嗯？', 'Hmm?'],
+  '啊！我没睡！': ['啊！我没睡！', 'Ah! I was awake!'],
+  '晕了晕了…': ['晕了晕了…', 'So dizzy…'],
+  '噗！': ['噗！', 'Poof!'],
+  '别戳我啦~': ['别戳我啦~', 'Stop poking me~'],
+  '再来一次？': ['再来一次？', 'One more time?'],
+  咕噜咕噜: ['咕噜咕噜', 'Purrrr'],
+  '我是煤球，不是芝麻球': ['我是煤球，不是芝麻球', 'A soot sprite, not a sesame ball'],
+  嘿嘿: ['嘿嘿', 'Hehe'],
+  软乎乎的吧: ['软乎乎的吧', 'So fluffy, right?'],
+  '好舒服~': ['好舒服~', 'Feels so nice~'],
+  嘿嘿嘿: ['嘿嘿嘿', 'Hehehe'],
+  再摸摸: ['再摸摸', 'More pets, please'],
+  '哇！': ['哇！', 'Wow!'],
+  '吃不下啦…': ['吃不下啦…', 'I am full…'],
+  '好甜！✦': ['好甜！✦', 'So sweet! ✦'],
+  '肚子饿了…': ['肚子饿了…', 'Getting hungry…'],
+  '你好呀，我是 Feather': ['你好呀，我是 Feather', 'Hello, I am Feather'],
+});
+
+export const companionExpressions = [
+  ['blink', '眨眼'], ['wink', '眨单眼'], ['happy', '开心'], ['drowsy', '瞌睡'],
+  ['curious', '好奇'], ['surprised', '惊讶'], ['shy', '害羞'], ['dizzy', '眩晕'],
+  ['sleep', '睡眠'],
+] as const;
+export const companionMotions = [
+  ['hopAct', '跳跃'], ['poof', '炸毛'],
+] as const;
+export type CompanionAction = typeof companionExpressions[number][0] | typeof companionMotions[number][0];

@@ -1,0 +1,98 @@
+/* 共享中性操作状态。业务组件负责布局，不重复定义 hover / 展开底色。
+   aria-expanded 属于菜单/弹层；Tooltip 共用的 data-state 不参与判断。
+   html 前缀让状态契约稳定高于局部控件的默认背景，不依赖 CSS 加载顺序。 */
+.fob-action {
+  --action-state-bg: var(--action-hover-bg);
+  --action-state-ink: var(--ink);
+}
+
+.fob-action[data-surface="subtle"] {
+  --action-state-bg: var(--action-surface-hover-bg);
+}
+
+/* 浅灰白色工具按钮：常态用共享 hover 灰度，交互时用共享激活灰度。 */
+.fob-action[data-surface="muted"] {
+  --action-state-bg: var(--interaction-active-bg);
+}
+html button.fob-action[data-surface="muted"] {
+  background: var(--interaction-hover-bg);
+}
+
+/* 底色即时出现；颜色、描边与按下位移仍可柔和过渡。 */
+html .fob-action {
+  transition-property: color, border-color, box-shadow, transform;
+}
+
+/* 筛选/排序入口只保留底色反馈；Radix 选中后回焦不产生 ring、阴影或描边动画。 */
+html .dropdown-menu-trigger:not(.sidebar-nav-row) {
+  box-shadow: none;
+  translate: none;
+  transform: none;
+  transition-property: color;
+}
+
+html .dropdown-menu-trigger:not(.sidebar-nav-row):is(:focus, :focus-visible, :active, [aria-expanded="true"]) {
+  box-shadow: none;
+  outline: none;
+}
+
+/* 激活的筛选入口在悬停、回焦和菜单展开时保留中性强调色。 */
+.fob-action[data-active="true"] {
+  --action-state-ink: var(--accent-ink);
+}
+
+.fob-action[data-variant="destructive"] {
+  --action-state-bg: var(--menu-danger-hover-bg);
+  --action-state-ink: var(--menu-danger-hover-ink);
+}
+
+.fob-action[data-variant="warning"] {
+  --action-state-bg: var(--menu-warning-hover-bg);
+  --action-state-ink: var(--menu-warning-hover-ink);
+}
+
+/* 嵌套操作在父容器已悬停时仍保留独立反馈面。 */
+html .fob-action[data-variant="nested"] {
+  --action-state-bg: var(--action-nested-hover-bg);
+  transition-property: color, border-color, box-shadow, transform;
+}
+
+/* 紧凑工具栏操作保留浅色容器，展开状态沿用同一共享反馈。 */
+html button.fob-action[data-surface="subtle"] {
+  background: var(--action-surface-bg);
+  border-radius: 5px;
+}
+
+/* 白底／透明工具栏：常态不铺灰；hover 沿用全局“浅灰白色”。 */
+html button.fob-action[data-surface="plain"] {
+  background: transparent;
+}
+
+/* 树目录折叠箭头的反馈由整行承担，展开、悬停与键盘焦点均不叠加底色。 */
+.fob-action[data-variant="disclosure"] {
+  --action-state-bg: transparent;
+}
+
+/* 文字入口以文案和图标反馈交互，不添加背景面。 */
+.fob-action[data-variant="text"] {
+  --action-state-bg: transparent;
+}
+
+/* 内容折叠按钮仅在当前交互时高亮；展开的内容本身已表达状态。 */
+html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not([data-variant="collapsible"])):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
+  background: var(--action-state-bg);
+  color: var(--action-state-ink);
+}
+
+/* 按下、展开与有效筛选用全局“灰白色”；不覆盖其它功能色控件。 */
+html .fob-action:is([data-surface="plain"], [data-surface="muted"]):is(:active, [aria-expanded="true"]:not([data-variant="collapsible"]), [aria-pressed="true"], [data-active="true"], [data-filter-active]):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
+  background: var(--action-active-bg);
+  color: var(--ink);
+}
+
+.dropdown-menu-search { display:flex; align-items:center; gap:7px; margin:3px 4px 7px; padding:5px 7px; border:1px solid var(--control-border); border-radius:5px; color:var(--muted); }
+.dropdown-menu-search:focus-within { border-color:var(--ink); }
+.dropdown-menu-search > svg { flex-shrink:0; }
+.dropdown-menu-search input { width:100%; min-width:0; padding:0; border:0; outline:none; box-shadow:none; background:transparent; color:var(--ink); font-size:12px; line-height:20px; }
+.dropdown-menu-search input::placeholder { color:var(--muted); }
+.dropdown-menu-search button { display:grid; place-items:center; flex-shrink:0; width:18px; height:18px; border-radius:3px; cursor:pointer; }

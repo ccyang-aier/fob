@@ -1,0 +1,996 @@
+/* Generated from Highlight.js styles by scripts/prepare-code-themes.mjs. Upstream copyright and theme credits retained.
+BSD 3-Clause License
+
+Copyright (c) 2006, Ivan Sagalaev.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+/*!
+  Theme: GitHub
+  Description: Light theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-light
+  Current colors taken from GitHub's CSS
+*/
+.fob-code-theme[data-code-theme="light"] {
+  --code-bg: #ffffff;
+  --code-ink: #24292e
+}
+.fob-code-theme[data-code-theme="light"] .hljs-doctag,
+.fob-code-theme[data-code-theme="light"] .hljs-keyword,
+.fob-code-theme[data-code-theme="light"] .hljs-meta .hljs-keyword,
+.fob-code-theme[data-code-theme="light"] .hljs-template-tag,
+.fob-code-theme[data-code-theme="light"] .hljs-template-variable,
+.fob-code-theme[data-code-theme="light"] .hljs-type,
+.fob-code-theme[data-code-theme="light"] .hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #d73a49
+}
+.fob-code-theme[data-code-theme="light"] .hljs-title,
+.fob-code-theme[data-code-theme="light"] .hljs-title.class_,
+.fob-code-theme[data-code-theme="light"] .hljs-title.class_.inherited__,
+.fob-code-theme[data-code-theme="light"] .hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #6f42c1
+}
+.fob-code-theme[data-code-theme="light"] .hljs-attr,
+.fob-code-theme[data-code-theme="light"] .hljs-attribute,
+.fob-code-theme[data-code-theme="light"] .hljs-literal,
+.fob-code-theme[data-code-theme="light"] .hljs-meta,
+.fob-code-theme[data-code-theme="light"] .hljs-number,
+.fob-code-theme[data-code-theme="light"] .hljs-operator,
+.fob-code-theme[data-code-theme="light"] .hljs-variable,
+.fob-code-theme[data-code-theme="light"] .hljs-selector-attr,
+.fob-code-theme[data-code-theme="light"] .hljs-selector-class,
+.fob-code-theme[data-code-theme="light"] .hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #005cc5
+}
+.fob-code-theme[data-code-theme="light"] .hljs-regexp,
+.fob-code-theme[data-code-theme="light"] .hljs-string,
+.fob-code-theme[data-code-theme="light"] .hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #032f62
+}
+.fob-code-theme[data-code-theme="light"] .hljs-built_in,
+.fob-code-theme[data-code-theme="light"] .hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #e36209
+}
+.fob-code-theme[data-code-theme="light"] .hljs-comment,
+.fob-code-theme[data-code-theme="light"] .hljs-code,
+.fob-code-theme[data-code-theme="light"] .hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #6a737d
+}
+.fob-code-theme[data-code-theme="light"] .hljs-name,
+.fob-code-theme[data-code-theme="light"] .hljs-quote,
+.fob-code-theme[data-code-theme="light"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="light"] .hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #22863a
+}
+.fob-code-theme[data-code-theme="light"] .hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #24292e
+}
+.fob-code-theme[data-code-theme="light"] .hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #005cc5;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="light"] .hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #735c0f
+}
+.fob-code-theme[data-code-theme="light"] .hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #24292e;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="light"] .hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #24292e;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="light"] .hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #22863a;
+  background-color: #f0fff4
+}
+.fob-code-theme[data-code-theme="light"] .hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #b31d28;
+  background-color: #ffeef0
+}
+.fob-code-theme[data-code-theme="light"] .hljs-char.escape_,
+.fob-code-theme[data-code-theme="light"] .hljs-link,
+.fob-code-theme[data-code-theme="light"] .hljs-params,
+.fob-code-theme[data-code-theme="light"] .hljs-property,
+.fob-code-theme[data-code-theme="light"] .hljs-punctuation,
+.fob-code-theme[data-code-theme="light"] .hljs-tag {
+  /* purposely ignored */
+  
+}
+/*!
+  Theme: GitHub Dark
+  Description: Dark theme as seen on github.com
+  Author: github.com
+  Maintainer: @Hirse
+  Updated: 2021-05-15
+
+  Outdated base version: https://github.com/primer/github-syntax-dark
+  Current colors taken from GitHub's CSS
+*/
+.fob-code-theme[data-code-theme="dark"] {
+  --code-bg: #0d1117;
+  --code-ink: #c9d1d9
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-doctag,
+.fob-code-theme[data-code-theme="dark"] .hljs-keyword,
+.fob-code-theme[data-code-theme="dark"] .hljs-meta .hljs-keyword,
+.fob-code-theme[data-code-theme="dark"] .hljs-template-tag,
+.fob-code-theme[data-code-theme="dark"] .hljs-template-variable,
+.fob-code-theme[data-code-theme="dark"] .hljs-type,
+.fob-code-theme[data-code-theme="dark"] .hljs-variable.language_ {
+  /* prettylights-syntax-keyword */
+  color: #ff7b72
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-title,
+.fob-code-theme[data-code-theme="dark"] .hljs-title.class_,
+.fob-code-theme[data-code-theme="dark"] .hljs-title.class_.inherited__,
+.fob-code-theme[data-code-theme="dark"] .hljs-title.function_ {
+  /* prettylights-syntax-entity */
+  color: #d2a8ff
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-attr,
+.fob-code-theme[data-code-theme="dark"] .hljs-attribute,
+.fob-code-theme[data-code-theme="dark"] .hljs-literal,
+.fob-code-theme[data-code-theme="dark"] .hljs-meta,
+.fob-code-theme[data-code-theme="dark"] .hljs-number,
+.fob-code-theme[data-code-theme="dark"] .hljs-operator,
+.fob-code-theme[data-code-theme="dark"] .hljs-variable,
+.fob-code-theme[data-code-theme="dark"] .hljs-selector-attr,
+.fob-code-theme[data-code-theme="dark"] .hljs-selector-class,
+.fob-code-theme[data-code-theme="dark"] .hljs-selector-id {
+  /* prettylights-syntax-constant */
+  color: #79c0ff
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-regexp,
+.fob-code-theme[data-code-theme="dark"] .hljs-string,
+.fob-code-theme[data-code-theme="dark"] .hljs-meta .hljs-string {
+  /* prettylights-syntax-string */
+  color: #a5d6ff
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-built_in,
+.fob-code-theme[data-code-theme="dark"] .hljs-symbol {
+  /* prettylights-syntax-variable */
+  color: #ffa657
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-comment,
+.fob-code-theme[data-code-theme="dark"] .hljs-code,
+.fob-code-theme[data-code-theme="dark"] .hljs-formula {
+  /* prettylights-syntax-comment */
+  color: #8b949e
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-name,
+.fob-code-theme[data-code-theme="dark"] .hljs-quote,
+.fob-code-theme[data-code-theme="dark"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="dark"] .hljs-selector-pseudo {
+  /* prettylights-syntax-entity-tag */
+  color: #7ee787
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-subst {
+  /* prettylights-syntax-storage-modifier-import */
+  color: #c9d1d9
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-section {
+  /* prettylights-syntax-markup-heading */
+  color: #1f6feb;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-bullet {
+  /* prettylights-syntax-markup-list */
+  color: #f2cc60
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-emphasis {
+  /* prettylights-syntax-markup-italic */
+  color: #c9d1d9;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-strong {
+  /* prettylights-syntax-markup-bold */
+  color: #c9d1d9;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-addition {
+  /* prettylights-syntax-markup-inserted */
+  color: #aff5b4;
+  background-color: #033a16
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-deletion {
+  /* prettylights-syntax-markup-deleted */
+  color: #ffdcd7;
+  background-color: #67060c
+}
+.fob-code-theme[data-code-theme="dark"] .hljs-char.escape_,
+.fob-code-theme[data-code-theme="dark"] .hljs-link,
+.fob-code-theme[data-code-theme="dark"] .hljs-params,
+.fob-code-theme[data-code-theme="dark"] .hljs-property,
+.fob-code-theme[data-code-theme="dark"] .hljs-punctuation,
+.fob-code-theme[data-code-theme="dark"] .hljs-tag {
+  /* purposely ignored */
+  
+}
+/*!
+  Theme: StackOverflow Light
+  Description: Light theme as used on stackoverflow.com
+  Author: stackoverflow.com
+  Maintainer: @Hirse
+  Website: https://github.com/StackExchange/Stacks
+  License: MIT
+  Updated: 2021-05-15
+
+  Updated for @stackoverflow/stacks v0.64.0
+  Code Blocks: /blob/v0.64.0/lib/css/components/_stacks-code-blocks.less
+  Colors: /blob/v0.64.0/lib/css/exports/_stacks-constants-colors.less
+*/
+.fob-code-theme[data-code-theme="paper"] {
+  --code-bg: #f6f6f6;
+  --code-ink: #2f3337
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-subst {
+  /* var(--highlight-color) */
+  color: #2f3337
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-comment {
+  /* var(--highlight-comment) */
+  color: #656e77
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-keyword,
+.fob-code-theme[data-code-theme="paper"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="paper"] .hljs-meta .hljs-keyword,
+.fob-code-theme[data-code-theme="paper"] .hljs-doctag,
+.fob-code-theme[data-code-theme="paper"] .hljs-section {
+  /* var(--highlight-keyword) */
+  color: #015692
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-attr {
+  /* var(--highlight-attribute); */
+  color: #015692
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-attribute {
+  /* var(--highlight-symbol) */
+  color: #803378
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-name,
+.fob-code-theme[data-code-theme="paper"] .hljs-type,
+.fob-code-theme[data-code-theme="paper"] .hljs-number,
+.fob-code-theme[data-code-theme="paper"] .hljs-selector-id,
+.fob-code-theme[data-code-theme="paper"] .hljs-quote,
+.fob-code-theme[data-code-theme="paper"] .hljs-template-tag {
+  /* var(--highlight-namespace) */
+  color: #b75501
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-selector-class {
+  /* var(--highlight-keyword) */
+  color: #015692
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-string,
+.fob-code-theme[data-code-theme="paper"] .hljs-regexp,
+.fob-code-theme[data-code-theme="paper"] .hljs-symbol,
+.fob-code-theme[data-code-theme="paper"] .hljs-variable,
+.fob-code-theme[data-code-theme="paper"] .hljs-template-variable,
+.fob-code-theme[data-code-theme="paper"] .hljs-link,
+.fob-code-theme[data-code-theme="paper"] .hljs-selector-attr {
+  /* var(--highlight-variable) */
+  color: #54790d
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-meta,
+.fob-code-theme[data-code-theme="paper"] .hljs-selector-pseudo {
+  /* var(--highlight-keyword) */
+  color: #015692
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-built_in,
+.fob-code-theme[data-code-theme="paper"] .hljs-title,
+.fob-code-theme[data-code-theme="paper"] .hljs-literal {
+  /* var(--highlight-literal) */
+  color: #b75501
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-bullet,
+.fob-code-theme[data-code-theme="paper"] .hljs-code {
+  /* var(--highlight-punctuation) */
+  color: #535a60
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-meta .hljs-string {
+  /* var(--highlight-variable) */
+  color: #54790d
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-deletion {
+  /* var(--highlight-deletion) */
+  color: #c02d2e
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-addition {
+  /* var(--highlight-addition) */
+  color: #2f6f44
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-emphasis {
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-strong {
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="paper"] .hljs-formula,
+.fob-code-theme[data-code-theme="paper"] .hljs-operator,
+.fob-code-theme[data-code-theme="paper"] .hljs-params,
+.fob-code-theme[data-code-theme="paper"] .hljs-property,
+.fob-code-theme[data-code-theme="paper"] .hljs-punctuation,
+.fob-code-theme[data-code-theme="paper"] .hljs-tag {
+  /* purposely ignored */
+  
+}
+/*
+Monokai style - ported by Luigi Maselli - http://grigio.org
+*/
+.fob-code-theme[data-code-theme="monokai"] {
+  --code-bg: #272822;
+  --code-ink: #ddd
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-tag,
+.fob-code-theme[data-code-theme="monokai"] .hljs-keyword,
+.fob-code-theme[data-code-theme="monokai"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="monokai"] .hljs-literal,
+.fob-code-theme[data-code-theme="monokai"] .hljs-strong,
+.fob-code-theme[data-code-theme="monokai"] .hljs-number,
+.fob-code-theme[data-code-theme="monokai"] .hljs-name {
+  color: #f92672
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-code {
+  color: #66d9ef
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-attribute,
+.fob-code-theme[data-code-theme="monokai"] .hljs-attr,
+.fob-code-theme[data-code-theme="monokai"] .hljs-symbol,
+.fob-code-theme[data-code-theme="monokai"] .hljs-regexp,
+.fob-code-theme[data-code-theme="monokai"] .hljs-link {
+  color: #bf79db
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-string,
+.fob-code-theme[data-code-theme="monokai"] .hljs-bullet,
+.fob-code-theme[data-code-theme="monokai"] .hljs-subst,
+.fob-code-theme[data-code-theme="monokai"] .hljs-title,
+.fob-code-theme[data-code-theme="monokai"] .hljs-section,
+.fob-code-theme[data-code-theme="monokai"] .hljs-emphasis,
+.fob-code-theme[data-code-theme="monokai"] .hljs-type,
+.fob-code-theme[data-code-theme="monokai"] .hljs-built_in,
+.fob-code-theme[data-code-theme="monokai"] .hljs-selector-attr,
+.fob-code-theme[data-code-theme="monokai"] .hljs-selector-pseudo,
+.fob-code-theme[data-code-theme="monokai"] .hljs-addition,
+.fob-code-theme[data-code-theme="monokai"] .hljs-variable,
+.fob-code-theme[data-code-theme="monokai"] .hljs-template-tag,
+.fob-code-theme[data-code-theme="monokai"] .hljs-template-variable {
+  color: #a6e22e
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-title.class_,
+.fob-code-theme[data-code-theme="monokai"] .hljs-class .hljs-title {
+  color: white
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-comment,
+.fob-code-theme[data-code-theme="monokai"] .hljs-quote,
+.fob-code-theme[data-code-theme="monokai"] .hljs-deletion,
+.fob-code-theme[data-code-theme="monokai"] .hljs-meta {
+  color: #75715e
+}
+.fob-code-theme[data-code-theme="monokai"] .hljs-keyword,
+.fob-code-theme[data-code-theme="monokai"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="monokai"] .hljs-literal,
+.fob-code-theme[data-code-theme="monokai"] .hljs-doctag,
+.fob-code-theme[data-code-theme="monokai"] .hljs-title,
+.fob-code-theme[data-code-theme="monokai"] .hljs-section,
+.fob-code-theme[data-code-theme="monokai"] .hljs-type,
+.fob-code-theme[data-code-theme="monokai"] .hljs-selector-id {
+  font-weight: bold
+}
+/*
+
+Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+.fob-code-theme[data-code-theme="idea"] {
+  --code-bg: #fff;
+  --code-ink: #000
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-subst,
+.fob-code-theme[data-code-theme="idea"] .hljs-title {
+  font-weight: normal;
+  color: #000
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-comment,
+.fob-code-theme[data-code-theme="idea"] .hljs-quote {
+  color: #808080;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-meta {
+  color: #808000
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-tag {
+  background: #efefef
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-section,
+.fob-code-theme[data-code-theme="idea"] .hljs-name,
+.fob-code-theme[data-code-theme="idea"] .hljs-literal,
+.fob-code-theme[data-code-theme="idea"] .hljs-keyword,
+.fob-code-theme[data-code-theme="idea"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="idea"] .hljs-type,
+.fob-code-theme[data-code-theme="idea"] .hljs-selector-id,
+.fob-code-theme[data-code-theme="idea"] .hljs-selector-class {
+  font-weight: bold;
+  color: #000080
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-attribute,
+.fob-code-theme[data-code-theme="idea"] .hljs-number,
+.fob-code-theme[data-code-theme="idea"] .hljs-regexp,
+.fob-code-theme[data-code-theme="idea"] .hljs-link {
+  font-weight: bold;
+  color: #0000ff
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-number,
+.fob-code-theme[data-code-theme="idea"] .hljs-regexp,
+.fob-code-theme[data-code-theme="idea"] .hljs-link {
+  font-weight: normal
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-string {
+  color: #008000;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-symbol,
+.fob-code-theme[data-code-theme="idea"] .hljs-bullet,
+.fob-code-theme[data-code-theme="idea"] .hljs-formula {
+  color: #000;
+  background: #d0eded;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-doctag {
+  text-decoration: underline
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-variable,
+.fob-code-theme[data-code-theme="idea"] .hljs-template-variable {
+  color: #660e7a
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-addition {
+  background: #baeeba
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-deletion {
+  background: #ffc8bd
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-emphasis {
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="idea"] .hljs-strong {
+  font-weight: bold
+}
+/*!
+  Theme: Darcula
+  Author: jetbrains
+  License: ~ MIT (or more permissive) [via base16-schemes-source]
+  Maintainer: @highlightjs/core-team
+  Version: 2021.09.0
+*/
+/*
+  WARNING: DO NOT EDIT THIS FILE DIRECTLY.
+
+  This theme file was auto-generated from the Base16 scheme darcula
+  by the Highlight.js Base16 template builder.
+
+  - https://github.com/highlightjs/base16-highlightjs
+*/
+/*
+base00  #2b2b2b  Default Background
+base01  #323232  Lighter Background (Used for status bars, line number and folding marks)
+base02  #323232  Selection Background
+base03  #606366  Comments, Invisibles, Line Highlighting
+base04  #a4a3a3  Dark Foreground (Used for status bars)
+base05  #a9b7c6  Default Foreground, Caret, Delimiters, Operators
+base06  #ffc66d  Light Foreground (Not often used)
+base07  #ffffff  Light Background (Not often used)
+base08  #4eade5  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
+base09  #689757  Integers, Boolean, Constants, XML Attributes, Markup Link Url
+base0A  #bbb529  Classes, Markup Bold, Search Text Background
+base0B  #6a8759  Strings, Inherited Class, Markup Code, Diff Inserted
+base0C  #629755  Support, Regular Expressions, Escape Characters, Markup Quotes
+base0D  #9876aa  Functions, Methods, Attribute IDs, Headings
+base0E  #cc7832  Keywords, Storage, Selector, Markup Italic, Diff Changed
+base0F  #808080  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+*/
+.fob-code-theme[data-code-theme="darcula"] {
+  --code-bg: #2b2b2b;
+  --code-ink: #a9b7c6
+}
+.fob-code-theme[data-code-theme="darcula"] .hljs::selection,
+.fob-code-theme[data-code-theme="darcula"] .hljs ::selection {
+  background-color: #323232;
+  color: #a9b7c6
+}
+/* purposely do not highlight these things */
+.fob-code-theme[data-code-theme="darcula"] .hljs-formula,
+.fob-code-theme[data-code-theme="darcula"] .hljs-params,
+.fob-code-theme[data-code-theme="darcula"] .hljs-property {
+  
+}
+/* base03 - #606366 -  Comments, Invisibles, Line Highlighting */
+.fob-code-theme[data-code-theme="darcula"] .hljs-comment {
+  color: #606366
+}
+/* base04 - #a4a3a3 -  Dark Foreground (Used for status bars) */
+.fob-code-theme[data-code-theme="darcula"] .hljs-tag {
+  color: #a4a3a3
+}
+/* base05 - #a9b7c6 -  Default Foreground, Caret, Delimiters, Operators */
+.fob-code-theme[data-code-theme="darcula"] .hljs-subst,
+.fob-code-theme[data-code-theme="darcula"] .hljs-punctuation,
+.fob-code-theme[data-code-theme="darcula"] .hljs-operator {
+  color: #a9b7c6
+}
+.fob-code-theme[data-code-theme="darcula"] .hljs-operator {
+  opacity: 0.7
+}
+/* base08 - Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted */
+.fob-code-theme[data-code-theme="darcula"] .hljs-bullet,
+.fob-code-theme[data-code-theme="darcula"] .hljs-variable,
+.fob-code-theme[data-code-theme="darcula"] .hljs-template-variable,
+.fob-code-theme[data-code-theme="darcula"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="darcula"] .hljs-name,
+.fob-code-theme[data-code-theme="darcula"] .hljs-deletion {
+  color: #4eade5
+}
+/* base09 - Integers, Boolean, Constants, XML Attributes, Markup Link Url */
+.fob-code-theme[data-code-theme="darcula"] .hljs-symbol,
+.fob-code-theme[data-code-theme="darcula"] .hljs-number,
+.fob-code-theme[data-code-theme="darcula"] .hljs-link,
+.fob-code-theme[data-code-theme="darcula"] .hljs-attr,
+.fob-code-theme[data-code-theme="darcula"] .hljs-variable.constant_,
+.fob-code-theme[data-code-theme="darcula"] .hljs-literal {
+  color: #689757
+}
+/* base0A - Classes, Markup Bold, Search Text Background */
+.fob-code-theme[data-code-theme="darcula"] .hljs-title,
+.fob-code-theme[data-code-theme="darcula"] .hljs-class .hljs-title,
+.fob-code-theme[data-code-theme="darcula"] .hljs-title.class_ {
+  color: #bbb529
+}
+.fob-code-theme[data-code-theme="darcula"] .hljs-strong {
+  font-weight: bold;
+  color: #bbb529
+}
+/* base0B - Strings, Inherited Class, Markup Code, Diff Inserted */
+.fob-code-theme[data-code-theme="darcula"] .hljs-code,
+.fob-code-theme[data-code-theme="darcula"] .hljs-addition,
+.fob-code-theme[data-code-theme="darcula"] .hljs-title.class_.inherited__,
+.fob-code-theme[data-code-theme="darcula"] .hljs-string {
+  color: #6a8759
+}
+/* base0C - Support, Regular Expressions, Escape Characters, Markup Quotes */
+/* guessing */
+.fob-code-theme[data-code-theme="darcula"] .hljs-built_in,
+.fob-code-theme[data-code-theme="darcula"] .hljs-doctag,
+.fob-code-theme[data-code-theme="darcula"] .hljs-quote,
+.fob-code-theme[data-code-theme="darcula"] .hljs-keyword.hljs-atrule,
+.fob-code-theme[data-code-theme="darcula"] .hljs-regexp {
+  color: #629755
+}
+/* base0D - Functions, Methods, Attribute IDs, Headings */
+.fob-code-theme[data-code-theme="darcula"] .hljs-function .hljs-title,
+.fob-code-theme[data-code-theme="darcula"] .hljs-attribute,
+.fob-code-theme[data-code-theme="darcula"] .ruby .hljs-property,
+.fob-code-theme[data-code-theme="darcula"] .hljs-title.function_,
+.fob-code-theme[data-code-theme="darcula"] .hljs-section {
+  color: #9876aa
+}
+/* base0E - Keywords, Storage, Selector, Markup Italic, Diff Changed */
+/* .hljs-selector-id, */
+/* .hljs-selector-class, */
+/* .hljs-selector-attr, */
+/* .hljs-selector-pseudo, */
+.fob-code-theme[data-code-theme="darcula"] .hljs-type,
+.fob-code-theme[data-code-theme="darcula"] .hljs-template-tag,
+.fob-code-theme[data-code-theme="darcula"] .diff .hljs-meta,
+.fob-code-theme[data-code-theme="darcula"] .hljs-keyword {
+  color: #cc7832
+}
+.fob-code-theme[data-code-theme="darcula"] .hljs-emphasis {
+  color: #cc7832;
+  font-style: italic
+}
+/* base0F - Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?> */
+/*
+  prevent top level .keyword and .string scopes
+  from leaking into meta by accident
+*/
+.fob-code-theme[data-code-theme="darcula"] .hljs-meta,
+.fob-code-theme[data-code-theme="darcula"] .hljs-meta .hljs-keyword,
+.fob-code-theme[data-code-theme="darcula"] .hljs-meta .hljs-string {
+  color: #808080
+}
+/* for v10 compatible themes */
+.fob-code-theme[data-code-theme="darcula"] .hljs-meta .hljs-keyword,
+.fob-code-theme[data-code-theme="darcula"] .hljs-meta-keyword {
+  font-weight: bold
+}
+/*
+ * Copyright (c) 2017-present Arctic Ice Studio <development@arcticicestudio.com>
+ * Copyright (c) 2017-present Sven Greb <development@svengreb.de>
+ *
+ * Project:    Nord highlight.js
+ * Version:    0.1.0
+ * Repository: https://github.com/arcticicestudio/nord-highlightjs
+ * License:    MIT
+ * References:
+ *   https://github.com/arcticicestudio/nord
+ */
+/*
+
+Polar Night
+
+#2E3440
+#3B4252
+#434C5E
+#4C566A
+
+Snow Storm
+
+#D8DEE9
+#E5E9F0
+#ECEFF4
+
+Frost
+
+#8FBCBB
+#88C0D0
+#81A1C1
+#5E81AC
+
+Aurora
+
+#BF616A
+#D08770
+#EBCB8B
+#A3BE8C
+#B48EAD
+
+*/
+.fob-code-theme[data-code-theme="nord"] {
+  --code-bg: #2E3440;
+  --code-ink: #24292e
+}
+.fob-code-theme[data-code-theme="nord"] .hljs,
+.fob-code-theme[data-code-theme="nord"] .hljs-subst {
+  color: #D8DEE9
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-selector-tag {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-selector-id {
+  color: #8FBCBB;
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-selector-class {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-selector-attr {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-property {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-selector-pseudo {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-addition {
+  background-color: rgba(163, 190, 140, 0.5)
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-deletion {
+  background-color: rgba(191, 97, 106, 0.5)
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-built_in,
+.fob-code-theme[data-code-theme="nord"] .hljs-type {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-class {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-function {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-title.hljs-function,
+.fob-code-theme[data-code-theme="nord"] .hljs-function > .hljs-title {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-keyword,
+.fob-code-theme[data-code-theme="nord"] .hljs-literal,
+.fob-code-theme[data-code-theme="nord"] .hljs-symbol {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-number {
+  color: #B48EAD
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-regexp {
+  color: #EBCB8B
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-string {
+  color: #A3BE8C
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-title {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-params {
+  color: #D8DEE9
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-bullet {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-code {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-emphasis {
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-formula {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-strong {
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-link:hover {
+  text-decoration: underline
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-quote {
+  color: #4C566A
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-comment {
+  color: #4C566A
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-doctag {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-meta,
+.fob-code-theme[data-code-theme="nord"] .hljs-meta .hljs-keyword {
+  color: #5E81AC
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-meta .hljs-string {
+  color: #A3BE8C
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-attr {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-attribute {
+  color: #D8DEE9
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-name {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-section {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-tag {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-variable {
+  color: #D8DEE9
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-template-variable {
+  color: #D8DEE9
+}
+.fob-code-theme[data-code-theme="nord"] .hljs-template-tag {
+  color: #5E81AC
+}
+/* per language customizations */
+.fob-code-theme[data-code-theme="nord"] .language-abnf .hljs-attribute {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-abnf .hljs-symbol {
+  color: #EBCB8B
+}
+.fob-code-theme[data-code-theme="nord"] .language-apache .hljs-attribute {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-apache .hljs-section {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .language-arduino .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-aspectj .hljs-meta {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-aspectj > .hljs-title {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-bnf .hljs-attribute {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .language-clojure .hljs-name {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-clojure .hljs-symbol {
+  color: #EBCB8B
+}
+.fob-code-theme[data-code-theme="nord"] .language-coq .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-cpp .hljs-meta .hljs-string {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .language-css .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-css .hljs-keyword {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-diff .hljs-meta {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .language-ebnf .hljs-attribute {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .language-glsl .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-groovy .hljs-meta:not(:first-child) {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-haxe .hljs-meta {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-java .hljs-meta {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-ldif .hljs-attribute {
+  color: #8FBCBB
+}
+.fob-code-theme[data-code-theme="nord"] .language-lisp .hljs-name {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-lua .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-moonscript .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-nginx .hljs-attribute {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-nginx .hljs-section {
+  color: #5E81AC
+}
+.fob-code-theme[data-code-theme="nord"] .language-pf .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-processing .hljs-built_in {
+  color: #88C0D0
+}
+.fob-code-theme[data-code-theme="nord"] .language-scss .hljs-keyword {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .language-stylus .hljs-keyword {
+  color: #81A1C1
+}
+.fob-code-theme[data-code-theme="nord"] .language-swift .hljs-meta {
+  color: #D08770
+}
+.fob-code-theme[data-code-theme="nord"] .language-vim .hljs-built_in {
+  color: #88C0D0;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="nord"] .language-yaml .hljs-meta {
+  color: #D08770
+}
+/*
+
+Atom One Dark by Daniel Gamage
+Original One Dark Syntax theme from https://github.com/atom/one-dark-syntax
+
+base:    #282c34
+mono-1:  #abb2bf
+mono-2:  #818896
+mono-3:  #5c6370
+hue-1:   #56b6c2
+hue-2:   #61aeee
+hue-3:   #c678dd
+hue-4:   #98c379
+hue-5:   #e06c75
+hue-5-2: #be5046
+hue-6:   #d19a66
+hue-6-2: #e6c07b
+
+*/
+.fob-code-theme[data-code-theme="one-dark"] {
+  --code-bg: #282c34;
+  --code-ink: #abb2bf
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-comment,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-quote {
+  color: #5c6370;
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-doctag,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-keyword,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-formula {
+  color: #c678dd
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-section,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-name,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-selector-tag,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-deletion,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-subst {
+  color: #e06c75
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-literal {
+  color: #56b6c2
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-string,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-regexp,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-addition,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-attribute,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-meta .hljs-string {
+  color: #98c379
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-attr,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-variable,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-template-variable,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-type,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-selector-class,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-selector-attr,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-selector-pseudo,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-number {
+  color: #d19a66
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-symbol,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-bullet,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-link,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-meta,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-selector-id,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-title {
+  color: #61aeee
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-built_in,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-title.class_,
+.fob-code-theme[data-code-theme="one-dark"] .hljs-class .hljs-title {
+  color: #e6c07b
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-emphasis {
+  font-style: italic
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-strong {
+  font-weight: bold
+}
+.fob-code-theme[data-code-theme="one-dark"] .hljs-link {
+  text-decoration: underline
+}

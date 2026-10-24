@@ -1,0 +1,102 @@
+.frame {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background: #fff;
+}
+
+.scrollArea { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.document {
+  width: min(calc(100% - 112px), max(min(100% - 112px, 360px), var(--document-width)));
+  font-family: var(--document-font);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: clamp(28px, 3.6vh, 40px) 0 160px;
+}
+.heading { position:relative; margin-bottom: 25px; }
+.titleIcon { position:absolute; inset-inline-end:calc(100% + 12px); top:4px; }
+.titleRow { display:flex; align-items:center; gap:12px; min-width:0; }
+.title,
+.titleInput {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 1.18;
+}
+.titleInput { outline: none; border-bottom: 1px solid transparent; }
+.titleInput:focus-visible { border-bottom-color: var(--accent); }
+.titleInput::placeholder { color: var(--muted); }
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted-strong);
+  font-size: 13px;
+  line-height: 24px;
+}
+.metadata > * { display:inline-flex; align-items:center; gap:6px; min-height:24px; }
+.metadata > * + *::before { flex:none; width:4px; height:4px; margin-right:2px; border-radius:50%; background:var(--muted); content:''; }
+
+.document :global(.ProseMirror) { min-height: 48vh; outline: none; color: var(--ink); font-size: var(--document-size); line-height: var(--document-line-height); }
+.document :global(.ProseMirror > *) { margin-top: 0; margin-bottom: 18px; }
+.document :global(.ProseMirror > *:last-child) { margin-bottom: 0; }
+.document :global(.ProseMirror p) { margin-top: 0; margin-bottom: 0; }
+.document :global(.ProseMirror > p:not(:last-child)) { margin-bottom: var(--document-paragraph-gap); }
+.document :global(.ProseMirror > p:first-child:last-child:has(> br.ProseMirror-trailingBreak)::before) {
+  float: left;
+  height: 0;
+  color: var(--muted);
+  content: '输入内容，或输入 / 插入内容';
+  pointer-events: none;
+}
+.document :global(.ProseMirror h1),
+.document :global(.ProseMirror h2),
+.document :global(.ProseMirror h3),
+.document :global(.ProseMirror h4) { color: var(--ink); font-weight: 650; line-height: 1.35; }
+.document :global(.ProseMirror h1) { font-size: 30px; margin-top: 38px; margin-bottom: 14px; }
+.document :global(.ProseMirror h2) { font-size: 25px; margin-top: 34px; margin-bottom: 12px; }
+.document :global(.ProseMirror h3) { font-size: 21px; margin-top: 30px; margin-bottom: 10px; }
+.document :global(.ProseMirror h4) { font-size: 18px; margin-top: 26px; margin-bottom: 8px; }
+.document :global(.ProseMirror ul),
+.document :global(.ProseMirror ol) { padding-left: 1.5em; }
+.document :global(.ProseMirror ul) { list-style: disc; }
+.document :global(.ProseMirror ol) { list-style: decimal; }
+.document :global(.ProseMirror li) { margin: 4px 0; padding-left: 2px; }
+.document :global(.ProseMirror li::marker) { color: var(--ink); }
+.document :global(.ProseMirror blockquote) { border-left: 3px solid var(--line-strong); padding-left: 18px; color: var(--muted-strong); }
+.document :global(.ProseMirror code) { border-radius: 4px; background: var(--raise); padding: 2px 4px; font-family: var(--document-code-font, var(--font-code)); font-size: .88em; }
+.document :global(.ProseMirror hr) { border: 0; border-top: var(--separator-width) solid var(--separator-color); margin: 32px 0; }
+.document :global(.ProseMirror a) { color: #0869cf; text-decoration: underline; text-underline-offset: 3px; }
+.document :global(.ProseMirror mark) { background: #e6f0ff; }
+
+@media (max-width: 700px) {
+  .document { padding: 28px 0 120px; }
+  .heading { margin-bottom: 28px; }
+  .metadata > * + *::before { display: none; }
+}
+
+.frame:fullscreen { width:100vw; height:100dvh; background:var(--panel); }
+.document :global(.document-search-match) { background:#fff0a3; border-radius:2px; }
+.document :global(.document-search-current) { background:#ffc764; outline:1px solid #d89635; }
+.document :global(.ProseMirror h1),.document :global(.ProseMirror h2),.document :global(.ProseMirror h3),.document :global(.ProseMirror h4) { scroll-margin-top:28px; }
+.document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4)) { position:relative; }
+.document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4)::before) { position:absolute; inset-inline-end:calc(100% + 12px); top:50%; width:24px; transform:translateY(-50%); opacity:0; color:var(--muted-strong); font-family:var(--font-code); font-size:11px; font-weight:400; line-height:20px; text-align:center; transition:opacity 160ms ease-out; pointer-events:none; }
+.document :global(.ProseMirror[contenteditable=true] h1::before) { content:'H1' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h2::before) { content:'H2' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h3::before) { content:'H3' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h4::before) { content:'H4' / ''; }
+.document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4):hover::before),.document :global(.ProseMirror[contenteditable=true]:focus-within [data-heading-current]::before) { opacity:1; }
+
+:global(html[data-theme="dark"]) .document :global(.ProseMirror a) { color:#8cc7ff; }

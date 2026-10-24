@@ -1,0 +1,4442 @@
+{
+  "sourceCommit": "90d779897f221bc2203e1538b67b068edc39d819",
+  "normalization": [
+    "FOUC→FOB",
+    "Fouc→Fob",
+    "fouc→fob",
+    "Text CRLF/CR→LF; binary fixtures unchanged"
+  ],
+  "files": [
+    {
+      "path": "src/features/knowledge/ai/ai-task-status.messages.ts",
+      "sha256": "a7f2b3caafbf696e897a5f774f618e9d0d0d60bfb39ebb3593d43689ad3635f7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/ai/ai-task-status.test.tsx",
+      "sha256": "53e4029cb7d30b38431df0d8eba185b6723333157d932231a96b8a08d17041d9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/ai/ai-task-status.tsx",
+      "sha256": "ad045eb696bcc3c25db40052e215cb1fdb9389874806035d83df7501f60feda5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/ai/use-ai-streaming-task.ts",
+      "sha256": "3fe12070769d03d04b659e31f81d765e4456977be1f310b3a1ded6461bbd4582",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/assets-api.messages.ts",
+      "sha256": "c6fd53e4910d65791631929d009bc193a18fd6baecda2bf53bdcb3cb76080f26",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/assets-api.test.ts",
+      "sha256": "1afa9f49234d9618f69b4939eaae8b5699a72248c588958505a8a1e8c1bfc9d6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/assets-api.ts",
+      "sha256": "d6ab380d3aaf7516df0ced7cd18ab9a23a14d440e76078a166a8b1a17db23229",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/components/asset-uploader.messages.ts",
+      "sha256": "1f57730e90888d6f0ef17c2bf3ea42f57e7a4480949f2fefd224fda4427ca235",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/components/asset-uploader.test.tsx",
+      "sha256": "4f6f0cc94786931c04d5bd749173c1cf559a37c306f70a990696795836de03fa",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/components/asset-uploader.tsx",
+      "sha256": "5e8a2a5e72e4850fef9f5da20d910aa0940530d5246df606510e19a0a426ee8a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/components/upload-queue-item.messages.ts",
+      "sha256": "6043c4fe8633fcd581245f5afff46a6f768b3114e637fc1cee21a98d2bc9ef0f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/components/upload-queue-item.tsx",
+      "sha256": "7f0721c504566940deeeb79b1cfd7fd6d4349e878231946693f42d4707402c94",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/index.ts",
+      "sha256": "ec16c9ac5a4cc4432cf48f4c351c7d2b60e352e733ecc96632641ba2d092ab28",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/local-assets.messages.ts",
+      "sha256": "98408812898f1cf462ee84518d89c9c1e87662bf77fe8aed7db2eef70122e9cd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/local-assets.ts",
+      "sha256": "dbd49c9627ea9f79a83253497111ebed13e667cf49456ad4af056999922bc33b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/minio.integration.test.ts",
+      "sha256": "f237fa91699e5d7888c0ec15b76df75d9ed934eeedd69ed4aa67f9142e723f54",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/sha256.messages.ts",
+      "sha256": "29d2ff44968a25873b32b583810e93e58473cf6b6ab7446fc4adafbe5de0d655",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/sha256.test.ts",
+      "sha256": "53e5f77499828facb04570a917aa852e0980647c959b0598956575bcb64f58b1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/sha256.ts",
+      "sha256": "db6cc8312176d2eb68438334baf97e39cead515910ce293dce5de8b19d515b46",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/transfer.messages.ts",
+      "sha256": "e38323a9a7ce5392da5641cfc7ef4fe3ee8908eca20cbb06061779e4405c6239",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/transfer.ts",
+      "sha256": "e6b2184331fbaee00013b662dbc2ea7c9305cb1bea6819d2aeb8efd7961adbd7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/upload-copy.messages.ts",
+      "sha256": "b9b608f1d77ea0938397f4040d3299dc0b09fce28dc83857fa86cc2092a2c451",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/upload-copy.ts",
+      "sha256": "63ac5be9c6a0179a25a0c641aa9108aa08d0ab1a93d843c2fc41e018e8937e90",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/upload-machine.messages.ts",
+      "sha256": "32d44d0209e92ef4bd0c40e8fa8642c2e0155ad3090a108db88eb415501eb278",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/upload-machine.test.ts",
+      "sha256": "d87accc14406d2727cc1a6c33d0f09435f0aec02cd20a2ead2c0f4acedcd7a60",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/upload-machine.ts",
+      "sha256": "b7e154b87b6a4ad0de62507afa251c05e8169f1514f1087f8b0a84bb2ec2f842",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assets/use-asset-uploads.ts",
+      "sha256": "3836e729b9802b4a938e526e322a0cff21af07b93bec910a90c13b55e37de695",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assistant-rail.messages.ts",
+      "sha256": "a07caae237297ed2324da2d861a8b96dd60976935f79fc9d1c5a5a373e05fc12",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/assistant-rail.tsx",
+      "sha256": "5baa3b4958672dadc0fda5a03323920e8a7f0fcea9dd59b31e53837b4e1d72f4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/canvas-states.messages.ts",
+      "sha256": "620c537d0ad738765dbed49ed853d10589986c8f69da18edd895a0b3a71c45db",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/canvas-states.tsx",
+      "sha256": "ef9de645d9694d3025515d70d10c038bc64eb522dfda876d2369b43ff095c4e3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/awareness.test.ts",
+      "sha256": "3b3792899a827b55410dd4d0ec1c4a88430925fdffc0532de40dd8c963f419e5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/awareness.ts",
+      "sha256": "28ca8d6bd7e4eb9c525401e699d02254a4bebe504c4741e4ad216b9ad2acc686",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/knowledge-base-events.test.ts",
+      "sha256": "cf35a718275a7fa470c7052b2dae1abb633199143a34d0810c57ceecb89e5024",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/knowledge-base-events.ts",
+      "sha256": "1bacd95fcfdad84cf1994aeb63923ccb5fa6dd1c9a37241879972d7b8639bb34",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/metadata-queue.test.ts",
+      "sha256": "abe1bbe98ff46a35b6904fb273aaf3b40cc1e09f9ed997bae57733ff8286ff55",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/metadata-queue.ts",
+      "sha256": "bf9b222b06f48554bf90cae1137aae8c3140e0be579e6912bf1bc76e62195626",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/offline-doc.ts",
+      "sha256": "1a86d39ae63cd87830f2340483ae3b601d9084edc95fcdea94e43051c632c7f7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-documents.test.ts",
+      "sha256": "89cc1b5e5465ccf453a2851ef4c85ff932e86328b1d8cf54356bb145b0c347d8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-provider.test.ts",
+      "sha256": "824a226b12de94782c59103e33ea2075f2418ba5ce0992ebe4c6ea16b9340fa9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-provider.ts",
+      "sha256": "71ca5406f08b9f83f94148c3143dc95757e6270ef583aa8ba1fd81dc1a171c2f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-sync-state.test.ts",
+      "sha256": "9703a0476c0c3ae49a978bf19bc08a7a35316ec8e13d0015802be94ac3580ee8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-sync-state.ts",
+      "sha256": "cc443a6013282b4e2ece07aea753c6e45d564fe4fc289682c0ea2075907d2474",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-undo.test.ts",
+      "sha256": "c5cd076e9e529bad7e4e3617e5e0d8f57cac5f4c8a251a7e19d2365e44625610",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/collaboration/page-undo.ts",
+      "sha256": "901a6dbd72742cf1ccbe0c4291e22ec9ae1be5e4b740f6b1bcf59d6a59059fee",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comment-anchors.test.ts",
+      "sha256": "4c366b4f73a5d55268fad9db090370df3b5d3f507d8965bec6f81bfea10b4026",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comment-anchors.ts",
+      "sha256": "b03113f8161dd82700772c87a7a58c228cee75ac1a5b5e8e6771ad7695d542da",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comment-compose-bridge.ts",
+      "sha256": "5e8a59ef5494a7caf24173f75c8b0eeee83dfa42de4ff53691a580bded634879",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comment-link.test.ts",
+      "sha256": "8a91fa835d03e5dcbef8032d2c5fd44d3d57f1c2116d425d35ccc17d32855777",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comment-link.ts",
+      "sha256": "35037f812046bfd57aaf1f5f20bba8a705accd5eb837a2253417fa32dd202800",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-api.messages.ts",
+      "sha256": "042a843b27017b468ebbd677bfdd52ecec339e5dba2dcc8a4048911dd942a3ba",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-api.test.ts",
+      "sha256": "22edee1cded452f5c4b34a09c711b1441d7f0e2830daecc4c2842001630b1bc7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-api.ts",
+      "sha256": "3750952b3093134fd8a2722a9f98ae9e5e222a8e6ad81e1ecc21692f75836e99",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-controller.messages.ts",
+      "sha256": "18237a3a33d3c2f446f3930e5d531524e2f2cc4c2831c964eae71e97664713a7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-controller.tsx",
+      "sha256": "3dbf9d9bfe1f6221dfaea2b4ebb9e9617fe99d369cb88a9eedf97a84466ea85a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-plugin.instance.test.ts",
+      "sha256": "1a706665dd87a1c1a65d90e4d3f402218c4908268a6a79883b183e45561d0238",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-plugin.messages.ts",
+      "sha256": "a77ef55e910d884108ce0849552c28a2dfb11a8a3199b6a7abcfaa0b39a82f9b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-plugin.ts",
+      "sha256": "995e90e544eb79020933cf3bf8e4943a72dcff5510b95c92b26e629b277c5309",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-queries.ts",
+      "sha256": "1c96d324e8c399baf181b624ca58f4e1fadbdb0a9af0f70bbf0daf650e6dab7f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-view-model.messages.ts",
+      "sha256": "d48cfb95bf9d328325f41164f35901bde20ba8706a46d7a3f9313c5cc166c653",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-view-model.test.ts",
+      "sha256": "bdc4cecc8e14c74ae1c0436a0c6187576f112ee60d82db8275db3bad36934aff",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/comments-view-model.ts",
+      "sha256": "15201395f5756d0be8255afe2dd43310f0bfee5fa80ace619cd1fb2a32c36404",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-avatar.tsx",
+      "sha256": "c1389f2abc67951155e7f197b175ae7532379eee42eeb9ffc2a2feed090a9f80",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-composer.messages.ts",
+      "sha256": "c8362fc7c7635e4ae3bdd7141968f613f0cbc529dac0d5999330dd2c9b99cdd5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-composer.tsx",
+      "sha256": "79f2461e159ad6d00ccb489d374289b16cdc514b1d563fca861385eec0407fac",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-editor.messages.ts",
+      "sha256": "0256e77e12585c6639b680993b202a4092cab534d71ca74aacb5d780e4c71b40",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-editor.tsx",
+      "sha256": "f54378244d7a4906d87505a554924ec1655f725c5d1020b6f46dd3c7643f36be",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-entry.messages.ts",
+      "sha256": "fad48945b6647e72c3ff30d7f9b5fb736d04fa3868c69c23cc6ebd74c5f44593",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-entry.tsx",
+      "sha256": "bd0e88af0cffad5ac786cfa84e6f728856bfcb6cba3cc8cec9f4c70be05af25f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-filters.messages.ts",
+      "sha256": "386d20226735e44eef3956a2b80bb9a6b0116a4510997deeb90ab306d9ffc623",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-filters.tsx",
+      "sha256": "61094a951bf076829eeb619604b0cf12a0b5874bf3d11ea9e10ad4cf9443565e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-markdown.messages.ts",
+      "sha256": "8133218a8f42509be7d555693b7d285193fc85a9cc8473ea0afb0f573e170abe",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-markdown.tsx",
+      "sha256": "60022cb902ce8b90e4b83501ae2fe872fbcb5be688b3ee525c5dabb4adcfe768",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-popover-placement.test.ts",
+      "sha256": "520adb886fdb1ad6e09d4128f06235cd4cd9994e9a4be939967e4f86ba662bff",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-popover-placement.ts",
+      "sha256": "48114b76fd533dc7eb4951b584d52ca44f2b0ab69546f42f945e3fbd93616acc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-thread-card.messages.ts",
+      "sha256": "d3a3632e857901d1a400b9c3bc7b35723caee5a33904fea2d0babc5ebc033b25",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comment-thread-card.tsx",
+      "sha256": "c396d6c1f898238ffcd417e9e83a354cbef3ccacd13376e48295d110c99844b2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comments-sidebar.messages.ts",
+      "sha256": "9dc511e56867fbe6ce5c37bb6edabe4170c266f1e9ec890b1796655174722d31",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comments-sidebar.test.tsx",
+      "sha256": "407610580eefdf699af02603f918d68fd2c7854e73e7eedb4ea749f765a9c359",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comments-sidebar.tsx",
+      "sha256": "929f05a9d1046d19070625db85643969c365cb4a5dc813a1f03c4d140f570805",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/comments.module.css",
+      "sha256": "c4104b1ffaef8f65d347398c516d61363a94b2830324ac4323397cc4da043dc6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/selection-comment-popover.messages.ts",
+      "sha256": "399ffc99bd6eed3ea0118dd18fba56447488a761560e67e041d49ce0d49f8dd1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/selection-comment-popover.module.css",
+      "sha256": "cb74007eb2137847c5ec530bd3e986def5f2f5d9482d06d4369f1562e6fc6bec",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/comments/components/selection-comment-popover.tsx",
+      "sha256": "9069081b8faa7ef94154accb4be7c1b8beda1b0626a094b245e7aeabefc39b00",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/api-types.ts",
+      "sha256": "030289e412c4fbe515c00a534c74a71d837e01552649416b9ca253c147bff4c7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/catalog-queries.ts",
+      "sha256": "c30a292e6b06538a5838e7044dc0729a6e0e882eaa4bfd3f291b0e4ca51177d0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/endpoint.test.ts",
+      "sha256": "b7f6fcd9ab3af106b9ea70d8ce40b4eb2b0891074835f616b85e9c95e34cbfe5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/endpoint.ts",
+      "sha256": "7bdcbd030115ff0fff2e34574a09d7c169380d5e55b726c88bebf8b1ffeebc92",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/errors.test.ts",
+      "sha256": "067699329a6fd0e299c7f3956e11483bd93a84b142b0a3c1d392169cf8bfd405",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/errors.ts",
+      "sha256": "fadf27c739a2141d856797d5bc1d299d08ea486ec817671dc148e76072eb3b0a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/hooks.ts",
+      "sha256": "4b12f82658cf871b147ba08479e645b9082eaf1f030fb1cffccc7e7ae1afd288",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/invalidation.test.ts",
+      "sha256": "528d6f723779bd2038543ade55b59f1e27e71856d3e14db6412de1ce1f916b58",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/invalidation.ts",
+      "sha256": "b785bdbc95cf85192db02bfda4640a6cb7eef0ec0988b3bbaf0f99abefa3b6d5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/knowledge-catalog-client.messages.ts",
+      "sha256": "75ed0be327f75b1c3da61310605bb621457d90f527cdfe2f346489ddea6f71bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/knowledge-catalog-client.ts",
+      "sha256": "bf3bc9d797d87d8ffc4f5c66c42646b145af3006cf265bd7cb21b4dd8131a7db",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/pages-api.messages.ts",
+      "sha256": "48a0f954a3b2456938e3a6c5774808b56346ba4fb9738e13d689b8974ae34253",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/pages-api.test.ts",
+      "sha256": "c64b3df7c34bca4bb549d617da8b9ccb15f5f6aff144677383da0ad60c8f933a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/pages-api.ts",
+      "sha256": "5dc9b59f84c6364028993231a03edfbdebfb03a8f48fcbe3e84ffbd46fca8818",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/pages-queries.ts",
+      "sha256": "fa7dd4679792784bc03aed47387e8b41fe2b8eaed60aecc59eec8ba28bab6e79",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/provider.tsx",
+      "sha256": "23f5ece3ccf5f23ab2f421e89e2e7a646c0e27db1893a262e04114eac7e245a3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/query-client.ts",
+      "sha256": "43018866ba0fac917daae51f75380dc2abdefada63f1337d7fb993505b6973dc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/query-keys.test.ts",
+      "sha256": "13ac9e36305246cd35bfaa9bac36bf5236b64e3ead7ddb294995df8e27582ffa",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/query-keys.ts",
+      "sha256": "b46fb56f2c50a7d2bd66f42cc1dc52ed59d0cffce7f8c4beee0fdd11186b2126",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/reference-pages.test.ts",
+      "sha256": "17166997cf7ed242e3007308e3054e0f930bd747b1e17716f9aefb52a68d505a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/reference-pages.ts",
+      "sha256": "de9e78331f3612fd87f56e48811f9799c6647d24e72034e1b9946da53c312008",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/trpc-client.test.ts",
+      "sha256": "b7250e9daa4cf55e39cfe930eaac37229162d74d935cc5222af22d5b58a5b7a7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/trpc-client.ts",
+      "sha256": "8fa52f43a1c6e6473ff7499fae9152d690ef56ee4461e37947f136461934e6ce",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/use-project-knowledge-directory.test.tsx",
+      "sha256": "fc5ed2e7b31f8e5a3346c7f9713dfc5a9ce2c70f1d600282d0d00f23379eddd1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/data/use-project-knowledge-directory.ts",
+      "sha256": "5f10f90fbb255ee61370a37700fa77baab89b169ed8c07cd6fa461fbbe2a09bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/anchored-panel.tsx",
+      "sha256": "4189d62bcaa078cdeb931836b70c83bd960b8d5e907db0eb28bca6764f3c7651",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/cell-model.messages.ts",
+      "sha256": "951af621573f7e04631dc5c139f0ca0ba8c1aaedacc388654be159c4fe6e5949",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/cell-model.test.ts",
+      "sha256": "15d89a18328be6fc4d6d3b492afc98a75b29d5249cf14db9ba5923d309275a4e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/cell-model.ts",
+      "sha256": "cde2ae728233ea0c4a8e7b245bbfb2ac095d213b40303c9c69cafbb6d3da8cb3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-api.messages.ts",
+      "sha256": "513b8a8bd510087469ef24526b7a9126c7bb047afe10fda5c890cc0e7f93b9bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-api.test.ts",
+      "sha256": "84b6e965f2bc6ae0d26d744056897c1adb30c33023a1ecb05887204e52faf002",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-api.ts",
+      "sha256": "95c04e11eb99d038965ad70cb0b34bca20b3e46a5ddcbc1a5d6754fc8cf1b468",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-queries.ts",
+      "sha256": "61bed17151e385fd199d3806cad6356066b5033035ca5bb68692a94220aed140",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-table-view.messages.ts",
+      "sha256": "16b7a2fd21c362b387cbde15ed54f16c8431e145c8ac3baaf53f7842425aeb93",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-table-view.test.tsx",
+      "sha256": "24dc9c7840b4c6fba0e0b91ee7e7a0345df4da43f5a0742513477f4ed93ce2b2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/database-table-view.tsx",
+      "sha256": "b048738d1cd85ef72ac820902856fc3395cb7077480a8ccd682d9397a3f77fe6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/filter-sort-bar.messages.ts",
+      "sha256": "94c73c25bb0876e550c1cfbc228a7f11187702c2a11afa369978ca050015da1d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/filter-sort-bar.tsx",
+      "sha256": "65e4a45ced5f7870e35a8dbfe0e6ab7c4e0b85b87f6cdc8d8519c8c59756c228",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/grid-navigation.test.ts",
+      "sha256": "e731ea7a020be8d40e9fc4904f1b1802c51815e0f9d4f8753fd4876396a1c20e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/grid-navigation.ts",
+      "sha256": "7ca4dd471b51954f1f5744f29c12b4b113b04e0eb0177a741c2f2991b575340a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/index.ts",
+      "sha256": "8e2f5aaadbbf6731bbbf88c0e71dfa4fad54f44e112d2bed0713c950836fd9bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/query-state.messages.ts",
+      "sha256": "3b045e09fda8bf5178551d7fc832ccecf4cb85c93462da329174cf18197ca73c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/query-state.test.ts",
+      "sha256": "4712a6f3c06e6c34442d195448d52c050093a0d856f7ea502e0778c00376af32",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/query-state.ts",
+      "sha256": "70a4b03a28a88d8f237902c69c4d13c633c84a4eafb8b1b2176fa8046f3ce00b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-cells.messages.ts",
+      "sha256": "34d33f52b1360afe53e5ca651f18394682e0f25866d66e2261bda2e44ea58472",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-cells.tsx",
+      "sha256": "1bc58bb165b9ffe37c356d93c10bae29969fa7d5e5fa1a724518d41ae07a08c6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-grid.messages.ts",
+      "sha256": "f27cd17457aaf2197e176d2220a7d0659d3ce633b59703a235c3d096fb05615c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-grid.tsx",
+      "sha256": "08b11b06f58560a7f7c8fa532249f75cc4cebf2253197a2d00f3e5008162d140",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-header.messages.ts",
+      "sha256": "f75f3037e927fe24a32207fce202f4bfac37b8b584450ecc300b56f979083b61",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-header.tsx",
+      "sha256": "74ded3d4dc71d4deca25823664e35c8ffda8474d1cbda365e477be8072d277f7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-operations.test.ts",
+      "sha256": "8a5e9a0f33446db5eac627af750037fb47e9de1fa0f023f81c7fc1ec69786aa9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/databases/table-operations.ts",
+      "sha256": "2d1fccdf47ccf1465650f0ff8ed757350ca1f3dcefce8748594c03f257c19b51",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/document-action-menu-content.messages.ts",
+      "sha256": "5ccf40c954cb175379669d3f074e31771028275bfa18581c2e0518c993273c10",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/document-action-menu-content.tsx",
+      "sha256": "03e964ef40365270c2c3fce39fafa2ce16b2615bf9a2a32d2ae36a1b4d55317e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/draft-icon.tsx",
+      "sha256": "3e22282119d38c395b88e9016e21662f82c47ffdd6ae9c1a954e78bfb9ac739f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.messages.ts",
+      "sha256": "ad50c97d59f6a9b91863021ffe287afc79c44a335c202d9d52612a9869043455",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.tsx",
+      "sha256": "690510d58eb4e49a52fbdcbb988e4c5f8a6444735709341c2280f72b6bda20d8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/icon-button.tsx",
+      "sha256": "20a2bad9671ff060c25c2e6e3d1ca0f9cdcc0e226571f6044d6673e62c746eed",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/messages.ts",
+      "sha256": "cfb249e5edc7d7b9dcb0a9ee0d609e86983d026f8dd6d3784305dda18c926a04",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/project-icon.tsx",
+      "sha256": "e7050eb147d88f68a894375b8c139b367ca54bfebd2a598b1f369ed6239ecad3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/project-icons.ts",
+      "sha256": "d149638443a945ddb8e6682ecf434ed838ecf2946ba79207af4a6aec6bd52652",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx",
+      "sha256": "9418054192715dd2bfc629bc5ea450722301e7217e78ae57cb2d2b49f555fb2b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-interactions.module.css",
+      "sha256": "8f6184251bb2dfe6f6b3999535e3421e677dd72170bc65875cb7890dd059effb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.messages.ts",
+      "sha256": "3559632527eefbca91f42edc468ad9ba0dd054e9727f24d6aea84e9a9c4231d5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx",
+      "sha256": "5c0044bec0d31ab761fd35c5175469d1311494d893bf278af6f280f90bf7f955",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-navigation.ts",
+      "sha256": "288d4cef2b4ce4084181a58f191ea04ae8c765bfdfd004d5016dfb0ba1ed2058",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-project-tree.messages.ts",
+      "sha256": "30a2cb1da82493fa6da6a38ba594b595c2103c58e4d679e738c1f8cf8530025b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx",
+      "sha256": "fb0eb848b6ac7e3f8289364a3942e3ccb810cc04ccc62a1cf8e5d4893da55f98",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-recent-notes.tsx",
+      "sha256": "faf8188ec5c07bb815af694d4b7554f88312e6c165be8591bc31aa4a0c4a21e5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-tag-tree.messages.ts",
+      "sha256": "719be0abd566ad1e205b79c1a7a3c91cb7a5567220dfd7f874bd902dc3804195",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/sidebar-tag-tree.tsx",
+      "sha256": "910f2e4c13c8be2029cc500cb3ab7b0dbf4f8daefbc5e2cb407d35dc2a1fa140",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/dense-sidebar/use-i18n.ts",
+      "sha256": "3bd985f7a2067a66948a5bb06fe114e5a19a643ce5b36c490590d4dcaea44bc5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-collection.messages.ts",
+      "sha256": "75eba29b9942de63574d0dfdaee99106aa51310fd138884242779c947273c951",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-collection.tsx",
+      "sha256": "4bd99f36a82e7834461206cab84ff42825f4347d667cbac956f423aba00cf278",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-folders.messages.ts",
+      "sha256": "ec49bb46ecc5a29f69799cf02f93e4c9dda2c0201795eb3ec19aa1c4406bc51e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-folders.tsx",
+      "sha256": "57d971976fa810c1eaad8eea47b96d75217db63e4ea02f04afaffb36698b35f7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-metadata.messages.ts",
+      "sha256": "46bc4182fd8805aa674ca2677082a53211184ab365819fe40deacc43f0984bb6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-metadata.test.ts",
+      "sha256": "816a278f05ce30f33c0a23af4c41aebb81e23b0652c60958d3be0339662493b8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-metadata.ts",
+      "sha256": "72740a4de50a2e702c9c6a06f79a9746d787740d798c0fd7aedf6745610ad085",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/document-visuals.tsx",
+      "sha256": "4613636077b7f189f1a33014cfc777c7ea6f4203daec2be8198018d77a8342f8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-page.messages.ts",
+      "sha256": "34a0a9375ff279748c9b2db393f637b67aae2bd546260264d022902ee8abe508",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-page.module.css",
+      "sha256": "962f042c494ef6b2b6824f4123ed932bc1a3fec3eba5a430fb119cfdbcc6f259",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-page.test.tsx",
+      "sha256": "bd5c50baf68cba2f76fb701e7b2f48e4ef9b5351a901a5a57b8413f53a7c28ef",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-page.tsx",
+      "sha256": "0d9b2397497957e173848cf0f95af01a92c29f272b2e1c0f9a97ec3eada142b6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-toolbar.messages.ts",
+      "sha256": "363d8d441b9ff9b533f372fdb2c4a2c7923943fea3ed3757a621c02c11c2a328",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/documents-toolbar.tsx",
+      "sha256": "e97d2856f3dad569d937e0a22c4bbd8e6c726a928613cf7bf609c67b983859cc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-document-preview.messages.ts",
+      "sha256": "71ae8c0f4fe3a5f4e7d50190f54db9134b129fb6855b164ee8e1e2a188568b3c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-document-preview.tsx",
+      "sha256": "33c4b312a845bb3b527ebc8ded6f20779e27a8e9d509f13d038487dc74afbc7c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-document-surface.messages.ts",
+      "sha256": "0247abc8abab9235f7894624745ed3f706e0e20dc9042662dffe64ee3aa6d512",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-document-surface.tsx",
+      "sha256": "02fa242a4a853fb1ad72d4e37479288d79841c238f8c2dd36d012a1d86ba9c8b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-format.messages.ts",
+      "sha256": "d33c403cf6e313c3a5199749fcba210a6138afbc19a2c3ee27051f0ff331d995",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-format.test.ts",
+      "sha256": "b45fd47ffd8e245229ddc41ae8c5c24fadd7e7fffa952dc3ee54ae0d2f71eef1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-format.ts",
+      "sha256": "5b7a014485e7235ccaf04d0c421954c09cf146fd4bc5fbe6e5fac79912178b57",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-preview.module.css",
+      "sha256": "52f800442fe4914d179246c2920630c8a6220118f05deed94238a2965ee77b0e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-source.messages.ts",
+      "sha256": "a66d25878a83da47f2cde6b55d507574c7f41f79bd213e4c5c3d8d4896746e68",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/file-source.ts",
+      "sha256": "ccd493382112f95580bb44bad4f3ce33067c256385cbb6489497182f53f4965b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/local-document-import.messages.ts",
+      "sha256": "fe933f1990b60a54083b2c12d7775deb5eb7ab63f143a6ed76729fb2c85b84df",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/local-document-import.tsx",
+      "sha256": "a556f6db4f2336db6b61555bbce2e4a9ee1986f5df06b4a518f51bb2868c54a0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/office-file-view.messages.ts",
+      "sha256": "f50f59a577e25ec482d40f062a40916f21012b792fdd081ce58ba27db6ae13c9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/office-file-view.tsx",
+      "sha256": "09f4c6147599f43ad054e78e35d94c3cef29bb5b5364a436ce273152fed1a551",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-file-view.messages.ts",
+      "sha256": "b28a0835a77d581294ebefe3d4a438526b0130576b5c27d44f611f6a80c4a26e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-file-view.test.tsx",
+      "sha256": "8b9e6868927bb247ac3fd97daefef950e5f92e3c6baefaeb6980982690c63916",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-file-view.tsx",
+      "sha256": "e67e41bf871d1205859beaccbeeaa8a391f8bf2f8ca621245da8fda2f17e0b4e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-page-surface.messages.ts",
+      "sha256": "5f5628455af9d0517b20ec3cadf2cf522551dcd1979501e0fb6c71b891d869e3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-page-surface.tsx",
+      "sha256": "a6dcf4e329da56e7558691c8feca5805122c4e398e78290ee4155ce924cc2a4f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-selection.test.ts",
+      "sha256": "2a1e7e76cc82dc6ec6c0575d8c3b4798158865f5f843ab9e92cab7fda1eb8c64",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-selection.ts",
+      "sha256": "e02d2fcd440848c47235b428d4a6456c9d23bb88032e94ba680070de59372ed5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/pdf-text-order.ts",
+      "sha256": "d9891f1cdf9006d63f24be253fd330dd1e37880de58d022f77f3ab95a454eadb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/server-document-import.messages.ts",
+      "sha256": "e9e1da048699c67828362289c307aee161b8a2eeece7a3c32386cead3aec8061",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/server-document-import.tsx",
+      "sha256": "5a8daebe64c064be40e8a27f26fb6726dd6e689b567aed3f7a50eb6e94ccb979",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/text-file-view.messages.ts",
+      "sha256": "f526ae44103a064bc254c9cd5928e1098cff650cfa11401ce74db491704ebfb9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/text-file-view.tsx",
+      "sha256": "d2c653fc4e8d176a9ba9f51e371638665e812e22df890737f6beac1b889e67bc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/documents/types.ts",
+      "sha256": "4d059eaef3bb4457ae5b1ed0282d8aad0051b33af1489b5a3de2319dbefb5a7c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-extension.instance.test.ts",
+      "sha256": "4f80292fb757a2f129330c78e6e0bb52bb38d83456d0ea6f6081834d7a52a244",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-extension.messages.ts",
+      "sha256": "88b2035aaa4c78fa910e2c44c72e4342acca0b598f1c4897fd5bd4373a581829",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-extension.ts",
+      "sha256": "6cb70c15acc7a342afb16d176706b88b9fdd52b428784799251d3502360662a8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-members.messages.ts",
+      "sha256": "d59e553fac6d4ae423cc871110818aa33648836e5b7ee487dd45eb61cb9bee96",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-members.module.css",
+      "sha256": "09ef86ea409229da4b74f74647c7ab1f926414ef1fc402c3635971c7fb2bb426",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-members.test.tsx",
+      "sha256": "a5ba8713ee58de38041c988a1c626db2ef62e1206ff7fcf376120e0b24593ae6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/awareness-members.tsx",
+      "sha256": "032b27db457f697446f276885d2a23cf1b058604c62b965add15e5a1752919ac",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/awareness/index.ts",
+      "sha256": "a1bc2bc2135181761d9b7f0361bafad8670f4360e01bd513d232f55034781e91",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.messages.ts",
+      "sha256": "85d846caba3532fbeb469712cd01d76d614db5ff5efe6a80a7ea4de8b344ae02",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.tsx",
+      "sha256": "538d13813a955299d025c308fe0815013c11ed6f7401194e97184c0669d82807",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ai-block/ai-block.module.css",
+      "sha256": "d35c0c1c793e5bd35cc5bf3e2dd470dd9f81e199ca730ba0506862b1da7e4a1b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ai-block/index.ts",
+      "sha256": "af757523a8ae7c1511814daec5687f3684ff26df91bc1a72026af1d6328703af",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/audio/audio-node-view.messages.ts",
+      "sha256": "5d1ccbddd6793b0fd41ba7cca77cc1af015298ea0bf762857251fdd57db30b1a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/audio/audio-node-view.tsx",
+      "sha256": "52dfc415f94c9f7ee81cf152e776297e3f45ca3ed4512278ffb8cd55c74a8a40",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/audio/index.ts",
+      "sha256": "2e2e7a870bc333f789b7c05e34f9cd0b8b502bd40b47e2790bd2d032de545251",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference-picker.messages.ts",
+      "sha256": "f4a9e44787e9854d70e9f11b86d06afbfdfce0a51bff79d0ee0b9c54d58f916b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference-picker.tsx",
+      "sha256": "a840da1e52c1453910c60f79b1ce8a4f10b963c3b5f527cb9e5b4650954721bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference-source.ts",
+      "sha256": "89f411da845614344a1aabdd7300aff4d447329f1185e53132c50f619014ee3d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference.instance.test.ts",
+      "sha256": "a93e1c386b305c49b18102f1803c007bce35d1b333f5f15bebca1b31f67887a7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference.messages.ts",
+      "sha256": "289f339b97e1a15b97bc3a79e58292064c47aed227ceafec0d45a6cd147bbbe2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference.module.css",
+      "sha256": "21de8ac68d4475f68c8ce17c6a73255f746b4e4d6c51190d7f04600d999b5df2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference.test.ts",
+      "sha256": "b43c365593adca81296053d8a404009acbb4f0cd71335f6c7b565266388aa1b4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/block-reference.tsx",
+      "sha256": "773db4ab64699633c660151ee0b67c5eaa159f98c0ab97027a9429117c1ec6d2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/index.ts",
+      "sha256": "4fc7ac7d2fac17a532c3f8085b35c19e2f3abed28dd8635fb82947bc8419b97f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/local-block-reference.messages.ts",
+      "sha256": "29bb5e3b9f93e217cc3967053bcf53bb0e55dcc55d9b6543d304a25db41f2e13",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/block-reference/local-block-reference.tsx",
+      "sha256": "4af7fa36d72a8ce88fc113404721f0e186ba9af713026c021989be5edcd9ebb3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/blockquote/index.ts",
+      "sha256": "717fb23b8b256e7eb0ec1e0c1fa2ff9be11da8359e96c01fa8b7de9c7c506572",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/blockquote/input-rule.ts",
+      "sha256": "ad4d8e4e628db5f1687e17cd3fedeee54a0d47745da123f20c11adb583132a5a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/blocks.instance.test.ts",
+      "sha256": "a536c651cebced4b1790904c4797a50b4cb6f00b2713e118aa4164b0e505fedf",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/bullet-list/index.ts",
+      "sha256": "c137f4fdb7e9c7184eb368787788126fd90490ca5a0297954a8bc0662214dec7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/bullet-list/input-rule.ts",
+      "sha256": "d7c9071f38ebc0a3b07f9a02dfd05d3b5f3d4456540b751091473076b00ff75b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/callout/callout-node-view.messages.ts",
+      "sha256": "fdd7665f4d6cf8d1579eef9396043b89d6cc0aab4aa83429a84593907f7e740a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/callout/callout-node-view.tsx",
+      "sha256": "8ced0d1e86c712a8003a819148c5a6e6f1399867d3e123af626111753b5ef974",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/callout/callout.module.css",
+      "sha256": "562371efabc98f2dded2028bd9030d17aee8f676e9ae704c41ee9e2bfde94ca3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/callout/index.ts",
+      "sha256": "3d9f0db0d432f3bafe253625cb563c950a13667fee22280c90766240c505bf23",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/code-block-node-view.messages.ts",
+      "sha256": "99ff7669993ef542391a0a719b0b9b6712018ead3cf11aa94d89b0c6ba382d3e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/code-block-node-view.tsx",
+      "sha256": "e7715ec654ca9c3f570758a9cab05416d562db432a319231f38a0773d3c359e8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/code-block.module.css",
+      "sha256": "9eed229a8ed5e8a0de2cb645c3cc52daec6fffa6ec006591f7bf108429492fa3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/code-themes.css",
+      "sha256": "4d2274ec701bf77b4ca258c1e40a3cc70e13e389bbf299dd7ffbdffd56c9c958",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/highlight.messages.ts",
+      "sha256": "6af69cf1a97a2489e829c8dfdf3fe2410769be9a67941c155527ce112fa41dda",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/highlight.ts",
+      "sha256": "1882b2a31f0cd8fb95cc2b2a88e92dfc9e4dd6f93534dd752fbd3aa92d854c62",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/indent.ts",
+      "sha256": "ec5411f2aba8d6e331989c7ffe212ab8a3849ff8423babfaaaf0230416c6aed2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/index.ts",
+      "sha256": "db40bd222b53ac1b6ab0754f01cc1fd164b30b7c750e162d63a9e3a03e67aa52",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/code-block/input-rule.ts",
+      "sha256": "acbfdb46df38f67338d35cbf577b678e55f703137108ebc13f2c816e5af5722d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/columns/columns-commands.ts",
+      "sha256": "3dadfef6abc06325bdea095a18b26ffb5bd9d861ae09bd5e6758bc1e2a22b5d8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/columns/columns-node-view.messages.ts",
+      "sha256": "cd9d0dca1b9f50c044b2abee941985bceda4442880c2fac9d6285bba7e8644bf",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/columns/columns-node-view.tsx",
+      "sha256": "7ff6383df235af7420894f6d807b0fc87e1d10b030a796e0bf11e7740b777605",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/columns/columns.module.css",
+      "sha256": "e5fc445424a9f6feaf55a6cb9923cf3329dec709f05cf224350c542d10a1add0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/columns/index.ts",
+      "sha256": "c3b0372c973eeee4a87084e983e813c2b3c46716f92f95e16f3252ad306f82b7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.messages.ts",
+      "sha256": "ac1b0814164150dc554e169ce9e8116bea5f5c4fb46cba16233c1c46c2e0d975",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx",
+      "sha256": "aafdaaeb79462eaf96755cb86a24b943e23dad966ed0bde4e52bcd267294b786",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/database-view/database-view.module.css",
+      "sha256": "71176b3f2ca6f7e8e2a30d3b7b412ac24a486f89123d690a4edec3860741a18e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/database-view/index.ts",
+      "sha256": "a6c85c45f8088e914da4844ad1c0db3bdfe1e6b217bb5e1ddb23e2c3963ef8cb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/embed/embed-node-view.messages.ts",
+      "sha256": "148a5150b42e14b2352065d01e7c8fff331e2608835b6674f1403cf6e02114ac",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/embed/embed-node-view.tsx",
+      "sha256": "dd1e589cfea69c9f53ab92bb75d97b67cbefcfd462253d6052cedb0a4200d633",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/embed/embed.module.css",
+      "sha256": "4f1d51ec976768d380bf8e7c568a99013ad934d8436770e4697593ae7b8aaa42",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/embed/index.ts",
+      "sha256": "2f5725de2e90fb3734113f5f2c506fcd19d3c8744239c7fe767fb38406ed0b05",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/file/file-node-view.messages.ts",
+      "sha256": "cd7c26a1e85978a3ca4d4b377a2cd9f35a2224830e10b8bd744f976871e218a1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/file/file-node-view.tsx",
+      "sha256": "92c69fca37bd5fd002d2a95235841cf6150a8aeb95e737933742e4888be5e59a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/file/index.ts",
+      "sha256": "e90c01ab1e735bd04275b414e2305c0269bb4a63397e147df0870e62c5d06896",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/heading/heading-affordance.test.ts",
+      "sha256": "84d59852c8ae4a84e34f53dc10b7b4fbb3ad95ad8ca4b02d04d3a50c25fa101d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/heading/heading-affordance.ts",
+      "sha256": "a744dcfea9bd0a03dc87f8c71e9da0b9ef95b577e128358116d17b951a4f901f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/heading/index.messages.ts",
+      "sha256": "8f1751090bab588be3622888b28d491e95dba20a79b7a9074bfa1d8dffd70930",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/heading/index.ts",
+      "sha256": "6576679a8e00670fae74df123ddd980627fab4cdb2a605e58266db66a5754d2a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/heading/input-rule.ts",
+      "sha256": "04f6d1dc4e72a00082d406ac5b0f7698da587481784b526d327d6f9abaf4c4ef",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/horizontal-rule/index.ts",
+      "sha256": "3fff46f3ef6347cefc3f4e8420e526339391a9719085d91a0e597305fed92eb1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/horizontal-rule/input-rule.ts",
+      "sha256": "253dd47c6d9afa079ac9dd36c67f749ee4513d7e9fb1f0d7c3909cbedfbc52b2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/image/image-node-view.messages.ts",
+      "sha256": "0652d1ddcc0ff66baaf8315f47b9070095f5fbc1aff91de7f797b5095dbfcc4b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/image/image-node-view.tsx",
+      "sha256": "b731b972d81ec49aa9bc671d8be0f5edac3d0b810a39bdd901a169580ba34615",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/image/index.ts",
+      "sha256": "a16f967c6bfaffa3b4518c83c32708ae4be02e6355b0e5651388eb1430cdee0d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/index.ts",
+      "sha256": "b8009c3e1ec23586e88c7acca1c4dcc42973b9cb67b8c0c0902926cc6bc83f29",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/insert.ts",
+      "sha256": "ebb0a99d90f7bf1fd28110c7de210f6587f2ff9ebc025112df009a398c562e87",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/math/index.ts",
+      "sha256": "65ab31ee8d0708975cf298b581ba9193afa25c4345ad782a41ff0719b989f768",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/math/math-node-view.messages.ts",
+      "sha256": "6af8dfbdea103d6ae897c4b7e55514b60947c47314a24ce3bc08f22c86c4e226",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/math/math-node-view.tsx",
+      "sha256": "2db8887bd85a2bdba84216c42b97927cf89e3dc38f75e145d952695f2fc14903",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/math/math.module.css",
+      "sha256": "5a1323681a5bf9ec4b75d2e50e735365ac8b0683fd7a43d01c81ea1818ef1f12",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/insert-media.messages.ts",
+      "sha256": "b7eeb9d65a311fb09b09e417a883d6c1fab5c1e2b6653ae7647ec87568c69c2d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/insert-media.test.ts",
+      "sha256": "78bee7584b6fc30daee755a0f23c40e1bbda3327eaf663d3dccbde558a698550",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/insert-media.ts",
+      "sha256": "f0c0aa24b7e3314cefc95e695a1ef0dbca7907528e76ec35cd9b4de30ec56651",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/media-block-view.messages.ts",
+      "sha256": "67d1577c64219ff2336215452d250b25236c058eed48ff1217bc246248d78cf5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx",
+      "sha256": "d8b75e39e2e5ee17babfba0d31c7fd8fcbfff8e31acc6131a5c4b7890937165b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/media-core/media-block.module.css",
+      "sha256": "f2b6b2f9f0d91deebe7ffc6c359ebe61660d967c9f61444c3be6276ef026e839",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ordered-list/index.ts",
+      "sha256": "2ca0390cb290b779b299e9f4901413320ce387b0bb42256ac88c8dbcbbaaf3d9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/ordered-list/input-rule.ts",
+      "sha256": "dc7b7301446b76d4cbea28fb8c0a47e1ef3c4a6a840b770d41ced0c3a17058e3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/page-link/index.ts",
+      "sha256": "2b5a481fa5f334928efba7ce0aedb1514c8c9afee1c2e390a7007c31d063ab9b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.messages.ts",
+      "sha256": "fc8166355bf06710eb87bc18cee08b77e9f68ec6247f29aa6ebe6cebba2ad319",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx",
+      "sha256": "28302e502a3d812dab301815756a2f1ce02a77f9a21b355ff08f8530070ca3dd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/page-link/page-link.module.css",
+      "sha256": "eab6379b0b2066ddf07574ba601def2f5923b346e8ff86460b9b0ad01ef73d97",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/paragraph/index.ts",
+      "sha256": "e3e565dd0273db8a905ce9c2e3a04369215e660edb73d9f40af0376d46cb13c6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/index.ts",
+      "sha256": "a968e0a28abec3916c583c5f7393751d698abe5fb72e44fd810b614ab78bf1b0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-color-menu-items.messages.ts",
+      "sha256": "e0022e747599fc2cb954bf4016fe5dbe29c6de9ca82c52bb9bc0a7cb31355449",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-color-menu-items.tsx",
+      "sha256": "c9e478858db598c2f5e14920092fed621b5657a753aed3cb230116d009ee7b4e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-color-picker.messages.ts",
+      "sha256": "d36a8368602721b7bc79eaf17b6732f8670c7056027a842c4341569e1cbe047f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-color-picker.tsx",
+      "sha256": "f4caf9f32a5c8cdc08431ee93efa47fad68d4aea918406846097666419a06155",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-color.ts",
+      "sha256": "f188f08ef056373165fcfe38b785d36967a625ee8983344d91c4d1a0ff89cccc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-commands.test.ts",
+      "sha256": "9a87dbcaf8eab8fdcf56d0dcc6290e0a16a4d3b44a193b7753d66c4300e861c8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-commands.ts",
+      "sha256": "46fd5008ee1790ea183c7bd49f7506197250099c516d83ebf0feae920b64f919",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-csv.messages.ts",
+      "sha256": "647f178a0875ced3b2b60cc6283ff98649b49b2e6cae2751dd56be2c9e727899",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-csv.ts",
+      "sha256": "eb9b374616d02addfa26c5c15e16fdcf8006edd6e29337e72981c5bb122decd5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-data.test.ts",
+      "sha256": "7a0a0046d846fd6b912b7f8577dd43d497b550c68ad249b9e1924cb6bdf2326b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-header.ts",
+      "sha256": "57f309aa89ab7d561177fff961cc1d1132833bf4748a1afd952cdabd314a9790",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-interactions.test.ts",
+      "sha256": "3b9581dda7deb5971d51b40302c8ae40fe8499187b3aa60ff8aa9677dc9eec8c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-move.ts",
+      "sha256": "ec3bcd5c5b683830a5ae0c74fa0df9229db40bb5ec11bab48ad0d02de9285777",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-node-view.messages.ts",
+      "sha256": "7fedc13823be224caeed6d50dc69932cedfceb6928dc1950de657e148675d41f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-node-view.tsx",
+      "sha256": "007b582510325ec773f13cb85097481de87921d3b63e9cbbd58a2da62e17f64c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-selection-format.ts",
+      "sha256": "e6bd50578f63a855a836b3981c64024fd05f22c764eb1d79e2fd4accbe911c35",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-selection-toolbar.messages.ts",
+      "sha256": "93e2966d990d745207f04112a73722a4ff7e7373f7da07b3597f706726d62498",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-selection-toolbar.tsx",
+      "sha256": "3db86875f582e70f7398718d209938c85f81174305d86420521e2089e5a680fe",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-selection.test.ts",
+      "sha256": "8dcc96513de6a6023003f33e70505a15bbdd44af9221499d3ea1e3e47f066699",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-style-menu.messages.ts",
+      "sha256": "d2b231a0e4a15e1f62c81d144f513f3ee05f8062a1e528502278cb6161a54b86",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-style-menu.tsx",
+      "sha256": "6ae65a550df06faad9102f8eaea57961f27b5348d0afd7db03b5b552499488e9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-style.messages.ts",
+      "sha256": "d11123a56a21be5fe1c5f94d4d460b1f439d2bbba6444264f924f265cd4e0295",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-style.test.ts",
+      "sha256": "6005644dd663d8c37361d5931d828db4b1ce87e049b4dd2a2bcce9c84eb1d108",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table-style.ts",
+      "sha256": "6e908296c502c55a825e2eea6f640c1a95941d991b05ab4aecc23357f87b98af",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/table.module.css",
+      "sha256": "21875730fe20b2f48a4ee834adca51522eaeed851c1b674b18bcf5261326d32e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/use-table-geometry.ts",
+      "sha256": "b782bb894673d1be719c38c4c9c804398b3879273a85e753c36ab6b02b941f15",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/table/use-table-reorder.ts",
+      "sha256": "ea0d4b7d326176d99015c737f6336e6bc6449ce70abeb8b9d1b31d32515fc0cd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/index.messages.ts",
+      "sha256": "7de07077b7aec24630803f14174ef1c925af4f9f47099374e39458f7d04e0a86",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/index.ts",
+      "sha256": "71aa366d349b9ccd501e2c230bfcb023a107f8544ab47a2d39786da9c954091b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/input-rule.ts",
+      "sha256": "63a5d1a0edb97df0e8b492ff1be1e97e4f3b6fc998f06156a53a75bbbb0a5098",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-celebration.test.ts",
+      "sha256": "e0eab422b90f2c709c1593510cdc9e3e4bb3bf9345a70c6d889ee4f48e8431bd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-celebration.ts",
+      "sha256": "9afc02908397ac3f4201b42f158b736ed5858bd03cd8a85344efe55656371064",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-item-toggle.ts",
+      "sha256": "7485c82e11e4543030c9a5ebc6d090b96f52c0418d6493382af62d3c05a128ee",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-list.css",
+      "sha256": "7f7b6873450e6a8af2ca6b02a49dfcbde286b954c398bdcd095418b030e5a228",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-progress.messages.ts",
+      "sha256": "4cf084aacc8378d4bc7b9a3ecb5df866627229c391c2611d9af25b5b4e584489",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/task-list/task-progress.tsx",
+      "sha256": "c9788d9e7b50f70559a2687b4f662e0fc8991b8917d1f452fd7370816568b411",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/types.ts",
+      "sha256": "664157c76b354898fe617e2ea63ca74142e4b55d4a34999942661da0f90b6648",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/video/index.ts",
+      "sha256": "04fe3876e01fcc38e1b8763895a24f89c93ada0ec831be3b77609dda3b7536ce",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/video/video-node-view.messages.ts",
+      "sha256": "0db82fc660d4474f56def87cd1cb2446506d76814e197162339f35d1ff446ea4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/block-modules/video/video-node-view.tsx",
+      "sha256": "769bbb2fc0db82d989e0a7d4511073f08263a7759987bed720b09cbdd457ad05",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/code-fonts.css",
+      "sha256": "45defc3c23f966c7402010ca113b8307ad7e6bb06cb1348132373cc4b3a6fa2c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/block-labels.messages.ts",
+      "sha256": "1beda85a6906904c5cb9107c941797b966cbc33c09369946b9f10dcc6a8aa55e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/index.ts",
+      "sha256": "42f7133a5e41634908df9f8608ae8b6f0d54666e9434b19591ad736b282adbe3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/markdown-detect.test.ts",
+      "sha256": "b2542a48f0db9ee936ac121aa30b4e5f00ca6327fc7a792157546b3aa43a4949",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/markdown-detect.ts",
+      "sha256": "408596928c2ad73ff527bd05e6427cf3a3bbee7e4fbe3b1780e06dee9d0d6258",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-items.test.ts",
+      "sha256": "c809a46a52431b9c618977d36c24f9df94993014427ace8cb4da26538b584ae0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-items.ts",
+      "sha256": "cf4ae804508a8901a525fe52f696f56dd2944202c73679c4cbc6b01ab4fadd17",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-menu.messages.ts",
+      "sha256": "dc75f868d8ee18a1b9b44bfa7576c8d33d2471667d943944383b6f5ef5279385",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-menu.module.css",
+      "sha256": "871ebd4818737083ad1f031b0e98f96c7c8e831839e5972ab3b97ab775e3f7e1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-menu.tsx",
+      "sha256": "a2afb6c02813715197eafdb452ccb277709fdac3977961dbe2e4844f61491fac",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-paste.instance.test.ts",
+      "sha256": "9c135ae320c644d3e202a3443b31a03cc550af7392f376eb20446d7021187475",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/commands/slash-paste.ts",
+      "sha256": "68d3d9af4a97f36befb98be28620ba168dbfcfb7bf8e10a521b1a1215a96eb7e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/comments-integration.messages.ts",
+      "sha256": "0d8a126efc3e484a883d6fbf0244b4714b4e944671498dfbaaf62ffe64c54c1c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/comments-integration.module.css",
+      "sha256": "1d076c0fabe234242d981b9116062d49574fcb1b117972d3611b853f4a389824",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/comments-integration.tsx",
+      "sha256": "f22ff5ad08bcf965469912a718d04588c38b3eccadad40d6e0c73775ba3a1029",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-appearance-menu.messages.ts",
+      "sha256": "2724ce9cbe1700ce098653b6e4b2be5837be28ba22cb1fec9e60b9d0b80b9d26",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-appearance-menu.module.css",
+      "sha256": "1c47024c54434dc6c48aca4077fc82dd7b34fb17375f1dfa2694d9371f6c3f67",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-appearance-menu.tsx",
+      "sha256": "c4b85b168810c283c5789283d3cb5832bc62f93123b10a59f4444fe9a79dbc88",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-appearance.test.tsx",
+      "sha256": "5654ee198424ec142423bbf05377b7646f49ec876d29914744b160ff49e4ba2d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-appearance.tsx",
+      "sha256": "c961c4ad6976e614b8326796cb6bc54c3dc207143ae0c64a333eecca97bd2c80",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-content-actions.messages.ts",
+      "sha256": "c12d8ce571b63e7beb5d8d9529b55e9c2a35ff7435ef34ab31ffd4785b00c7f0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-content-actions.test.ts",
+      "sha256": "4cc4a38fb78fbc2d57b4caeb7f1df1fbba9f6f5b75dd8102a029503fd412ccba",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-content-actions.ts",
+      "sha256": "2709237ddfdc96ced4b7c64446f24ade4cc0f0c5915b2c0b20f63dfc2119682e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-editor-header.messages.ts",
+      "sha256": "e08f9360c8011ca449af75875f8042ecb49e8f6c767d3723148f8be014eb120b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-editor-header.module.css",
+      "sha256": "aaf30dd169ef422c92735dd60a2b13d35667beb1df1627e8802ca16bb0570e52",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-editor-header.tsx",
+      "sha256": "15b3ede8b88948263c7c611b3456af9e13c68f72662f93e37d4c2f4919ae38ae",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-html-export.messages.ts",
+      "sha256": "8670559f4d4b34ef4c97930b19e9b2090e33df1c560fa97d7480b9ee3e93b2d0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-html-export.test.ts",
+      "sha256": "e35520ac6b87442cf860e8ea073e2a2d31f09b8ce48420827283073f43d17964",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-html-export.ts",
+      "sha256": "25141a01ded46ac21c48c37dee7e67a5aa673b376b5fd8f806efdad45d20af07",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-markdown-export.messages.ts",
+      "sha256": "078e677e7a66eb8c57a10a762e6e8f7a34bdeffa29cce71cf3b083119e329b85",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-markdown-export.test.ts",
+      "sha256": "06b97e3d4375a3a9b303b019a7473d7a110887977a0742abb0a409814f2ce503",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-markdown-export.ts",
+      "sha256": "9476ac987c04897ecb80d85c2e4ffebdc9d80408c28187a6755acea630b12d4d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-more-menu.messages.ts",
+      "sha256": "1c874f3c099051a5a5453b91876cddfd3f36e046d5ef458d0bf7ad30708b91ab",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-more-menu.module.css",
+      "sha256": "f5f1cf4f37f790c7e765a5f543cc9d05787c43e2a0083229521e5e950adfc7de",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-more-menu.test.tsx",
+      "sha256": "97b4ca75b5cdb92ad88ae7bc37aadf5fc012351754d12e5e99ee1ecee962c94a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-more-menu.tsx",
+      "sha256": "71f7d97e53b6499906e4bd8e9503efdd9ab849c080219edf7712fbc886645994",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-outline.messages.ts",
+      "sha256": "5c9af3b492a06c2bc523f72363ec31ecad0a57757519bfb5f4e45a54f274d6b7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-outline.module.css",
+      "sha256": "6bf9a295abb64b47ee0a59e2644998a69a059122653d20b4b6df135493fac27f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-outline.tsx",
+      "sha256": "bc816ee03f2806b0ac003dc14a9f89680c7aa185f5275d445c89191e828e09bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-pdf-export.messages.ts",
+      "sha256": "852716ac8440066117c9380de3914be639f4dc8894fe23b166f442121c2413bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-pdf-export.test.ts",
+      "sha256": "f1ed8c416fda7d79d5a28eba48d8066de4033ac82f6a0e30b41e2d77fd663569",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-pdf-export.ts",
+      "sha256": "5bb4ce5195aafc6dd40a657049943306642890c0442374b19c98079875c34b22",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-button.messages.ts",
+      "sha256": "9196627b7190e73e96ea942e9513e5403190df5273057c1dae7a2e5addd6a971",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-button.module.css",
+      "sha256": "94c4654cd5012bc0ebf830683f2479f4943a4ec6388ef45a5f2eab2bf657b972",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-button.tsx",
+      "sha256": "b5e29f5b20156e349c13ac0b46244db45ee6d0b64b45122ae4d70f1a35465aff",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-icon.module.css",
+      "sha256": "0a79e0df40a5ebfa07fcbff40fc1794a74e7feb1fcb47aac67e1ba62e0f401e1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-icon.tsx",
+      "sha256": "dbb126caa3589bdd6ce4ab6b88f911e4b6af2de5002923590a2d7003b85dd46b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-menu-item.messages.ts",
+      "sha256": "71758135c32f593c5fd4ba5bd8895ef28dcea1c827cfeffcf70b4bf8ce48c36e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-menu-item.test.tsx",
+      "sha256": "3390f4b81e0ad7c3bd9fc022ade52b356e81523f79c7476b21ed3ab8d3532a79",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/document-star-menu-item.tsx",
+      "sha256": "03cd4bc94aafd5cf06775b320fb316de84b5c7a4e8054d68f4cd4f23bb7cdf05",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/selection-toolbar.messages.ts",
+      "sha256": "f2d0e1a4eb9c203df84eeb554dca95dad75ce23d0b69822a575471122806f4a9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/selection-toolbar.module.css",
+      "sha256": "e6c522a14335c2d04436dd3c9b05fba84817c524661f05c513ca9f27fa9feee1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/selection-toolbar.tsx",
+      "sha256": "5cb763da863a34a0dbc68f9e9600b08e4795d839f7106010663fc1c7106e70ed",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/components/sync-indicator.tsx",
+      "sha256": "9f7ad81481a465d16dc81f731f013601641d1ce17daf404072b6de6ddc8c3ad7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-fonts.css",
+      "sha256": "b6f1e5094ea665e056b8fd0ec65555b51d3e48517b1c884fbf2ffca80121a0d7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-link.ts",
+      "sha256": "da8edbd2757afefcec3a1a0eb5bcdb85bda40e973eaa41501e455417280ba9ad",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-reference.messages.ts",
+      "sha256": "5d8eae18968cdd8b9f6c95fc7da1026a2ad5ae2842afd3923c029d1cc5a867a5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-reference.test.tsx",
+      "sha256": "5907c0e35363f0d97cd47336163ae287d7ed2f4f23099b860c3726bdde348f5e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-reference.tsx",
+      "sha256": "1bf627905a40d3537763193ccf6a848ac3f1281a969dbd3faa1982d60aa972eb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-tools.messages.ts",
+      "sha256": "89403c334c9d3298c763bea35c37ab9d0893a83ff11520346e71f2e77222941b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-tools.module.css",
+      "sha256": "70a0ef86a340d45ee01ad8ba6c03ed8178e85fcaaff0f4d838fc46dff316f8c1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/document-tools.tsx",
+      "sha256": "653c2d5b4eaacf17c6e6d3436700e9280aaf2f6f1a4ce37bdcb84571ba0e7d8f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-boundary-options.messages.ts",
+      "sha256": "04420d4d80a44ce0fbac928923ac6c2588acff69bc92c98a4a200dfcba9d4a83",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-boundary-options.ts",
+      "sha256": "4f94cbd8aaecc39b9909260fffc51637a9b73ad39256e445306ed1fa89a736e0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-boundary.test.ts",
+      "sha256": "e96ecd2ee82fa92883c0d5bf1f8df6b229c4ac954cea69e9c30460f38ad12ea7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-boundary.tsx",
+      "sha256": "5c6a4e60273b4e5fc45d21b25d791f387cadb71ae13be59b0fbbe2e6ca22179f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-layout.messages.ts",
+      "sha256": "5c0827f82870b442887599f9f85ade5fbbd051cbef6e699dde322ecac0cba71b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-layout.module.css",
+      "sha256": "dc6c194b8481faf23335210e2239fe876c30fffe988ce852878fd507165bbd83",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-layout.tsx",
+      "sha256": "5f55ef91b7bd637aaef5522077f0fa69f50d908d64bd7690424dbab3ed163e1a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-state.messages.ts",
+      "sha256": "15d662f5d255123d791039a77dec5696b7cd8e113de2ce0676b68a5ad5d39019",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-state.test.ts",
+      "sha256": "72e023c55ac2beba2c1066ec1feca4ba7f7c83f03db55bab369aaf69599a1b28",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-state.ts",
+      "sha256": "64539d69528cbb16ab67422ff67b37fba6855bcd6043b3798810411067f782c3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-surface.messages.ts",
+      "sha256": "13af9140591c8f6c38dd003c730e3e485dd32d73a1150a4bf708d02a9592147d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/editor-surface.tsx",
+      "sha256": "7bca6cf29286f8df12193adaa097f705ca5f1f72d4b5a88245f742abe5f96806",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/block-format.test.ts",
+      "sha256": "82094b3d8eac0de65ee76298c5c28eb0b95bda24a0204ab79c6985407ac7c7a0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/document-search.test.ts",
+      "sha256": "13830a58695d04e52c7026d484bd47afbe48fb60ad022b8ea51c514e19c7af38",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/document-search.ts",
+      "sha256": "2ffd6c432a519d99c91ff8764c4dad91922e3f1f27986ca8baf86ddca351af90",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/format/block-format.ts",
+      "sha256": "5a5f0ef64103451bd510abdb3bab4f3538d9354787c4430da31470af8715a8c1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/index.ts",
+      "sha256": "a326eacfd2c5061b3962eed6e8347110736bb218a368f96ae9589992383d0076",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/input-rules/mark-input-rules.ts",
+      "sha256": "fee21c18aeb3bba1971008d617e73cbcff87a03652c64e21bf90f010f4cdf39a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/input-rules.test.ts",
+      "sha256": "1ece5300eb7e17a5d9e6af414520c761410822f331cb22e505517c5b17c5d4de",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard/block-backspace.ts",
+      "sha256": "e8cfecd85b8bfc4f619e45d743b713b9a2614098a27b18032ca73c9fa0dacf35",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard/block-enter.ts",
+      "sha256": "c0912d39192a7c68d03772e584946fbb5047ad60a4897e376f7e20399e8e9207",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard/block-format-shortcuts.ts",
+      "sha256": "41992815bcde18d4dd3147938a3b3867500dbc6e48abc8dd0589eec5044b3582",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard/block-move.ts",
+      "sha256": "ed09dc4eb0986ed51fe96ac336d66e56b649547aeb2651ae78ef6e157c6920ad",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard/list-indent.ts",
+      "sha256": "34472469469a0c34ca10b7862795855613510828b3467be5ade9aabc1ec5abb9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/keyboard-editing.test.ts",
+      "sha256": "67ee6fa540f92cf96d0e75bf220b0a2e90b004a1476b9703808b23c8b750601c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/prose-context.ts",
+      "sha256": "a3bc0cc2e64a60bf36ad24a4fb491232b4eeed6cb5d7be0fce320ad52511f313",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/extensions/with-node-view.ts",
+      "sha256": "655a81c9516530a589a204045adf48bb3e20912e63d10426df5d08c76bad0512",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/index.ts",
+      "sha256": "ef0274c4c086358dddeba5159b35035052b8db9216053171b29b1551f1950f99",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/open-target.test.ts",
+      "sha256": "061fd5f728eb848f5e788acba50baa3511d17b3c06e4de4aea1d26477269158d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/open-target.ts",
+      "sha256": "873242c8bd0e435116bccb8aa72bb05312f8386bbad25dd48206b68afffa59ad",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-access.ts",
+      "sha256": "2d97ef16848c18cadfed53f6a67d79ed62784c428e69a9bc2e42865737be2dd2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-collaboration.ts",
+      "sha256": "a239b4fa5c82e7a3a512d3e4ccd4807ceb89bdbfbdbdae465d4e512682f8840f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-editor.instance.test.ts",
+      "sha256": "eee4694ac3fcbee34c579850f4154a36e0b61bd1631fa0ff444350ca3298aa63",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-editor.messages.ts",
+      "sha256": "6176f9241b2bf4e5e51e9ece018e02c52a570838691b6a635867e0a4e112645f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-editor.tsx",
+      "sha256": "4e332e4b9a6a7df4615b6959f0e488787bfe78101ae6a3dbf08e09d80e27a8b9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-session.messages.ts",
+      "sha256": "2de19b4295fcaff5514b52b40f9310c72f096a8c044d8a79b836a5bd4224f63a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/page-session.ts",
+      "sha256": "6ccfd51869ab5273c077e46a04d0e4a7cee02f832797547d621eaf023acba385",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/presentation-slides.messages.ts",
+      "sha256": "b44a5a7da9239e25913b307523cb1b8906c59a8d183ef05e2b896d3e2ed58653",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/presentation-slides.test.ts",
+      "sha256": "cb43a02d086630ec1c71c1a9ab505f07513c1b4035d8affa5616d8733143c618",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/presentation-slides.ts",
+      "sha256": "e9dd4b2a12cba6e7ac54dedd13a9e1e65a624b7a1b33a9c4e0e503895663ad01",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/author.messages.ts",
+      "sha256": "b40f2be771d818b415b77b9c93e8b1203b8210afd556ad2b94adef66b81f1c89",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/author.test.ts",
+      "sha256": "cb8c8e28af824a1d263ec849f6f616c74aa697cf78b916f6fd217db249aaf661",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/author.ts",
+      "sha256": "f304dfe8e832f62d6888f8b71dc27fe6940d72966d4df0ff8951c3dbf17ecadd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-card.messages.ts",
+      "sha256": "8f8833d49fc6348578fce1bd53dd8670818a8265d9d04f844cac82d25be6bf67",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-card.tsx",
+      "sha256": "e6af5121fd53afda259cb3abb99a2f71249c1f1b7e712ee8ee834a57137a0c4b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-decisions.ts",
+      "sha256": "8a56fdc2366b1240cb3e1716e25bdf8f0e4bd08a3a1decdeef369a630dc90b40",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-marks.test.ts",
+      "sha256": "5f6ad07872bd948339150a8835a139d744e4c399de9fb2fbd72608e3417dc94a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-marks.ts",
+      "sha256": "048cfd053f0aa6fd10ebc33a09602bd5cc9eab48b1da0302295f25e8b37c610b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-model.messages.ts",
+      "sha256": "1b8cbcbff7dca4fa979623eff1dc18a6832b59a5596100375cbde75aef1510e4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-model.test.ts",
+      "sha256": "968f2701a193965204713c525af435f229831b477c3461c53301caec1192c35e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-model.ts",
+      "sha256": "d703272f1be8ed51c0af672d99b8274b7c999ebdb7c109cda4f098e64bbbabc8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-panel.messages.ts",
+      "sha256": "d724bf036e01ad275a6c4c7d8de446b39cbbc80543ee0ccd09767817d7c78a04",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-panel.test.tsx",
+      "sha256": "30887d1625019e448ebc8820282f287abd8b2f4edb40c165865181544aec1da9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-panel.tsx",
+      "sha256": "d597cf1f25b7a29ecb89d22fe84643b8a89d4a56fef5c91a509164a9d05d91fd",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-scroll.test.ts",
+      "sha256": "c75123f94a858fc18f260376eab55a453938c8da19542e07539969b470664fc0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/review-scroll.ts",
+      "sha256": "7b9c1f0aea19d60da7f080267f4972c6adf4c76e1b44fbc25f31678e304a6340",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review/use-review-panel.ts",
+      "sha256": "e92cd5cef44922616ab2eb080c57a4b4727022330cd05ded1114c0753f8aa505",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/review-integration.tsx",
+      "sha256": "38c09dd40ff5884b518fbab153ef11a1315fe419759089110f7ea83ea767a1a1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/use-editor-locale.test.tsx",
+      "sha256": "36802e7b425f658958ec780927189668b2fa3035d865b957bf8ec928ad2dcd2f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/use-editor-locale.ts",
+      "sha256": "ed418b43a4ef219bd25fc0757537cebb7467ffaae5052f32390844143da2c56f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/use-page-metadata.messages.ts",
+      "sha256": "fbd4ae29268311a2368550f6205438a6171669fd1f29f6e71bfd35404a567455",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/editor/use-page-metadata.ts",
+      "sha256": "f4aabfaf3d81048e950fec6a74d2d6552079117f944a6bc1c2c3f1b4358a187a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/entry-state.test.ts",
+      "sha256": "d1c89dffa3470b2b48fe330400bb4d18b59f5f40275887f3ac744d8d5719681b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/entry-state.ts",
+      "sha256": "50cb56fe15c4488bc725cdb74c5776baacddeaaefb00a9d8e007113bb8f30a43",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history-api.messages.ts",
+      "sha256": "5f32b05f4cd7553da18ecf062eab9d3fe78883aad327c121ee90190d63b1b66d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history-api.ts",
+      "sha256": "3f08758e02dece26cb5b97be03974d1d130be2d39ced1bbbc464c2aa04fa97e2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history-panel.messages.ts",
+      "sha256": "6ea422f8fb985c5da280cd400d374e402463514a06b1af143e37ef7f4c811ff6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history-panel.tsx",
+      "sha256": "8f2e1777f8ebef6103d265e1e2787ee30a58afdd2febe1b3e85a18b0aeace6ce",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history-render.test.ts",
+      "sha256": "28ce169e083e6069469c8fa752b017a86c27aae1506b966ec3b37987d64d2f78",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/history.test.ts",
+      "sha256": "3bce9c827be9773693d89c5db5fd016c412fed2e38e47cb1622c2cc3339becdc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/history/restore.ts",
+      "sha256": "86a889f02b0ee540ded519f87fde740b813cff2c8278de15c89f85fe99eb3a76",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-base-header.messages.ts",
+      "sha256": "f08304dec66736fd1e39e6b49a282946bb218cb4c9cd6678c2201d2674ec6b9c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-base-header.tsx",
+      "sha256": "54899d4c1b432b7ca33bb7cd0ab9754c25c441fd2acaa46c900482648d777f40",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-empty-state.messages.ts",
+      "sha256": "2d00542f60c7a31b31e04c846a8d0ca96872de23ce14ab33dd038b2e3454946c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-empty-state.module.css",
+      "sha256": "ace1d355c10eb55ee55efc35b79501acc11239bf0b721bd90cc82bc9a67d891c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-empty-state.tsx",
+      "sha256": "481f48ecc3b1816d85067bdc8b156565c6e472e5c6895ef9a31d5c2a096f9eb3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-page.messages.ts",
+      "sha256": "be875ed38211a5f9a11d9ace37ba902c9ba0e57391487a2019545c2d599877d7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-page.tsx",
+      "sha256": "1952fcff68940ae188046516e2a577fd17ca157f4b59057da06a36cda4d790f1",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-workbench.messages.ts",
+      "sha256": "318b3f74b7bc6670aeed9221fe53cf3994cee2a8be90ac889c69cf792f39c5e4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-workbench.module.css",
+      "sha256": "ece33234fa034cc780c4055033c0cfb5e48bc98dc3a5c4bf9a9654611326a1a3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/knowledge-workbench.tsx",
+      "sha256": "66e89c054b00f4649f394fc92e2d0f5dc9b1e0c11040c1539cd304b1deaa41dc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/library-canvas.module.css",
+      "sha256": "dc8a62d8689d347d1d3337fcdba830eda3fe0dd1c7eb53cd791bb8631d2336f6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-document-editor.instance.test.tsx",
+      "sha256": "42b89ffddcb7f6f0b798b37c1cba00c1ef7742d610fd6a288c870c8d993c2a8d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-document-editor.messages.ts",
+      "sha256": "99dd2666224b5025e2f9c14faf5a93363f9553ab695435712c9815ce0b4b208a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-document-editor.tsx",
+      "sha256": "174d10242b73e120130f4f88381bb031a51f4107447fa76eccdaf1848dd50860",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-knowledge-resource.messages.ts",
+      "sha256": "290f5a7811b1d87e27241c20310a63859c11e92a47cb150dc8c3187ca27c380e",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-knowledge-resource.tsx",
+      "sha256": "cd542ad33d9481417c09cd5ba537a02e2fddf2909ca36953bb0371b9bf27ccf4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-library-navigation.messages.ts",
+      "sha256": "a9490d091cda32e8f45536ca87a0d311abd90a2e7df17c74bcd1554b71a5e2a0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-library-navigation.tsx",
+      "sha256": "76229463f90d15bec28591c2912d25153656526ba0a32dd05d53efecaf7d5e83",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-library.messages.ts",
+      "sha256": "b44a5a7da9239e25913b307523cb1b8906c59a8d183ef05e2b896d3e2ed58653",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-library.test.ts",
+      "sha256": "d1b13ca98ff9ae8de358c41c202c2fb968c1e419b45d475cdfe436d551c3f71a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/local-library.ts",
+      "sha256": "05004a15887ce33005d73183d01db6fabb4fcba70efcb4b94cfcc31653676ee4",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/local/use-local-library.ts",
+      "sha256": "4295d900232e53768c7b13db185284ffda0fb4597040f68a0c03eecd7c0df565",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/create-document-dialog.messages.ts",
+      "sha256": "45c653eb023aed6b5920b20f633598e8d0487271adafe9a171b322f7d9cf93d2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/create-document-dialog.tsx",
+      "sha256": "bfd4751c4702bf02f6aaa284672d1c05130217306fa0e3b780b68e7b9fdb0a0b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/create-teamspace-dialog.messages.ts",
+      "sha256": "7b7fdb46ff4eca1b234a84ceadc5b874e808e2903bec1a2e4e559bd2721b26fe",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/create-teamspace-dialog.tsx",
+      "sha256": "acdc848d67e01d795c7652b120f72a42d944058852791747e87f419102b5cb8c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/document-navigation-actions.messages.ts",
+      "sha256": "60023e13bf4bc1cb56c851a9ca91c15c35ab2282835529e642f6d1f3766bae1f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/document-navigation-actions.tsx",
+      "sha256": "dab88d4d3f05e4a26ef791fb869e461bff1b3dde0c23f413a5be04df7bf8bfdc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/knowledge-base-actions.messages.ts",
+      "sha256": "7bae6332f11bf646800d9f288b548cfad7f23a3f86b00bdd27a95a0a53da59ce",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/knowledge-base-actions.tsx",
+      "sha256": "5dda011d488ba9878cf69cf3e39efb68d7446c9792d50102ded6c1aaf267ebb7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/knowledge-sidebar.module.css",
+      "sha256": "76ff27c9ce223eff5b216457a977bd8240f226e8b4e8fffbdd3b9d86127e380b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/library-canvas.messages.ts",
+      "sha256": "cf70544b639209284317b45ffe909fd82e0fc72d5d81a2ef200088b6d0996d85",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/library-canvas.tsx",
+      "sha256": "08c46b1b957b046cbf477484537c0b561394c463d7592139ec26e453d17685ed",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/move-controller.messages.ts",
+      "sha256": "ef5a2d30a567b9ce18d179cbe6f797f5ae27cd31e79b15a7d33841216834e040",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/move-controller.test.ts",
+      "sha256": "361ca12e184c765d1b163f0b315e5b5151b21c571eaa43e6b0f9b4a5280edebb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/move-controller.ts",
+      "sha256": "6800a5f88f4ed59deaa0f66f12d5a1b4eb72f55a487496d2e1a584fa8b43735d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/navigation-dialog-portal.tsx",
+      "sha256": "da887062d4a346a5aea3f5a5cb6690765b5b1e80c341e6f3617fc30e88318b88",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-appearance-dialog.messages.ts",
+      "sha256": "e6bb2683c7584191bd4a39feedbbb0ebbe69a8a3e1fbbc7eaa177bdf21ccc128",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-appearance-dialog.tsx",
+      "sha256": "84d6a52afd823e9344ab01f6f36c53f62f307c2c5910a56a2906418b373205fc",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-emojis.ts",
+      "sha256": "cd01d9149ffb3f32b039c4c705b6402c016b1b29632a86b5b3df9441fddadb9b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-icon-picker.messages.ts",
+      "sha256": "eddae98e09ba7bde40ef70966a09fe6deaec250c5b8e9f1c3c83168ac6d55f54",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-icon-picker.module.css",
+      "sha256": "9a1c184d953a53a7363311f859f8d8e36b39d919e147c1fe8393c63e060e95ba",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-icon-picker.tsx",
+      "sha256": "62b8b1eaf80e94dd1e4c22b74b0a3027b2aecb491f02c93569a86c15d7226a83",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-icon.test.tsx",
+      "sha256": "aa807de3acf78efbace92925080b9866efcf42ebda180f92a8af9cb39f34ab5a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-icon.tsx",
+      "sha256": "15b041d12ae9540c36b43c2f85b54d0e8ccad5d0e0ba62b42a79bba34e72402a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-operations.messages.ts",
+      "sha256": "4a9069f8ecac4424274bc794be9cd3ab88150752ea1815347ea4609e306c4b6d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-operations.ts",
+      "sha256": "e208e4d692b9a7c236b24638711c34d77717fb26b728062db02fb80c42364323",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-tree-sidebar.messages.ts",
+      "sha256": "3142b1862614f522167cc8e24d4b0f77cca2b0e50c0989b7c56272061c5a8ea2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/page-tree-sidebar.tsx",
+      "sha256": "8180e4e0a4338358fbe4f6543026b534c8565bb993b06844d4e8f0b45d3a2b58",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/sidebar-collections.tsx",
+      "sha256": "927d64b716135df1766f32915b11129c32ff530c41488f1c0ac9204df79bd7cf",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/sidebar-documents.test.ts",
+      "sha256": "5363dbf1976080763bafdf6dfcf32972fe700815acb4c702a789fdbc3c96ace5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/sidebar-documents.tsx",
+      "sha256": "2bbebf21f6e3a764e7f40afe2546fe633b2d664b60d59f15e39264da48c539ad",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-actions.messages.ts",
+      "sha256": "07e30892d35c4075b210d9fe985885994cc87b099153e528e6123a7660eae3e7",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-actions.test.ts",
+      "sha256": "afa3a2b3793e58a195ae020aafb7454f167e746cd288ea66ca843ffb6bb5b322",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-actions.ts",
+      "sha256": "a41b3a9291b0c9cb943c1b14c5a9401cf39224cb0d963bd76ccb712719e13d54",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-model.messages.ts",
+      "sha256": "4a9069f8ecac4424274bc794be9cd3ab88150752ea1815347ea4609e306c4b6d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-model.test.ts",
+      "sha256": "d292e88e2bc0dbbf9cd97afb45b2d4195a54439d4c7c246632194f94b3961f25",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-model.ts",
+      "sha256": "efaa58f42e71f954d81aa5c15355badcceca77b3ca11cf4ca4e97ceb041b6d2f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-operations.test.ts",
+      "sha256": "70df0ae859142686ff7e46da16f393aecefc8c490afbe0d2316218199945accf",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-operations.ts",
+      "sha256": "21f44a749c6d02dfd859068ecd8b414ede16d888c56c0045a0f1efff0328ab83",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-stage.messages.ts",
+      "sha256": "b49a42111713258dc5e906d78d2982beb53f280706a1900cc321ceff7ff8c600",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/navigation/tree-stage.tsx",
+      "sha256": "680f543e39a7dababb3654120e33a245a943d061b987bbee4a19cb13c90e0f6f",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/components/notification-bell.messages.ts",
+      "sha256": "e0aa3a5ed2434dfa47ff89e1fa15c32c36a00e169c95fbee02674c3f10bc7123",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/components/notification-bell.tsx",
+      "sha256": "c32d632e72de3a1a6cd79ba78b32b9bb35d9a956bdb6708b973bed6351e0635b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/index.ts",
+      "sha256": "327a95945df8b13d7800570c23c0493698ab9ae75fb8932ce9eca966b1daf600",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-api.messages.ts",
+      "sha256": "3374bfdda82f8f480386cc43d846075a5f8135e6b5cc7f509c958e7a1c650994",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-api.test.ts",
+      "sha256": "993d0579dc7a1b9297cfdc70b7e2051b252e8c2038aa7308c958eda2d182d85c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-api.ts",
+      "sha256": "5636c12ff7c96c3b8db692464fafa352f520e8c47c7ec0749e0dca058ed0c7e5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-bridge.test.ts",
+      "sha256": "7162eaac775d510ddf7ec015cea3349aa8ed6943e40d41b2fed5d59ecf5f8281",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-bridge.ts",
+      "sha256": "6d484af55fed043b0c0439ff41e1f5098b9564f4a9b66baf9e08fa75b4a1d27d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-queries.ts",
+      "sha256": "a6e620619df4e4bb822dc02a5d4d251fd7763a6fa17bd560b5de7c74e105349a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-view-model.messages.ts",
+      "sha256": "f6d197438d96ce6f19055b13eae76c3a1fc15fa60038229d133e9f8705e2d1ee",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-view-model.test.ts",
+      "sha256": "4493a4bab989f875c05b0b13d1c325de33bee3bf674c6e8c57738d24a5a94fb3",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/notifications/notifications-view-model.ts",
+      "sha256": "b8e42e7b4d4aeb36351e3a8e58f0344195049843db7139663c156b0460564dd0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/cache.ts",
+      "sha256": "3adfa12576e4c13f15409f6763db113883b8c443a64acef1a198ecddce0a757c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/client.messages.ts",
+      "sha256": "72e40f47dff6ae0beea12ddb66787169467ff64b18b91925ab10f9f9ecc79f2d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/client.test.ts",
+      "sha256": "282955f990b87b5c15e98efa2329efa0d079675b600f7a7c16a005c739dcc861",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/client.ts",
+      "sha256": "9a1b1207a54560707aba1f99047c2a8da332433351472286a7a34ab92604dbd0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/create-knowledge-base-dialog.messages.ts",
+      "sha256": "5d463de54fb1e40528690739a2dadd88a9624295675c74575147d03d657e1c1c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/create-knowledge-base-dialog.tsx",
+      "sha256": "ab8c742b08a7fd9b91b562a7e2482fa15efdc5468b077286e376d348fa4a49c8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/default-access-field.messages.ts",
+      "sha256": "594fc05b1396e1912f6fe043d704193d9cbaea7f20edd3cba899b47171d14c80",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/default-access-field.tsx",
+      "sha256": "aa8b67f7d47a67c58880334378dbdc8aafe34f149211500aa501dbc0a155c9ad",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/errors.messages.ts",
+      "sha256": "14be88430eceadc4c9dbcd47483d7479856446b63ad8157950321146a2317717",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/errors.ts",
+      "sha256": "aa33a9011775a8c567450938cf62054dbe10e66fb091e72141d2946854e49905",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/groups-section.messages.ts",
+      "sha256": "f2790f327cbc160423a70e604b6244188b2693c6db1e5b179316a99fcac68c29",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/groups-section.tsx",
+      "sha256": "6c1051e0b110087d3dda86877016ccf16bc95aa9f1074334c7de874f8e44faed",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/hooks.tsx",
+      "sha256": "cdc6967ef1a93311b26f577108589dc6aac008370a41be674a4731742470cb73",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/index.ts",
+      "sha256": "f6bf9cc2d6f3910545eb936351ed4b1a58d06088f1b153b9f161ccc41421de01",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/keys.ts",
+      "sha256": "44676c596bd87c0cc2e958b9f26be181542519a626741f5ea375fc0b0fa14d0c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/knowledge-base-projects.messages.ts",
+      "sha256": "a4d1c4c70f043c5dd0500e22628fdbab4dea18669956368799919869358e4d79",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/knowledge-base-projects.tsx",
+      "sha256": "0915cded7a436d9462a1a70838b565bdb5dd21dda51756832be4aac646ac1fab",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/list-mutations.test.ts",
+      "sha256": "3ac2a4d22f993433c0642ef61a43f8cc36a9f9306e508870c67b75c3c79979d2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/list-mutations.ts",
+      "sha256": "7121eab9782503e79714c36c8974f896c97508cd4401b728a464ffcbc3ac0e6c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/members-section.messages.ts",
+      "sha256": "17e4234787a23571b4e256da48eed5fe795ea91fdb034dfb9114938b6c905828",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/members-section.tsx",
+      "sha256": "7736afe32c19f785ffa78b88fe78988d337e853359eee3ff122b0c9ff01dbc30",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/organization-panel.messages.ts",
+      "sha256": "edd271e907c4627e507937e9e17efb8a5cc416857d66d4abd4d7472857f7d7a8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/organization-panel.tsx",
+      "sha256": "3de2b2c4a94645d18740dc9b049d4d7d28e988d133aa24c98f29a3bbdd6a46f6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/permission-select.messages.ts",
+      "sha256": "d376f2a35212a7c7943e8d2051e3591aa5f459d3d1c5dcc6904e6ad2d36f568c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/permission-select.tsx",
+      "sha256": "c7314d3fab2e4ae0eaccb8e49cf31fc56254bfdd2b11e9ffcfd2a677acd024b2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/teamspaces-section.messages.ts",
+      "sha256": "3b1e38857438fdd95fcd8db280c5b061cb92ce355c8e6bf192d50bc2a06a9a6b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/teamspaces-section.tsx",
+      "sha256": "7267ea46b4241cbaa4f2fcbe00775a65aa1df1e804b91f6f5e9d9b9749493e35",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/ui.messages.ts",
+      "sha256": "4b2d59ffc706a5be7030644b0eb26607ef6fe1493c9d712ad7f64ea6e81c02a0",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/ui.tsx",
+      "sha256": "9e3c929ab8af9cb0671e68eec2ea434a7cd4835d2c6bfbd25c1d6fbbdc49cd39",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/view-model.messages.ts",
+      "sha256": "d1bc9250cc9ec089beea5896e2923b5c912aee33f28df79c063de48832e2a69c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/view-model.test.ts",
+      "sha256": "9d8e64659b5cc63892712b60b01793b9e6f889d7ea6e8ab19cb613c9854efd43",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/organization/view-model.ts",
+      "sha256": "493bb05db6b0a06c1bb641bd88c823b4358f27da6394f62331860756c70d70bf",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-api.ts",
+      "sha256": "205a2360e27990486c6031c93557010ec8be025b21d8182d9903bb716c97ed41",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-panel.messages.ts",
+      "sha256": "a434b7e1f20ed18dc5d13d50a6d48263fa6ddb3c8d37fdd580296a12699648c2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-panel.tsx",
+      "sha256": "f7593d030498d14390739bddb1351e55e7de852b0cb16db14f96fd3fd487d6d2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-state.messages.ts",
+      "sha256": "b4500bfc5f827b2ba2ec65f3f84e1f8f1c06c2d4f302594be30b146a0c2fe799",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-state.test.ts",
+      "sha256": "94ad2f25f32cb8d21aee3dd3867c95f23f80bf034d19a09e523945887d3b8bc6",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/search/search-state.ts",
+      "sha256": "8f7ad83ab632716252b2605f271036ed120714ae895380863f7242c1b5864850",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/document-share-dialog.messages.ts",
+      "sha256": "c539ed2272995d38c99720bd71c3fe855aa2ad4a17e21f654a9dbdcda49fae61",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/document-share-dialog.tsx",
+      "sha256": "b65cd90abdd6e9939c7363e46fde921455220f50236167e7c0e88ed3e872f5eb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/permission-model.messages.ts",
+      "sha256": "9582fe6e5a5fd72724b7321dc8eb20ce1eabccdda6ad4b84dd1552665605bb22",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/permission-model.test.ts",
+      "sha256": "290988d6366b78aea3a5fcbd742196c71a416369ac4b85e458bc0b2526339a6b",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/permission-model.ts",
+      "sha256": "0d15ab7ae4416012a914cfb9d62d5d1eccd3cc02c5f982ebec3fb6384116e34c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/sharing-panel.messages.ts",
+      "sha256": "734dd4171123311e437a539ba1f6fb8498214d107bd76703b0cb9bf479329948",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/sharing/sharing-panel.tsx",
+      "sha256": "0e8626b516bd9e87f81ed91720c6f69270c1db50a157d67e69acad5e69aa348d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/ui-message.test.tsx",
+      "sha256": "3fae55212f3549cd7070ea910a53ab75f475b01521a35864c166615e9d2d039c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/ui-message.ts",
+      "sha256": "50ce25b0e238f879183679bdecf56f4bbeb33be24e9973dabe14f4604bee8c88",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/knowledge/use-knowledge-base-selection.ts",
+      "sha256": "d36af2191f0db009a9575ef38ea9868543fdd30f6f1b6e5bd8d6dfbc9d5a6198",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/access-policy.ts",
+      "sha256": "877f8c53ef5166e0144e344d1640a014db8d319296a86b9b3132ebfba6ed2096",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/index.ts",
+      "sha256": "234d1528a0f9fab3e205f6482d88ee4011cc200151868203126095f2db5a9455",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/oauth-server.test.ts",
+      "sha256": "fa9a3d29e4f00c6aa14401e8a532142f52f2781fe903ace454b7b75aa841f01b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/oauth-server.ts",
+      "sha256": "6398944178a36bbf276570032a30a0b1533da11d60df12f68a6a06cc40d66aa3",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/request-context.ts",
+      "sha256": "74f3d83e0d78e0d68da0b0e46fcb1aa73982e16e9dd6b31b8c97c11b61f30375",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/session-access.ts",
+      "sha256": "7d8013a367a87bd81b54f53608c7c7a1bd7fa22d57d5e45f56a7d257a7af02de",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/token-format.ts",
+      "sha256": "61fa6556a9209f4d6b265a240e47f180735b572fde446bc1d5ca1ebea41ab3b2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/tokens.integration.test.ts",
+      "sha256": "dfa83d3899e37f1b6f4fd52542e4e873d7210132a730fcc55e555dc1a5e2b5d5",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/tokens.test.ts",
+      "sha256": "4fee95bf5969726fddebc13bb6d9e91710fc39e9bc7c9d65ae898844ea8d0015",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/access/tokens.ts",
+      "sha256": "b72976931865e56248fe79f1c9dbdd3ee717cf807e06659982da5257bc8a8891",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/config.test.ts",
+      "sha256": "06851f7b4dbf338bc1337885d367b11e93ae5c1c31137867a1b617fb904f2eb7",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/config.ts",
+      "sha256": "bdc526776483ead92f83091603aaed13d7e381b2851937f6c16be576f3acf2dc",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/context.integration.test.ts",
+      "sha256": "ba14ec304ede59b17f5d9e6a51373b020b1ee7ddddefbb27bfbce896b48fbb36",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/context.ts",
+      "sha256": "999cb7c120c23a8f2ffdd2fbf55657506afdb17590b6195d94a0efba0fe4d954",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/credentials.test.ts",
+      "sha256": "1c3aaea4e030b2cc00893199be82c96d6aee05d7b68538a45e4fadde7b3cd6ea",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/credentials.ts",
+      "sha256": "7b660a134f8c2f3b35da1666c46b33eca764e02b20699c11b9cfc447897c2ef8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/errors.ts",
+      "sha256": "ab5200e785143d5e34d9eb2fccf10468ddad083bf74629fe5782a8b4b520cfb4",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/gateway.test.ts",
+      "sha256": "459da246c685a8b8340de9f0a8e18eeeef166f9ee877cec7aa6462e23dcf16c8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/gateway.ts",
+      "sha256": "1abee93bc88a973f775c791fdab16095489b54643db62f81f85e4e178fd2de08",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/index.ts",
+      "sha256": "e17aeaa02061decb4742a5c47959fcff40c66af400af69a58013ea1f0006b0ce",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/providers.ts",
+      "sha256": "889f267792f2500dd955aa149a911c115fe19255a5f29b129509a5d15a0c7936",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/types.ts",
+      "sha256": "b4a603d585f65cd488e427c8520883d19af00f69aa02e272c4b4ec9a2dc1a23f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/gateway/validation.ts",
+      "sha256": "d9ecbf0c3c74eabe93ef3b58d874a5b546c45190eab110f5c7eeb69691d00cbf",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/index.ts",
+      "sha256": "71cdaa3bcebffd11173131591916fa9d8b8512af42ac3e504bb0083b12a7df4b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/streaming.integration.test.ts",
+      "sha256": "e1e6f51546ada084688039446c13f610b70acc462d17e27d61d21a14a5ca0466",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/streaming.test.ts",
+      "sha256": "a181bf677458b492db2386a2f3c6a47d561a014bd663b2d05e3fa8a600f15216",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/streaming.ts",
+      "sha256": "c2d05d8179c1a810bd4108df822705776644d0f84fa9c46180f7c4cbc128131c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/errors.ts",
+      "sha256": "a0006871f30dce785f2fc0e713af394a2522395128df9fa685166ee47e15d82f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/get-backlinks.ts",
+      "sha256": "b26649e6b010da1661bb56dfab1a2f903b0f6f8ce8068933a7c91305105b647e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/index.ts",
+      "sha256": "746fe40e4fa6e804f4cedd18e460ae624ac58f36c4991aeb1cbc473c8f2153e4",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/list-pages.ts",
+      "sha256": "c1cd3fc9039bc9174d689a64648b59375f5856e832db18db8cd63bb734397f87",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/query-database.ts",
+      "sha256": "5c9984176dd97ef9a97df07566af5b4d0341edc83526da05ddd2017dcee75223",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/read-page.ts",
+      "sha256": "b94e141f17808a6ebb3280da8abff6e1fa57c427cc6c5b04d323b05dfa5cfab1",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/registry.ts",
+      "sha256": "2c36acfb960c6e319f1804f870d3ca853d65e67a28b97efdf9a594c98fe5ef19",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/search.ts",
+      "sha256": "742eb5a207dba806ef9abccf3a1ed667989995f5fad72920d6677136aec58a68",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/tools.integration.test.ts",
+      "sha256": "067b6fb0446e1539f1182c2fef68b70778d20d7c3bae4df87faeb460aa62d738",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/types.ts",
+      "sha256": "37fac0b6f574f5b1e0055ac0fbd106830e802456619f4ad41a73597ce10c6c39",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/write.integration.test.ts",
+      "sha256": "37c72a589211930934cde5474b71a4a7b37fe71bbb1099e58ea771261023807d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/ai/tools/write.ts",
+      "sha256": "ca0efad9a1738c0edb08d6086e1ae149ddcbd45ececdc246dba91f91207216b9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/asset-routes.integration.test.ts",
+      "sha256": "2fc24078d41653d44cfa2844205b049211a5c79b32260b78ec3d88b11cdb371f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/asset-routes.ts",
+      "sha256": "193911ea68cd91d24e1c8ca0e343288e90fe1d535d0e559956abc0da96a55698",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/boundary.test.ts",
+      "sha256": "1393dd0aad96095c3cda0d1a128b07c69c90745581a8b839c706b0752e85e26c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/checkpoint-routes.ts",
+      "sha256": "26ce22bff752c0785684539db01ef2dd5dcf6b92d8d0136c319128ce1721278f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/client-types.test.ts",
+      "sha256": "7cf409c8b7d2b3709a4390e95a098166a388071304108bff6707968bfc5b4fa2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/client-types.ts",
+      "sha256": "25e756798fa77c0a4a65133859466e93d9d108ba269b36739eba1e5cca2ebb5b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/comment-routes.test.ts",
+      "sha256": "38f9c42d3696fc2d2c33c2986b850596f2b8a9a133c6e2310a17b49ae7c373cf",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/comment-routes.ts",
+      "sha256": "8802f77e8fa3d2f3d437505e1ac1341b80eb55afe40a86173dc8e81e5065598c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/context.ts",
+      "sha256": "1a6e822b1fbc307dd90981d2672028b97afe8059dcc83dcf00b68c177abb0e30",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/database-routes.integration.test.ts",
+      "sha256": "8877f869f62d58d3b210ea46fd56f36f84b84fb5d4bdaa1c415757c10395a304",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/database-routes.ts",
+      "sha256": "1b7f73247ec3a12eb6cf415aea26bdb2f93b3bf4c988e4f041d5019e6e55807b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/errors.ts",
+      "sha256": "9add35fbf69ba20015ecded7dbb6a62b015d1fe72d06dc480157c1d2aa6f6568",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/http-test-fixture.ts",
+      "sha256": "422ffcd34c76e022711f4f466b115279b3ed11776fd618fd32b30e42d8fb3d7d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/http.integration.test.ts",
+      "sha256": "bf963b6f9de5331aad4d2ab7fe0e6c74a6b216f797edf2e92d08e7e0596de063",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/http.ts",
+      "sha256": "8cad349f255c3454dfc9122121f82845a559cd6a4c1cec1bbd6311873ee650e2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/index.ts",
+      "sha256": "89e926299ff3c1dc8e657ed99649ece880e38fd1b9555c631c1913c4dcf20d2c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/lifetime.ts",
+      "sha256": "d19b8ca55282ed8536750d729d3063417a77b99c3f9ca4b503d7686480d6228d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/page-route-guards.ts",
+      "sha256": "6a09342eb2d73caba920601224a801dd2b32dcc68c1531e4c04d1d7255e194c5",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/page-routes.test.ts",
+      "sha256": "54e36036698b1216c1b6e64646718d11a58d4b24140634448b1a4bddcfc6d1a0",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/page-routes.ts",
+      "sha256": "c4400a1faa5c420af07ed6f525468d0d6c928ca9c70c802c753a8405c039f035",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/pat-routes.ts",
+      "sha256": "9bbfb833958b5e3ae723967a2cee60d26aa25ee23074bd3b2017784c2f844496",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/procedures.ts",
+      "sha256": "0dbf47c57d04389a87a424287a4d67c39b10aa2f24f9efd70ac140d58ba5d22f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/router.ts",
+      "sha256": "2bafb6e38170a1daea5beaad32670f83d6711ae7c220922a15c6866ba43fe167",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/api/transport.ts",
+      "sha256": "a2c459096a7aca96d86fce0530445e8f9b0fb13f5b8015dd9877274e89b876c9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/assets.integration.test.ts",
+      "sha256": "3d62467dd60df47952f2d328e86df7606f374a5c9727b5ea6742cffecb90b520",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/errors.ts",
+      "sha256": "b9bf8cbd9976934a99703591a42099e9c3373fdf6c6ced3b29a6a64def47458a",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/index.ts",
+      "sha256": "e661063196523f482d398501ea422568ad66888b6e4972212418dcefe9e05a75",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/runtime.ts",
+      "sha256": "d9aa762f5e28417088585f2c9ea0c6f8ab965c3da68263ad92f67fd1ac59c959",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/service.test.ts",
+      "sha256": "e1cf7ef1403fc8c77ff0b81786c6e9e14801947f1928f760c3085e3e262051c5",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/service.ts",
+      "sha256": "6ca783aef7826105f165dc9de7803f9dab1d8db2f44b2fd40f14cf9ed055d30c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/assets/storage.ts",
+      "sha256": "6be64f8945c69904e6e38c84c602d2d10c88662bf98aa87986a042e121da7d97",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/agent-awareness.integration.test.ts",
+      "sha256": "26f12e9c5934511134a79469d7d0d34476738ea4ad377167c114568e48cb511b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/agent-awareness.ts",
+      "sha256": "3e0022260b88002e3bc10fb3455508d8724f8720e3cb32a755dc0a4ea9f65652",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/checkpoints.integration.test.ts",
+      "sha256": "1d11b788c71e1966ac3026bb2c4254820c6358e7dc446425d9c6f0a09c5570de",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/checkpoints.ts",
+      "sha256": "239ec937a3e6fea2abb01dc172b76d2379ee31dac875618222b616b3e15e8859",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/collaboration.integration.test.ts",
+      "sha256": "04c44db5e2fe4d821a55bd7eeef88540e03bcf9522c71cf947a76b260c21e989",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/events.ts",
+      "sha256": "afec06fff013eea437db860b408f3664e04795420d0af33bfcbfa27dd004c108",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/history.integration.test.ts",
+      "sha256": "1545c400016f0b4113b37c70fc68ef0d5f93dbcbc1d01b90cdbba80c30c726d9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/history.ts",
+      "sha256": "06876bf7dcf1c870355b3d280511337e7a8f8ff7ad4b8a3e14ed60bf51768b7b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/index.ts",
+      "sha256": "abcc276ffe5457b94d38ba549c8834f222232ff7b904c0d82eca4fd607335cb5",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/knowledge-base-events.integration.test.ts",
+      "sha256": "72c2dc85028bf74c36c6e16b78f573b5ec21717f3a2e946311253ea2ace8fdca",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/multi-node.integration.test.ts",
+      "sha256": "38879a915b75f3c3b36fa88562e3a3b08603164289494a610030dfa8e7a57cb6",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/page-collaboration-bun.ts",
+      "sha256": "fefb7414aae6028d6e88fa564a32565f26284e7e7b393ea7b73bfadae9644575",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/page-collaboration-redis.ts",
+      "sha256": "fc798c5da027557c758966774250c90fa621a94c427e9eb25b7850c900267147",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/page-collaboration-server.ts",
+      "sha256": "a27863fce2a9c2d6621e4c91443ee903922029599c6b5216c7810b5aec6e5256",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/page-collaboration.ts",
+      "sha256": "6696803c686f870c201359ea9b0fd8b65ea98ec0dfd44e2d9e310ca2f14488c8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/collaboration/persistence.integration.test.ts",
+      "sha256": "1f763610a596c9135402bea4f3affc376d278c91946a8319090bc41103b5ba2e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/access.ts",
+      "sha256": "f26c8297d03cd0be2e5c4e1bafe2609054f60f33ddc521419899fed5c00b2826",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/comments.integration.test.ts",
+      "sha256": "4f8758c16304f243bf9997adc638fa20c99fea7d5a9f33f2d8c6764659706fcb",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/create-with-id.test.ts",
+      "sha256": "80f198c50b0d1bc850a43aa340b4e09f648d5984dfdf8bb48441ad749c35c981",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/create-with-id.ts",
+      "sha256": "c1d85a2f75abcc4f0535ccedcd3216b2ee153930bc33720ebbdd5a636e9cb45c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/errors.ts",
+      "sha256": "95593bf07acf60af4166e1d24a39b73359eaa792935df20af60da8528c522b58",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/index.ts",
+      "sha256": "5d16a4932518d40b42ac2f56fcc3047a9f1eab1de6e9a48d7cf98b092c7bef20",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/mutations.ts",
+      "sha256": "2797b21dee426a6185acd5cb4645aba95e4334d4e7960194dca05b2bd702df27",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/notifications.ts",
+      "sha256": "562850099d2e63de4c5e328640779801547ddc68a61578f5fe7b057a363f76e6",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/comments/queries.ts",
+      "sha256": "5acb76bd40f824ffcec37324a3468fa36061c7010a780f497316f1d167612ae0",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/databases/databases.integration.test.ts",
+      "sha256": "e5df1c393ecf9bf6cbca4121c03a90cdcd55130b372ec6159acb024c3545e5e3",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/databases/errors.ts",
+      "sha256": "9373968172b8be2e5ba7ad17d69598509a8da5aa7cbc3dcd6f4e5a1ebdae91bf",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/databases/index.ts",
+      "sha256": "c051f9cbf96f8e30337d9683f2bebcdc73627e0053457a131476de75c5e273e2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/databases/properties.ts",
+      "sha256": "967e4f66197e321fc04d3102734d01f99e4f2830394962762f411ce9781ab5f4",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/databases/service.ts",
+      "sha256": "51002d16a2fb73ce0a1e86f857839238a76e4ed31298a99102e0b772b246021e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/fixtures/word-preview.doc",
+      "sha256": "9431c1bd95541b4eab9f51e775994bda87f655dfa76a0b7bc219aa9b9a72df6d",
+      "kind": "binary"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/http.test.ts",
+      "sha256": "220f946a32db29883e932636e8237697e4a7ac2039e235e424d486a232da086d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/http.ts",
+      "sha256": "38173d8161aea397feb40035957625b5d694e48194008b848e384d82b42a2503",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/office.integration.test.ts",
+      "sha256": "075e649bbf818606fedbef721f201784660364b3aa11acfaf9b884875b1e944b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/office.test.ts",
+      "sha256": "e253beebf51969c965c90c44b929ee41d0223d474ad919aabc2d6991bec2fa79",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/office.ts",
+      "sha256": "223803a4f16e0dbd81233c521e9695cb1c3f1c7e1cfb0653fdc731b0da4cc7d6",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/pdf.integration.test.ts",
+      "sha256": "f9ac401d737d9815c2c6d0e04a3fa7e773c71b78a38dbe0b8d91e6c3a04c59cf",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/export/pdf.ts",
+      "sha256": "a388bea6d1f19c0d50d2744166d551c389464cd94595171dfdac2268cdbb58c7",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/body.test.ts",
+      "sha256": "bdfe03b8f2213f6ac92edda081116d3b135867d7a937ff1659cdd27d8b09b383",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/body.ts",
+      "sha256": "f4170d8c74deb1ea6ffee59e8e13b9894ba779977a332df47a2d0c696261a6dc",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/errors.ts",
+      "sha256": "fb38c54488a3a3f131478b4a54414cbd4f28ca36b9595d31a3cdb5c59096b8ad",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/events.ts",
+      "sha256": "dccbba599ded3d3a94b97de4cb599e4aedfe6817a96f018756509371a246921d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/export.ts",
+      "sha256": "8774a057d36d0b3222b32cf2746854ad03465d9bf97ce255f32b8942e0151d5d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/frontmatter.test.ts",
+      "sha256": "ef1c5f05700160e452fb784559880a636402b24222f5713004c39d1cc91a6b0f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/frontmatter.ts",
+      "sha256": "648607d08927573e6911198970e2e7d6967be0cd8c6bddb381a0fb89a853fe3b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/import-export.integration.test.ts",
+      "sha256": "cd5cbcd5b9dc72e0c500e282aef7c23e1456a07fa551163e4576326f466d46d1",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/import.ts",
+      "sha256": "ddca3330718285b2be79867bf7379a5cb43197548a34fa7eaa4e4cac5e514b06",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/index.ts",
+      "sha256": "d351f426d782f9b1735417d00ba11483d07fb39d37e6cb65fbed9bda876fb4d0",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-archive.ts",
+      "sha256": "4e9e752d600362bca7c8a38f1ec4a4b7140b0d78450c1fd20376c83a8838261f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-body.ts",
+      "sha256": "a197c8f84dd773fbb639ea23429d299c72d62ecf3728bf376c225fc5448b293b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-csv.ts",
+      "sha256": "be5428a942041df712b24053b4b950d9792747736238a7a2b89484466016fc9a",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-document.ts",
+      "sha256": "f694f4d7140c976756f6f902dfbcc0d6c1082a45f0d9403a334f8fc35dc89122",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-html.test.ts",
+      "sha256": "16d242d800b2bdb84990cdff223843820e435d1e0f6d801da29dbd0e68c61019",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-html.ts",
+      "sha256": "9dd2a07bbd9c3093d976e78ddeffef34325611d76646b681b5f90cc7ce6b9a75",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-importer.ts",
+      "sha256": "24a8bbb65d4de276fa516035fb237de6274bcb03db737e1ae7baf69887e06761",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/notion-types.ts",
+      "sha256": "9abc45c64dd666669f07d890ddc0eb4b1ae5b1e57a33bb3f39e93ebd88d43b51",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/vault.test.ts",
+      "sha256": "2fe322a5721c25f57bab02f46ed618ac6d5255fa8676a24ec6bbd3c40729fecd",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/vault.ts",
+      "sha256": "e5e6782ee7517982f3b5217aaa0d353a17f4da64e62bcefecdbf21b4ed35de03",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/import-export/y-encoding.ts",
+      "sha256": "7156aa49ff76529777ddabbed1e4ec81186eb5a2b34e6e1e9f5fe22ffb5c51e2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/bun-adapter.integration.test.ts",
+      "sha256": "4d26fba0eec607179d2da3d077a8a897eddea14a0d9a883525ff44ad57d91b82",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/bun-adapter.ts",
+      "sha256": "f7b481892ce0f44209cb23cb0526cdf0ff1323a2c3f34a62eb3d9c425e083435",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/mcp.integration.test.ts",
+      "sha256": "1019c5ff2485943034ed9b16cb4e9675571ca6d682b2f514368f6d8182789388",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/oauth.integration.test.ts",
+      "sha256": "b5d5082b2ba213ce12d1c1a3dce6ace60c668563294bd18bab89e073ed2b637c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/oauth.ts",
+      "sha256": "aaf2ae5615df8a2b55681401661cfb915656026d80f5c5c5622eb3c5d3ece246",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/mcp/server.ts",
+      "sha256": "6190d264fcd7eee3608f1467b22389b2746d5823f030fd770be14e03b1d98b69",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/media/client.test.ts",
+      "sha256": "c44cfa80fb8319ae4949f9f067db2bceb2b8fa07f1e081c43446a58d503f4a13",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/media/client.ts",
+      "sha256": "22f56537ee6afe77ae58975cddac61866609dccb61442470c39bffcb15f4b0ed",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/errors.ts",
+      "sha256": "6e2f8a3a268ec2da133802b05d28e02a47a8973c8bb542dde5e528d554d9805e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/events.integration.test.ts",
+      "sha256": "a92fd6976a2c72f7660b6fd22be5eb1ab936725dd250d1a24fd9b519d5a59541",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/http.integration.test.ts",
+      "sha256": "e668f053522d620196fe351475bc12751e49133933e5419f24fc61dc6f75733e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/http.ts",
+      "sha256": "0bc2468797589ad8c1bb03c4cb211ead0f886524fd09b8d28112a0067efa4581",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/index.ts",
+      "sha256": "4789a58344ec5c594575ea8d4098b969a66a0459c5e079d8561d4509df393021",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/service.integration.test.ts",
+      "sha256": "c5f7c8c6a94c53344b3d16f39e089c022e609f82c7bd0f7f788bf4192594b284",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/notifications/service.ts",
+      "sha256": "a6c9238b984a0876fa96272326abcf00abf841def2276bee00d50176615f754b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/observability/assembly.ts",
+      "sha256": "a268249b3482ea212b7b3aacdbf6dd1203847dea8ec9f5770567c1a51ee27de0",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/observability/index.ts",
+      "sha256": "49740badeb7a73f8e307a75c7d21db8ac53cf41c0222ae14e7c55b32786234db",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/observability/observability.test.ts",
+      "sha256": "176853b45d3d44fcdcf100daae3c820ba83ac5b4bdcc6407fdbaf91439d69447",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/observability/tracing.ts",
+      "sha256": "a092b17321a1e820a6906222dbb698fa44631dd13918f0db5b9d0e3a6e7d0d82",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/observability/usage.ts",
+      "sha256": "f1dfd899cd88377bc7a6b2e694010d5e16fa8e9c43a62b6048feaca197319531",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/context.ts",
+      "sha256": "f6a287d6d7478f452b30091c8a916c602278a505ac52eb7961ccd535445bb5ae",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/groups.ts",
+      "sha256": "db5c2f9942f1ef70bff0945920a7caa7023f31a36b0dbe63dfdbb6a7aecdd266",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/http.ts",
+      "sha256": "bf06655d38e77d326dc757a8246ef0741f64efb6f870d52c224585ffe814b016",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/index.ts",
+      "sha256": "5f6c6199020a8e1eadd4be7a1e04a875f474295d5af652f93359d4e176ebd4b8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/invitations.ts",
+      "sha256": "6398c281c1eb7eff8c012c858213c001f6e54b76c21bfdb7cdb192777304615b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/knowledge-bases.integration.test.ts",
+      "sha256": "adc65b8a6b9822e58f4fb5d1b974893fc62f1ef05c52f08a2436035a6bb0640f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/knowledge-bases.ts",
+      "sha256": "491984648796c775e3312355ed8ac0d87a498308b49f8efff6656d6b5f3227fb",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/members.integration.test.ts",
+      "sha256": "4ebe1bc8858b756a87a68f81dcdf579868394b07dca17e75cc4406f9cc95e750",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/members.ts",
+      "sha256": "eacd63e138a08585a854b5dcd54ec84f62d1fbcec0e50d9e59be2a7cb9352558",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/membership-http.ts",
+      "sha256": "bb3d73b7f9f716f12cb81e5ac42cbff4a6299145ce66ebf0fd824cade8c3e716",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/membership-service.ts",
+      "sha256": "4524a703dcab83690c11a11190b5e3630008702dcda44dbd858d1f4e7a3810b9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/paths.ts",
+      "sha256": "2e19871d24eed2158c122430173fd5892c7420086a86ba2d16894ba0b2a94a0c",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/project-scopes.integration.test.ts",
+      "sha256": "b1134bbb8dd83d45d837280800b478d8b0781f992f15c2949069fa3e60b4aa22",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/project-scopes.ts",
+      "sha256": "5417466898e76a021d7574e1df9599be02361f2fe90eec05e869f1fd57ac533f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/service.ts",
+      "sha256": "d38ba1efeead75fa92dfa8e926ecb798099d576de6ceeb18dfe88f190858027b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/teamspaces.integration.test.ts",
+      "sha256": "cc45a4411779377b6e44481fe25e0c0408a9cf2b99986ffe1f99f90dbf36f0b8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/organization/teamspaces.ts",
+      "sha256": "5e6082fd66cbd2c60193adc9f6f2f32628a75c160c94f5c7d4f529858feeff3b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/errors.ts",
+      "sha256": "08b5199630faac17ea26d3a26270c7e8a8a0466261094f58088c04251fc9523d",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/index.ts",
+      "sha256": "9628debc2a3ca2c76f6901434daa412622ecc66b035b854d19f8a595f4f40c5f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/ordering.test.ts",
+      "sha256": "119785ec697c876f594385494efa19d8f52d490c8c9e97ed416d92b869752266",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/ordering.ts",
+      "sha256": "9b7b43f7d5713f95970cdc6a82630d2d1e4d75105a425cf403149859d88f21f9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/tree.integration.test.ts",
+      "sha256": "eadb5c3db8dad25aeaab3e98720ee7d23e158b66859f754ac51bcc0c09537e7e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/pages/tree.ts",
+      "sha256": "0c0db758e5e0ecc49bcc924cc32f2a44970437477547b1c6eb1a935530227077",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/authorization.integration.test.ts",
+      "sha256": "fd416a5ccb5b1ee07cfba3f769a701ed20f12079612759e75dbc1659da7afd6e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/authorization.ts",
+      "sha256": "3db3b10266fdf58d81a61db36bed99e5ce58d0c74aeae3fc5e59de63ce4192e3",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/effective.test.ts",
+      "sha256": "7c2f403aacc63b73bf43ca15affd4dc9783e3d441872869be4a10c4be29a9415",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/effective.ts",
+      "sha256": "ed547c7dd8434bfc46ea8acd44c1bc5185ed481cad73d72c6cda3e3cfc6a45a8",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/errors.ts",
+      "sha256": "0caccd54bdbea8559098dfc272501de1631c83f14597fa73929038c9a33e129b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/fence.ts",
+      "sha256": "0fe2144162dd4b5ea561d10b6590cc37ae3cdc49ebc1ee0a236312b9fc21f633",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/index.ts",
+      "sha256": "a5fb5493b489ecdf63e7f96bb8e9e8a2a386e6dba74e55a1848421101ec6ccf5",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/locking.ts",
+      "sha256": "c0bea16d0320670e4cd316441bfef740d56c3cc7fcd4392aed69cc49068c17e2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/mutations.ts",
+      "sha256": "5ec1ec4fc0efd56df1f5ab0b3f008fe3f63a13406e84cbb892ce6ab0522c4a3f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/permissions-test-fixture.ts",
+      "sha256": "c1ee635a52e6b6288912bd784d712c987968fe58f55146385040af61dc483d74",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/permissions.integration.test.ts",
+      "sha256": "b4a54a528013cabeab632cf2c241c4a955614def6c114b4f4f7b1161c55e1f77",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/projection.ts",
+      "sha256": "7f8a7c4d809999fcfab42166f765a6cb0929aa4f88ef3e89d258bdc25655ff54",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/queries.ts",
+      "sha256": "c04a870e76f57b29fe135d73cfcf0dcd9d09f15db8a60e09492ed0563277a072",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/permissions/rebuild.ts",
+      "sha256": "eb4162e2b85133edc38d43e90f1cb17f7b521048cd98908f8d3524946586ea23",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/backlinks.integration.test.ts",
+      "sha256": "8a5f11e5e19ea50bf0fc5c5a4ede4c913e218fe3edf574c9ac0d7564295a7a44",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/backlinks.ts",
+      "sha256": "5d765a3783e2d2921308dbd63a730fc76daeca51434c4402b12d607f724e21a2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/embeddings.integration.test.ts",
+      "sha256": "4f62418452ed2821189e4382ec9de60386d49cddf94ddbfdf0a47f5f8515942e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/embeddings.ts",
+      "sha256": "62ed98d40c4dd4ae4ef6d742a7b8fdb8dbddd0b18766b48ff4c62e98593e757a",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/index.ts",
+      "sha256": "5f92942fd9c37bdcdc98415995178b57bb7026619be16e46173aed5135336afb",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/indexer.integration.test.ts",
+      "sha256": "8fad954446b4c462411c24c1e9940846327b7d92214e8468897be47159d77da2",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/indexer.ts",
+      "sha256": "c1e74fc54ce53d512d38be2b147a53d77c87c54593686f9de3221a484c653abf",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/keyword.integration.test.ts",
+      "sha256": "d209abbf726d091547de5c3d45249b6e4c1c2e99296df08e8924d185b4b2b66f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/keyword.ts",
+      "sha256": "8431b5aa2724fdf4ad4dbca359bab3027c70486a322f13fc70cbbab14113b347",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/service.integration.test.ts",
+      "sha256": "fb2f9e6c967e08f65d35ca354e3eac833eb0dbf516499889e85d6d9663ae105b",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/search/service.ts",
+      "sha256": "a6380252572f6a44ab497f7ebaaeba051161bb9ec362ac2100c8438d61da33ac",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/errors.ts",
+      "sha256": "73e42349a2ec0112fba59db1954ea6363f5c3b2cb7fd1bae249c5504a869bc6e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/index.ts",
+      "sha256": "2131cfed1bc010b2050a987c08262158e3ea4368d0642519983c2c7a1eb7eb6e",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/links.integration.test.ts",
+      "sha256": "01b2406d99cf5b10670d0f5087662de9c77db47caeb37934c06f61f494b82cf7",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/links.ts",
+      "sha256": "26fd0df9d0f2eb214162b631ad995719befd8396680f60776a7afb3cba4b026f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/service.ts",
+      "sha256": "e5ebac658f2c06eff6c03e5c1b87710cd3b1dac808ee9ff4ca038d8ab8292307",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/token-format.test.ts",
+      "sha256": "639dc89c327c9c4603c29bd8fc1921914e47a174e7594b9a3e871e0bcd900a3f",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/sharing/token-format.ts",
+      "sha256": "0a5ea4b24b8175f915718a7bb86e31db8909f5b989b34f39c3c3e9cd6bb4a655",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/index.ts",
+      "sha256": "581f0299624d0c50c81e6c9f55625c9d410a24019ea4f8d73c3ae7bd4178a191",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/initialize.ts",
+      "sha256": "8053612e0dbe2021fb4146820b1854e7c3e57551e58789c0752a95572feab6b0",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/logger.ts",
+      "sha256": "f5c995e2e9c99471aab62cdff7206a84daa13e99a8616d09ff533a0b23e2605a",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/media.integration.test.ts",
+      "sha256": "ee9fe47be70234b334fbe6e72924e256d6328e45444812a3e61bed84e4f6ce89",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/media.ts",
+      "sha256": "0fd2e2a698fde8c9e632f57d1a20d1460a107db34587eb6abd988a9678bd53a9",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/outbox.ts",
+      "sha256": "f1803c047070e230ad230837501664f1bd8653a073ec836f300493dc7e2548fd",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/pool-errors.ts",
+      "sha256": "0f24001dbe60a67476f90ade5f08d4b3c05309b1658d49eea6e12b9c93f3da54",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/runner.ts",
+      "sha256": "cd0c41d733ebccc67bdc33c08bf49f1c8d99e11e53abb927a0a06eeed6b58912",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/tasks.ts",
+      "sha256": "372ba6a5eaee0bee793255bd37122959e88e7b5c6f3496dcfdcc5f5d1d8ad921",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/testing/crash-child.ts",
+      "sha256": "7d3a7e930f87bb3dda27f4d74ab3185af706c8aa86639f486d1b1a5e377043fc",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/types.ts",
+      "sha256": "9fb4c838e34f57e136adda1303cbb13fcefe0b510ba5281ec06150b06b0a8248",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/vision.integration.test.ts",
+      "sha256": "71332fbfd866d68bc6a3ef22c816a50cc6c4a8b89b85607dd8d7b29006807373",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/vision.ts",
+      "sha256": "149fdce3498ebf289ea47cee30ced46c850d952c6ba812a03fab26a243ff3a07",
+      "kind": "text"
+    },
+    {
+      "path": "backend/server/src/modules/knowledge/workers/workers.integration.test.ts",
+      "sha256": "b5477dba9d42bf0e96a19d1857077de7650e9722b06f4090e6a3078d83602684",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/collaboration/index.ts",
+      "sha256": "a4ab428ff38ac30077e9d01ee0803ac5f3ff5eac1006f26601b0878eb82468d1",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/collaboration/origin.ts",
+      "sha256": "28c7e6c89467b0d76ed671966eb879bbaf5f983a23275c3e763b837f84acae9d",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/collaboration/page-documents.ts",
+      "sha256": "da52e0263ad9c267be66cc206fa7e05dfc588378a9e3e01f541baee4e6d8a2d0",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/collaboration/undo.test.ts",
+      "sha256": "83ce0463b0f9c69e2985aacb70797b3cc97037f29ccc154d3eba5f3d1b95d9a6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/collaboration/undo.ts",
+      "sha256": "25b88470e2e4897dea07b2d0221ad257bbb043162df8b7247da1ac5f28cc5a7e",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/comments/index.ts",
+      "sha256": "a6a97158dbfd72c7f14b958e001a5aaa42e430ae2451f33545c8eb0d6e34d803",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/agent-tools.ts",
+      "sha256": "c37eb1649abab98bdc3bbfdc70b6941c81734905879d1edd73792f433b369278",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/ai-tasks.ts",
+      "sha256": "9ba986d22d9eddab005ad63f40a35fa19a622593aee743ac755cee087e783620",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/ai.ts",
+      "sha256": "faf653bcd92b79823f9c3027f0bcd7d9e9ad26b58fe5b70e8cce557c7483a399",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/assets.ts",
+      "sha256": "ffdde4127b1c1b617990ed80e49f482a3a829acd83669351b2bc454510747111",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/content.ts",
+      "sha256": "91d31db8e3c450a688890f438500278d6bc462b727569fa92faa806a59a3e438",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/contracts.test.ts",
+      "sha256": "df5e37b5dd2b04002601bcb4dadd0a04d21bf120b8d48c408a2ec3dee2d3bd9c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/databases.ts",
+      "sha256": "e8fd00fc79933d6b1cf085eabbbc120830da647d2a5f19d5c3ae8db5bdd6da95",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/events.ts",
+      "sha256": "e62bb382415200f86d98f1b03dc8f5cc68391049d1b038273ff0fdba2c300bee",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/index.ts",
+      "sha256": "d6e32d8356ee22abe8c15b0fea1e08ec3cff2be445e4d882aa89d1be076a32f4",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/models.ts",
+      "sha256": "9948d96f55f56ff9d8cf926f1fc4a3de3c2074da5f58af463cf1fac0f469f976",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/organization.test.ts",
+      "sha256": "ac8220438b15eb6f906062b646a9766dd1666c4c09e6877066cc5e3ee8017bb2",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/organization.ts",
+      "sha256": "d5179ca7443f678f546ecee70d2b6e311172181a0b2d233d6bd3a964e96df4c4",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/pages-tree.ts",
+      "sha256": "db579927dec6f4718b91d5cb2c85b2dc64495537c8a066caceac6f4143234c6c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/pages.ts",
+      "sha256": "538b418db16a71912e6bcd11388c74e72ab6fd351bb9a707ca36894e1b14ccf8",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/pat.ts",
+      "sha256": "4b130ccc841dd41ce78bccfefe54ef5a3425346972d98dea9891bd21c9881236",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/primitives.ts",
+      "sha256": "8aa5d182ff5a7fb606f9034c84c78abc33569164fac517d58939e072332dc25a",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/contracts/sharing.ts",
+      "sha256": "9592124d3d130deed18fde4c9e9a312b21f7f5b91584a9571857a244d79ef7fd",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/diff.ts",
+      "sha256": "9674f8e087458b203cbad6d98715feda757c9fa5e70ac14f8d3c17455e5f8cf7",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/history.test.ts",
+      "sha256": "33d4cad384000284fd3a6e68763967ba4f18ed6b600660c68b392fbfd51a2a79",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/index.ts",
+      "sha256": "9ab774f8a279c2d744a93d83abe3c1623583317efb293b04eba3a01c912a48cb",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/inline.ts",
+      "sha256": "552fcb5528f7dfdb0feb193304e4c21f812c24ffb319aefdb1cbd65db8711a27",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/order.ts",
+      "sha256": "91e6232999d9a930649343cfd76813df89a6daa6706de1967c3c441d4a915074",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/history/types.ts",
+      "sha256": "bb71cfa6de50522fef779b4d54aeb143aabcf079670447055c06ef6edf7c51ea",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-anchors.ts",
+      "sha256": "65e750f19b99833c9a62aaf2568678680be5c81ca6dc922deda6676f584bcac6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-context.ts",
+      "sha256": "dd2ef2f523f770556257044b8650da3bb398aaaf3df656d4d8d1f195d18858c0",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-derived.ts",
+      "sha256": "6e1b818eddf6c213e9541f2ce8efffd80578cd1470b6ecfff2cb2342a4738ce2",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-scan.ts",
+      "sha256": "b471f7d30616e5d96216d41846732ff16d2cf4234521a1eb40d1c480568a99dd",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-tree.ts",
+      "sha256": "b7df52e78016208eca7741020470e0622187ed1c6f36d5e0cdec2d3e0c76b9da",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai-types.ts",
+      "sha256": "27d0268bb0cd6021c73911889b8b7939eec8edd15f0d543b480806982853df25",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/ai.test.ts",
+      "sha256": "a16ba283a1ec9319a03e8d136f09478ed49a0a2b7e4302e2b8e4fdc9529499e1",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/attributes.ts",
+      "sha256": "b08c55a6380a3dc80bfffd2dc3c33ea736b4a12a205b53728a8fab132b951ec3",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/block-codecs.ts",
+      "sha256": "fe285fdaf82f298a48659e8b54a2492c078bb95a7525d0d1e57e4f99bfb43bbd",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/directives.ts",
+      "sha256": "c84c2dddd535f73df955fffcd16c433dc305b751f68e83224be5c7ab4175f3e6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/errors.ts",
+      "sha256": "2eb1e95248622e7d57e30c4609561ab3e4952545d93428b2516f290793dc415c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/fidelity.test.ts",
+      "sha256": "93e69a953f0855851de232ff2722a3bbd337490e4de68c0666202369ce60ceb6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/index.ts",
+      "sha256": "688f36a1a0c32280f4c4eb463c01276812eb54d851a0801ae81ef192c2f1319c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/inline.ts",
+      "sha256": "49b1258ef2a2f7c2d722c95fa1bdc7ba68b8b90d85a02146ab5e3fe200f0cd71",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/metadata.ts",
+      "sha256": "5aa97afba0790cac5ce7a923e369ad4f8dc1ead2e476a3a3b9bbb54122a5d279",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/pipeline.test.ts",
+      "sha256": "86b00dfc7defb29f541dbe03fa624cc99aa70dc7cd948de38ee53a604e76adcc",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/pipeline.ts",
+      "sha256": "c025f1725f4590296f7be40ec31fd3ed81d4b1c22659a9aa02dcab7ccb3cb6b3",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/types.ts",
+      "sha256": "b406f67ba5623e00d18a78d3fbf3afd62fe45ed2306e2c7565a5a23bfe79292c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/markdown/wiki.ts",
+      "sha256": "6f69e45e49aa915610a98229e89a7ba4332aff5c63c4437bfe30aa9290fadf0e",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/notifications/index.ts",
+      "sha256": "9d99929c6781f6f6160b0b40e4031644630e6375035325ae3d5085d27408b76b",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/annotations.ts",
+      "sha256": "b4072f2511466b142b7ba5aa5b0d2561c85205fdb7e3382b6b1e633d05784eca",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/attributes.ts",
+      "sha256": "d27f4279c3bfe4ab69e18015c8e74f0fd7067d69b4002106e1d26c41ebbbcd1d",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/block-id-clipboard.ts",
+      "sha256": "e8369400bddaedfe558d047d7363e826a9cb32b910eccf19dd8a4ba0e68316a6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/block-id-plugin.ts",
+      "sha256": "33818047bae85e4ed8973dd49ac754f71f2fcb31ac32e5065d17e7dbcf9b636e",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/block-id.test.ts",
+      "sha256": "e2b63b0436c992f3df020186acb87f441c838902f7e170478f2e179aed51f354",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/block-id.ts",
+      "sha256": "4ea558531c259c578d015481bbba3c739cdb96fd05fb984ea9441c6caea26f26",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/blocks.ts",
+      "sha256": "d1b4caddd2f86bc135b2e9b360c0a1194bd30232e05e4e9995d7d67741fbce59",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/index.ts",
+      "sha256": "276fc13c6322f40ac5bf4104abbca9dede73766300c857d0d69cf57377417ee6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/marks.ts",
+      "sha256": "0be4befe6959c079dc780702753c0d9ee9acc4e60c09fdc3bf14174523eebf90",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/registry.ts",
+      "sha256": "aba172ab7dea7394db6161611b55d0847c0432de437d664b40dd25b776d3bd30",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/safety.test.ts",
+      "sha256": "190be76d8fb7489f33a133273c408089e13e83c24d073195ad57fecf87199f6b",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/schema.test.ts",
+      "sha256": "6ddb7c1f1e99cb291d3ceb9d882f77fe05e64ec84a7c018e620e5bc672db5e89",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/suggestions/change.ts",
+      "sha256": "c17bfdd28ec95ac257278976c9cf13245a4319acf2946387280dfe1b7c6be2cb",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/suggestions/collect.ts",
+      "sha256": "f3e1fccbca954e008c6b75a161aae99c665dde9996e9c79692f021b78d8db028",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/suggestions/index.ts",
+      "sha256": "4869a8a2045717b691e5d353a7d8a3b2cf3a4a825d5b8323edb6018c24426153",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/suggestions/review.ts",
+      "sha256": "0b12aaa4c989d90a6f54767b3dce8ba33f17bf6778864def86e0df3912de93c6",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/suggestions/suggestions.test.ts",
+      "sha256": "3add30d9a466489a3528aaac6cb003e3ec3e0f3501ca22f44e18b886018dae57",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/types.ts",
+      "sha256": "4d29ed597653769a79115a00dbb4958ebbe25e3d59a8352f4503828d5739965d",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/schema/urls.ts",
+      "sha256": "bc549f55d1e1900a654a093214d45bd52b023a538ed6dff2b3c341e948572a9c",
+      "kind": "text"
+    },
+    {
+      "path": "shared/src/knowledge/search/index.ts",
+      "sha256": "d7d2d8d5b2200baebf9233722688cab49fa1da978d4ba43a116bfeb25d1fbaa8",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-action-menu.tsx",
+      "sha256": "21301656442258b8bc717847b458cbd737894b394573c24c194f10ce1d5134d5",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-character.module.css",
+      "sha256": "04e95b5f16c24f3c0dc83bf3b7bdb161c84e87a100a44b6724a26ef3d6ca9552",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-character.tsx",
+      "sha256": "e28550a61de34f8335982e988be0123af81bc70a6498768eb17287b34d3e7da2",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-click-sequence.test.ts",
+      "sha256": "02aca4fe635727ece82ceda6bbdce5e030a76bb00df185eeee5c735be7bcd79c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-click-sequence.ts",
+      "sha256": "c1cafe86882000998dae1037fd515d104b6a30bc4552bf50188cae082bbe9811",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-events.ts",
+      "sha256": "9d3c0692e8f438e0469013b6eae691f1bc750f476c8cbc8329d1cf999458235c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-fur.test.ts",
+      "sha256": "657e4632255c2f7db0641463b9b7ecc4ede435eef6a389db02cd56a6da4d8888",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-fur.ts",
+      "sha256": "7dfafc7d92c60cf10f9da7ec91d438aee6b34bd8ddc7b654df0a27c018298a11",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-layer.tsx",
+      "sha256": "b5cbedfc1958ed0411f009ab52c730886ee46ef8287deb005ae0523d7477963a",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-runtime.ts",
+      "sha256": "f5c967753ee8ac464a1f416944c2cc3bc1332d058180e2ebae5a76590fbcfaec",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-tool-button.tsx",
+      "sha256": "a5f5245355f987f3fd12c62f7d0e29b089e0a8a1a933ad2b1f48aecae3ecc799",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-toolbar.tsx",
+      "sha256": "55b990d2e5d14fd1bea7219149d650b1e2241be10b17a114f249135f1adc92bb",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-widget.module.css",
+      "sha256": "5273d8225e8afc9e2aac8fd718e23f1fb1843c3235fc840173196adb6975b71c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion-widget.tsx",
+      "sha256": "bb3c3c7ee9004249a6daadb98d771c03d32c4c9871b399a79c3a4a790ede49c9",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/companion.messages.ts",
+      "sha256": "f36ed6f1cfa2ec93dbd1f103c88fd5bebe8d0562c5e60c04c7823360006dd92c",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/global-companion.tsx",
+      "sha256": "f914f2cf683c820099441d1e8d3569fc346d48bb1bfb07141034eb27c2c68b2d",
+      "kind": "text"
+    },
+    {
+      "path": "src/features/companion/use-companion-drag.ts",
+      "sha256": "93ca50caa25573c5deeb177de0f020e3b792ce2a4f81140a9f6681cc30bbcd26",
+      "kind": "text"
+    }
+  ],
+  "binaryHashing": "Binary fixtures are hashed byte-for-byte without text normalization."
+}

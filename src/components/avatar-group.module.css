@@ -1,0 +1,6 @@
+.group { display:inline-flex; flex-shrink:0; align-items:center; vertical-align:middle; }
+.item { display:inline-flex; flex-shrink:0; align-items:center; justify-content:center; width:var(--avatar-group-size); height:var(--avatar-group-size); overflow:hidden; border:2px solid var(--panel); border-radius:50%; line-height:1; }
+.item + .item { margin-left:calc(var(--avatar-group-size) * -.25); }
+.avatar { width:100%; height:100%; font-size:calc(var(--avatar-group-size) * .38); }
+.remaining { background:var(--interaction-active-bg); color:var(--muted-strong); font-size:calc(var(--avatar-group-size) * .38); font-weight:500; font-variant-numeric:tabular-nums; }
+.tooltip { max-inline-size:min(280px, calc(100vw - 24px)); white-space:normal; overflow-wrap:anywhere; }

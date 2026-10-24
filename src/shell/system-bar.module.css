@@ -1,0 +1,15 @@
+.bar {
+  display:flex;
+  align-items:center;
+  height:var(--workbench-toolbar-height);
+  flex-shrink:0;
+  gap:8px;
+  padding:0 12px;
+  user-select:none;
+}
+.actions { display:flex; align-items:center; gap:2px; }
+.trailing { margin-left:auto; }
+.button { display:grid; place-items:center; width:28px; height:28px; flex-shrink:0; border-radius:6px; color:var(--sidebar-icon); cursor:pointer; outline:none; }
+.button:disabled { opacity:.3; cursor:default; }
+.separator { width:var(--separator-width); height:18px; margin:0 6px; background:var(--line); }
+@media (max-width:850px) { .bar { gap:4px; padding-inline:8px; } .separator { margin-inline:3px; } }

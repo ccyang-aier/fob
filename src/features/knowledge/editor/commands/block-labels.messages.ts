@@ -1,0 +1,28 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const blockLabels = defineMessages({
+  paragraph: ['正文', 'Text'],
+  heading1: ['主标题', 'Heading 1'],
+  heading: ['次标题', 'Heading 2'],
+  heading3: ['小标题', 'Heading 3'],
+  heading4: ['附加小标题', 'Heading 4'],
+  bulletList: ['无序列表', 'Bullet list'],
+  orderedList: ['有序列表', 'Numbered list'],
+  taskList: ['任务列表', 'Task list'],
+  blockquote: ['引用', 'Blockquote'],
+  callout: ['提示框', 'Callout'],
+  codeBlock: ['代码', 'Code'],
+  math: ['数学公式', 'Equation'],
+  horizontalRule: ['分隔线', 'Divider'],
+  table: ['表格', 'Table'],
+  columns: ['分栏', 'Columns'],
+  image: ['图片', 'Image'],
+  video: ['视频', 'Video'],
+  audio: ['音频', 'Audio'],
+  file: ['文件', 'File'],
+  embed: ['嵌入', 'Embed'],
+  blockReference: ['块引用', 'Block reference'],
+  pageLink: ['页面链接', 'Page link'],
+  databaseView: ['数据库视图', 'Database view'],
+  aiBlock: ['AI 块', 'AI block'],
+});

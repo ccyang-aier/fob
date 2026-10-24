@@ -1,0 +1,35 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  valueColumnMenu: ['{v0} 列菜单', '{v0} column menu'],
+  columnName: ['列名', 'Column name'],
+  delete: ['删除「', 'Delete “'],
+  andRemoveItsValueFromEveryRow: [
+    '」会同时移除每一行上的该属性值。',
+    '” and remove its value from every row.',
+  ],
+  cancel: ['取消', 'Cancel'],
+  deleteColumn: ['删除列', 'Delete column'],
+  removeAscendingSort: ['取消升序', 'Remove ascending sort'],
+  sortThisColumnAscending: ['按此列升序', 'Sort this column ascending'],
+  removeDescendingSort: ['取消降序', 'Remove descending sort'],
+  sortThisColumnDescending: ['按此列降序', 'Sort this column descending'],
+  filterThisColumn: ['筛选此列', 'Filter this column'],
+  pageFullControlPermissionRequired: ['需要页面完整权限', 'Page full-control permission required'],
+  rename: ['重命名', 'Rename'],
+  editOptions: ['编辑选项', 'Edit options'],
+  newColumn: ['新建列', 'New column'],
+  columnType: ['列类型', 'Column type'],
+  createColumn: ['创建列', 'Create column'],
+  editOptionsForValue: ['编辑「{v0}」选项', 'Edit options for “{v0}”'],
+  removingOptionsKeepsExistingCellValuesUntilThey: [
+    '移除选项后，已有行会保留原值，直到下一次编辑该单元格时按新选项校验。',
+    'Removing options keeps existing cell values until they are edited and validated again.',
+  ],
+  saveOptions: ['保存选项', 'Save options'],
+  optionValueColor: ['选项 {v0} 颜色', 'Option {v0} color'],
+  optionValue: ['选项 {v0}', 'Option {v0}'],
+  optionValueName: ['选项 {v0} 名称', 'Option {v0} name'],
+  removeOptionValue: ['移除选项 {v0}', 'Remove option {v0}'],
+  addOption: ['添加选项', 'Add option'],
+});

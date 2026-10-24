@@ -1,0 +1,11 @@
+import { cpSync, mkdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import path from 'node:path';
+const require = createRequire(import.meta.url);
+const root = path.dirname(require.resolve('pdfjs-dist/package.json'));
+const target = path.resolve('public/vendor/pdfjs');
+mkdirSync(target, { recursive: true });
+cpSync(path.join(root, 'build/pdf.worker.mjs'), path.join(target, 'pdf.worker.mjs'));
+for (const name of ['cmaps', 'standard_fonts', 'wasm']) cpSync(path.join(root, name), path.join(target, name), { recursive: true });
+cpSync(path.join(root, 'LICENSE'), path.join(target, 'LICENSE'));
+console.log('Prepared matching PDF.js worker, CJK maps, fonts and WASM.');

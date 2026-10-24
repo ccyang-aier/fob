@@ -1,0 +1,83 @@
+/* 系统分隔柄：业务组件只安排点击区与位置，不重写指示线或交互状态。
+   常态边界由所属面板绘制；独立分隔柄用 --resize-rest-color 提供唯一的浅线。 */
+html .fob-resize-handle.fob-resize-handle {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  cursor: col-resize;
+  touch-action: none;
+  user-select: none;
+  outline: none;
+  box-shadow: none;
+  transition: none;
+}
+
+/* 避免业务容器的通用 button:hover / focus 覆盖分隔柄，产生额外色块。 */
+html .fob-resize-handle.fob-resize-handle:is(:hover, :focus-visible, :active, [data-resizing="true"]) {
+  background: transparent;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  transition: none;
+}
+
+html .fob-resize-handle::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: var(--resize-line-position, 50%);
+  width: var(--separator-width);
+  transform: translateX(-50%);
+  background: var(--resize-rest-color, transparent);
+  pointer-events: none;
+  transition: none;
+}
+
+html .fob-resize-handle:is(:hover, :focus-visible, :active, [data-resizing="true"])::before {
+  width: var(--drag-indicator-width);
+  background: var(--drag-indicator-color);
+}
+
+html .fob-resize-handle.fob-resize-handle[data-resize-axis="y"] { cursor: row-resize; }
+html .fob-resize-handle[data-resize-axis="y"]::before {
+  inset: auto 0;
+  top: var(--resize-line-position, 50%);
+  width: auto;
+  height: var(--separator-width);
+  transform: translateY(-50%);
+}
+html .fob-resize-handle[data-resize-axis="y"]:is(:hover, :focus-visible, :active, [data-resizing="true"])::before {
+  height: var(--drag-indicator-width);
+}
+
+/* 浮窗的角手柄沿对角线缩放，沿用同一根反馈线。 */
+html .fob-resize-handle.fob-resize-handle[data-resize-axis="nw-se"] { cursor: nwse-resize; }
+html .fob-resize-handle.fob-resize-handle[data-resize-axis="ne-sw"] { cursor: nesw-resize; }
+html .fob-resize-handle:is([data-resize-axis="nw-se"], [data-resize-axis="ne-sw"])::before { inset-block: 2px; transform: translateX(-50%) rotate(-45deg); }
+html .fob-resize-handle[data-resize-axis="ne-sw"]::before { transform: translateX(-50%) rotate(45deg); }
+
+/* 拖动高亮互斥：其他手柄可能保留键盘焦点，或因布局移动落在鼠标下方。
+   它们在当前手势结束前只显示常态边界，不能同时显示第二条黑线。 */
+html body:has(.fob-resize-handle[data-resizing="true"]) .fob-resize-handle:not([data-resizing="true"])::before {
+  width: var(--separator-width);
+  background: var(--resize-rest-color, transparent);
+}
+html body:has(.fob-resize-handle[data-resizing="true"]) .fob-resize-handle[data-resize-axis="y"]:not([data-resizing="true"])::before {
+  width: auto;
+  height: var(--separator-width);
+}
+
+/* 侧栏可裁切内容；指示线向内放置，避免 2px 线被 overflow 裁成 1px。 */
+.fob-sidebar-resize { --resize-line-position: calc(100% - 1px); }
+
+/* 指针移出分隔柄后仍保持相同光标，并阻止沿途选中文字。 */
+body:has(.fob-resize-handle[data-resizing="true"]) { user-select: none; }
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="x"]),
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="x"]) * { cursor: col-resize !important; }
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="y"]),
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="y"]) * { cursor: row-resize !important; }
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="nw-se"]),
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="nw-se"]) * { cursor: nwse-resize !important; }
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="ne-sw"]),
+body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="ne-sw"]) * { cursor: nesw-resize !important; }

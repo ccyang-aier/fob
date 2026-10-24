@@ -1,0 +1,13 @@
+/* ── 侧栏材质：标准面板 ──
+   不透明浅色面板底座，供工作台双层侧栏与设置弹窗共用。 */
+.sidebar-material {
+  background: var(--wt-sidebar-standard-panel);
+}
+
+.sidebar-material[data-surface="content"] {
+  background: var(--wt-sidebar-content-panel);
+}
+
+.sidebar-material[data-surface="database"] {
+  background: var(--wt-sidebar-database-panel);
+}

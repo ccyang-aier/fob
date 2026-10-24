@@ -1,0 +1,15 @@
+.button {
+  position: relative;
+  display: grid;
+  flex: none;
+  width: 28px;
+  height: 32px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: color 160ms ease, background-color 160ms ease;
+}
+.button:active svg { transform: scale(.9); }

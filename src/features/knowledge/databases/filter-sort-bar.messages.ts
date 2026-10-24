@@ -1,0 +1,35 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  noPropertyColumnsInThisDatabaseYet: [
+    '数据库还没有属性列',
+    'No property columns in this database yet',
+  ],
+  filter: ['筛选', 'Filter'],
+  sort: ['排序', 'Sort'],
+  editFilterValueValue: ['编辑筛选：{v0} {v1}', 'Edit filter: {v0} {v1}'],
+  removeFilterValue: ['移除筛选：{v0}', 'Remove filter: {v0}'],
+  changeSortDirectionValueCurrentlyValue: [
+    '切换排序方向：{v0}（当前{v1}）',
+    'Change sort direction: {v0} (currently {v1})',
+  ],
+  ascending: ['升序', 'Ascending'],
+  descending: ['降序', 'Descending'],
+  removeSortValue: ['移除排序：{v0}', 'Remove sort: {v0}'],
+  yes: ['是', 'Yes'],
+  no: ['否', 'No'],
+  filterConditions: ['筛选条件', 'Filter conditions'],
+  filterColumn: ['筛选列', 'Filter column'],
+  operator: ['比较方式', 'Operator'],
+  updateFilter: ['更新筛选', 'Update filter'],
+  addFilter: ['添加筛选', 'Add filter'],
+  comparisonValue: ['比较值', 'Comparison value'],
+  chooseAnOption: ['选择选项…', 'Choose an option…'],
+  chooseAMember: ['选择成员…', 'Choose a member…'],
+  number: ['数字', 'Number'],
+  text: ['文本', 'Text'],
+  sortColumn: ['排序列', 'Sort column'],
+  sortDirection: ['排序方向', 'Sort direction'],
+  updateSort: ['更新排序', 'Update sort'],
+  addSort: ['添加排序', 'Add sort'],
+});

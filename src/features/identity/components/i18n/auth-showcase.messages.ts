@@ -1,0 +1,28 @@
+import { defineMessages } from '@/lib/i18n/messages';
+
+export const messages = defineMessages({
+  AI工作台: ['AI 工作台', 'AI WORKBENCH'],
+  Research: ['研究', 'Research'],
+  Writer: ['写作', 'Writer'],
+  Developer: ['开发', 'Developer'],
+  'Fob 协作示例': ['Fob 协作示例', 'Fob collaboration examples'],
+  协作示例: ['协作示例', 'Collaboration examples'],
+  '梳理 AI 工作台竞品格局': ['梳理 AI 工作台竞品格局', 'Explore the AI workbench landscape'],
+  检索公开资料: ['检索公开资料', 'Research public sources'],
+  交叉核对关键结论: ['交叉核对关键结论', 'Cross-check key findings'],
+  生成结构化报告: ['生成结构化报告', 'Create a structured report'],
+  '你定方向，': ['你定方向，', 'You set the direction,'],
+  '剩下的路交给 Agent。': ['剩下的路交给 Agent。', 'your agent takes it from there.'],
+  起草产品发布说明: ['起草产品发布说明', 'Draft product release notes'],
+  读取产品需求与变更: ['读取产品需求与变更', 'Read requirements and changes'],
+  撰写不同语气的草稿: ['撰写不同语气的草稿', 'Draft in different tones'],
+  提交给你审阅: ['提交给你审阅', 'Submit for your review'],
+  '思考是你的，': ['思考是你的，', 'Your ideas,'],
+  '执行是它的。': ['执行是它的。', 'your agent’s execution.'],
+  把想法变成可用的产品: ['把想法变成可用的产品', 'Turn ideas into working products'],
+  理解需求与设计: ['理解需求与设计', 'Understand requirements and design'],
+  实现并验证交互: ['实现并验证交互', 'Build and validate interactions'],
+  交付可审阅的成果: ['交付可审阅的成果', 'Deliver work ready for review'],
+  '从一个想法，': ['从一个想法，', 'From an idea,'],
+  '到下一步行动。': ['到下一步行动。', 'to the next action.'],
+});

@@ -1,0 +1,16 @@
+export { KnowledgeVaultError } from './errors';
+export type { VaultErrorCode } from './errors';
+export { vaultProgressEventSchema } from './events';
+export type { VaultProgressEvent, VaultPhase, VaultItemResult, VaultTransferSummary, VaultEventSink } from './events';
+export { summarize } from './events';
+export { exportObsidianVault } from './export';
+export type { VaultExportResult } from './export';
+export { importObsidianVault, mimeOfAttachment } from './import';
+export type { VaultImportResult } from './import';
+export { parseVaultArchive, parentPathOf, vaultPathsForExport, buildVaultArchive, titleFromFileName, fileNameFromTitle, ATTACHMENTS_DIR } from './vault';
+export type { ParsedVault, VaultPage, VaultAttachment, ExportVaultPage } from './vault';
+export { splitFrontmatter, decodeFrontmatter, encodeFrontmatter } from './frontmatter';
+export type { VaultFrontmatter } from './frontmatter';
+export { importVaultBody, exportVaultBody, createVaultResolver, collectAssetReferences, attachmentExtension } from './body';
+export type { VaultBodyResolver, VaultExportContext, VaultBodyFailure, VaultBodyError } from './body';
+export { prosemirrorDocToYDoc, yStateToProseMirrorDoc, PAGE_BODY_FRAGMENT } from './y-encoding';

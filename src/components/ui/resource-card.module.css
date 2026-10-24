@@ -1,0 +1,23 @@
+.card {
+  border: 1px solid var(--resource-card-border);
+  border-radius: 8px;
+  background: var(--panel);
+  transition: border-color 120ms ease;
+}
+
+.card:hover {
+  border-color: var(--resource-card-border);
+  background: var(--surface-subtle);
+}
+
+.card:is(:focus-visible, :focus-within, [aria-pressed="true"]) {
+  border-color: var(--accent);
+}
+
+.card[aria-pressed="true"] {
+  background: var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+}

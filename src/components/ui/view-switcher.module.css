@@ -1,0 +1,38 @@
+.switcher {
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 32px;
+  overflow: hidden;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+.switcher .option {
+  --action-state-bg: var(--action-hover-bg);
+  --action-state-ink: var(--muted);
+  width: 30px;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  translate: none;
+}
+
+.switcher .option[aria-pressed="true"] {
+  --action-state-bg: var(--accent-soft);
+  --action-state-ink: var(--accent-ink);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.switcher .option:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.switcher:has(.option:focus-visible) {
+  border-color: var(--accent);
+}

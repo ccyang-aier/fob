@@ -1,0 +1,3 @@
+Source: https://github.com/lxgw/LxgwZhenKai/releases/download/v0.825/LXGWZhenKaiGB-Regular.ttf
+License: SIL OFL 1.1
+Unicode subsets, WOFF2 compression and renamed font families; original glyph outlines retained.

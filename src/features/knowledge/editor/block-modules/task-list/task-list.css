@@ -1,0 +1,19 @@
+.ProseMirror [data-task-list] { list-style: none !important; padding-left: 0 !important; }
+.ProseMirror li[data-task-item] { position: relative; list-style: none !important; padding-left: 32px !important; min-height: 30px; }
+.ProseMirror li[data-task-item]::before {
+  position: absolute; top: .4em; left: 1px; width: 19px; height: 19px;
+  border: 1.5px solid var(--control-border); border-radius: 5px; background: var(--panel); content: '';
+  box-shadow: 0 1px 2px rgba(28, 43, 66, .07); cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.ProseMirror li[data-task-item]:hover::before { border-color: #0869cf; }
+.ProseMirror li[data-task-item][data-checked="true"]::before { border-color: #0869cf; background: #0869cf; animation: task-check-pop 220ms ease-out; }
+.ProseMirror li[data-task-item][data-checked="true"]::after {
+  position: absolute; top: calc(.4em + 5px); left: 6px; width: 10px; height: 6px;
+  transform: rotate(-45deg); border-bottom: 2px solid white; border-left: 2px solid white; content: '';
+  pointer-events: none; animation: task-check-mark 180ms ease-out;
+}
+.ProseMirror li[data-task-item][data-checked="true"] > p { color: var(--muted-strong); text-decoration: line-through; text-decoration-color: var(--muted); transition: color 180ms ease; }
+@media (prefers-reduced-motion: reduce) { .ProseMirror li[data-task-item]::before, .ProseMirror li[data-task-item]::after, .ProseMirror li[data-task-item] > p { animation: none; transition: none; } }
+@keyframes task-check-pop { 50% { transform: scale(1.13); } }
+@keyframes task-check-mark { from { opacity: 0; transform: rotate(-45deg) scale(.55); } to { opacity: 1; transform: rotate(-45deg) scale(1); } }

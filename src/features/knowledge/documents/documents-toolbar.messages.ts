@@ -1,0 +1,25 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  expandKnowledgeBaseSidebar: ['展开知识库侧边栏', 'Expand knowledge base sidebar'],
+  expandSidebar: ['展开侧栏', 'Expand sidebar'],
+  document: ['文档', 'Document'],
+  searchDocuments: ['搜索文档', 'Search documents'],
+  clearSearch: ['清除搜索', 'Clear search'],
+  filter: ['筛选', 'Filter'],
+  allFormats: ['全部格式', 'All formats'],
+  starredDocumentsOnly: ['仅星标文档', 'Starred documents only'],
+  resetFilters: ['重置筛选', 'Reset filters'],
+  newestUpdateFirst: ['按更新时间从新到旧', 'Newest update first'],
+  oldestUpdateFirst: ['按更新时间从旧到新', 'Oldest update first'],
+  changeUpdatedTimeSort: ['切换更新时间排序', 'Change updated-time sort'],
+  fileListView: ['文件列表视图', 'File list view'],
+  fileGridView: ['文件网格视图', 'File grid view'],
+  new: ['新建', 'New'],
+  newDocument: ['新建文档', 'New document'],
+  newFolder: ['新建文件夹', 'New folder'],
+  upload: ['上传', 'Upload'],
+  moreDocumentViewActions: ['文档视图更多操作', 'More document view actions'],
+  resetView: ['重置视图', 'Reset view'],
+  exportSelectedDocumentList: ['导出所选文档清单', 'Export selected document list'],
+});

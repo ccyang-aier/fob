@@ -1,0 +1,6 @@
+Noto Sans SC variable, Google Fonts v41, weights 400-600.
+Source: https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400..600&display=swap
+Upstream: https://github.com/google/fonts/tree/main/ofl/notosanssc
+Retrieved: 2026-10-24
+License: OFL.txt (SIL Open Font License 1.1). Font binaries are unchanged.
+CSS family alias: Fouc Channel Sans. Unicode ranges intersect CJK and fullwidth punctuation; Latin and emoji retain the application font. Browser loads only ranges used by visible text.

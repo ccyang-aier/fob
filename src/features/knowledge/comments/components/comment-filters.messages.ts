@@ -1,0 +1,26 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  allComments: ['全部评论', 'All comments'],
+  comments: ['普通评论', 'Comments'],
+  allQuestions: ['全部问题', 'All questions'],
+  unresolvedQuestions: ['未解决问题', 'Unresolved questions'],
+  resolvedQuestions: ['已解决问题', 'Resolved questions'],
+  anyLikes: ['不限点赞', 'Any likes'],
+  likedByMe: ['我赞过的', 'Liked by me'],
+  mostLiked: ['最多点赞', 'Most liked'],
+  anyTime: ['不限时间', 'Any time'],
+  last7Days: ['近 7 天', 'Last 7 days'],
+  last30Days: ['近 30 天', 'Last 30 days'],
+  documentPosition: ['按正文位置', 'Document position'],
+  newestFirst: ['最新发表', 'Newest first'],
+  oldestFirst: ['最早发表', 'Oldest first'],
+  commentFilters: ['评论筛选', 'Comment filters'],
+  commentType: ['评论类型', 'Comment type'],
+  filterComments: ['筛选评论', 'Filter comments'],
+  filter: ['筛选', 'Filter'],
+  filterByLikes: ['点赞筛选', 'Filter by likes'],
+  timeRange: ['时间范围', 'Time range'],
+  clearFilters: ['清除筛选', 'Clear filters'],
+  sortComments: ['评论排序', 'Sort comments'],
+});

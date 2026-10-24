@@ -1,0 +1,19 @@
+.root { margin: 20px 0; padding: 0 !important; border: 1px solid color-mix(in srgb, var(--callout-accent) 16%, transparent) !important; border-radius: 7px; background: var(--callout-wash) !important; }
+.inner { position: relative; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; }
+.iconButton { display: grid; width: 26px; height: 27px; flex: none; place-items: center; padding: 0; border: 0; border-radius: 5px; background: transparent; color: var(--callout-accent); font-size: 20px; line-height: 1; cursor: pointer; transition: background 160ms ease; }
+.iconButton:hover:not(:disabled) { background: color-mix(in srgb, var(--callout-accent) 10%, transparent); }
+.iconButton:disabled { cursor: default; }
+.content { min-width: 0; flex: 1; }
+.editable { min-height: 27px; color: var(--ink); font-size: var(--document-size, 16px); line-height: var(--document-line-height, 1.8); }
+.editable :global(p + p) { margin-top: 8px; }
+.menu { composes: menu-surface from global; position: absolute; top: calc(100% + 7px); left: 0; z-index: 35; width: 264px; padding: 12px; border: 1px solid var(--menu-border); border-radius: 8px; color: var(--ink); }
+.menuTitle { margin: 0 2px 8px; color: var(--muted-strong); font-size: 11px; font-weight: 500; }
+.menuTitle:not(:first-child) { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
+.emojiGrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
+.emojiOption { display: grid; height: 27px; place-items: center; border: 0; border-radius: 5px; background: transparent; font-size: 17px; cursor: pointer; }
+.emojiOption:hover,.emojiOption[aria-pressed="true"] { background: var(--surface-hover); }
+.toneGrid { display: flex; flex-wrap: wrap; gap: 5px; }
+.toneOption { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink-soft); font-size: 12px; cursor: pointer; }
+.toneOption:hover,.toneOption[aria-pressed="true"] { border-color: var(--accent-soft-line); background: var(--accent-soft); color: var(--accent-ink); }
+.swatch { width: 8px; height: 8px; border-radius: 50%; }
+.iconButton:focus-visible,.menu button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }

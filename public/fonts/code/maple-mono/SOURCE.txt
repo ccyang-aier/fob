@@ -1,0 +1,6 @@
+Maple Mono v7.8
+Upstream: https://github.com/subframe7536/maple-font
+Fontsource package: @fontsource/maple-mono 5.3.0
+Source: https://registry.npmjs.org/@fontsource/maple-mono/-/maple-mono-5.3.0.tgz
+SHA256: 5d21b3a697334a11be74eddfd2dcc5092964deec4642041ac956df87a3e7fc79
+License: SIL OFL 1.1

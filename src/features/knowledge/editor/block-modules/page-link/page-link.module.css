@@ -1,0 +1,23 @@
+.root { margin: 18px 0; border: 1px solid var(--control-border); border-radius: 9px; background: var(--panel); box-shadow: 0 2px 9px rgba(0,0,0,.035); }
+.card { display: flex; align-items: center; gap: 12px; min-height: 67px; padding: 11px 13px; }
+.icon { display: grid; width: 39px; height: 39px; flex: none; place-items: center; border-radius: 9px; background: #eef4fc; color: #3d76bd; }
+.cardText { min-width: 0; flex: 1; }
+.cardText strong { display: block; overflow: hidden; color: var(--ink-soft); font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.cardText small { display: block; margin-top: 2px; color: var(--muted-strong); font-size: 10px; }
+.edit,.open { display: grid; width: 27px; height: 27px; flex: none; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted-strong); cursor: pointer; }
+.edit:hover,.open:hover { background: var(--surface-subtle); color: var(--muted-strong); }
+.open { color: #447cbd; }
+.picker { padding: 14px; }
+.pickerTitle { display: flex; align-items: center; gap: 7px; margin-bottom: 11px; color: var(--muted-strong); font-size: 12px; font-weight: 650; }
+.search { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid var(--control-border); border-radius: 6px; color: var(--muted-strong); }
+.search input { width: 100%; border: 0; outline: 0; color: var(--ink-soft); font-size: 12px; }
+.results { max-height: 210px; overflow-y: auto; margin-top: 8px; }
+.results button { display: flex; align-items: center; gap: 9px; width: 100%; padding: 8px 9px; border: 0; border-radius: 6px; background: transparent; color: var(--muted-strong); font-size: 12px; text-align: left; cursor: pointer; }
+.results button:hover,.results button[aria-selected="true"] { background: var(--surface-subtle); color: var(--muted-strong); }
+.results button span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.results button small { font-size: 10px; }
+.results p { margin: 11px 4px !important; color: var(--muted-strong); font-size: 11px; }
+.cancel { margin-top: 7px; padding: 4px 7px; border: 0; background: transparent; color: var(--muted-strong); font-size: 11px; cursor: pointer; }
+.unconfigured { padding: 18px; color: var(--muted-strong); font-size: 12px; }
+.root button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.search:focus-within { border-color: var(--accent); }

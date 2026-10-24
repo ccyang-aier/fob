@@ -1,0 +1,25 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  currentlyUnavailable: ['当前不可用', 'Currently unavailable'],
+  expandSuggestionReviewValue: ['展开建议审阅（{v0} 条）', 'Expand suggestion review ({v0})'],
+  reviewCount: ['审阅 {v0}', 'Review {v0}'],
+  suggestionReview: ['建议审阅', 'Suggestion review'],
+  collapseSuggestionReview: ['收起建议审阅', 'Collapse suggestion review'],
+  collapseSuggestionReviewEsc: ['收起建议审阅（Esc）', 'Collapse suggestion review (Esc)'],
+  suggestionCount: ['{count} 条建议', '{count} suggestions'],
+  oneSuggestion: ['{count} 条建议', '{count} suggestion'],
+  insertionCount: ['{count} 插入', '{count} insertions'],
+  oneInsertion: ['{count} 插入', '{count} insertion'],
+  deletionCount: ['{count} 删除', '{count} deletions'],
+  oneDeletion: ['{count} 删除', '{count} deletion'],
+  replacementCount: ['{count} 替换', '{count} replacements'],
+  oneReplacement: ['{count} 替换', '{count} replacement'],
+  rejectAllValue: ['全部拒绝（{v0} 条）', 'Reject all ({v0})'],
+  rejectAll: ['全部拒绝', 'Reject all'],
+  acceptAllValue: ['全部接受（{v0} 条）', 'Accept all ({v0})'],
+  acceptAll: ['全部接受', 'Accept all'],
+  suggestions2: ['建议列表', 'Suggestions'],
+  valueBlockSuggestions: ['· {v0} 块级', ' · {v0} block suggestions'],
+  oneBlockSuggestion: ['· {v0} 块级', ' · {v0} block suggestion'],
+});

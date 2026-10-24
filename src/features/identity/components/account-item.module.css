@@ -1,0 +1,219 @@
+.trigger {
+  --action-state-bg: var(--wt-sidebar-identity-hover);
+  --action-state-ink: var(--ink);
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--action-surface-hover-bg);
+  color: var(--ink);
+  text-align: left;
+  outline: none;
+}
+
+.trigger:focus-visible {
+  border-color: var(--control-border);
+}
+
+.avatarWrap {
+  position: relative;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.guestAvatar {
+  border: 1px dashed var(--control-border);
+  color: var(--muted-strong);
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+.avatar.avatar[data-fallback='true'] {
+  background: #141416;
+  color: #fff;
+}
+
+:global(html[data-theme='dark']) .avatar[data-fallback='true'] {
+  background: var(--ink);
+  color: var(--panel);
+}
+
+.presence {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  display: grid;
+  width: 9px;
+  height: 9px;
+  place-items: center;
+  border: 2px solid var(--wt-sidebar-standard-panel);
+  border-radius: 50%;
+}
+
+.presenceDash {
+  width: 5px;
+  height: 1px;
+  background: #fff;
+}
+
+.presenceHole {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--panel);
+}
+
+.identityText {
+  min-width: 0;
+  flex: 1;
+}
+
+.name,
+.menuName,
+.menuEmail {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.name {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.compact {
+  width: 32px;
+  min-height: 32px;
+  justify-content: center;
+  padding: 1px;
+  border-color: transparent;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.guestCompact.guestCompact {
+  --action-state-bg: transparent;
+  --action-state-ink: var(--ink);
+  backdrop-filter: none;
+}
+
+.guestCompact:focus-visible {
+  border-color: transparent;
+}
+
+.guestCompact:is(:hover, :focus-visible, :active) .guestAvatar {
+  border-style: solid;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.menu {
+  width: 200px;
+  max-width: calc(100vw - 24px);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.menuHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 10px;
+}
+
+.menuAvatar {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+
+.menuName {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 17px;
+}
+
+.menuEmail {
+  margin-top: 1px;
+  color: var(--muted-strong);
+  font-size: 10.5px;
+  line-height: 14px;
+}
+
+.separator {
+  margin: 3px 4px;
+}
+
+.menuItem {
+  height: 30px;
+  gap: 8px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.menuHint {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 10px;
+}
+
+.statusTrigger > svg:last-child {
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+}
+
+.statusMenu {
+  width: 200px;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.statusItem {
+  height: auto;
+  min-height: 38px;
+  gap: 8px;
+  padding-block: 6px;
+  border-radius: 5px;
+}
+
+.statusText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.statusDescription {
+  color: var(--muted-strong);
+  font-size: 11px;
+}
+
+.statusNote {
+  padding: 6px 10px 8px;
+  color: var(--muted-strong);
+  font-size: 10px;
+  line-height: 16px;
+}

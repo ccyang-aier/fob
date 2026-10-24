@@ -1,0 +1,90 @@
+name: fob-knowledge-dev
+
+# Development infrastructure only. Production assembly: compose.production.yaml.
+# Ports bind 0.0.0.0 inside the WSL NAT network: the Windows host reaches them
+# via the WSL address (see knowledge-infra.mjs endpoint sync), while physical
+# LAN peers cannot route into the WSL NAT. The Windows→WSL loopback relay is
+# intentionally avoided: it cannot sustain pooled concurrent connections.
+services:
+  postgres:
+    image: paradedb/paradedb:0.25.10-pg17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${FOB_POSTGRES_USER:?Run knowledge-infra.mjs init}
+      POSTGRES_PASSWORD: ${FOB_POSTGRES_PASSWORD:?Run knowledge-infra.mjs init}
+      POSTGRES_DB: ${FOB_POSTGRES_DB:?Run knowledge-infra.mjs init}
+      POSTGRES_INITDB_ARGS: --auth-host=scram-sha-256
+    ports:
+      - "55433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    shm_size: 256mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 15s
+
+  redis:
+    image: redis:7.4.8-alpine
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${KNOWLEDGE_REDIS_PASSWORD:?Run knowledge-infra.mjs init}
+    command:
+      - /bin/sh
+      - -ec
+      - exec redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    ports:
+      - "56380:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$$REDIS_PASSWORD\" redis-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  minio:
+    image: fob-knowledge-minio:RELEASE.2025-10-15T17-29-55Z
+    build:
+      context: ./backend/server/scripts
+      dockerfile: knowledge-infra-minio.Dockerfile
+      # Build-time only: lets an existing loopback proxy in WSL serve downloads.
+      # The running services continue to use the isolated Compose network.
+      network: host
+      args:
+        - HTTP_PROXY
+        - HTTPS_PROXY
+        - NO_PROXY
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY_ID:?Run knowledge-infra.mjs init}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_ACCESS_KEY:?Run knowledge-infra.mjs init}
+      MINIO_REGION_NAME: ${S3_REGION:-us-east-1}
+      MINIO_BROWSER_REDIRECT_URL: http://127.0.0.1:59011
+    command: ["server", "/data", "--console-address", ":9001"]
+    ports:
+      - "59010:9000"
+      - "59011:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:9000/minio/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+# Keep container addresses separate from WSL's 172.x NAT subnet; overlapping
+# addresses make containers ARP for the Windows host instead of replying via
+# their gateway, so host-side database/Redis/S3 connections time out.
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 192.168.241.0/24
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:

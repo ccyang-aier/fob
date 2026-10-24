@@ -1,0 +1,548 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../components/ui/interaction-states.css";
+@import "../components/ui/resize-handle.css";
+@import "../components/ui/animated-theme-toggler.css";
+@import "../shell/sidebar-material.css";
+@import "../components/sidebar-nav-row.css";
+
+/* ── 浅色主题令牌（默认） ── */
+:root {
+  --shell: #fafafa;
+  --panel: #ffffff;
+  --elevated: #ffffff;
+  --surface-subtle: #fafafa;
+  --surface-hover: var(--action-hover-bg);
+  --ink: #202020;
+  --ink-soft: #404040;
+  --muted-strong: #666666;
+  --muted: #767676;
+  --separator-width: 1px;
+  --separator-color: rgba(32, 32, 32, 0.1);
+  --line: var(--separator-color);
+  --drag-indicator-width: 2px;
+  --drag-indicator-color: #171717;
+  --line-strong: rgba(32, 32, 32, 0.22);
+  /* 控件与卡片使用不透明描边，圆角与直边保持同一清晰度。 */
+  --control-border: #c5c5c5;
+  --resource-card-border: #d7d7d7;
+  /* 固定黑白灰强调角色；不支持彩色预设或自定义主题色。 */
+  --accent: #202020;
+  --accent-strong: #404040;
+  --accent-foreground: #ffffff;
+  --accent-ink: var(--ink);
+  --accent-soft: #f0f0f0;
+  --accent-soft-line: #d9d9d9;
+  --workbench-tab-active-bg: #fafafa;
+  --workbench-tab-inactive-bg: #f1f1f1;
+  --sql-completion-function-ink: #8956c7;
+  --sql-completion-field-ink: #0e918a;
+  --focus-ring: rgba(32, 32, 32, 0.24);
+  /* 中性反馈统一使用浅白灰，避免局部叠加墨色后变深。 */
+  --hover-fill: var(--action-hover-bg);
+  /* 通用控件与导航行复用下方全局中性反馈色。 */
+  --raise: var(--action-hover-bg);
+  /* 浅白芯片（描边按钮 / 用户卡） */
+  --chip: rgba(255, 255, 255, 0.75);
+  --chip-strong: rgba(255, 255, 255, 0.95);
+  --switch-off: #d9d9d9;
+  --tooltip-bg: #202020;
+  --tooltip-ink: #ffffff;
+  /* 浮层层级：清晰边界 + 低扩散阴影，菜单、搜索与模态面板共用。 */
+  --floating-border: rgba(24, 24, 24, 0.13);
+  --floating-highlight: rgba(255, 255, 255, 0.78);
+  --floating-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.06),
+    0 9px 24px -10px rgba(18, 18, 18, 0.22);
+  /* 菜单贴近触发位置：短接触阴影 + 紧凑投影，不使用大范围柔光。 */
+  --menu-border: rgba(24, 24, 24, 0.2);
+  --menu-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.067),
+    0 4px 8px -2px rgba(18, 18, 18, 0.1),
+    0 8px 12px -5px rgba(18, 18, 18, 0.08);
+  --menu-compact-shadow: 0 1px 2px rgba(18, 18, 18, 0.12), 0 4px 10px -2px rgba(18, 18, 18, 0.18);
+  --modal-backdrop: rgba(18, 18, 18, 0.16);
+  --side-panel-shadow: -12px 0 28px -20px rgba(18, 18, 18, 0.32);
+  --side-panel-shadow-left: 12px 0 28px -20px rgba(18, 18, 18, 0.28);
+  --ok-ink: #1f8a5f;
+  /* 固定的信息、运行进度和数据类型色；独立于通用黑白灰操作令牌。 */
+  --info: #3e63dd;
+  --info-strong: #3355c9;
+  --info-ink: #3a55b0;
+  --info-soft: #eef1fd;
+  --info-soft-line: #ccd6f3;
+  --err-ink: #b3413c;
+  --danger-action-bg: #d4383d;
+  --warn-ink: #a06b12;
+  --warn-soft: #fdf8ee;
+  --warn-soft-line: #f0dcae;
+  /* 系统菜单状态色：普通项为浅白灰底；危险项红底白字；警示项琥珀底。
+     鼠标悬停、键盘高亮与展开的子菜单共用，业务组件只选择语义，不自定颜色。 */
+  --menu-item-hover-bg: var(--action-hover-bg);
+  --menu-item-hover-ink: var(--ink);
+  --menu-danger-ink: var(--err-ink);
+  --menu-danger-hover-bg: var(--danger-action-bg);
+  --menu-danger-hover-ink: #ffffff;
+  --menu-warning-ink: var(--warn-ink);
+  --menu-warning-hover-bg: #faedcc;
+  --menu-warning-hover-ink: #875510;
+  /* 全局中性反馈，取自系统侧栏：
+     “浅灰白色” = hover（#f7f7f7）；“灰白色” = active（#efefef）。
+     菜单、侧栏与页面工具栏共用这两个角色，业务组件不另配灰度。 */
+  --interaction-hover-bg: #fafafa;
+  --interaction-active-bg: #efefef;
+  --action-hover-bg: var(--interaction-hover-bg);
+  --action-active-bg: var(--interaction-active-bg);
+  --action-surface-bg: #f8f8f8;
+  --action-surface-hover-bg: var(--interaction-hover-bg);
+  --action-nested-hover-bg: color-mix(in srgb, var(--ink) 8%, var(--panel));
+  --dialog-action-height: 30px;
+  --dialog-section-gap: 16px;
+  --dialog-footer-block: 16px;
+  --dialog-footer-inset: 22px;
+
+  /* ── 字号基准（字体族默认栈由 @theme 定义，属性映射见下方） ── */
+  --ui-size: 13px;
+  --code-size: 12px;
+  --chat-size: 13px;
+  --font-code: "Maple Mono", "Maple Mono NF CN", ui-monospace,
+    SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-chat: var(--font-sans);
+
+  /* ── 侧栏材质令牌（供 sidebar-material.css 消费） ── */
+  /* 主侧栏使用浅白灰；知识库目录与社区分类使用内容面板底色。 */
+  --wt-sidebar-standard-panel: #f9f9f9;
+  --wt-sidebar-content-panel: var(--panel);
+  --wt-sidebar-database-panel: var(--panel);
+  --wt-sidebar-identity-panel: #f0f0f0;
+  --wt-sidebar-identity-hover: #e4e4e4;
+  --wt-sidebar-edge: var(--line);
+  /* 悬停比激活更轻，避免指针经过时与当前页面混淆。 */
+  --sidebar-row-bg: var(--interaction-active-bg);
+  --sidebar-row-hover-bg: var(--interaction-hover-bg);
+  --sidebar-row-border: #e3e3e3;
+  --sidebar-row-hover-border: var(--sidebar-row-border);
+  --sidebar-row-shadow: none;
+  --sidebar-icon: #525252;
+  --shell-tab-active-bg: color-mix(in srgb, var(--sidebar-icon) 8%, var(--wt-sidebar-standard-panel));
+  --shell-tab-active-border: color-mix(in srgb, var(--control-border) 65%, var(--wt-sidebar-standard-panel));
+  --wt-sidebar-hover: rgb(255 255 255 / 0.55);
+}
+
+/* ── 深色主题令牌 ── */
+html[data-theme="dark"] {
+  --shell: #111111;
+  --panel: #181818;
+  --elevated: #222222;
+  --surface-subtle: #1c1c1c;
+  --surface-hover: var(--action-hover-bg);
+  --ink: #ededed;
+  --ink-soft: #cccccc;
+  --muted-strong: #a3a3a3;
+  --muted: #8a8a8a;
+  --separator-color: rgba(237, 237, 237, 0.14);
+  --line: var(--separator-color);
+  --line-strong: rgba(237, 237, 237, 0.24);
+  --control-border: #4b4b4b;
+  --resource-card-border: #434343;
+  --accent: #ededed;
+  --accent-strong: #d4d4d4;
+  --accent-foreground: #181818;
+  --accent-ink: var(--ink);
+  --accent-soft: #292929;
+  --accent-soft-line: #444444;
+  --workbench-tab-active-bg: var(--elevated);
+  --workbench-tab-inactive-bg: var(--surface-subtle);
+  --sql-completion-function-ink: #bb9bea;
+  --sql-completion-field-ink: #72c9bd;
+  --focus-ring: rgba(237, 237, 237, 0.36);
+  --hover-fill: rgba(255, 255, 255, 0.055);
+  --raise: rgba(255, 255, 255, 0.06);
+  --chip: rgba(255, 255, 255, 0.045);
+  --chip-strong: rgba(255, 255, 255, 0.09);
+  --switch-off: #404040;
+  --tooltip-bg: #ededed;
+  --tooltip-ink: #181818;
+  --floating-border: rgba(237, 237, 237, 0.17);
+  --floating-highlight: rgba(255, 255, 255, 0.055);
+  --floating-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.32),
+    0 10px 28px -10px rgba(0, 0, 0, 0.62);
+  --menu-border: rgba(237, 237, 237, 0.24);
+  --menu-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.213),
+    0 4px 8px -2px rgba(0, 0, 0, 0.253),
+    0 8px 12px -5px rgba(0, 0, 0, 0.2);
+  --menu-compact-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px -2px rgba(0, 0, 0, 0.45);
+  --modal-backdrop: rgba(0, 0, 0, 0.38);
+  --side-panel-shadow: -12px 0 30px -18px rgba(0, 0, 0, 0.55);
+  --side-panel-shadow-left: 12px 0 30px -18px rgba(0, 0, 0, 0.5);
+  --ok-ink: #37c395;
+  --info: #6681f5;
+  --info-strong: #7f97f8;
+  --info-ink: #9db2fa;
+  --info-soft: rgba(102, 129, 245, 0.16);
+  --info-soft-line: rgba(102, 129, 245, 0.36);
+  --err-ink: #e06c5f;
+  --warn-ink: #d9a743;
+  --warn-soft: rgba(217, 167, 67, 0.1);
+  --warn-soft-line: rgba(217, 167, 67, 0.28);
+  --menu-warning-hover-bg: #4b3920;
+  --menu-warning-hover-ink: #f0c979;
+  /* 深色主题保留相同语义与侧栏原有层次：hover 更轻，active 更明显。 */
+  --interaction-hover-bg: rgb(255 255 255 / 0.04);
+  --interaction-active-bg: rgb(255 255 255 / 0.06);
+  --action-hover-bg: var(--interaction-hover-bg);
+  --action-active-bg: var(--interaction-active-bg);
+  --action-surface-bg: #222222;
+  --action-surface-hover-bg: var(--action-hover-bg);
+
+  --wt-sidebar-standard-panel: #141414;
+  --wt-sidebar-database-panel: var(--surface-subtle);
+  --wt-sidebar-identity-panel: var(--surface-subtle);
+  --wt-sidebar-identity-hover: var(--action-hover-bg);
+  --wt-sidebar-edge: var(--line);
+  --sidebar-row-bg: var(--interaction-active-bg);
+  --sidebar-row-hover-bg: var(--interaction-hover-bg);
+  --sidebar-row-border: rgb(255 255 255 / 0.08);
+  --sidebar-row-hover-border: var(--sidebar-row-border);
+  --sidebar-row-shadow: none;
+  --sidebar-icon: #b3b3b3;
+  --wt-sidebar-hover: rgb(255 255 255 / 0.06);
+}
+
+/* ── 窗口自绘外框（桌面端）：关闭系统 DWM 阴影后由应用层绘制紧凑阴影，
+   仅在窄透明边缘上叠合桌面，避免形成可见的宽浅色边带。
+   标记由 lib/window-frame.ts 运行时维护；贴边（最大化 / 分屏）时收起。 ── */
+html[data-desktop-frame] {
+  --win-frame-inset: 6px;
+  /* 细描边 + 单层短投影：保留窗口层次，同时避免大范围泛白。 */
+  --win-shadow:
+    0 0 0 1px rgb(16 20 24 / 0.14),
+    0 2px 6px rgb(16 20 24 / 0.12);
+}
+html[data-desktop-frame][data-theme="dark"] {
+  --win-shadow:
+    0 0 0 1px rgb(0 0 0 / 0.5),
+    0 2px 6px rgb(0 0 0 / 0.36);
+}
+html[data-desktop-frame][data-window-flat] {
+  --win-frame-inset: 0px;
+  --win-shadow: none;
+}
+
+/* ── 字体族目录：默认栈在 @theme 定义并发射到 :root，此处按外观偏好覆盖。
+   栈内容与 lib/appearance.ts 的预览栈保持同步。 ── */
+html[data-ui-font="native"] {
+  --font-sans: system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei UI",
+    "Noto Sans CJK SC", sans-serif;
+}
+html[data-ui-font="mono"] {
+  --font-sans: var(--font-code);
+}
+html[data-ui-font="lxgw-wenkai"] {
+  --font-sans: "LXGW WenKai", "霞鹜文楷", STKaiti, KaiTi, serif;
+}
+html[data-ui-font="source-han-sans"] {
+  --font-sans: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC",
+    "Microsoft YaHei UI", sans-serif;
+}
+html[data-ui-font="source-han-serif"] {
+  --font-sans: "Source Han Serif SC", "Noto Serif CJK SC", "Noto Serif SC",
+    "Songti SC", serif;
+}
+html[data-code-font="cascadia"] {
+  --font-code: "Cascadia Code", "Cascadia Mono", ui-monospace,
+    SFMono-Regular, Consolas, monospace;
+}
+html[data-code-font="jetbrains"] {
+  --font-code: "JetBrains Mono", "Cascadia Code", ui-monospace,
+    SFMono-Regular, Consolas, monospace;
+}
+html[data-code-font="maple"] {
+  --font-code: "Maple Mono", "Maple Mono NF CN", "JetBrains Mono",
+    ui-monospace, monospace;
+}
+html[data-code-font="sarasa"] {
+  --font-code: "Sarasa Mono SC", "Sarasa Fixed SC", "Noto Sans Mono CJK SC",
+    ui-monospace, monospace;
+}
+html[data-code-font="fira-code"] {
+  --font-code: "Fira Code", "JetBrains Mono", ui-monospace, monospace;
+}
+html[data-code-font="source-code-pro"] {
+  --font-code: "Source Code Pro", "Cascadia Code", ui-monospace, monospace;
+}
+html[data-code-font="iosevka"] {
+  --font-code: Iosevka, "JetBrains Mono", ui-monospace, monospace;
+}
+html[data-code-font="ibm-plex-mono"] {
+  --font-code: "IBM Plex Mono", "Source Code Pro", ui-monospace, monospace;
+}
+html[data-code-font="consolas"] {
+  --font-code: Consolas, "Liberation Mono", "Courier New", monospace;
+}
+html[data-chat-font="default"] { --font-chat: "Inter Variable", "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC", system-ui, sans-serif; }
+html[data-chat-font="native"] { --font-chat: system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC", sans-serif; }
+html[data-chat-font="lxgw-wenkai"] { --font-chat: "LXGW WenKai", "霞鹜文楷", STKaiti, KaiTi, serif; }
+html[data-chat-font="source-han-sans"] { --font-chat: "Source Han Sans SC", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei UI", sans-serif; }
+html[data-chat-font="source-han-serif"] { --font-chat: "Source Han Serif SC", "Noto Serif CJK SC", "Noto Serif SC", "Songti SC", serif; }
+html[data-chat-font="mono"] { --font-chat: var(--font-code); }
+
+@theme inline {
+  --color-background: var(--shell);
+  --color-foreground: var(--ink);
+  --font-sans: "Inter Variable", "SF Pro Text", "Segoe UI Variable Text",
+    "Segoe UI", "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC",
+    system-ui, sans-serif;
+  /* font-mono 跟随外观设置的代码字体 */
+  --font-mono: var(--font-code);
+  /* 自绘滚动条与侧栏拖拽手柄使用的墨色/边框令牌 */
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-soft);
+  --color-ink-faint: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-border: var(--line);
+  --color-border-strong: var(--line-strong);
+  --color-surface-hover: var(--surface-hover);
+  --color-sidebar-hover: var(--wt-sidebar-hover);
+  /* 面板与交互覆盖层 */
+  --color-panel: var(--panel);
+  --color-elevated: var(--elevated);
+  --color-wash: var(--hover-fill);
+  --color-raise: var(--raise);
+  --color-chip: var(--chip);
+  --color-chip-strong: var(--chip-strong);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-soft-line: var(--accent-soft-line);
+  --color-ok: var(--ok-ink);
+  --color-err: var(--err-ink);
+  --color-warn: var(--warn-ink);
+  /* 侧栏导航小节标题等 11px 微字号 */
+  --text-2xs: 11px;
+  /* 侧栏宽度过渡使用的柔出缓动 */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* 背景只落在应用面板根（画布渐变）：桌面端窗口为透明自绘外框，
+   body 必须透出窗口透明边距，阴影才能叠在桌面上。 */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--shell);
+  color: var(--ink);
+  font-size: var(--ui-size);
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-desktop-frame] body {
+  background: transparent;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+/* 表单焦点统一使用清晰边框，不叠加 ring / glow 阴影。 */
+:where(
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+  textarea,
+  select
+):is(:focus, :focus-visible) {
+  border-color: var(--accent) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* 浮层统一使用单一清晰边界、内侧高光与低扩散投影。 */
+.overlay-surface {
+  border-color: var(--floating-border);
+  box-shadow:
+    inset 0 1px 0 var(--floating-highlight),
+    var(--floating-shadow);
+}
+
+.menu-surface {
+  border-color: var(--menu-border);
+  background: var(--elevated);
+  box-shadow: var(--menu-shadow);
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin, top center);
+  animation: menu-pop-in 480ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.menu-surface[data-state="closed"] { animation: menu-pop-out 140ms ease-out both; }
+
+/* 紧凑工作菜单：就地出现，使用明确的边界与接触阴影。 */
+.menu-surface[data-density="compact"] { border-color: var(--line-strong); border-radius: 6px; box-shadow: var(--menu-compact-shadow); animation: none; }
+.menu-surface[data-density="compact"] .fob-menu-item { height: 26px; min-height: 26px; gap: 8px; padding-inline: 8px; border-radius: 3px; font-size: 13px; font-weight: 500; animation: none; }
+.menu-surface[data-density="compact"] [role="menuitemcheckbox"], .menu-surface[data-density="compact"] [role="menuitemradio"] { padding-left: 30px; }
+/* 带语义图标的选项不再叠加勾选标记与占位，选中状态保留加粗和 ARIA。 */
+.menu-surface[data-density="compact"] .fob-menu-item[data-indicator="none"] { padding-left: 8px; }
+.fob-menu-item[data-indicator="none"][data-state="checked"] { font-weight: 600; }
+.fob-menu-item[data-emphasize-selection="false"][data-state="checked"] { font-weight: 400; }
+/* 共享菜单项契约；Radix 与原生菜单均使用 fob-menu-item，禁用项不响应高亮。 */
+.fob-menu-item {
+  --menu-state-bg: var(--menu-item-hover-bg);
+  --menu-state-ink: var(--menu-item-hover-ink);
+  color: var(--ink);
+  cursor: pointer;
+  /* 底色即时反馈，避免短暂停留时仍像透明项；仅文字颜色柔和过渡。 */
+  transition-property: color;
+  transition-duration: 80ms;
+}
+.fob-menu-item[data-variant="destructive"] {
+  --menu-state-bg: var(--menu-danger-hover-bg);
+  --menu-state-ink: var(--menu-danger-hover-ink);
+  color: var(--menu-danger-ink);
+}
+.fob-menu-item[data-variant="warning"] {
+  --menu-state-bg: var(--menu-warning-hover-bg);
+  --menu-state-ink: var(--menu-warning-hover-ink);
+  color: var(--menu-warning-ink);
+}
+.fob-menu-item:is(:hover, :focus-visible, [data-highlighted], [aria-expanded="true"], [data-current="true"]):not(:disabled):not([data-disabled]):not([aria-disabled="true"]) {
+  background: var(--menu-state-bg);
+  color: var(--menu-state-ink);
+}
+/* 分区标题的相邻操作共用整行反馈，键盘进入任一按钮时同样可见。 */
+.fob-menu-item[data-variant="group"]:focus-within {
+  background: var(--menu-state-bg);
+  color: var(--menu-state-ink);
+}
+.fob-menu-item:is(:hover, :focus-visible, [data-highlighted], [aria-expanded="true"]):not(:disabled):not([data-disabled]):not([aria-disabled="true"]) svg:not([data-static-color]) {
+  color: inherit;
+}
+/* 每级菜单只绘制当前交互行；展开态和上一次焦点不能与新 hover 叠加。 */
+.menu-surface:has(.fob-menu-item:hover) .fob-menu-item:not(:hover),
+.menu-surface:not(:has(.fob-menu-item:hover)):has(.fob-menu-item[data-highlighted]) .fob-menu-item:is([data-current="true"], [aria-expanded="true"]):not([data-highlighted]) {
+  background: transparent;
+}
+.fob-menu-checkbox { display: grid; place-items: center; width: 14px; height: 14px; border: 1px solid var(--line-strong); border-radius: 3px; background: var(--panel); }
+[data-state="checked"] > .fob-menu-checkbox { border-color: var(--accent); background: var(--accent); color: var(--accent-foreground); }
+.fob-menu-checkbox svg { width: 11px; height: 11px; }
+/* 原生 dialog、共享 ModalDialog 和显式标记的动作栏使用同一契约。
+   选择器覆盖旧局部尺寸，避免懒加载 CSS 的顺序再次改变按钮高度。 */
+html :is(dialog, [role="dialog"], [role="alertdialog"]) :is(footer:has(button), .fob-dialog-footer) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: auto;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 0;
+  padding: var(--dialog-footer-block) var(--dialog-footer-inset);
+}
+html :is(dialog, [role="dialog"], [role="alertdialog"]) :is(footer:has(button), .fob-dialog-footer) button {
+  box-sizing: border-box;
+  height: var(--dialog-action-height);
+  min-height: var(--dialog-action-height);
+  flex-shrink: 0;
+  padding-block: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+@media (max-width: 540px) { :root { --dialog-footer-inset: 13px; } }
+.menu-surface :where([role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="option"], [data-menu-reveal], button):not([data-menu-reveal] *) {
+  animation: menu-item-pop-in 400ms cubic-bezier(.22, 1, .36, 1) var(--menu-item-delay, 0ms) backwards;
+}
+.menu-surface :where([data-disabled], [aria-disabled="true"], button:disabled) { --menu-item-opacity: .45; }
+@keyframes menu-pop-in {
+  from { opacity: 0; scale: .985; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes menu-item-pop-in {
+  from { opacity: 0; }
+  to { opacity: var(--menu-item-opacity, 1); }
+}
+@keyframes menu-pop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.modal-backdrop {
+  background: var(--modal-backdrop);
+  backdrop-filter: blur(1.5px);
+}
+
+.modal-surface {
+  border: 1px solid var(--floating-border);
+  background: var(--elevated);
+  box-shadow:
+    inset 0 1px 0 var(--floating-highlight),
+    0 2px 5px rgba(18, 23, 31, 0.07),
+    0 18px 48px -20px rgba(18, 23, 31, 0.32);
+}
+
+.side-panel-surface-left {
+  box-shadow: var(--side-panel-shadow-left);
+}
+
+@media (max-width: 1060px) {
+  .responsive-side-panel-surface {
+    border-color: var(--floating-border);
+    box-shadow: var(--side-panel-shadow);
+  }
+}
+
+:where(
+  button:not(:disabled),
+  a[href],
+  summary,
+  select,
+  input:is([type="button"], [type="submit"], [type="reset"], [type="checkbox"], [type="radio"], [type="color"]),
+  label:has(input:is([type="checkbox"], [type="radio"])),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="menuitem"]:not([aria-disabled="true"]),
+  [role="menuitemcheckbox"]:not([aria-disabled="true"]),
+  [role="menuitemradio"]:not([aria-disabled="true"]),
+  [role="checkbox"]:not([aria-disabled="true"]),
+  [role="radio"]:not([aria-disabled="true"]),
+  [role="switch"]:not([aria-disabled="true"]),
+  [role="option"]:not([aria-disabled="true"])
+) {
+  cursor: pointer;
+}
+
+:where(button:disabled, select:disabled, input:disabled, textarea:disabled, label:has(input:disabled), [aria-disabled="true"], [data-disabled]) {
+  cursor: not-allowed;
+}
+
+/* 字号作用域：会话消息与输入使用对话字体，等宽内容使用代码字体 */
+.chat-scope {
+  font-family: var(--font-chat);
+  font-size: var(--chat-size);
+}
+.code-scope {
+  font-family: var(--font-code);
+  font-size: var(--code-size);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* 滚动容器统一由 ui/scroll-area 的自绘滚动条接管，全局隐藏原生滚动条 */
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,41 @@
+.menu {
+  composes: menu-surface from global;
+  border: 1px solid var(--menu-border);
+  position: fixed;
+  z-index: 50;
+  max-height: 324px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: 8px;
+  color: var(--ink);
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  text-align: left;
+  outline: none;
+  cursor: pointer;
+}
+.item.separated { position: relative; margin-top: 10px; }
+.item.separated::before {
+  position: absolute;
+  top: -6px;
+  right: 0;
+  left: 0;
+  border-top: var(--separator-width) solid var(--separator-color);
+  content: '';
+  pointer-events: none;
+}
+.marker,
+.icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 17px; color: inherit; font-weight: 750; }
+.icon { height: 17px; }
+.title { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shortcut { flex: none; color: var(--muted-strong); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.empty { display: flex; align-items: center; justify-content: center; min-height: 64px; color: var(--muted); font-size: 13px; }

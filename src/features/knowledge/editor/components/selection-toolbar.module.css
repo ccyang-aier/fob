@@ -1,0 +1,15 @@
+.toolbar { position:fixed; z-index:35; display:flex; align-items:center; gap:7px; padding:5px 7px; border:1px solid var(--floating-border); border-radius:8px; background:var(--panel); color:var(--ink-soft); box-shadow:0 3px 6px rgb(0 0 0 / 0.039),0 8px 24px rgb(0 0 0 / 0.071); overflow-x:auto; scrollbar-width:none; }
+.group { display:flex; align-items:center; gap:2px; flex:none; }
+.group+.group { border-inline-start:1px solid var(--line); padding-inline-start:7px; }
+.tool { display:inline-flex; align-items:center; justify-content:center; flex:none; width:27px; height:27px; padding:0; border:0; border-radius:4px; background:transparent; color:inherit; font-size:12px; font-weight:650; cursor:pointer; }
+.tool:hover { background:var(--surface-hover); color:var(--ink); }
+.tool[aria-pressed=true] { background:#0667f5; color:#fff; }
+.tool:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
+.tool:disabled { opacity:.35; cursor:default; }
+.linkForm { padding:8px; width:250px; font-size:12px; }
+.linkForm label { display:flex; flex-direction:column; gap:7px; }
+.linkForm input { padding:7px; border:1px solid var(--line); border-radius:5px; background:var(--panel); color:var(--ink); outline-color:var(--accent); }
+.linkForm p { color:var(--err-ink); margin-top:7px; }
+.linkForm>div { display:flex; justify-content:space-between; margin-top:8px; }
+.linkForm button { padding:5px 8px; border:0; border-radius:4px; background:transparent; color:var(--accent-ink); cursor:pointer; }
+.linkForm button:hover { background:var(--surface-hover); }

@@ -1,0 +1,6 @@
+{
+  "src/features/knowledge/data/endpoint.test.ts": {
+    "reason": "Web-only API endpoint contract: remove desktop IPC test cases, use isolated Fob port 8721, and retain configured-origin/production-failure/scope validation tests.",
+    "sha256": "ff5e30ee40f9407a461bd3bab7ad8370deaa5c10cae1ad3a5e2847f3491a4de4"
+  }
+}

@@ -1,0 +1,4 @@
+Noto Serif SC (the Noto distribution of Source Han Serif)
+Upstream: https://github.com/notofonts/noto-cjk
+Web subsets: https://registry.npmjs.org/@fontsource/noto-serif-sc/-/noto-serif-sc-5.3.0.tgz
+License: SIL OFL 1.1

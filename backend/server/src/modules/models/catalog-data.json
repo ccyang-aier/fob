@@ -1,0 +1,872 @@
+{
+  "items": [
+    {
+      "id": "claude-haiku-5-5",
+      "name": "Claude Haiku 5.5",
+      "provider": "anthropic",
+      "summary": {
+        "zh": "面向分类、提取、路由等高频任务的快速模型，支持自适应思考与 1M 上下文。",
+        "en": "A fast model for high-volume classification, extraction and routing, with adaptive thinking and a 1M context window."
+      },
+      "contextWindow": 1000000,
+      "maxOutput": 128000,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "defaultLevel": "medium"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 0.1,
+        "output": 0.5,
+        "cacheRead": 0.01,
+        "cacheWrite": 0.125,
+        "note": {
+          "zh": "所列为不超过 100K 输入的标准价（USD/百万 tokens），缓存写入为 5 分钟。超过 100K：输入 $0.50、输出 $2.50、缓存读 $0.05、5 分钟写 $0.625；1 小时缓存写入分别 $0.20 / $1。Batch 输入与输出减半。",
+          "en": "Standard USD per 1M tokens for prompts up to 100K; cache writes use 5-minute retention. Over 100K: input $0.50, output $2.50, cache read $0.05, 5-minute write $0.625. One-hour writes: $0.20 / $1. Batch input and output are 50% lower."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 43.4,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-haiku-5-5"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：Claude Haiku 5.5 (Max)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. Claude Haiku 5.5 (Max); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 53.8,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/claude-haiku-5-5"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：Claude Haiku 5.5 (Max)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. Claude Haiku 5.5 (Max); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "mock",
+          "score": 76,
+          "source": null,
+          "note": {
+            "zh": "Mock 开发目录人工种子：Claude Haiku 5.5 的 writing 轴尚无已核实同口径数据，此分数用于界面演示，不是实测或能力结论；设置于 2026-10-17。",
+            "en": "Mock development catalog seed: no verified comparable writing measurement for Claude Haiku 5.5. This manually assigned score is for UI demonstration, not a measurement or capability conclusion. Set 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 61.2,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1279；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1279. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 70.3,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-haiku-5-5"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 236.6 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：Claude Haiku 5.5 (Max)；采集 2026-10-17。",
+            "en": "AA median output 236.6 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. Claude Haiku 5.5 (Max); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 83.3,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://platform.claude.com/docs/en/models/haiku-5-5/overview"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $0.2/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $0.2/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "Claude Haiku 5.5 specifications and pricing",
+          "url": "https://platform.claude.com/docs/en/models/haiku-5-5/overview"
+        },
+        {
+          "label": "Claude Haiku 5.5 launch evaluations",
+          "url": "https://www.anthropic.com/claude-haiku-5-5"
+        },
+        {
+          "label": "Claude model capabilities",
+          "url": "https://platform.claude.com/docs/en/models/overview"
+        },
+        {
+          "label": "Claude effort levels",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "claude-sonnet-5-5",
+      "name": "Claude Sonnet 5.5",
+      "provider": "anthropic",
+      "summary": {
+        "zh": "兼顾速度与能力，适合日常开发、文档与设计任务，支持 1M 上下文与自适应思考。",
+        "en": "Balances speed and capability for everyday coding, documents and design, with a 1M context window and adaptive thinking."
+      },
+      "contextWindow": 1000000,
+      "maxOutput": 128000,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "defaultLevel": "high"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 2,
+        "output": 10,
+        "cacheRead": 0.1,
+        "cacheWrite": 2.5,
+        "note": {
+          "zh": "标准价，USD/百万 tokens；缓存写入为 5 分钟，1 小时缓存写入 $4。Batch 输入与输出减半。完整 1M 上下文不加长上下文溢价。",
+          "en": "Standard USD per 1M tokens. Cache writes use 5-minute retention; one-hour writes cost $4. Batch input and output are 50% lower. The full 1M context has no long-context premium."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 56,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-sonnet-5-5"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：Claude Sonnet 5.5 (Max, Default Fallback)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. Claude Sonnet 5.5 (Max, Default Fallback); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 57.5,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/claude-sonnet-5-5"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：Claude Sonnet 5.5 (Max, Default Fallback)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. Claude Sonnet 5.5 (Max, Default Fallback); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "measured",
+          "score": 82.1,
+          "source": {
+            "label": "Arena · Creative Writing",
+            "url": "https://arena.ai/leaderboard/chat/text/creative-writing"
+          },
+          "note": {
+            "zh": "创意写作偏好 Elo 1465；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；榜单配置 claude-sonnet-5.5-xhigh，非写作准确率；榜单更新 2026-10-15，采集 2026-10-17。",
+            "en": "Creative-writing preference Elo 1465; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Tested as claude-sonnet-5.5-xhigh; not writing accuracy. Board updated 2026-10-15; observed 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 72.1,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1365；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1365. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 58.6,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-sonnet-5-5"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 141.4 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：Claude Sonnet 5.5 (Max, Default Fallback)；采集 2026-10-17。",
+            "en": "AA median output 141.4 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. Claude Sonnet 5.5 (Max, Default Fallback); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 20,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $4/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $4/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "Claude Sonnet 5.5 specifications and pricing",
+          "url": "https://platform.claude.com/docs/en/models/sonnet-5-5/overview"
+        },
+        {
+          "label": "Claude Sonnet 5.5 launch evaluations",
+          "url": "https://www.anthropic.com/claude-sonnet-5-5"
+        },
+        {
+          "label": "Claude model capabilities",
+          "url": "https://platform.claude.com/docs/en/models/overview"
+        },
+        {
+          "label": "Claude effort levels",
+          "url": "https://platform.claude.com/docs/en/build-with-claude/effort"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "claude-haiku-4-5-20251001",
+      "name": "Claude Haiku 4.5",
+      "provider": "anthropic",
+      "summary": {
+        "zh": "低延迟的轻量模型，支持视觉、工具与扩展思考，适合快速交互和编码子任务。",
+        "en": "A lightweight, low-latency model with vision, tools and extended thinking for quick interactions and coding subtasks."
+      },
+      "contextWindow": 200000,
+      "maxOutput": 64000,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": null,
+      "pricing": {
+        "currency": "USD",
+        "input": 1,
+        "output": 5,
+        "cacheRead": 0.1,
+        "cacheWrite": 1.25,
+        "note": {
+          "zh": "标准价，USD/百万 tokens；缓存写入为 5 分钟，1 小时缓存写入 $2。Batch 输入与输出减半。",
+          "en": "Standard USD per 1M tokens. Cache writes use 5-minute retention; one-hour writes cost $2. Batch input and output are 50% lower."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 16.9,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：Claude 4.5 Haiku (Reasoning)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. Claude 4.5 Haiku (Reasoning); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 15,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：Claude 4.5 Haiku (Reasoning)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. Claude 4.5 Haiku (Reasoning); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "measured",
+          "score": 74.7,
+          "source": {
+            "label": "Arena · Creative Writing",
+            "url": "https://arena.ai/leaderboard/chat/text/creative-writing"
+          },
+          "note": {
+            "zh": "创意写作偏好 Elo 1388；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；榜单配置 claude-haiku-4-5-20251001，非写作准确率；榜单更新 2026-10-15，采集 2026-10-17。",
+            "en": "Creative-writing preference Elo 1388; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Tested as claude-haiku-4-5-20251001; not writing accuracy. Board updated 2026-10-15; observed 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 38.1,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1116；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1116. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 49.2,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/claude-4-5-haiku-reasoning"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 97 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：Claude 4.5 Haiku (Reasoning)；采集 2026-10-17。",
+            "en": "AA median output 97 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. Claude 4.5 Haiku (Reasoning); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 33.3,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://platform.claude.com/docs/en/models/haiku-4-5/overview"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $2/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $2/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "Claude Haiku 4.5 specifications and pricing",
+          "url": "https://platform.claude.com/docs/en/models/haiku-4-5/overview"
+        },
+        {
+          "label": "Claude Haiku 4.5 launch benchmarks and methodology",
+          "url": "https://www.anthropic.com/news/claude-haiku-4-5"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "gpt-6.1-sol",
+      "name": "GPT-6.1 Sol",
+      "provider": "openai",
+      "summary": {
+        "zh": "面向复杂编码、计算机操作与专业工作，在成本和能力之间取得平衡。",
+        "en": "Balances cost and capability for complex coding, computer use and professional work."
+      },
+      "contextWindow": 1050000,
+      "maxOutput": 128000,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "defaultLevel": "medium"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 2,
+        "output": 10,
+        "cacheRead": 0.1,
+        "cacheWrite": 2.5,
+        "note": {
+          "zh": "标准价，USD/百万 tokens，适用于输入不超过 272K。超过 272K 时整次请求：输入 $4、输出 $15、缓存读 $0.20、缓存写 $5。Fast 为标准 2 倍，Ultrafast 6 倍，Batch/Flex 减半；适用区域处理另加 10%。图像生成通过独立工具，另行计费。",
+          "en": "Standard USD per 1M tokens for up to 272K input. Above 272K, the full request costs $4 input, $15 output, $0.20 cache read and $5 cache write. Fast is 2x, Ultrafast 6x; Batch/Flex are half price. Eligible regional processing adds 10%. Image generation uses a separately billed tool."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 51.8,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/gpt-6-1-sol"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：GPT-6.1 Sol (Max)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. GPT-6.1 Sol (Max); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 50,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/gpt-6-1-sol"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：GPT-6.1 Sol (Max)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. GPT-6.1 Sol (Max); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "measured",
+          "score": 81.5,
+          "source": {
+            "label": "Arena · Creative Writing",
+            "url": "https://arena.ai/leaderboard/chat/text/creative-writing"
+          },
+          "note": {
+            "zh": "创意写作偏好 Elo 1458；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；榜单配置 gpt-6.1-sol-max，非写作准确率；榜单更新 2026-10-15，采集 2026-10-17。",
+            "en": "Creative-writing preference Elo 1458; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Tested as gpt-6.1-sol-max; not writing accuracy. Board updated 2026-10-15; observed 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 69.9,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1346；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1346. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 37.9,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/gpt-6-1-sol"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 61.1 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：GPT-6.1 Sol (Max)；采集 2026-10-17。",
+            "en": "AA median output 61.1 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. GPT-6.1 Sol (Max); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 20,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $4/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $4/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "GPT-6.1 Sol specifications, features and pricing",
+          "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol"
+        },
+        {
+          "label": "OpenAI API pricing",
+          "url": "https://developers.openai.com/api/docs/pricing"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "gpt-6-luna",
+      "name": "GPT-6 Luna",
+      "provider": "openai",
+      "summary": {
+        "zh": "面向目标明确、高频任务的高效率模型，可调整推理强度。",
+        "en": "An efficient model for focused, high-volume tasks with configurable reasoning effort."
+      },
+      "contextWindow": 1050000,
+      "maxOutput": 128000,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "defaultLevel": "medium"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 0.1,
+        "output": 0.5,
+        "cacheRead": 0.01,
+        "cacheWrite": 0.125,
+        "note": {
+          "zh": "标准价，USD/百万 tokens，适用于输入不超过 272K。超过 272K 时整次请求：输入 $0.20、输出 $0.75、缓存读 $0.02、缓存写 $0.25。Fast 为标准 2 倍，Batch/Flex 减半；适用区域处理另加 10%。图像生成通过独立工具，另行计费。",
+          "en": "Standard USD per 1M tokens for up to 272K input. Above 272K, the full request costs $0.20 input, $0.75 output, $0.02 cache read and $0.25 cache write. Fast is 2x; Batch/Flex are half price. Eligible regional processing adds 10%. Image generation uses a separately billed tool."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 38.1,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/gpt-6-luna"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：GPT-6 Luna (Max)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. GPT-6 Luna (Max); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 43.8,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/gpt-6-luna"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：GPT-6 Luna (Max)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. GPT-6 Luna (Max); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "measured",
+          "score": 77,
+          "source": {
+            "label": "Arena · Creative Writing",
+            "url": "https://arena.ai/leaderboard/chat/text/creative-writing"
+          },
+          "note": {
+            "zh": "创意写作偏好 Elo 1410；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；榜单配置 gpt-6-luna-max，非写作准确率；榜单更新 2026-10-15，采集 2026-10-17。",
+            "en": "Creative-writing preference Elo 1410; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Tested as gpt-6-luna-max; not writing accuracy. Board updated 2026-10-15; observed 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 60.2,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1272；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1272. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 55.3,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/gpt-6-luna"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 123.6 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：GPT-6 Luna (Max)；采集 2026-10-17。",
+            "en": "AA median output 123.6 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. GPT-6 Luna (Max); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 83.3,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://developers.openai.com/api/docs/models/gpt-6-luna"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $0.2/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $0.2/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "GPT-6 Luna specifications, features and pricing",
+          "url": "https://developers.openai.com/api/docs/models/gpt-6-luna"
+        },
+        {
+          "label": "OpenAI API pricing",
+          "url": "https://developers.openai.com/api/docs/pricing"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "deepseek-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "provider": "deepseek",
+      "summary": {
+        "zh": "支持原生视觉理解、工具调用与可调思考的高效率模型，官方标注 1M 上下文。",
+        "en": "An efficient model with native visual understanding, tool use and adjustable thinking; the API advertises a 1M context window."
+      },
+      "contextWindow": null,
+      "maxOutput": 393216,
+      "capabilities": {
+        "vision": true,
+        "tools": true,
+        "reasoning": true,
+        "imageGeneration": false,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "none",
+          "low",
+          "high",
+          "max"
+        ],
+        "defaultLevel": "high"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 0.15,
+        "output": 0.6,
+        "cacheRead": 0.003,
+        "cacheWrite": null,
+        "note": {
+          "zh": "所列为非高峰价，USD/百万 tokens。高峰时输入 $0.30、输出 $1.20、缓存读 $0.006；独立缓存写入价格未公布。高峰为周一至周五 UTC 01:00–04:00 和 06:00–10:00，中国法定节假日除外。",
+          "en": "Listed rates are off-peak USD per 1M tokens. Peak: $0.30 input, $1.20 output, $0.006 cache read. No separate cache-write price is published. Peak hours are weekdays 01:00–04:00 and 06:00–10:00 UTC, excluding Chinese public holidays."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "measured",
+          "score": 39.5,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
+          },
+          "note": {
+            "zh": "AA 智能指数，沿用原始 0–100 分；测量配置：DeepSeek V4.1 Flash (Max)；采集 2026-10-17。",
+            "en": "Original AA Intelligence Index on its 0–100 scale. DeepSeek V4.1 Flash (Max); 2026-10-17."
+          }
+        },
+        "agentic": {
+          "kind": "measured",
+          "score": 35,
+          "source": {
+            "label": "Artificial Analysis · AnalystAgent",
+            "url": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
+          },
+          "note": {
+            "zh": "AA-AnalystAgent 代理数据分析任务成功率 ×100；仅代表此任务集，非通用 Agent 总分；配置：DeepSeek V4.1 Flash (Max)；采集 2026-10-17。",
+            "en": "AA-AnalystAgent success rate ×100. A proxy for agentic data analysis, not a universal agent score. DeepSeek V4.1 Flash (Max); 2026-10-17."
+          }
+        },
+        "writing": {
+          "kind": "measured",
+          "score": 79.9,
+          "source": {
+            "label": "Arena · Creative Writing",
+            "url": "https://arena.ai/leaderboard/chat/text/creative-writing"
+          },
+          "note": {
+            "zh": "创意写作偏好 Elo 1440；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；榜单配置 deepseek-v4.1-flash-max，非写作准确率；榜单更新 2026-10-15，采集 2026-10-17。",
+            "en": "Creative-writing preference Elo 1440; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Tested as deepseek-v4.1-flash-max; not writing accuracy. Board updated 2026-10-15; observed 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 66.9,
+          "source": {
+            "label": "DesignArena · Frontend",
+            "url": "https://www.designarena.ai/leaderboard"
+          },
+          "note": {
+            "zh": "前端设计偏好 Elo 1322；换算为对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；非设计准确率；采集 2026-10-17。",
+            "en": "Frontend design preference Elo 1322. Score = win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)); not design accuracy. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 64.3,
+          "source": {
+            "label": "Artificial Analysis",
+            "url": "https://artificialanalysis.ai/models/deepseek-v4-1-flash"
+          },
+          "note": {
+            "zh": "AA 输出中位速度 179.7 tokens/s；评分 = 100×速度/(速度+100)，不含首字等待；配置：DeepSeek V4.1 Flash (Max)；采集 2026-10-17。",
+            "en": "AA median output 179.7 tokens/s. Score = 100×speed/(speed+100); excludes first-token latency. DeepSeek V4.1 Flash (Max); 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 79.2,
+          "source": {
+            "label": "Provider list price",
+            "url": "https://api-docs.deepseek.com/quick_start/pricing/"
+          },
+          "note": {
+            "zh": "标准文本价，3:1 输入/输出混合 $0.3/百万 tokens；越便宜分越高：100/(1+混合价)，不含缓存、折扣和工具费；目录核验 2026-10-16，计算 2026-10-17。",
+            "en": "Standard text list price with 3:1 input/output blend: $0.3/1M tokens. Cheaper scores higher: 100/(1+blended price). Excludes cache, discounts and tools. Price verified 2026-10-16; computed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "DeepSeek models and pricing",
+          "url": "https://api-docs.deepseek.com/quick_start/pricing/"
+        },
+        {
+          "label": "DeepSeek V4.1 Flash release evaluations",
+          "url": "https://api-docs.deepseek.com/updates/"
+        },
+        {
+          "label": "DeepSeek API exact output limit",
+          "url": "https://api-docs.deepseek.com/api/create-chat-completion/"
+        },
+        {
+          "label": "DeepSeek thinking effort",
+          "url": "https://api-docs.deepseek.com/guides/thinking_mode/"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    },
+    {
+      "id": "gemini-3.1-flash-image",
+      "name": "Nano Banana 2",
+      "provider": "google",
+      "summary": {
+        "zh": "Gemini 3.1 Flash Image，面向快速图像生成与对话式编辑，支持多种分辨率及搜索增强。",
+        "en": "Gemini 3.1 Flash Image for fast image generation and conversational editing, with multiple resolutions and search grounding."
+      },
+      "contextWindow": 131072,
+      "maxOutput": 32768,
+      "capabilities": {
+        "vision": true,
+        "tools": false,
+        "reasoning": true,
+        "imageGeneration": true,
+        "videoGeneration": false
+      },
+      "reasoning": {
+        "levels": [
+          "minimal",
+          "high"
+        ],
+        "defaultLevel": "minimal"
+      },
+      "pricing": {
+        "currency": "USD",
+        "input": 0.5,
+        "output": 3,
+        "cacheRead": null,
+        "cacheWrite": null,
+        "note": {
+          "zh": "标准价，USD/百万 tokens：所列输出价仅用于文本与思考，图片输出 $60，约 $0.045/0.5K、$0.067/1K、$0.101/2K、$0.151/4K 每张。Batch 减半。不支持缓存和函数调用；搜索增强单独计费。",
+          "en": "Standard USD per 1M tokens: listed output applies only to text and thinking. Image output is $60, about $0.045/0.5K, $0.067/1K, $0.101/2K or $0.151/4K per image. Batch is half price. Caching and function calling are unsupported; search grounding is billed separately."
+        }
+      },
+      "ratings": {
+        "intelligence": {
+          "kind": "mock",
+          "score": 52,
+          "source": null,
+          "note": {
+            "zh": "Mock 开发目录人工种子：Nano Banana 2 的 intelligence 轴尚无已核实同口径数据，此分数用于界面演示，不是实测或能力结论；设置于 2026-10-17。",
+            "en": "Mock development catalog seed: no verified comparable intelligence measurement for Nano Banana 2. This manually assigned score is for UI demonstration, not a measurement or capability conclusion. Set 2026-10-17."
+          }
+        },
+        "agentic": null,
+        "writing": {
+          "kind": "mock",
+          "score": 47,
+          "source": null,
+          "note": {
+            "zh": "Mock 开发目录人工种子：Nano Banana 2 的 writing 轴尚无已核实同口径数据，此分数用于界面演示，不是实测或能力结论；设置于 2026-10-17。",
+            "en": "Mock development catalog seed: no verified comparable writing measurement for Nano Banana 2. This manually assigned score is for UI demonstration, not a measurement or capability conclusion. Set 2026-10-17."
+          }
+        },
+        "design": {
+          "kind": "measured",
+          "score": 41.2,
+          "source": {
+            "label": "Artificial Analysis · Image Arena",
+            "url": "https://artificialanalysis.ai/image/models/nano-banana-2"
+          },
+          "note": {
+            "zh": "生图质量偏好 Elo 1138.52；对固定 1200 Elo 参考的胜率：100/(1+10^((1200−Elo)/400))；仅代表图像偏好，非文本智能指数或前端设计能力；采集 2026-10-17。",
+            "en": "Image-generation preference Elo 1138.52; win probability vs fixed 1200 Elo: 100/(1+10^((1200−Elo)/400)). Image preference only, not text intelligence or frontend design. Observed 2026-10-17."
+          }
+        },
+        "speed": {
+          "kind": "measured",
+          "score": 54,
+          "source": {
+            "label": "Artificial Analysis · Image Generation",
+            "url": "https://artificialanalysis.ai/image/models/nano-banana-2"
+          },
+          "note": {
+            "zh": "Google 生图中位耗时 8.5 秒/图；评分=100×10/(10+秒数)，10秒基准；与文本 tokens/s 分属不同口径；采集 2026-10-17。",
+            "en": "Google median image-generation time 8.5 seconds/image. Score = 100×10/(10+seconds), a 10-second reference. Separate from text tokens/s. Observed 2026-10-17."
+          }
+        },
+        "price": {
+          "kind": "measured",
+          "score": 42.7,
+          "source": {
+            "label": "Artificial Analysis · Image Price",
+            "url": "https://artificialanalysis.ai/image/models/nano-banana-2"
+          },
+          "note": {
+            "zh": "Google 生图价 $67/1000图；评分=100/(1+每图USD/0.05)，$0.05/图基准；非文本 token 价格；采集 2026-10-17。",
+            "en": "Google image-generation price $67/1000 images. Score = 100/(1+USD-per-image/0.05), a $0.05/image reference. Not text-token pricing. Observed 2026-10-17."
+          }
+        }
+      },
+      "sources": [
+        {
+          "label": "Gemini 3.1 Flash Image API specifications",
+          "url": "https://ai.google.dev/gemini-api/docs/models/gemini-3.1-flash-image"
+        },
+        {
+          "label": "Gemini API pricing",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing"
+        },
+        {
+          "label": "Gemini 3.1 Flash Image model card and original Elo evaluations",
+          "url": "https://deepmind.google/models/model-cards/gemini-3-1-flash-image/"
+        },
+        {
+          "label": "Gemini image thinking levels",
+          "url": "https://ai.google.dev/gemini-api/docs/image-generation#thinking"
+        }
+      ],
+      "verifiedAt": "2026-10-16"
+    }
+  ]
+}

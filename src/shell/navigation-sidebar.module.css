@@ -1,0 +1,21 @@
+.header {
+  display:flex;
+  align-items:center;
+  gap:4px;
+  height:var(--workbench-toolbar-height);
+  flex-shrink:0;
+  padding:0 12px;
+}
+.header[data-compact="true"] { justify-content:center; padding:0; }
+.project { flex:1; min-width:0; }
+.toggle {
+  display:grid;
+  flex-shrink:0;
+  width:28px;
+  height:28px;
+  place-items:center;
+  border-radius:6px;
+  color:var(--sidebar-icon);
+  cursor:pointer;
+}
+.resizeHandle { top:var(--workbench-toolbar-height); }

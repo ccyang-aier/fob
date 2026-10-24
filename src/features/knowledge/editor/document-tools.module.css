@@ -1,0 +1,64 @@
+.referenceSurface,.primary { display:flex; flex:1; min-width:0; min-height:0; flex-direction:column; }
+.surfaceBody { position:relative; display:flex; flex:1; min-width:0; min-height:0; }
+.toolsSurface { position:relative; display:flex; flex:1; min-width:0; min-height:0; container-type:inline-size; }
+.documentPrimary { display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; }
+.toolbarHost { position:relative; flex:none; }
+.documentSurface { display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; container-type:inline-size; }
+.readingSurface { display:flex; flex:1; min-width:0; min-height:0; }
+.readingCanvas { position:relative; display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; }
+.readingRail { display:flex; flex:none; flex-direction:column; min-height:0; width:210px; padding:clamp(28px,3.6vh,40px) 14px 24px 20px; color:var(--ink); }
+.railHeader { display:flex; align-items:center; flex:none; min-height:20px; }
+.railLabel { display:flex; align-items:center; gap:8px; padding-inline-start:8px; }
+.railLabel strong { font-size:14px; font-weight:600; color:var(--ink-soft); }
+.railLabel>span { font-size:10px; color:var(--muted); font-variant-numeric:tabular-nums; }
+.railButton { display:flex; align-items:center; justify-content:center; gap:8px; flex:none; height:30px; min-width:30px; padding:0 6px; border:0; border-radius:5px; background:transparent; color:var(--muted-strong); font-size:11px; cursor:pointer; transition:color 160ms ease-out,background 160ms ease-out; }
+.railButton:hover { background:var(--surface-hover); color:var(--ink); }
+.railButton:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.railButton[aria-pressed=true] { color:var(--accent-ink); }
+.actionBar { display:flex; flex:none; align-items:center; justify-content:flex-end; gap:4px; height:28px; padding:2px 16px; background:var(--panel); }
+.actionBar .railButton { height:24px; padding-inline:8px; gap:6px; }
+.search button { display:grid; place-items:center; flex:none; width:30px; height:32px; padding:0; border:0; border-radius:6px; background:transparent; color:var(--muted-strong); cursor:pointer; }
+.search button:hover { background:var(--surface-hover); color:var(--ink); }
+.search button[aria-pressed=true] { background:var(--accent-soft); color:var(--accent-ink); }
+@container (width < 760px) {
+  .readingRail { width:176px; padding-inline:12px; }
+}
+@container (width < 520px) {
+  .readingSurface { flex-direction:column; }
+  .readingRail { width:100%; max-height:180px; padding:12px 16px 8px; }
+}
+@media (prefers-reduced-motion:reduce) { .railButton { transition:none; } }
+.search { position:absolute; top:48px; right:14px; z-index:35; display:flex; align-items:center; gap:5px; padding:8px 10px; width:min(438px,calc(100cqw - 28px)); }
+.search input { min-width:0; flex:1; width:100px; background:transparent; border:0; outline:none; font-size:12px; }
+.search>span { flex:none; font-size:10px; color:var(--muted-strong); }
+.search button:disabled { opacity:.35; cursor:default; }
+.pins { display:flex; flex:none; gap:6px; overflow:auto; padding:7px 12px; border-bottom:1px solid var(--line); }
+.pins>span { display:flex; flex:none; max-width:220px; border-radius:6px; background:var(--surface-subtle); }
+.pins button { display:flex; align-items:center; min-width:0; gap:6px; padding:5px 7px; border:0; background:transparent; color:var(--ink-soft); font-size:11px; cursor:pointer; }
+.pins button>span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pins button:hover { color:var(--accent-ink); }
+.presentation { position:fixed; inset:0; width:100vw; max-width:none; height:100dvh; max-height:none; margin:0; padding:0; border:0; background:#11151c; color:#eef0f4; }
+.presentation[open] { display:flex; flex-direction:column; }
+.presentation>header { display:flex; align-items:center; justify-content:space-between; padding:12px 24px; font-size:13px; }
+.presentation button { display:grid; place-items:center; width:36px; height:36px; border:0; border-radius:7px; background:transparent; color:inherit; cursor:pointer; }
+.presentation button:hover { background:#ffffff12; }
+.presentation button:disabled { opacity:.3; }
+.stage { display:flex; align-items:center; justify-content:center; flex:1; min-height:0; padding:12px 5vw; }
+.stage iframe { width:100%; height:100%; border:0; border-radius:8px; background:white; animation:document-stage-in 220ms ease-out; }
+.presentation footer { display:flex; align-items:center; justify-content:center; gap:22px; padding:8px 24px 16px; font-size:12px; font-variant-numeric:tabular-nums; }
+@keyframes document-stage-in { from {opacity:.3} to {opacity:1} }
+.splitSurface[data-stacked=true] { flex-direction:column; }
+.reference { display:flex; flex:none; flex-basis:var(--reference-size,50%); min-width:0; min-height:0; flex-direction:column; background:var(--panel); overflow:hidden; }
+.referenceTabs { display:flex; flex:none; align-items:center; gap:6px; height:38px; padding:5px 12px; border-bottom:1px solid var(--line); overflow-x:auto; scrollbar-width:none; }
+.referenceTab { display:flex; flex:none; align-items:center; gap:7px; min-width:0; max-width:100%; padding:3px 5px 3px 9px; border-radius:6px; color:var(--muted-strong); font-size:11px; }
+.referenceTab[data-active=true] { background:var(--surface-subtle); color:var(--accent-ink); }
+.referenceTab>svg { flex:none; }
+.referenceTab>span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.referenceTab button { display:grid; place-items:center; flex:none; width:23px; height:23px; padding:0; border:0; border-radius:4px; background:transparent; color:var(--muted-strong); cursor:pointer; }
+.referenceTab button:hover { background:var(--surface-hover); color:var(--ink); }
+.referenceTab button:focus-visible { outline:2px solid var(--accent); }
+.referenceTab .tabTitle { display:block; width:auto; min-width:0; height:23px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:inherit; color:inherit; }
+.resizer { position:relative; z-index:2; flex:none; width:1px; --resize-rest-color:var(--separator-color); }
+.resizer::after { position:absolute; inset:0 -6px; content:''; }
+.splitSurface[data-stacked=true]>.resizer { width:100%; height:1px; }
+.splitSurface[data-stacked=true]>.resizer::after { inset:-6px 0; }

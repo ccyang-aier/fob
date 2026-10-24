@@ -1,0 +1,65 @@
+.viewer { display:flex; flex:1; min-height:0; min-width:0; flex-direction:column; background:var(--panel); container-type:inline-size; }
+.viewer:fullscreen { width:100vw; height:100dvh; }
+.toolbar { display:flex; flex:none; align-items:center; gap:12px; height:44px; padding:0 18px; border-bottom:1px solid var(--line); font-size:11px; color:var(--muted-strong); }
+.filename { flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+.format { flex:none; padding:3px 5px; border-radius:4px; font-size:9px; color:var(--accent-ink); background:var(--accent-soft); font-weight:650; }
+.toolbar button,.toolbar a,.dataToolbar button { display:inline-flex; justify-content:center; align-items:center; flex:none; min-width:27px; height:28px; padding:0 5px; border:0; border-radius:5px; background:transparent; color:inherit; cursor:pointer; }
+.toolbar button:hover,.toolbar a:hover,.dataToolbar button:hover { color:var(--ink); background:var(--surface-hover); }
+.toolbar button:disabled,.dataToolbar button:disabled { opacity:.35; cursor:default; }
+.paging,.zoom { display:flex; align-items:center; gap:4px; flex:none; }
+.paging input { width:36px; border:0; background:var(--surface-subtle); border-radius:4px; text-align:center; height:25px; font-size:11px; appearance:textfield; }
+.paging input::-webkit-inner-spin-button { appearance:none; }
+.content { display:flex; flex:1; min-height:0; min-width:0; }
+.state { display:flex; flex:1; min-height:160px; align-items:center; justify-content:center; flex-direction:column; gap:14px; padding:32px; text-align:center; font-size:12px; color:var(--muted-strong); }
+.state strong { font-size:15px; color:var(--ink); font-weight:600; }.state p{max-width:370px;margin:0;line-height:1.8}
+.state>button { padding:8px 14px; border:1px solid var(--line-strong); border-radius:6px; background:var(--panel); color:var(--ink); cursor:pointer; }
+.pdfViewport { width:100%; height:100%; overflow:auto; padding:28px 32px; text-align:center; background:var(--surface-subtle); }
+.pdfPage { position:relative; display:inline-block; box-shadow:0 1px 6px #202b3d18; background:white; }.pdfPage canvas{display:block;max-width:none}
+.textLayer { position:absolute; inset:0; overflow:hidden; text-align:initial; }
+.office { position:relative; flex:1; min-height:0; }.office iframe{display:block;width:100%;height:100%;border:0}.renderStatus{position:absolute;inset:0;display:grid;place-items:center;background:var(--surface-subtle);font-size:12px;z-index:1}
+.csv,.json,.text { display:flex; flex:1; min-width:0; min-height:0; flex-direction:column; }
+.dataToolbar { display:flex; flex:none; align-items:center; justify-content:space-between; gap:12px; min-height:43px; padding:7px 20px; border-bottom:1px solid var(--line); color:var(--muted-strong); font-size:11px; }
+.dataToolbar label { display:flex; align-items:center; gap:7px; }.dataToolbar input{width:190px;border:0;background:transparent;outline:none;font-size:12px}
+.tableScroll { flex:1; overflow:auto; }.tableScroll table{border-collapse:separate;border-spacing:0;width:100%;font-size:12px}.tableScroll th{position:sticky;top:0;z-index:1;background:var(--surface-subtle);text-align:left;font-weight:600}.tableScroll th,.tableScroll td{padding:11px 16px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);max-width:380px;white-space:pre-wrap;overflow-wrap:anywhere}.tableScroll td:first-child{width:50px;color:var(--muted-strong);font-size:10px;font-variant-numeric:tabular-nums}.tableScroll tr:hover td{background:var(--surface-hover)}
+.text pre { flex:1; overflow:auto; margin:0; padding:20px 24px; font:13px/1.9 var(--font-code); }.text pre>div{display:flex;gap:22px}.text pre>div>span{min-width:32px;text-align:right;user-select:none;color:var(--muted-strong);font-size:10px}.text code{white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}.error{margin:0;padding:12px 20px;background:var(--err-soft);color:var(--err-ink);font-size:12px}
+.jsonBody{flex:1;overflow:auto;padding:24px;font:13px/1.9 var(--font-code)}.jsonNode>div:first-child{display:flex;align-items:baseline;gap:4px}.jsonNode button{border:0;background:transparent;color:var(--muted-strong);padding:0;cursor:pointer}.jsonNode button:not(.jsonValue){display:inline-flex;align-self:center;align-items:center}.jsonSpacer{width:13px;flex:none}.jsonKey{color:#7751a5}.jsonKey>span{color:var(--muted-strong)}.jsonPrimitive{color:#73809a}.jsonPrimitive[data-kind=string]{color:#278261}.jsonPrimitive[data-kind=number]{color:#346ec5}.jsonPrimitive[data-kind=boolean]{color:#ad5e24}.jsonChildren{margin-left:18px;padding-left:12px;border-left:1px solid var(--line)}.jsonEnd{padding-left:17px;color:var(--muted-strong)}.jsonValue>span{font-size:11px}.moreNodes{margin:10px 17px;font-size:11px}
+.image{display:grid;flex:1;overflow:auto;place-items:center;padding:32px;background:var(--surface-subtle)}.image img{max-width:100%;max-height:100%;object-fit:contain}
+@media(max-width:700px){.toolbar{padding:0 8px;gap:5px}.filename{display:none}.pdfViewport{padding:16px}.dataToolbar{padding:7px 12px}.jsonBody{padding:16px}.text pre{padding:16px 12px}}
+
+.markdown { flex:1; overflow:auto; padding:40px max(24px,8%); font-size:15px; line-height:1.8; }.markdown h1{font-size:30px;margin-bottom:24px}.markdown h2{font-size:24px;margin-top:28px}.markdown h3{font-size:20px}.markdown p{margin:16px 0}.markdown ul{list-style:disc;padding-left:24px}.markdown ol{list-style:decimal;padding-left:24px}.markdown pre{padding:16px;background:var(--surface-subtle);border-radius:6px;overflow:auto;font-size:13px}.markdown table{width:100%;border-collapse:collapse}.markdown th,.markdown td{padding:9px 12px;border:1px solid var(--line)}.markdown img{max-width:100%}
+
+@container(max-width:550px){.toolbar{padding:0 8px;gap:5px}.filename{display:none}}
+.pdfReader { display:flex; position:relative; flex:1; min-width:0; min-height:0; }
+.pdfViewport { position:relative; flex:1; min-width:0; padding:24px; outline:none; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.pdfViewport:focus-visible { outline:1px solid var(--accent-soft-line); outline-offset:-1px; }
+.pdfPages { display:flex; flex-direction:column; align-items:center; gap:24px; width:max-content; min-width:100%; }
+.pdfPage { flex:none; display:block; }
+.pdfThumbnails button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.pdfPage { user-select:none; }
+.pdfPage .textLayer { user-select:none; }
+.pdfPage .textLayer :global(span) { user-select:text; -webkit-user-select:text; }
+.pdfPage .textLayer :global(span)::selection { background:color-mix(in srgb,var(--accent) 15%,transparent); color:transparent; }
+.pdfPage .textLayer :global(br)::selection { background:transparent; }
+.toolbar button[aria-expanded=true] { color:var(--ink); }
+.toolbar button[aria-pressed=true] { background:var(--accent-soft); color:var(--accent-ink); }
+.pdfThumbnails { display:flex; flex-direction:column; flex:none; width:154px; min-height:0; border-right:1px solid var(--line); background:var(--surface-subtle); }
+.pdfThumbnails>header { display:flex; flex:none; align-items:center; justify-content:space-between; height:36px; padding:0 12px; color:var(--muted-strong); font-size:11px; }
+.pdfThumbnails>header button { display:grid; place-items:center; padding:4px; border:0; border-radius:4px; background:transparent; cursor:pointer; }
+.pdfThumbnailList { flex:1; overflow:auto; min-height:0; padding:4px 12px 16px; scrollbar-width:thin; }
+.pdfThumbnailList>button { display:flex; flex-direction:column; align-items:center; gap:8px; width:100%; margin:0 0 12px; padding:8px 4px; border:1px solid transparent; border-radius:6px; background:transparent; font-size:10px; color:var(--muted-strong); cursor:pointer; }
+.pdfThumbnailList>button:hover { background:var(--surface-hover); }
+.pdfThumbnailList>button[data-active=true] { border-color:var(--accent-soft-line); background:var(--accent-soft); color:var(--accent-ink); }
+.thumbnailImage { position:relative; pointer-events:none; }
+.thumbnailVisible { position:absolute; inset-inline:0; border:1px solid var(--accent); background:color-mix(in srgb,var(--accent) 7%,transparent); pointer-events:none; }
+.pdfAnnotations { position:absolute; inset:0; z-index:3; pointer-events:none; }
+.pdfAnnotation>span { position:absolute; background:color-mix(in srgb,var(--accent) 16%,transparent); border-bottom:1px solid var(--accent-soft-line); mix-blend-mode:multiply; }
+.pdfAnnotation>button { position:absolute; transform:translateY(-100%); min-width:15px; height:15px; padding:0 3px; border:1px solid var(--accent-soft-line); border-radius:5px; background:var(--panel); color:var(--accent-ink); font:10px/13px var(--font-sans); cursor:pointer; pointer-events:auto; }
+.pdfAnnotation[data-active=true]>button,.pdfAnnotation>button:hover { background:var(--accent); color: var(--accent-foreground); }
+.pdfAnnotation[data-active=true]>span { border-color:var(--accent); }
+.pdfAnnotation[data-resolved=true] { opacity:.55; }
+.pdfSelectionAction { position:fixed; display:flex; align-items:center; gap:6px; z-index:25; height:30px; padding:0 10px; border:1px solid var(--floating-border); border-radius:6px; background:var(--panel); box-shadow:var(--floating-shadow); color:var(--ink-soft); font-size:12px; cursor:pointer; }
+.pdfSelectionAction:hover { background:var(--surface-hover); color:var(--ink); }
+.pdfSelectionAction:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.pageError { position:absolute; inset:0; display:grid; place-items:center; color:var(--err-ink); font-size:12px; }
+@container(max-width:640px){.toolbar{gap:3px;padding-inline:6px}.filename{display:none}.pdfThumbnails{width:140px}.pdfViewport{padding:16px}.pdfPages{gap:16px}}
+@container(max-width:400px){.pdfThumbnails{position:absolute;inset:0 auto 0 0;z-index:5;box-shadow:3px 0 8px #202b3d14}.toolbar{flex-wrap:wrap;height:auto;min-height:44px;padding-block:4px}.zoom{gap:0}}

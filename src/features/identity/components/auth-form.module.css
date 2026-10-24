@@ -1,0 +1,107 @@
+@font-face {
+  font-family: 'Fob Instrument Serif';
+  src: url('/fonts/instrument-serif/InstrumentSerif-Italic.ttf') format('truetype');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.entry {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  color: var(--auth-ink, var(--ink));
+}
+
+.heading { margin-bottom: 30px; }
+.eyebrow {
+  margin-bottom: 14px;
+  color: var(--muted-strong);
+  font-family: var(--font-code);
+  font-size: 10px;
+  letter-spacing: .14em;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+.title { font-size: 29px; font-weight: 600; letter-spacing: -.025em; line-height: 1.25; }
+.wordmark { font-family: 'Fob Instrument Serif', Georgia, serif; font-size: 35px; font-style: italic; font-weight: 400; }
+.lead { margin-top: 10px; color: var(--muted-strong); font-size: 12.5px; line-height: 1.8; }
+.form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; min-width: 0; flex-direction: column; gap: 7px; }
+.label { color: var(--ink-soft); font-size: 12px; font-weight: 500; line-height: 18px; }
+.inputShell {
+  display: flex;
+  height: 46px;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--auth-input-border, var(--control-border));
+  border-radius: 12px;
+  background: var(--auth-paper, var(--surface-subtle));
+  transition: border-color .16s;
+}
+.inputShell:focus-within { border-color: var(--auth-ink, var(--ink)); background: var(--panel); }
+.inputShell[data-invalid='true'] { border-color: var(--err-ink); background: var(--panel); }
+.input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  padding: 0 14px;
+  color: var(--auth-ink, var(--ink));
+  font-size: 13px;
+  box-shadow: none;
+}
+.input::placeholder { color: var(--muted); }
+.input:disabled { cursor: not-allowed; opacity: .55; }
+.passwordToggle {
+  display: grid;
+  width: 38px;
+  height: 32px;
+  margin-right: 5px;
+  flex-shrink: 0;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  outline: none;
+  color: var(--muted-strong);
+  cursor: pointer;
+}
+.passwordToggle:focus-visible { border-color: var(--control-border); }
+.hint { color: var(--muted-strong); font-size: 11px; line-height: 17px; }
+.error { color: var(--err-ink); font-size: 11px; line-height: 17px; }
+.submit {
+  height: 46px;
+  width: 100%;
+  margin-top: 4px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--auth-ink, var(--ink));
+  color: var(--panel);
+  font-size: 13px;
+  box-shadow: none;
+  cursor: pointer;
+}
+.submit:hover { background: var(--auth-ink, var(--ink)); opacity: .9; }
+.submit:focus-visible { outline: 2px solid var(--muted-strong); outline-offset: 3px; box-shadow: none; }
+.submit svg { transition: transform .18s; }
+.submit:hover svg[data-arrow] { transform: translateX(3px); }
+.providers { margin-top: 22px; }
+.divider { display: flex; align-items: center; gap: 12px; color: var(--muted-strong); font-size: 11px; }
+.divider::before, .divider::after { content: ''; height: 1px; flex: 1; background: var(--line); }
+.providerGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.providerGrid > :only-child { grid-column: 1 / -1; }
+.providerButton { width: 100%; min-height: 42px; border-radius: 12px; padding: 8px 10px; box-shadow: none; font-size: 12px; font-weight: 400; }
+.providerButton:focus-visible { outline: 2px solid var(--control-border); outline-offset: 2px; box-shadow: none; }
+.footer { display: flex; margin-top: auto; padding-top: 26px; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted-strong); font-size: 12px; line-height: 18px; }
+.modeButton { margin-left: 6px; padding: 2px 0; border-bottom: 1px solid var(--control-border); border-radius: 0; color: var(--auth-ink, var(--ink)); font-weight: 500; cursor: pointer; }
+.modeButton:focus-visible { outline: 2px solid var(--control-border); outline-offset: 3px; }
+.dismiss { height: var(--dialog-action-height); padding: 0 5px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+
+@media (max-width: 540px) {
+  .title { font-size: 26px; }
+  .wordmark { font-size: 32px; }
+  .heading { margin-bottom: 24px; }
+  .footer { flex-wrap: wrap; }
+}

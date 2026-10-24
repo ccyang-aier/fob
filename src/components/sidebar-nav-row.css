@@ -1,0 +1,33 @@
+/* ── 中性侧栏导航行 ──
+   hover 使用更浅的底条，激活保留当前页面反馈；普通鼠标焦点不保留底色。
+   图标默认深灰轮廓与浅灰局部填充，激活时保持相同造型与灰度。
+   消费方：navigation-sidebar / settings-canvas。 */
+html .sidebar-nav-row {
+  --action-state-bg: var(--sidebar-row-hover-bg);
+  --action-state-ink: var(--ink);
+  border: 1px solid transparent;
+  color: var(--muted-strong);
+  transition: color 150ms ease;
+}
+.sidebar-nav-row:where(:hover),
+.sidebar-nav-row:where(:not([data-kind="section"]):is(:focus-visible, :has(:focus-visible), [data-menu-open="true"])) {
+  border-color: var(--sidebar-row-hover-border);
+  background: var(--sidebar-row-hover-bg);
+  color: var(--ink);
+  box-shadow: var(--sidebar-row-shadow);
+}
+.sidebar-nav-row[data-active="true"] {
+  --action-state-bg: var(--sidebar-row-bg);
+  border-color: var(--sidebar-row-border);
+  background: var(--sidebar-row-bg);
+  color: var(--ink);
+  box-shadow: var(--sidebar-row-shadow);
+  font-weight: 500;
+}
+/* 分区标题只在悬停时显示底条，键盘定位用边框表达。 */
+.sidebar-nav-row[data-kind="section"]:has(:focus-visible):not(:hover) {
+  border-color: var(--control-border);
+}
+.sidebar-nav-icon {
+  color: var(--sidebar-icon);
+}

@@ -1,0 +1,23 @@
+.popover { position:fixed; z-index:30; display:flex; flex-direction:column; width:min(420px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); border:1px solid var(--floating-border); border-radius:12px; background:var(--panel); color:var(--ink); box-shadow:var(--floating-shadow); }
+.quote { display:flex; align-items:center; gap:10px; flex:none; margin:0 16px; padding:12px 0; border-bottom:1px solid var(--line); }
+.quoteIcon { display:grid; place-items:center; flex:none; width:26px; height:26px; border-radius:7px; background:var(--action-surface-bg); color:var(--muted-strong); }
+.quote p { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin:0; color:var(--ink-soft); font-size:13px; line-height:1.6; overflow-wrap:anywhere; }
+.pointer { position:absolute; left:var(--comment-pointer-x,50%); bottom:-11px; transform:translateX(-50%); color:var(--panel); filter:drop-shadow(0 1px 0 var(--floating-border)); pointer-events:none; }
+.popover[data-side=below] .pointer { top:-11px; bottom:auto; transform:translateX(-50%) rotate(180deg); }
+
+.popover [data-comment-composer] { min-height:0; flex:1; gap:0; }
+.popover [data-comment-box] { display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; border:0; border-radius:0 0 12px 12px; background:transparent; }
+.popover [data-comment-writing] { min-height:0; overflow-y:auto; overscroll-behavior:contain; }
+.popover [data-comment-writing] [role=textbox] { max-height:220px; padding:12px 16px 4px; font-size:14px; line-height:1.7; }
+.popover [data-comment-writing] [role=textbox]::before { top:12px; left:16px; color:var(--muted-strong); }
+.popover [data-comment-shortcut] { display:block; margin:0; padding:4px 16px 10px; text-align:right; font-size:10.5px; line-height:16px; }
+.popover [data-comment-feedback] { display:flex; flex-direction:column; gap:8px; padding:4px 16px 10px; }
+.popover [data-comment-feedback]:empty { display:none; }
+.popover [data-comment-actions] { display:flex; align-items:center; flex:none; flex-wrap:wrap; gap:8px; min-height:50px; padding:10px 12px; border-top:1px solid var(--line); background:var(--surface-subtle); }
+.popover [data-comment-tools] { gap:4px; }
+.popover [data-comment-tools]>button { color:var(--ink-soft); }
+.popover [data-comment-tools] label { gap:6px; margin-left:7px; padding-left:11px; border-left:1px solid var(--line); color:var(--ink-soft); font-size:12px; }
+.popover [data-comment-tools] input { width:14px; height:14px; accent-color:var(--accent); }
+.popover [data-comment-submit] { display:flex; align-items:center; gap:6px; margin-left:auto; }
+.popover [data-comment-submit] button { height:30px; padding-inline:10px; font-size:12px; box-shadow:none; }
+.popover [data-comment-submit] button:last-child { min-width:56px; }

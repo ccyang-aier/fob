@@ -1,0 +1,55 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  defaultAccessForValueUpdatedRecalculatingPagePermissions: [
+    '「{v0}」的根默认权限已更新，正在重算页面授权',
+    'Default access for “{v0}” updated. Recalculating page permissions.',
+  ],
+  changeDefaultAccess: ['修改根默认权限', 'Change default access'],
+  folderRenamed: ['团队空间已重命名', 'Folder renamed'],
+  renameFolder: ['重命名团队空间', 'Rename folder'],
+  folderValueDeleted: ['团队空间「{v0}」已删除', 'Folder “{v0}” deleted'],
+  deleteFolder: ['删除团队空间', 'Delete folder'],
+  folder: ['团队空间', 'Folder'],
+  aTopLevelPageContainerDefaultAccessDetermines: [
+    '页面树的顶层容器；根默认权限决定知识库成员对其页面的默认访问级别。',
+    'A top-level page container. Default access determines member permissions for its pages.',
+  ],
+  newFolder: ['新建团队空间', 'New folder'],
+  noFoldersYet: ['还没有团队空间', 'No folders yet'],
+  foldersContainTopLevelPagesDefaultAccessDetermines: [
+    '团队空间是页面的顶层容器；根默认权限决定知识库成员对其中页面的默认访问级别。',
+    'Folders contain top-level pages. Default access determines member permissions for those pages.',
+  ],
+  defaultAccess: ['根默认权限', 'Default access'],
+  defaultPermissions: ['默认权限', 'Default permissions'],
+  renameFolderValue: ['重命名团队空间「{v0}」', 'Rename folder “{v0}”'],
+  deleteFolderValue: ['删除团队空间「{v0}」', 'Delete folder “{v0}”'],
+  delete: ['删除', 'Delete'],
+  folderValueCreated: ['团队空间「{v0}」已创建', 'Folder “{v0}” created'],
+  createFolder: ['创建团队空间', 'Create folder'],
+  deleteFolder2: ['确定删除团队空间', 'Delete folder'],
+  onlyFoldersWithNoPagesIncludingTrashedPages: [
+    '？ 只有完全不含页面（包括回收站页面）的团队空间可以删除；删除后不可恢复。',
+    '? Only folders with no pages, including trashed pages, can be deleted. This cannot be undone.',
+  ],
+  cancel: ['取消', 'Cancel'],
+  creating: ['正在创建…', 'Creating…'],
+  create: ['创建', 'Create'],
+  name: ['名称', 'Name'],
+  eGProductDocumentation: ['例如：产品文档', 'E.g. Product documentation'],
+  allRootPagesInValueWillBeAccessible: [
+    '「{v0}」内所有根页面将按此级别向知识库成员开放。',
+    'All root pages in “{v0}” will be accessible to knowledge base members at this level.',
+  ],
+  applying: ['正在应用…', 'Applying…'],
+  confirmChange: ['确认变更', 'Confirm change'],
+  chooseConfirmChangeToApplyNoUpdateIs: [
+    '调整后选择“确认变更”生效；当前值与服务器一致时不产生写请求。',
+    'Choose Confirm change to apply. No update is sent when the value is unchanged.',
+  ],
+  saving: ['正在保存…', 'Saving…'],
+  save: ['保存', 'Save'],
+  enterANewName: ['输入新的名称', 'Enter a new name'],
+  rename: ['重命名', 'Rename'],
+});

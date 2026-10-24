@@ -1,0 +1,121 @@
+.widget {
+  --companion-rail-width: 48px;
+  position: fixed;
+  z-index: 45;
+  right: 16px;
+  bottom: 24px;
+  width: 52px;
+  height: 56px;
+  user-select: none;
+  color: var(--ink);
+}
+.widget[data-open="true"] { height: 296px; }
+
+.rail {
+  position: absolute;
+  left: 50%;
+  margin-left: calc(var(--companion-rail-width) / -2);
+  bottom: 72px;
+  display: flex;
+  width: var(--companion-rail-width);
+  height: 224px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 6px;
+  border: 0;
+  border-radius: 24px;
+  background: var(--elevated);
+  box-shadow: inset 0 1px 0 var(--floating-highlight), var(--floating-shadow);
+  transform-origin: 50% 100%;
+  will-change: transform, opacity, clip-path;
+}
+.toolItem { width: 36px; height: 36px; flex: 0 0 36px; }
+.tool {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--muted-strong);
+  outline: none;
+  cursor: pointer;
+}
+.glyph { display: grid; width: 20px; height: 20px; place-items: center; transition: transform 160ms cubic-bezier(.22,1,.36,1); }
+.tool:not(:disabled):is(:hover, :focus-visible, [aria-expanded="true"]) .glyph { transform: translateY(-1px); }
+.tool:not(:disabled):active .glyph { transform: scale(.88); transition-duration: 80ms; }
+.tool:disabled { opacity: .4; cursor: default; }
+.divider { width: 16px; height: 1px; flex: 0 0 1px; margin: 2px 0; background: var(--separator-color); }
+.menu { min-width: 152px; padding: 5px; border-radius: 12px; animation-duration: 220ms; }
+.menu[data-state="closed"] { animation-duration: 120ms; }
+.menu [role="menuitem"] { height: 32px; border-radius: 7px; animation-duration: 160ms; }
+.menu [role="menuitem"] svg { opacity: .65; }
+
+.trigger {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 52px;
+  height: 56px;
+  touch-action: none;
+  outline: none;
+  cursor: pointer;
+}
+.scene { position: absolute; top: -3.2px; left: 50%; margin-left: -28.6px; width: 57.2px; height: 62.4px; }
+.scene > div { transform: scale(.26); transform-origin: 0 0; }
+.trigger:focus-visible::after { content: ''; position: absolute; left: 16px; right: 16px; bottom: -2px; height: 2px; border-radius: 2px; background: var(--ink); }
+.close {
+  position: absolute;
+  bottom: -4px;
+  left: -16px;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted-strong);
+  outline: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+.widget:is(:hover, :focus-within) .close { opacity: .8; }
+.widget[data-open="false"] .rail { pointer-events: none; }
+.widget[data-dragging="true"], .widget[data-dragging="true"] * { cursor: grabbing !important; }
+
+.speech {
+  max-width: min(248px, calc(100vw - 32px));
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 450;
+  line-height: 1.5;
+  letter-spacing: .1px;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+}
+.speech[data-state="instant-open"], .speech[data-state="delayed-open"] { animation: speech-in 180ms cubic-bezier(.22,1,.36,1) both; }
+.speech[data-state="closed"] { animation: speech-out 120ms ease-out both; }
+@keyframes speech-in { from { opacity: 0; transform: translateY(4px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes speech-out { to { opacity: 0; transform: translateY(3px) scale(.98); } }
+
+@media (pointer: coarse) {
+  .widget { --companion-rail-width: 52px; }
+  .widget[data-open="true"] { height: 336px; }
+  .rail { height: 264px; padding: 8px 4px; }
+  .toolItem { width: 44px; height: 44px; flex-basis: 44px; }
+  .close { left: -32px; width: 44px; height: 44px; opacity: .65; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glyph, .close { transition: none; }
+  .tool:not(:disabled):is(:hover, :focus-visible, :active, [aria-expanded="true"]) .glyph { transform: none; }
+  .speech[data-state], .menu[data-state], .menu [role="menuitem"] { animation: none; }
+}

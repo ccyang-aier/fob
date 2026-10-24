@@ -1,0 +1,20 @@
+FROM oven/bun:1.4.0 AS bun
+
+FROM node:24-bookworm-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends chromium libreoffice-writer ca-certificates fonts-liberation fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/* \
+    && corepack enable
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY shared/package.json ./shared/package.json
+COPY backend/server/package.json ./backend/server/package.json
+RUN pnpm install --frozen-lockfile --ignore-scripts
+COPY --chown=node:node shared ./shared
+COPY --chown=node:node backend/server ./backend/server
+COPY --chown=node:node scripts/initialize-storage.mjs ./scripts/initialize-storage.mjs
+RUN mkdir -p /app/.runtime && chown node:node /app/.runtime
+USER node
+ENV NODE_ENV=production FOB_SERVICE_HOST=0.0.0.0 FOB_SERVICE_PORT=8721 PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+EXPOSE 8721
+CMD ["bun", "backend/server/src/entrypoints/server.ts"]

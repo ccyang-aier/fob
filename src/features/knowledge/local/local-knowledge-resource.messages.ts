@@ -1,0 +1,40 @@
+import { defineMessages } from '@/lib/i18n';
+
+export const knowledgeMessages = defineMessages({
+  unfiled: ['未归档', 'Unfiled'],
+  localSaveFailedChangesWereNotSavedCheck: [
+    '本机保存失败，修改未保存。请检查存储空间后重试。',
+    'Local save failed. Changes were not saved. Check storage space and retry.',
+  ],
+  documentDeletedOrInaccessible: ['文档已删除或无法访问', 'Document deleted or inaccessible'],
+  me: ['我', 'Me'],
+  documentActions: ['文档操作', 'Document actions'],
+  openEdit: ['打开 / 编辑', 'Open / Edit'],
+  toggleStar: ['切换星标', 'Toggle star'],
+  toggleDraft: ['切换草稿', 'Toggle draft'],
+  tags: ['标签', 'Tags'],
+  noTags: ['暂无标签', 'No tags'],
+  moveToTrash: ['移至回收站', 'Move to trash'],
+  localPersonal: ['本机 · 个人', 'Local · Personal'],
+  document: ['文档', 'Document'],
+  newDocument: ['新建文档', 'New document'],
+  localDocumentsAreStoredOnlyInThisBrowser: [
+    '本机文档仅保存在当前浏览器。登录不会自动上传内容；团队知识库、成员授权与云端协作需要 Fob 账户。',
+    'Local documents are stored only in this browser. Signing in does not upload them. A Fob account is required for team knowledge bases, member permissions and cloud collaboration.',
+  ],
+  accountServiceUnavailableLocalKnowledgeBasesRemainAvailable: [
+    '账户服务暂不可用，本机知识库仍可使用。',
+    'Account service unavailable. Local knowledge bases remain available.',
+  ],
+  signInRetry: ['登录 / 重试', 'Sign in / Retry'],
+  untitledDocument: ['无标题文档', 'Untitled document'],
+  restore: ['恢复', 'Restore'],
+  deletePermanently: ['彻底删除', 'Delete permanently'],
+  trashIsEmpty: ['回收站是空的', 'Trash is empty'],
+  noDocumentsYet: ['还没有文档', 'No documents yet'],
+  newFolder: ['新建文件夹', 'New folder'],
+  newLocalDocument: ['新建本机文档', 'New local document'],
+  name: ['名称', 'Name'],
+  cancel: ['取消', 'Cancel'],
+  create: ['创建', 'Create'],
+});

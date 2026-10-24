@@ -1,0 +1,190 @@
+DBX
+Source revision: f909f85075e12beb78dffe5942f7d039bede25de
+License: Apache License 2.0; see DBX-LICENSE.txt in this directory.
+
+Fouc incorporates adapted DBX driver and connection Profile descriptors and
+SQL dialect metadata in shared/catalog/dbx-catalog.json. The YAML dialect
+descriptors were converted to JSON. The MySQL metadata lookup sequence was
+adapted for the Fouc Bun sidecar.
+
+MySQL workspace sessions, bounded array-row reads and metadata fallback are
+adapted from crates/dbx-drivers/src/db/mysql.rs. Table-change plans, generated
+column omission, key predicates and row guards follow
+crates/dbx-sql/src/data_grid_sql.rs. Fouc uses parameter bindings and native
+driver transactions in relational-save.ts; it does not load DBX runtime code.
+Typed table filters, NULL-aware membership/ranges and multicolumn sorting also
+follow data_grid_sql.rs and the desktop grid interaction model. Fouc compiles
+validated field metadata and bound values in relational-table-query.ts.
+
+PostgreSQL catalog discovery and bounded read-only cursors, SQLite file opening
+and table_xinfo metadata, and relational query guards are behavior adaptations
+of crates/dbx-drivers/src/db/{postgres.rs,sqlite.rs} and dbx-core/src/query/.
+The connection/workbench layout follows apps/desktop/src/components/{connection,
+layout,grid}. Fouc's corresponding implementation is independently written in
+backend/device/src/database/{drivers,relational-*}, shared/src/relational.ts and
+src/features/connectors/datastore/ using TypeScript, React and Node-compatible APIs.
+The SQLite connector SVG is an original Fouc illustration.
+SQL query tab lifecycle, navigation history, pin/order/close/reopen actions,
+editor-state preservation and durable drafts adapt queryStore.ts and
+lib/{app/openTabsPersistence,tabs/*}.ts. Fouc stores workspace/connection-scoped
+drafts in its own SQLite repository and serializes version-checked saves through
+its React controller; no DBX runtime modules are imported.
+SQL metadata completion adapts QueryEditor.vue's lazy metadata and request epochs,
+lib/sql/sqlCompletionLookupTarget.ts and lib/sql/semantic/tokens.ts for native
+MySQL/PostgreSQL/SQLite scopes. Fouc owns the React controller, native column
+endpoint and CodeMirror completion source; metadata remains device/session scoped.
+Native SQL token spans, query-block sources, CTE/derived projection lineage and
+incremental statement lookup adapt semantic/{model,types,dialect,tokens,completion},
+cteNavigation.ts and sqlSyntaxTreeWindow.ts. Fouc shares its pure lexer contract
+between React completion and Bun read preflight; unsupported driver paths are
+omitted. The CTE/derived declaration guards follow sql_risk.rs structural proof
+behavior while retaining the existing native function/write restrictions.
+SQL history storage, stable time/ID pagination, literal search and connection-qualified
+database filtering follow crates/dbx-core/src/persistence/{history,storage}.rs
+and apps/desktop/src/stores/historyStore.ts. Saved SQL folders, lazy document
+loading, rename/move behavior and recent/frequent ranking follow saved_sql.rs,
+storage.rs, savedSqlStore.ts and lib/savedSql/{savedSqlFileName,savedSqlHistory}.ts.
+The history detail/reuse and SQL library surfaces follow QueryHistory.vue and
+the desktop file tree. Fouc adapts them in sql-library-repository.ts,
+shared/src/relational-sql-library.ts and the React sql-history/library panels;
+workspace-owned SQLite files and transactional document versions replace DBX's
+global storage and Vue store. No legacy storage adapter or DBX runtime is loaded.
+Table structure metadata, ordinal composite foreign keys, expression/INCLUDE
+indexes, constraints, triggers and source browsing follow the corresponding
+native driver catalog routines and TableStructureEditor.vue. The adapted
+TypeScript implementations are drivers/*-structure.ts and the React structure
+browser. Database-provided SQL remains source data, not executable UI code.
+
+Redis binary blob transport, cursor/key scans, bounded string/list/stream reads,
+collection browsing and command quoting are adapted from
+crates/dbx-drivers/src/db/redis_driver.rs. The Redis surface follows
+apps/desktop/src/components/redis/{RedisKeyBrowser,RedisValueViewer}.vue.
+Fouc's native implementation lives in backend/device/src/database/redis-*,
+shared/src/redis.ts and src/features/connectors/redis/. The Redis connector SVG
+is an original Fouc illustration. No DBX runtime module is loaded.
+Redis mutation commands, collision guards, expiry preservation and hash/ZSet
+rename semantics also follow redis_driver.rs and RedisValueViewer.vue. Fouc's
+TypeScript/Lua plans add complete-value guards, ACL preflight and snapshot
+compensation; the List deletion marker is generated and checked per operation.
+Redis database discovery, optional hash-field TTL metadata and expiry commands,
+terminal history/recall and DB selection also follow redis_driver.rs and
+RedisKeyBrowser.vue. Fouc verifies SELECT acknowledgements on isolated clients
+and stores bounded history under the owning workspace and saved connection.
+INFO section browsing, metric cards, refresh/search/copy and sortable slowlog
+details follow RedisDashboard.vue, RedisSlowlogPanel.vue and redis_driver.rs.
+Fouc adapts them in redis-observability.ts, redis-dashboard.tsx and
+redis-slowlog.tsx with lossless counters/arguments and scoped polling cleanup.
+Stream groups, consumers, Pending, optional Lag and inclusive cursor lookahead
+follow redis_driver.rs, redis_ops.rs and RedisValueViewer.vue. Fouc adapts the
+read commands in redis-stream.ts and the drill-down surface in
+redis-stream-groups.tsx, preserving byte names and 64-bit IDs with request
+cancellation and explicit unknown/stale/error states.
+Realtime MONITOR command detection, dedicated connection lifetime, stopped and
+failed states, 1000-row retention and per-line bounds follow lib/redis/redisMonitor.ts,
+query/redis_ops.rs, redis_driver.rs and dbx-web/routes/redis_pubsub_ws.rs. Fouc's
+redis-monitor.ts and use-redis-monitor.ts use an authenticated NDJSON stream,
+bounded pending batches and scoped cancellation instead of DBX WebSockets.
+Pub/Sub channel/pattern subscriptions, disconnect/reconnect restoration, message
+retention and publication follow RedisPubSubPanel.vue, redis_ops.rs,
+redis_driver.rs and redis_pubsub_ws.rs. Fouc adapts them in redis-pubsub*.ts/tsx
+with acknowledged subscription state, byte-preserving RESP2 parsing, scoped
+NDJSON capture IDs and explicit publication review through the existing write grant.
+RedisJSON root document reads/sets and inline draft/review behavior follow
+redis_driver.rs, RedisValueViewer.vue and RedisJsonEditor.vue. The JSON token
+formatter, Unicode display decoder and bounded display-to-source edit mapping
+are adapted from apps/desktop/src/lib/common/safeJsonFormat.ts into
+shared/src/json-source.ts; unused Number-wrapper/stringify helpers are omitted.
+Fouc's React CodeMirror editor and existing single-use mutation plans preserve
+raw request numbers, byte keys, exact expiry and conflict/permission guards.
+
+SQL statement targeting, per-statement execution/result status and cancellation
+follow sqlStatementRanges.ts, sqlExecutionTarget.ts, queryExecutionState.ts and
+crates/dbx-core/src/query/query_cancel.rs. Fouc implements scoped registrations,
+native MySQL/PostgreSQL interrupts and an isolated read-only SQLite query process
+in shared/src/sql-execution.ts and backend/device/src/database/sql-execution* /
+sqlite-query*. React result tabs use the existing native result renderer.
+
+SQL template parameters, MyBatis where/foreach handling and @set expressions
+are adapted from sqlParameters.ts, sqlVariables.ts, sqlParameterHistory.ts and
+SqlParameterDialog.vue. Fouc shared/src/sql-{parameters,variables,template,source-map}
+implements common MySQL/PostgreSQL/SQLite rules, dialect string escaping, input
+validation, bounded expansion and original-source diagnostics. React parameter
+UI keeps recent values in the current session/document rather than global storage.
+
+SQL formatting/layout, compression, structured auto-format, save snapshots and
+snippet defaults/fields follow apps/desktop/src/lib/sql/{sqlFormatter,
+sqlFormatterConfig,sqlFormatOnSave,sqlSnippetTemplates,sqlCompletion,autoFormat},
+sql/layout and common/xmlFormat. Fouc ports them into its native React editor
+and workspace-owned preference storage; it loads no DBX runtime module.
+sql-formatter 15.8.0 is an independently declared MIT dependency, pinned to the
+reference version for its internal AST interfaces. Its complete license is in
+SQL-FORMATTER-LICENSE.txt. Third-party package code is excluded from migration credit.
+
+SQL function completion/signature fields, native function documentation, alias/CTE
+diagnostics and definition navigation follow sqlCompletion.ts, sqlDiagnostics.ts
+and sql/semantic/{diagnostics,aliasHighlights,cteNavigation,references}. Fouc's
+sql-assistance modules use its own scope model and CodeMirror lifecycle.
+Quick intentions, selection quoting/case, IN-list paste and table query templates
+follow lib/editor/sqlIntentionActions.ts and lib/sql/{sqlSelectionCase,sqlQuoteCaret,
+sqlInListPaste,sqlShortcutTableTarget,sqlShortcutFormBodies}. Browser SQL file IO
+adapts sqlFileOpen.ts into strict decoding and current-connection document tabs;
+desktop path APIs and DBX runtime imports are not used.
+
+redis-parser 3.0.0
+Copyright (c) 2015 NodeRedis; MIT License.
+Fouc's dedicated Pub/Sub connection uses this RESP parser. The full license
+is retained in REDIS-PARSER-LICENSE.txt in this directory.
+
+This notice covers DBX-derived material. Other dependency notices remain
+subject to the separate F06 license audit.
+
+Native estimated EXPLAIN and plan rendering adapt query/plugin_plan.rs,
+query_execution_sql.rs, components/explain and lib/diagram/explainPlan.ts.
+Grid range/row/column selection, keyboard movement and exact summaries follow
+useDataGridSelection.ts and grid helpers; result export adapts useDataGridExport.ts,
+dbx-formats CSV writing and core data/table_export.rs. React result grids and
+chunked browser exports preserve native values and remain scoped to Fouc sessions.
+
+Table import parsing/mapping/review adapts core data/table_import.rs and
+components/import/TableImportDialog.vue into Fouc shared table-import contracts,
+native transaction-bound append and a React preview workflow. Data comparison
+adapts data/data_compare.rs and DataCompareDialog.vue; schema comparison adapts
+dbx-sql/schema_diff.rs, SchemaDiffObjectTree.vue and SchemaDiffDdlPanel.vue.
+Fouc compares immutable native snapshots and produces selected SQL/DDL review
+without importing DBX runtime modules or automatically executing comparison SQL.
+
+MongoDB native document and mutation workflows adapt mongo_driver.rs, mongo_ops.rs,
+mongo_cmd.rs and document components, with Fouc workspace sessions and EJSON.
+Grid layout/formatting adapts useDataGridColumnLayout, useDataGridColumnFormatter
+and DataGridColumnLayoutPopover. Relational structure editing adapts DBX native
+table_structure_sql and TableStructureEditor into typed plans and React review.
+MongoDB connector icon derives from DBX apps/desktop/public/connector-logos.
+
+Native metadata, quick-open, ER diagram and database documents adapt DBX object,
+quick-open, lib/diagram and data/docs workflows. Grid drafts, table transfer and
+query chart configuration adapt DBX grid, data/transfer and chart workflows.
+ECharts 6.1.0 is used under the Apache License 2.0.
+
+Native connection URL/DSN and certificate forms, database streaming exports and
+SQL DML preview adapt DBX connection/runtime_config, data/database_export,
+dml_preview_sql and dmlChangePreview workflows under Apache License 2.0.
+
+Mongo GridFS native file browsing and streamed download adapt DBX mongo_driver.rs
+and lib/document/gridfsFiles.ts/gridfsPagination.ts under Apache License 2.0.
+
+Connection config transfer, seeded table data generation and native binary
+HEX detail adapt DBX connection, test_data and binaryHexViewer workflows
+under Apache License 2.0.
+
+Native activity/process monitoring, Mongo Canonical EJSON file transfer,
+literal SQL data import, reviewed database/schema creation and workspace
+datastore CLI adapt the fixed DBX admin/data/CLI workflows under Apache 2.0.
+
+Native result transpose/pins, Redis reviewed bulk actions, table creation,
+Mongo tabular mapping, readonly MCP and SQLite consistent backup adapt the
+fixed DBX grid/data/admin/MCP workflows under Apache 2.0.
+
+Reviewed native index/foreign-key DDL, table clearing, real-FK JOIN completion,
+account/role security and MySQL events/PostgreSQL extensions adapt the fixed
+DBX structure, sqlCompletion, db_admin_sql and object/admin workflows under
+Apache License 2.0.
