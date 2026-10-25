@@ -1,36 +1,28 @@
 # Fob
 
-Fob (Fusion One Book) is the independent, Web-only knowledge product copied from Fouc. The authoritative architecture is `docs/architecture/fob-product-boundaries.md`; execution status is `.spec/tasks/fob-extraction.md`.
+Fob（Fusion One Book）是从 Fouc 复制并独立演进的纯 Web 知识产品。架构以 `docs/architecture/fob-product-boundaries.md` 为准，执行状态见 `.spec/tasks/fob-extraction.md`。
 
-## Product and engineering boundaries
+## 产品与工程边界
 
-- Use Next.js App Router, React, TypeScript, Tailwind CSS v4, existing Radix-style components, the TypeScript/Bun business service, and PostgreSQL. Keep backend APIs Node-compatible. Retain the independent Python media worker.
-- This product has no Tauri application, desktop sidecar, native IPC, or runtime dependency on the sibling Fouc checkout.
-- Copy existing implementations and make the smallest required Web/branding adaptations. Preserve the editor, collaboration, permissions, search, AI, MCP, import/export, files, and local-browser knowledge capabilities.
-- Knowledge navigation IS the single system sidebar. Mount it through the shell navigation outlet, never as a second sidebar inside a page. The shell owns the only collapse state; resource adapters own queries, permissions and actions. Only the selected navigation owner handles cross-feature document targets and notification publication.
-- Product surfaces must use real product data. Do not expose copied demo members, simulated saves, menu-only "content search", Agent marketing, or knowledge-management links that actually open global appearance settings.
-- `src/` owns frontend behavior; `backend/server/` owns identity, knowledge and models; `shared/` owns pure contracts/document semantics. Frontend server imports are type-only through `@fob/server/knowledge-api`.
-- A knowledge base IS Fob's sole workspace. The top switcher selects, creates and manages knowledge bases using the copied switcher design. There is no separate project entity, project membership, project-to-library association, lower knowledge-base selector, or extra `workspaceId`. Members/groups/pages/ACL and every business action are scoped directly to `knowledgeBaseId`.
-- Fob owns its database, object-storage namespace, account/session/token state, deployment, and browser-storage keys. Never silently connect to Fouc endpoints, read Fouc secrets, or mutate Fouc data.
-- Work only in this checkout. Do not modify `../fouc`, its running services, database, or local settings.
-- Source availability is not acceptance evidence. Keep unavailable externally configured capabilities explicit.
+- 沿用 Next.js App Router、React、TypeScript、Tailwind CSS v4、现有 Radix 风格组件、TypeScript/Bun 业务服务和 PostgreSQL；后端 API 保持 Node 兼容，保留独立 Python 媒体服务。
+- 不引入 Tauri、桌面辅助进程、原生 IPC 或对 Fouc 仓库的运行时依赖。优先复制已有实现，仅做必要的 Web 与品牌适配，保留编辑器、协作、权限、搜索、AI、MCP、导入导出、文件及浏览器本地知识能力。
+- 知识导航就是唯一系统侧栏，通过 shell 导航出口挂载，禁止页面内再建系统侧栏。shell 独占收起状态；资源适配器负责查询、权限和操作；仅当前导航所有者处理跨功能文档跳转与通知发布。
+- 产品界面使用真实数据；禁止演示成员、模拟保存、以菜单匹配冒充内容搜索、Agent 营销，以及把全局外观设置伪装成知识库管理。
+- `src/` 负责前端，`backend/server/` 负责身份、知识与模型，`shared/` 负责纯契约和文档语义。前端仅通过 `@fob/server/knowledge-api` 以 `import type` 引用服务端类型。
+- 一个知识库就是一个工作空间。顶部沿用原切换器设计，直接选择、新建和管理知识库；不设项目实体、项目成员、项目与知识库关联、下方知识库选择器或额外 `workspaceId`。成员、分组、页面、ACL 及全部业务操作直接归属 `knowledgeBaseId`。
+- Fob 独立拥有数据库、对象存储命名空间、账号、会话、令牌、部署及浏览器存储键。仅在本仓库工作，禁止读取 Fouc 密钥、连接其端点、修改其数据，以及改动 `../fouc` 的文件、服务或本地设置。
+- 源码存在不代表验收通过；依赖外部配置而不可用的能力必须明确说明。新产品不增加兼容 schema 或回退到 Fouc 的分支；经明确安排的一次性数据复制属于迁移操作，不是运行时兼容路径。
 
-## Workflow
+## 工作流程
 
-- Read `AI_FRONTEND_RULES.md` before frontend work and before committing; preserve the copied layout, interaction states and icon conventions.
-- Read relevant guides in `node_modules/next/dist/docs/` before changing Next.js behavior.
-- Maintain one current design document per topic in `docs/`; maintain execution gates and validation evidence in `.spec/tasks/`.
-- Independent agents may work in disjoint file ranges; the primary agent owns integration, authoritative docs and commits.
-- Keep the Web/service development processes running during development. Validate modified behavior, P0 resource boundaries and a real visual flow; do not build desktop binaries.
-- Commit completed and validated work with a clear conventional commit message. Never include credentials, runtime snapshots or transient screenshots.
-- This is a new product without legacy production formats. Do not add compatibility schemas or fallback-to-Fouc branches. A deliberate one-time independent data copy is a transfer operation, not a legacy runtime path.
+- 前端工作前及提交前阅读 `AI_FRONTEND_RULES.md`，保留既有布局、交互状态和图标约定。
+- 每个主题在 `docs/` 维护一份当前设计文档，执行门槛与验证证据放在 `.spec/tasks/`。
+- 多个独立代理协作时使用互不重叠的文件范围；主代理负责集成、权威文档与提交。
+- 开发期间保持 Web 与业务服务运行；验证修改行为、P0 资源边界和真实视觉流程，不构建桌面二进制。
+- 完成并验证后，以清晰的约定式提交信息提交；禁止纳入凭据、运行时快照或临时截图。
 
-<!-- BEGIN:nextjs-agent-rules -->
+## Next.js 版本约束
 
-# This is NOT the Next.js you know
+当前版本存在破坏性变更，API、约定和目录结构可能不同于已有知识。编写 Next.js 相关代码前，按需阅读 `node_modules/next/dist/docs/` 中的对应指南并遵循弃用提示；路径从本文件所在目录解析，多包仓库需注意 `next` 的安装位置。
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+`next.config.ts` 的 `agentRules: false` 仅关闭英文规则自动回写，本节的中文查阅要求仍须遵守。
