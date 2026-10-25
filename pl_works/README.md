@@ -5,7 +5,7 @@
 ## 目录
 
 - `guizang/`：上游 guizang-ppt-skill 的完整源码快照。
-- `foa-pl-report/outline-v1.md`：FOA 推理团队新任 PL 汇报的编排思路与内容大纲。本阶段不制作汇报 HTML 或 PPTX。
+- `foa-pl-report/outline-v1.md`：FOA 推理团队新任 PL 汇报的 7 页精简大纲，含封面，不设附录。本阶段不制作汇报 HTML 或 PPTX。
 
 ## 参考技能来源
 
