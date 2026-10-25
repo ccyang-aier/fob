@@ -1,28 +1,20 @@
 # Fob
 
-Fob（Fusion One Book）是从 Fouc 复制并独立演进的纯 Web 知识产品。架构以 `docs/architecture/fob-product-boundaries.md` 为准，执行状态见 `.spec/tasks/fob-extraction.md`。
+Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集文档编辑、文件管理、检索、协作与 AI 于一体。愿景是让知识易于记录、组织、发现和复用，成为持续积累的共同资产。
 
-## 产品与工程边界
+## 工程约定
 
-- 沿用 Next.js App Router、React、TypeScript、Tailwind CSS v4、现有 Radix 风格组件、TypeScript/Bun 业务服务和 PostgreSQL；后端 API 保持 Node 兼容，保留独立 Python 媒体服务。
-- 不引入 Tauri、桌面辅助进程、原生 IPC 或对 Fouc 仓库的运行时依赖。优先复制已有实现，仅做必要的 Web 与品牌适配，保留编辑器、协作、权限、搜索、AI、MCP、导入导出、文件及浏览器本地知识能力。
-- 知识导航就是唯一系统侧栏，通过 shell 导航出口挂载，禁止页面内再建系统侧栏。shell 独占收起状态；资源适配器负责查询、权限和操作；仅当前导航所有者处理跨功能文档跳转与通知发布。
-- 产品界面使用真实数据；禁止演示成员、模拟保存、以菜单匹配冒充内容搜索、Agent 营销，以及把全局外观设置伪装成知识库管理。
+- 使用 Next.js App Router、React、TypeScript、Tailwind CSS v4、现有 Radix 风格组件、TypeScript/Bun 业务服务和 PostgreSQL；后端 API 保持 Node 兼容，Python 服务负责媒体处理。
 - `src/` 负责前端，`backend/server/` 负责身份、知识与模型，`shared/` 负责纯契约和文档语义。前端仅通过 `@fob/server/knowledge-api` 以 `import type` 引用服务端类型。
-- 一个知识库就是一个工作空间。顶部沿用原切换器设计，直接选择、新建和管理知识库；不设项目实体、项目成员、项目与知识库关联、下方知识库选择器或额外 `workspaceId`。成员、分组、页面、ACL 及全部业务操作直接归属 `knowledgeBaseId`。
-- Fob 独立拥有数据库、对象存储命名空间、账号、会话、令牌、部署及浏览器存储键。仅在本仓库工作，禁止读取 Fouc 密钥、连接其端点、修改其数据，以及改动 `../fouc` 的文件、服务或本地设置。
-- 源码存在不代表验收通过；依赖外部配置而不可用的能力必须明确说明。新产品不增加兼容 schema 或回退到 Fouc 的分支；经明确安排的一次性数据复制属于迁移操作，不是运行时兼容路径。
+- 知识库是工作空间和权限边界；顶部切换器管理知识库，成员、分组、页面、ACL 及业务操作统一以 `knowledgeBaseId` 为作用域。
+- shell 提供唯一系统侧栏与收起状态；资源适配器负责查询、权限和操作，当前导航所有者负责跨功能文档跳转与通知。
+- 界面展示真实产品数据和操作结果，明确呈现外部配置依赖、不可用状态与错误。
+- 数据库、对象存储、认证状态、部署及浏览器存储使用 Fob 自有配置与命名空间；工作范围限当前仓库。
 
 ## 工作流程
 
-- 前端工作前及提交前阅读 `AI_FRONTEND_RULES.md`，保留既有布局、交互状态和图标约定。
-- 每个主题在 `docs/` 维护一份当前设计文档，执行门槛与验证证据放在 `.spec/tasks/`。
-- 多个独立代理协作时使用互不重叠的文件范围；主代理负责集成、权威文档与提交。
-- 开发期间保持 Web 与业务服务运行；验证修改行为、P0 资源边界和真实视觉流程，不构建桌面二进制。
-- 完成并验证后，以清晰的约定式提交信息提交；禁止纳入凭据、运行时快照或临时截图。
-
-## Next.js 版本约束
-
-当前版本存在破坏性变更，API、约定和目录结构可能不同于已有知识。编写 Next.js 相关代码前，按需阅读 `node_modules/next/dist/docs/` 中的对应指南并遵循弃用提示；路径从本文件所在目录解析，多包仓库需注意 `next` 的安装位置。
-
-`next.config.ts` 的 `agentRules: false` 仅关闭英文规则自动回写，本节的中文查阅要求仍须遵守。
+- 前端工作前及提交前阅读 `AI_FRONTEND_RULES.md`。
+- 修改 Next.js 行为前，查阅 `node_modules/next/dist/docs/` 中的当前版本指南与弃用说明。
+- 架构以 `docs/architecture/fob-product-boundaries.md` 为准，执行状态见 `.spec/tasks/fob-extraction.md`；每个主题在 `docs/` 保留一份当前设计，执行门槛与验证证据放在 `.spec/tasks/`。
+- 开发期间保持 Web 与业务服务运行，验证变更行为、资源权限边界及真实界面流程。
+- 完成验证后使用清晰的约定式提交信息；提交内容不包含凭据、运行时快照或临时截图。
