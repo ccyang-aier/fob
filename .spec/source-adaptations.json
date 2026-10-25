@@ -244,8 +244,8 @@
     "sha256": "8e47942a7f5d57b75147be73ec994bc90cb11e24cadd9ea2471b9044c949a10c"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "ea9be21c6a20c765f357f3eb6276acbe1850aabb20aaf82f1a54c955d533ad2a"
+    "reason": "Remove the redundant containing-folder entry and slash divider from the document toolbar; keep outline/thumbnail navigation, stars, sharing, creation and document actions intact.",
+    "sha256": "ee1f1b10b616d3aa0faf47cde002022d9325226092d0fcb7c7eb38957808d3d2"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
     "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
@@ -350,5 +350,9 @@
   "shared/src/knowledge/notifications/index.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
     "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
+  },
+  "src/features/knowledge/editor/components/document-editor-header.module.css": {
+    "reason": "Remove the redundant containing-folder entry and slash divider from the document toolbar; keep outline/thumbnail navigation, stars, sharing, creation and document actions intact.",
+    "sha256": "5087572a75d2bae7d75efe40cc133d792e77f2227d10d23e167b4681cea0af95"
   }
 }

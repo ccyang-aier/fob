@@ -24,7 +24,7 @@ export function SidebarHelp({ compact, onNavigate }: { compact: boolean; onNavig
   const { t } = useTranslation(messages);
   const [open, setOpen] = useState(false);
   return <>
-    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.iconButton}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={18} weight="regular" aria-hidden /></button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
+    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${compact ? styles.iconButton : styles.settings}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={18} weight="regular" aria-hidden />{!compact && <span>{t('help')}</span>}</button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
     {open && <HelpDialog onClose={() => setOpen(false)} onNavigate={onNavigate} />}
   </>;
 }

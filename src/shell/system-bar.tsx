@@ -8,6 +8,7 @@ import { AccountItem } from '@/features/identity/components/account-item';
 import { CoffeeBalanceButton } from '@/features/rewards';
 import { useTranslation } from '@/lib/i18n';
 import { GlobalSearch } from './global-search';
+import { ThemeSwitch } from './theme-switch';
 import type { useWorkbenchView, WorkbenchView } from './workbench-view';
 import { messages } from './i18n/system-bar.messages';
 import styles from './system-bar.module.css';
@@ -26,9 +27,10 @@ export function SystemBar({ onNavigate, navigation, children }: {
     {children}
     <div className={`${styles.actions} ${styles.trailing}`}>
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
+      <ThemeSwitch className={styles.button} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
-      <span className={styles.separator} aria-hidden />
       <CoffeeBalanceButton onOpen={() => onNavigate('rewards')} />
+      <span className={styles.separator} aria-hidden />
       <AccountItem variant="topbar" />
     </div>
   </header>;

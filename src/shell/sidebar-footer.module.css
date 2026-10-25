@@ -13,14 +13,16 @@
   gap: 2px;
 }
 
-.rewards { display: flex; min-width: 0; flex-direction: column; }
+.rewards {
+  min-width: 0;
+  padding-top: 12px;
+  border-top: var(--separator-width) solid var(--separator-color);
+}
 
 .dock {
   display: flex;
-  align-items: center;
-  gap: 4px;
-  padding-top: 5px;
-  border-top: 1px solid var(--line);
+  flex-direction: column;
+  gap: 2px;
 }
 
 .iconButton {
@@ -38,7 +40,7 @@
 .settings {
   display: flex;
   min-height: 30px;
-  flex: 1;
+  width: 100%;
   align-items: center;
   gap: 8px;
   padding: 0 7px;
@@ -50,10 +52,13 @@
 }
 
 .dock[data-compact='true'] {
-  flex-direction: column;
+  align-items: center;
+  padding-top: 6px;
+  border-top: var(--separator-width) solid var(--separator-color);
 }
 
 .dock[data-compact='true'] .settings {
+  width: 30px;
   flex: none;
   justify-content: center;
   padding: 0;

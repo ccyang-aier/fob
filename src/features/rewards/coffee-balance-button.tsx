@@ -1,7 +1,6 @@
 'use client';
 
 import { Coffee } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n/react';
 import { pushWorkbenchLocation } from '@/lib/navigation-history';
@@ -23,12 +22,12 @@ export function CoffeeBalanceButton({ onOpen = openRewardsPage }: { onOpen?: () 
   const label = authenticated && rewards.summary ? t('balanceLabel', { count: rewards.summary.balance }) : t(authenticated ? 'open' : 'signIn');
   return <Tooltip>
     <TooltipTrigger asChild>
-      <Button type="button" variant="ghost" size="sm" className={styles.balanceButton} aria-label={label}
+      <button type="button" className={`fob-action ${styles.balanceButton}`} aria-label={label}
         disabled={rewards.identityStatus === 'checking'} onClick={authenticated ? onOpen : rewards.openSignIn}>
-        <Coffee size={17} strokeWidth={1.8} className={styles.coffeeIcon} aria-hidden />
-        <span className={styles.balanceNumber}>{authenticated ? rewards.summary ? rewards.summary.balance : '—' : t('signIn')}</span>
-      </Button>
+        <Coffee size={18} strokeWidth={1.8} aria-hidden />
+        {authenticated && rewards.summary ? <span className={styles.balanceNumber} aria-hidden>{rewards.summary.balance > 99 ? '99+' : rewards.summary.balance}</span> : null}
+      </button>
     </TooltipTrigger>
-    <TooltipContent>{label}</TooltipContent>
+    <TooltipContent side="bottom">{label}</TooltipContent>
   </Tooltip>;
 }

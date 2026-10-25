@@ -5,7 +5,7 @@ import { knowledgeMessages } from './document-editor-header.messages';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/react';
-import { FolderSimple, List, Plus, ShareNetwork } from '@phosphor-icons/react';
+import { List, Plus, ShareNetwork } from '@phosphor-icons/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,11 +19,9 @@ import styles from './document-editor-header.module.css';
 
 export function DocumentEditorHeader({
   editor,
-  folderName,
   title,
   avatarName,
   starred,
-  onOpenSidebar,
   onToggleStar,
   onCreateDocument,
   canCreateDocument = true,
@@ -64,19 +62,6 @@ export function DocumentEditorHeader({
   return (
     <header className={styles.header}>
       <div className={styles.leading}>
-        <button
-          type="button"
-          className={`fob-action ${styles.folderButton}`}
-          aria-label={knowledgeT('openContainingFolderValue', { v0: folderName })}
-          onClick={onOpenSidebar}
-          title={knowledgeT('expandKnowledgeBaseSidebarValue', { v0: folderName })}
-        >
-          <FolderSimple aria-hidden size={18} weight="regular" />
-          <span className={styles.folderName}>{folderName}</span>
-        </button>
-        <span className={styles.divider} aria-hidden>
-          /
-        </span>
         <button
           ref={navigation?.outlineTrigger}
           type="button"
