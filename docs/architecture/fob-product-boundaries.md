@@ -118,7 +118,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 布局、共享控件、图标及交互状态遵循 [AI 前端规则](../../AI_FRONTEND_RULES.md)。
 
-系统图标统一由 `src/components/icons` 提供，默认采用官方 Font Awesome 7 Solid；前进/后退、更多、收纳及其他明确需要轮廓的控制使用目录中列明的 Lucide。尺寸统一为常规 16px、紧凑 14px、辅助指示 12px；优先圆润饱满、轮廓简单的候选，不使用手写 UI SVG 或第三套图标。详情见[图标系统](../ui/icon-system.md)。选中语义、文档图标 ID、用户上传内容和品牌图形继续各司其职；`pnpm icons:verify` 与 lint 自动检查来源边界。
+系统图标统一由 `src/components/icons` 提供，默认采用官方 Font Awesome 7 Solid；前进/后退、更多、收纳及其他明确需要轮廓的控制使用目录中列明的 Lucide。实际显示尺寸统一为常规 14px、紧凑 12px、辅助指示 10px；共享渲染层把原请求尺寸统一缩小 2px，预览与 Emoji 同样处理，按钮点击区域保留原布局。优先圆润饱满、轮廓简单的候选，不使用手写 UI SVG 或第三套图标。详情见[图标系统](../ui/icon-system.md)。选中语义、文档图标 ID、用户上传内容和品牌图形继续各司其职；`pnpm icons:verify` 与 lint 自动检查来源边界。
 
 ## 开发、部署与验收
 

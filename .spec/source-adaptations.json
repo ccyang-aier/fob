@@ -292,8 +292,8 @@
     "sha256": "bbbf8338986ff73e0a6a79d167c334a663b3742300a76994ca5afa827d242927"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "004e865f363abadbadd927bced1557425498b5e484153630d1ebef0ee2b3dda5"
+    "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
+    "sha256": "683a714990400a864b9532b70a6aa3996249fcc9834789e2b4368b90b5c33747"
   },
   "src/features/knowledge/notifications/notifications-api.test.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",

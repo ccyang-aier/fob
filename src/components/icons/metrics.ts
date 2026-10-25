@@ -1,9 +1,11 @@
-/** Shared UI scale. Larger explicit values are reserved for document art/previews. */
+/** Stable size requests used by callers; the shared renderer draws one step smaller. */
 export const ICON_SIZES = { control: 16, compact: 14, indicator: 12, artwork: 32 } as const;
 
 export function resolveIconSize(size: number | string = ICON_SIZES.control) {
-  if (typeof size !== 'number' || size > 20) return size;
-  if (size <= 12) return ICON_SIZES.indicator;
-  if (size <= 15) return ICON_SIZES.compact;
-  return ICON_SIZES.control;
+  if (typeof size !== 'number') return size;
+  const requested = size > 20 ? size
+    : size <= 12 ? ICON_SIZES.indicator
+    : size <= 15 ? ICON_SIZES.compact
+    : ICON_SIZES.control;
+  return requested - 2;
 }
