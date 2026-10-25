@@ -158,14 +158,14 @@ test('collapse hides the real descendants, survives changed positions, and leaf 
     );
   };
   await render(headings);
-  await click('[aria-label="折叠章节 A"]');
+  await click('[title="A"]');
   expect(document.querySelector('[title="B"]')).toBeNull();
   expect(document.querySelector('[title="C"]')).toBeNull();
   expect(document.querySelector('[title="D"]')).not.toBeNull();
   expect(navigation).toBe(-1);
   await render(headings.map((heading) => ({ ...heading, pos: heading.pos + 10 })));
   expect(document.querySelector('[title="B"]')).toBeNull();
-  await click('[aria-label="展开章节 A"]');
+  await click('[title="A"]');
   await click('[title="C"]');
   expect(navigation).toBe(2);
   expect(document.querySelector('[aria-current="location"]')?.textContent).toBe('C');

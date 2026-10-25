@@ -1,10 +1,10 @@
 import { expect, test } from 'bun:test';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ArrowLeft, Coffee, Folder, Star, StarOutline } from './index';
+import { ArrowLeft, Coffee, Folder, MagnifyingGlass, Moon, Star, StarOutline } from './index';
 import { ICON_SIZES, resolveIconSize } from './metrics';
 
 test('system entities render local FA7 Solid glyphs and lightweight controls use Lucide', () => {
-  for (const Component of [Folder, Coffee, Star]) {
+  for (const Component of [Folder, Coffee, Star, MagnifyingGlass, Moon]) {
     const markup = renderToStaticMarkup(<Component aria-hidden />);
     expect(markup).toContain('data-icon-library="fa7-solid"');
     expect(markup).toContain('width:14px;height:14px');

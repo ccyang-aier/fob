@@ -26,7 +26,7 @@ const serverLocalEnvironment = existsSync(path.join(root, '.env.fob.local')) ? p
 const webPort = Number(process.env.FOB_WEB_PORT ?? serverLocalEnvironment.FOB_WEB_PORT ?? 3001);
 const services = [
   { name: 'Server', port: Number(process.env.FOB_SERVICE_PORT ?? serverLocalEnvironment.FOB_SERVICE_PORT ?? 8721), health: '/api/auth/ok', executable: bunExecutable, args: ['--watch', ...serverEnvironment, path.join(root, 'backend/server/src/entrypoints/server.ts')] },
-  { name: 'Web', port: webPort, health: '/', executable: process.execPath, args: [require.resolve('next/dist/bin/next'), 'dev', '--hostname', '0.0.0.0', '--port', String(webPort)], owner: (command) => normalize(command).includes(normalize(root) + '/node_modules/') && /next[\\/]/.test(command) },
+  { name: 'Web', port: webPort, health: '/', executable: process.execPath, args: [require.resolve('next/dist/bin/next'), 'dev', '--webpack', '--hostname', '0.0.0.0', '--port', String(webPort)], owner: (command) => normalize(command).includes(normalize(root) + '/node_modules/') && /next[\\/]/.test(command) },
 ];
 
 function listenerCommands(port) {

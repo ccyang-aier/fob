@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowDown as LucideArrowDown, ArrowDownToLine as LucideArrowDownToLine, ArrowDownUp as LucideArrowDownUp, ArrowLeft as LucideArrowLeft, ArrowLeftRight as LucideArrowLeftRight, ArrowLeftToLine as LucideArrowLeftToLine, ArrowRight as LucideArrowRight, ArrowRightToLine as LucideArrowRightToLine, ArrowUp as LucideArrowUp, ArrowUpRight as LucideArrowUpRight, ArrowUpToLine as LucideArrowUpToLine, Check as LucideCheck, CheckCheck as LucideCheckCheck, ChevronDown as LucideChevronDown, ChevronLeft as LucideChevronLeft, ChevronRight as LucideChevronRight, ChevronUp as LucideChevronUp, ChevronsUpDown as LucideChevronsUpDown, Ellipsis as LucideEllipsis, ExternalLink as LucideExternalLink, FoldHorizontal as LucideFoldHorizontal, Heart as LucideHeart, LoaderCircle as LucideLoaderCircle, Maximize as LucideMaximize, Minimize as LucideMinimize, Minus as LucideMinus, Moon as LucideMoon, Plus as LucidePlus, RefreshCw as LucideRefreshCw, RotateCcw as LucideRotateCcw, RotateCw as LucideRotateCw, Star as LucideStar, ThumbsUp as LucideThumbsUp, UnfoldHorizontal as LucideUnfoldHorizontal, X as LucideX, ZoomIn as LucideZoomIn, ZoomOut as LucideZoomOut } from 'lucide-react';
+import { ArrowDown as LucideArrowDown, ArrowDownToLine as LucideArrowDownToLine, ArrowDownUp as LucideArrowDownUp, ArrowLeft as LucideArrowLeft, ArrowLeftRight as LucideArrowLeftRight, ArrowLeftToLine as LucideArrowLeftToLine, ArrowRight as LucideArrowRight, ArrowRightToLine as LucideArrowRightToLine, ArrowUp as LucideArrowUp, ArrowUpRight as LucideArrowUpRight, ArrowUpToLine as LucideArrowUpToLine, Check as LucideCheck, CheckCheck as LucideCheckCheck, ChevronDown as LucideChevronDown, ChevronLeft as LucideChevronLeft, ChevronRight as LucideChevronRight, ChevronUp as LucideChevronUp, ChevronsUpDown as LucideChevronsUpDown, Ellipsis as LucideEllipsis, ExternalLink as LucideExternalLink, FoldHorizontal as LucideFoldHorizontal, Heart as LucideHeart, LoaderCircle as LucideLoaderCircle, Maximize as LucideMaximize, Minimize as LucideMinimize, Minus as LucideMinus, Plus as LucidePlus, RefreshCw as LucideRefreshCw, RotateCcw as LucideRotateCcw, RotateCw as LucideRotateCw, Star as LucideStar, ThumbsUp as LucideThumbsUp, UnfoldHorizontal as LucideUnfoldHorizontal, X as LucideX, ZoomIn as LucideZoomIn, ZoomOut as LucideZoomOut } from 'lucide-react';
 import { faAlignCenter } from '@fortawesome/free-solid-svg-icons/faAlignCenter';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 import { faAlignRight } from '@fortawesome/free-solid-svg-icons/faAlignRight';
@@ -17,6 +17,7 @@ import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons/faBookmark';
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons/faMagnifyingGlass';
+import { faMoon } from '@fortawesome/free-solid-svg-icons/faMoon';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons/faBookOpen';
 import { faBoxArchive } from '@fortawesome/free-solid-svg-icons/faBoxArchive';
 import { faBrain } from '@fortawesome/free-solid-svg-icons/faBrain';
@@ -161,7 +162,7 @@ export const BellSimple = /* @__PURE__ */ solidIcon(faBell, 'BellSimple');
 export const BellSlash = /* @__PURE__ */ solidIcon(faBellSlash, 'BellSlash');
 export const Bicycle = /* @__PURE__ */ solidIcon(faBicycle, 'Bicycle');
 export const KnowledgeLibrary = /* @__PURE__ */ solidIcon(faBook, 'KnowledgeLibrary');
-export const MagnifyingGlass = /* @__PURE__ */ solidIcon(faMagnifyingGlass, 'MagnifyingGlass');
+export const MagnifyingGlass = /* @__PURE__ */ solidIcon(faMagnifyingGlass, 'MagnifyingGlass', { stroke: 'currentColor', strokeWidth: 16, strokeLinejoin: 'round' });
 export const SplitHorizontal = /* @__PURE__ */ solidIcon(faTableColumns, 'SplitHorizontal');
 export const BookOpen = /* @__PURE__ */ solidIcon(faBookOpen, 'BookOpen');
 export const BookOpenText = /* @__PURE__ */ solidIcon(faBookOpen, 'BookOpenText');
@@ -354,7 +355,7 @@ export const DotsThree = /* @__PURE__ */ outlineIcon(LucideEllipsis, 'DotsThree'
 export const HeartOutline = /* @__PURE__ */ outlineIcon(LucideHeart, 'HeartOutline', 16);
 export const MagnifyingGlassMinus = /* @__PURE__ */ outlineIcon(LucideZoomOut, 'MagnifyingGlassMinus', 16);
 export const MagnifyingGlassPlus = /* @__PURE__ */ outlineIcon(LucideZoomIn, 'MagnifyingGlassPlus', 16);
-export const Moon = /* @__PURE__ */ outlineIcon(LucideMoon, 'Moon', 16);
+export const Moon = /* @__PURE__ */ solidIcon(faMoon, 'Moon');
 export const Minus = /* @__PURE__ */ outlineIcon(LucideMinus, 'Minus', 12);
 export const Plus = /* @__PURE__ */ outlineIcon(LucidePlus, 'Plus', 14);
 export { SidebarToggleIcon as SidebarSimple } from './sidebar-toggle-icon';

@@ -18,7 +18,7 @@
 .root .table :global(.selectedCell)::selection { background: transparent; }
 .root .table :global(.column-resize-handle) { position: absolute; top: 0; right: -1px; bottom: 0; z-index: 7; width: var(--drag-indicator-width); background: var(--drag-indicator-color); pointer-events: none; }
 .root .table :global(.column-resize-dragging) { user-select: none; }
-:global(.ProseMirror.resize-cursor), :global(.ProseMirror.resize-cursor *) { cursor: col-resize !important; }
+/* The editor-root cursor rule lives in the shared resize stylesheet. */
 .controls { pointer-events: none; }
 .corner { position: absolute; z-index: 4; width: 14px; height: 14px; padding: 0; border: 0; border-radius: 50%; background: var(--accent-soft-line); cursor: pointer; pointer-events: auto; }
 .columnRail, .rowRail { position: absolute; z-index: 3; overflow: hidden; border-radius: 4px; background: var(--accent-soft-line); pointer-events: auto; }

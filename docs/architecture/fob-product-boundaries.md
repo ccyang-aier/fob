@@ -116,7 +116,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 气泡以被动 status 展示，随拖拽移动并避让视口，Escape 由活动交互层处理。宿主空白区域不接收指针，开关模态框与全屏切换保持同一实例和状态；`OverlayRootContext` 仅承载精灵内部浮层控件。
 
-布局、共享控件、图标及交互状态遵循 [AI 前端规则](../../AI_FRONTEND_RULES.md)。
+布局、共享控件、图标及交互状态遵循 [AI 前端规则](../../AI_FRONTEND_RULES.md)。浅色悬停反馈统一为 `#f1f1f1`，目录/星标加强激活为 `#ebebeb`，侧栏鼠标离开即清除悬停。缩放指示线为 1px，点击区保持原尺寸。文档目录父级整行触发折叠，叶子项定位，使用单个按钮表达每一行。
 
 系统图标统一由 `src/components/icons` 提供，默认采用官方 Font Awesome 7 Solid；前进/后退、更多及其他明确需要轮廓的控制使用目录中列明的 Lucide；搜索和拆分视图使用 FA7 Solid，一级折叠为实心三角，子级折叠为轮廓折线。主导航收纳按用户要求保留原双栏几何，检查脚本只允许这一处固定例外。实际显示尺寸统一为常规 14px、紧凑 12px、辅助指示 10px；共享渲染层把原请求尺寸统一缩小 2px，预览与 Emoji 同样处理，按钮点击区域保留原布局。优先圆润饱满、轮廓简单的候选，不新增其它手写 UI SVG 或第三套图标。详情见[图标系统](../ui/icon-system.md)。选中语义、文档图标 ID、用户上传内容和品牌图形继续各司其职；`pnpm icons:verify` 与 lint 自动检查来源边界。
 
@@ -127,7 +127,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 ### 运行与部署
 
 - 前端静态导出，由 Nginx 提供页面并反代 API/WebSocket；业务服务、作业 worker 和 Python 媒体服务分别运行。
-- `dev:init` 初始化开发环境，`dev:all` 保持源码热更新服务常驻。默认开发端口为 Web 3001、API/协作/MCP 8721、PostgreSQL 55433、Redis 56380、S3 59010/59011、媒体 8920。
+- `dev:init` 初始化开发环境，`dev:all` 保持源码热更新服务常驻。Web 开发使用 `next dev --webpack`，生产构建仍使用原配置；开发浏览器验证范围与热更新限制记录在 `.spec/tasks/fob-development-services.md`。默认开发端口为 Web 3001、API/协作/MCP 8721、PostgreSQL 55433、Redis 56380、S3 59010/59011、媒体 8920。
 - `media:dev` 单独启动 Python 媒体服务，监听 `media_worker/` 的 Python 源码并自动重启；Windows 后台会话由 Node 监听器回收本次启动的 Python 进程树，再拉起新进程。媒体子进程只接收媒体配置与必要的系统环境，认证 token 和下载 origin 来自当前 Fob 配置。
 - 生产部署使用 `Dockerfile.web`、`Dockerfile.server`、媒体镜像、`compose.production.yaml` 及数据库、队列与存储初始化工具；配置 HTTPS Web/S3 origin、非超级用户运行角色和认证与存储密钥。
 

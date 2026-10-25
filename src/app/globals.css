@@ -21,7 +21,7 @@
   --separator-width: 1px;
   --separator-color: rgba(32, 32, 32, 0.1);
   --line: var(--separator-color);
-  --drag-indicator-width: 2px;
+  --drag-indicator-width: 1px;
   --drag-indicator-color: #171717;
   --line-strong: rgba(32, 32, 32, 0.22);
   /* 控件与卡片使用不透明描边，圆角与直边保持同一清晰度。 */
@@ -88,11 +88,11 @@
   --menu-warning-hover-bg: #faedcc;
   --menu-warning-hover-ink: #875510;
   /* 全局中性反馈，取自系统侧栏：
-     “浅灰白色” = hover（#f7f7f7）；“灰白色” = active（#efefef）。
+     “浅灰白色” = hover（#f1f1f1）；“灰白色” = active（#efefef）。
      菜单、侧栏与页面工具栏共用这两个角色，业务组件不另配灰度。 */
-  --interaction-hover-bg: #fafafa;
+  --interaction-hover-bg: #f1f1f1;
   --interaction-active-bg: #efefef;
-  --interaction-active-strong-bg: #e5e5e5;
+  --interaction-active-strong-bg: #ebebeb;
   --action-hover-bg: var(--interaction-hover-bg);
   --action-active-bg: var(--interaction-active-bg);
   --action-surface-bg: #f8f8f8;
@@ -192,9 +192,9 @@ html[data-theme="dark"] {
   --menu-warning-hover-bg: #4b3920;
   --menu-warning-hover-ink: #f0c979;
   /* 深色主题保留相同语义与侧栏原有层次：hover 更轻，active 更明显。 */
-  --interaction-hover-bg: rgb(255 255 255 / 0.04);
-  --interaction-active-bg: rgb(255 255 255 / 0.06);
-  --interaction-active-strong-bg: rgb(255 255 255 / 0.14);
+  --interaction-hover-bg: rgb(255 255 255 / 0.06);
+  --interaction-active-bg: rgb(255 255 255 / 0.08);
+  --interaction-active-strong-bg: rgb(255 255 255 / 0.10);
   --action-hover-bg: var(--interaction-hover-bg);
   --action-active-bg: var(--interaction-active-bg);
   --action-surface-bg: #222222;

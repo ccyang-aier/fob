@@ -212,8 +212,8 @@
     "reason": "Retire the old nested document-tab labels or gray draft glyph after their behavior moved to the top-level workbench tabs and copied Dense primary icons."
   },
   "src/features/knowledge/dense-sidebar/sidebar-interactions.module.css": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "4d2d76d4f3344555a70daa55c1545297ab572c7f87746e63d31aaf6103cad537"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Use shared visible hover feedback and clear mouse focus highlighting when the pointer leaves; retain keyboard focus feedback.",
+    "sha256": "d5ee342de07aa45777d5fa7dc805af15792ccf2ca15ab0c4e9f14d2a1eb022df"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
@@ -256,8 +256,8 @@
     "sha256": "9cb5cba5af8bd0520f8b048a88c0ab7dd827695219034badcdd923e3661e218e"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "fc2fb6448b0d13653880358e47c31707060d01e11f205f1918000d0b2b2111e5"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view.",
+    "sha256": "b22ef9e2187cde4fc1446616c53039a3f9b35f20f3cd7d3cbd274d180ed9d199"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
     "deleted": true,
@@ -612,8 +612,8 @@
     "sha256": "599666ede53afc208f37bcf8b4f06275254a3d60f62906d94d62f5e3d85e89a4"
   },
   "src/features/knowledge/editor/components/document-outline.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "bc391022aa96a10acd47f1ed59011ca0d6d768ef49837ed0552baf944a298bf2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics.",
+    "sha256": "baf0b1a3391f041d349715d617af7e57953002f13a1528e1f0998a9763b7989b"
   },
   "src/features/knowledge/editor/components/document-star-icon.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -734,5 +734,17 @@
   "src/features/knowledge/editor/editor-layout.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
     "sha256": "4ba169a4a0caee5eacdb129d373215ae77613d7f692c04d9e4809de99a67f44c"
+  },
+  "src/features/knowledge/editor/block-modules/table/table.module.css": {
+    "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development.",
+    "sha256": "e4525a08799c0fd72eec47c6a46388242ce67b01ca8cf81e2293308290003ebc"
+  },
+  "src/features/knowledge/editor/components/document-outline.module.css": {
+    "reason": "Use shared hover feedback with a single full-width accessible button per outline row.",
+    "sha256": "63f79718adea6b17a4e6e3040624e63bd5c44dd4681d6ee0a3c5123b513121c0"
+  },
+  "src/features/knowledge/navigation/page-icon.test.tsx": {
+    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation.",
+    "sha256": "5dc63d14137290032777dd1c9110a28f44c38650c24b94fb00de58e508607e71"
   }
 }

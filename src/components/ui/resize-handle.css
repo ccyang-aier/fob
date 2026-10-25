@@ -68,7 +68,7 @@ html body:has(.fob-resize-handle[data-resizing="true"]) .fob-resize-handle[data-
   height: var(--separator-width);
 }
 
-/* 侧栏可裁切内容；指示线向内放置，避免 2px 线被 overflow 裁成 1px。 */
+/* 指示线向内放置，确保 1px 反馈线不会被侧栏 overflow 裁切。 */
 .fob-sidebar-resize { --resize-line-position: calc(100% - 1px); }
 
 /* 指针移出分隔柄后仍保持相同光标，并阻止沿途选中文字。 */
@@ -81,3 +81,6 @@ body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="nw-se"]),
 body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="nw-se"]) * { cursor: nwse-resize !important; }
 body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="ne-sw"]),
 body:has(.fob-resize-handle[data-resizing="true"][data-resize-axis="ne-sw"]) * { cursor: nesw-resize !important; }
+
+/* Tiptap marks the editor root, so this rule must remain global. */
+.ProseMirror.resize-cursor, .ProseMirror.resize-cursor * { cursor: col-resize !important; }

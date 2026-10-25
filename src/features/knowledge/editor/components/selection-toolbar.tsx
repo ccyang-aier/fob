@@ -193,24 +193,41 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
   }, [editor]);
   useEffect(() => {
     if (!editor) return;
-    const scroll = editor.view.dom.closest('[data-document-scroll]');
-    const blur = () => requestAnimationFrame(refresh);
-    editor.on('transaction', refresh);
-    editor.on('focus', refresh);
-    editor.on('blur', blur);
-    scroll?.addEventListener('scroll', refresh, { passive: true });
-    const observer = new ResizeObserver(refresh);
-    if (scroll) observer.observe(scroll);
-    window.addEventListener('resize', refresh);
-    document.addEventListener('fullscreenchange', refresh);
+    let detach = () => {};
+    const bind = () => {
+      detach();
+      if (editor.isDestroyed) return;
+      const scroll = editor.view.dom.closest('[data-document-scroll]');
+      const blur = () => requestAnimationFrame(refresh);
+      editor.on('transaction', refresh);
+      editor.on('focus', refresh);
+      editor.on('blur', blur);
+      scroll?.addEventListener('scroll', refresh, { passive: true });
+      const observer = new ResizeObserver(refresh);
+      if (scroll) observer.observe(scroll);
+      window.addEventListener('resize', refresh);
+      document.addEventListener('fullscreenchange', refresh);
+      detach = () => {
+        editor.off('transaction', refresh);
+        editor.off('focus', refresh);
+        editor.off('blur', blur);
+        scroll?.removeEventListener('scroll', refresh);
+        window.removeEventListener('resize', refresh);
+        observer.disconnect();
+        document.removeEventListener('fullscreenchange', refresh);
+      };
+    };
+    const unbind = () => {
+      detach();
+      refresh();
+    };
+    editor.on('mount', bind);
+    editor.on('unmount', unbind);
+    bind();
     return () => {
-      editor.off('transaction', refresh);
-      editor.off('focus', refresh);
-      editor.off('blur', blur);
-      scroll?.removeEventListener('scroll', refresh);
-      window.removeEventListener('resize', refresh);
-      observer.disconnect();
-      document.removeEventListener('fullscreenchange', refresh);
+      editor.off('mount', bind);
+      editor.off('unmount', unbind);
+      detach();
     };
   }, [editor, refresh]);
   if (!position || !editor?.isEditable) return null;

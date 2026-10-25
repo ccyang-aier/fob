@@ -14,10 +14,10 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, 'children' | 'mask'> & { s
 export type Icon = ReturnType<typeof solidIcon>;
 
 /** Layout adapter only. Glyph geometry is rendered by the official FA component. */
-export function solidIcon(definition: IconDefinition, name: string) {
+export function solidIcon(definition: IconDefinition, name: string, defaults: Pick<IconProps, 'stroke' | 'strokeWidth' | 'strokeLinejoin'> = {}) {
   const Component = forwardRef<SVGSVGElement, IconProps>(function SolidIcon({ size, className, style, ...props }, ref) {
     const dimension = resolveIconSize(size);
-    return <FontAwesomeIcon {...props} ref={ref} icon={definition}
+    return <FontAwesomeIcon {...defaults} {...props} ref={ref} icon={definition}
       data-icon-library="fa7-solid"
       className={cn('fob-icon inline-block shrink-0 align-[-0.125em]', className)}
       style={{ width: dimension, height: dimension, ...style }} />;

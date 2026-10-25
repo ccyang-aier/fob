@@ -10,7 +10,7 @@
 ## 共享交互
 
 - 中性操作复用 `Button`、`DropdownMenuTrigger` 或 `fob-action`，由 `components/ui/interaction-states.css` 管理。
-- 工具按钮 `data-surface="plain"` 常态透明，hover 用 `--interaction-hover-bg`（浅色 `#fafafa`），展开/选中用 `--interaction-active-bg`（`#efefef`）；`"muted"` 常驻浅灰底，hover/激活用灰白底。
+- 工具按钮 `data-surface="plain"` 常态透明，hover 用 `--interaction-hover-bg`（浅色 `#f1f1f1`），展开/选中用 `--interaction-active-bg`（`#efefef`）；`"muted"` 常驻浅灰底，hover/激活用灰白底。
 - 侧栏共用这两种反馈，深色用对应灰度；反馈即时，无背景过渡。
 - 菜单展开依赖 `aria-expanded`，避免 Tooltip 改写的 `data-state`。
 
@@ -31,7 +31,7 @@
 
 ## 组件与加载
 
-- 文档标题图标相对标题行垂直居中，标题输入聚焦无下划线；目录和星标工具激活使用共享 `data-active-emphasis="strong"` 中性底色。
+- 文档标题图标相对标题行垂直居中，标题输入聚焦无下划线；目录和星标工具激活使用共享 `data-active-emphasis="strong"` 中性底色（浅色 `#ebebeb`）；父级目录整行点击折叠，叶子项点击定位，不嵌套按钮。
 - 视图切换复用 `ViewSwitcher`，列表左、卡片右；hover 只变底色，保留图标色，不另加选中描边。
 - 筛选/排序入口回焦无 ring、outline、阴影或边框渐变。
 - 资源卡片复用 `resource-card.module.css` 单层描边，不加阴影或悬浮位移。
@@ -46,7 +46,7 @@
 ## 分隔与拖拽
 
 - 分隔用 `--separator-width`（1px）和 `--separator-color`，`--line`、侧栏边界同色，相邻面板仅一条边界。
-- 缩放复用根部 `components/ui/resize-handle.css`、`fob-resize-handle`；hover、按下、键盘焦点及拖动均即时显示 `--drag-indicator-color` 黑色、`--drag-indicator-width` 2px 线，无颜色/透明度/线宽过渡，按方向使用 `col-resize`/`row-resize`。
+- 缩放复用根部 `components/ui/resize-handle.css`、`fob-resize-handle`；hover、按下、键盘焦点及拖动均即时显示 `--drag-indicator-color` 黑色、`--drag-indicator-width` 1px 线，无颜色/透明度/线宽过渡，按方向使用 `col-resize`/`row-resize`。
 - 离开点击区用 `data-resizing="true"` 保持，仅当前拖动手柄高亮；重排插入线沿用相同令牌，无效操作说明原因。
 
 ## 配色
@@ -65,6 +65,6 @@
 - 图标统一从 `@/components/icons` 引用，默认使用官方 Font Awesome 7 Solid；只有明确需要轻量轮廓的控制符号使用目录中列明的 Lucide。除用户明确恢复、由检查脚本固定的原主导航双栏图标外，不得新增手写 UI SVG、混入第三套图标或用 CSS 强制填色。完整选型、尺寸及例外见 [图标系统](docs/ui/icon-system.md)。
 - 主页、星标、草稿、回收站保留 Dense 浅彩色实心配色，其他系统图标使用现有中性色；激活仅改变行反馈。
 - 常规图标实际显示 14px，菜单/资源树 12px，折叠及辅助指示 10px；共享渲染器将原尺寸档位统一缩小 2px，数字尺寸的插图/预览与 Emoji 图标同样缩小。调用方保留原布局尺寸请求，不逐处重复减小，不缩小按钮点击区。
-- 多个候选中优先圆润、饱满、轮廓简单的造型；避免复杂线条和多余背景容器。前进/后退、对外打开、更多、加减、关闭与勾选使用轻量 Lucide；搜索与拆分视图使用 FA7 Solid，主题月牙使用更圆润的 Lucide Moon；更多保留独立三点，方向箭头保持细线。
+- 多个候选中优先圆润、饱满、轮廓简单的造型；避免复杂线条和多余背景容器。前进/后退、对外打开、更多、加减、关闭与勾选使用轻量 Lucide；搜索与拆分视图使用 FA7 Solid，主题月亮使用 FA7 Solid；更多保留独立三点，方向箭头保持细线。
 - 一级分组折叠使用 FA7 实心三角，子级树节点使用 Lucide 折线，切换器保留上下折线。主导航收纳保留原双栏造型，仅此一处为固定几何例外，不扩散为新的自绘图标。
 - 保留用户内容、品牌图形、颜色和文档图标 ID；选中星标/点赞使用实心，未选中使用轮廓，编辑工具保留可辨认语义。新增或变更图标后运行 `pnpm icons:verify`，`pnpm lint` 已包含此门槛。

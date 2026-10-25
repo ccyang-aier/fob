@@ -4,7 +4,7 @@
 
 ## 实现
 
-- Web 使用 Next.js dev，业务 API、协作、MCP 与作业 Worker 使用 Bun watch，由 `pnpm dev:all` 启动或复用当前仓库的常驻进程。
+- Web 使用 `next dev --webpack`，业务 API、协作、MCP 与作业 Worker 使用 Bun watch，由 `pnpm dev:all` 启动或复用当前仓库的常驻进程。`pnpm dev` 与统一启动器使用相同 Web 参数，生产构建参数保持原样。
 - `pnpm media:dev` 监听媒体包的 Python 文件，合并连续写入并顺序重启。Windows 只回收本次启动的 Python 进程树，避免隐藏会话中 Uvicorn reload 的 Ctrl+C 停止问题；保留配置白名单与凭据隔离。
 - PostgreSQL、Redis、MinIO 使用 Fob 自有 Compose 项目；开发日志位于忽略目录 `.runtime/dev/`。
 
@@ -17,6 +17,14 @@
 - `pnpm dev:all` 成功复用当前仓库的 Web、业务服务与作业 Worker；Web 首页与身份健康端点返回 200。
 - 媒体 `/health` 返回 200；使用当前 Fob token 的 capabilities 返回 200，缺少认证返回 401，错误处理请求返回 422。
 - 修改 Python 源码时间戳后，媒体监听进程发生替换，旧进程退出，健康端点恢复 200，Node 监听器持续运行；源码内容未被修改。
+
+## UI 批注期间的开发更新验证（2026-10-25）
+
+- 当前环境的 Turbopack CSS 更新出现缺失 chunk link 错误，开发 Web 改用 Webpack；首次编译暴露的 CSS Module 全局 Tiptap cursor 选择器已移入根部共享缩放样式，表格行为不变。
+- Chrome 中修改/移除根 CSS 临时自定义属性，无手动刷新即可读到新值/空值，期间控制台无新增错误或警告；验证探针已移除。
+- 内置浏览器中 CSS 更新仍出现 stylesheet link `removeChild` 错误和 Fast Refresh 整页回退，目录局部状态会重置；不能将 Chrome 结果扩展为内置浏览器无损热更新通过。框架相关上游记录见 [Next.js CSS 热更新问题](https://github.com/vercel/next.js/issues/74749)，本地 Webpack 的具体异常以实际观察为准。
+- 热刷新另暴露 Tiptap 工具栏在视图未挂载时读取 `editor.view.dom` 的错误；监听器现随 mount/unmount 绑定与释放，独立回归覆盖未挂载和两轮重新挂载，真实选中文本工具栏可用。
+- Web、API、Worker 和媒体服务保持运行；本次未升级框架或修改第三方运行时。
 
 ## 外部依赖
 
