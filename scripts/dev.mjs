@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { setTimeout as delay } from 'node:timers/promises';
 import { prepareDocumentPdf } from '../backend/server/scripts/prepare-document-pdf.mjs';
+import './prepare-rich-content.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 await prepareDocumentPdf();

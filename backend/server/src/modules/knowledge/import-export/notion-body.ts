@@ -26,7 +26,7 @@ export interface NotionReferenceResolver {
   readonly knownAttachment: (reference: string) => boolean;
 }
 
-const MEDIA_BLOCKS = new Set(['image', 'video', 'audio', 'file']);
+const MEDIA_BLOCKS = new Set(['image', 'video', 'audio', 'file', 'pdf']);
 const LINK_MARK = 'link';
 
 export interface NotionFinalizedBody {

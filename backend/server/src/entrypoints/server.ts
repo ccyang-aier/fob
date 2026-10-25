@@ -34,6 +34,7 @@ import { handleKnowledgeMcpOnBun } from '../modules/knowledge/mcp/bun-adapter';
 import { createDocumentPdfRenderer } from '../modules/knowledge/export/pdf';
 import { createOfficePreviewRoutes } from '../modules/knowledge/export/office';
 import { createDocumentPdfRoutes } from '../modules/knowledge/export/http';
+import { createRichContentRoutes } from '../modules/knowledge/rich-content/http';
 import { startFobKnowledgeWorker } from './worker';
 import { createModelCatalogRoutes } from '../modules/models/http';
 import { createModelCatalogRepository } from '../modules/models/repository';
@@ -75,6 +76,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
     ({ knowledgeBaseId, event }) => { events.hub.publish(knowledgeBaseId, event); if (event.type === 'acl.changed' || event.type === 'page.deleted') void revalidateConnections(knowledgeBaseId); }) : undefined;
   const checkpoints = config.roles.includes('collab') ? pageCheckpointExtension({ pool }) : undefined;
   const app = new Hono();
+  app.route('/', createRichContentRoutes({ authenticator, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createModelCatalogRoutes(createModelCatalogRepository(pool), auth.options.trustedOrigins as string[]));
   app.route('/', createOfficePreviewRoutes(auth.options.trustedOrigins as string[]));
   const documentPdf = createDocumentPdfRenderer();

@@ -56,8 +56,8 @@
     "sha256": "833e91a1843e97c854784de27a6e7d65fb3e84362b68414b8ddcd645ea4e4839"
   },
   "src/features/knowledge/local/local-document-editor.instance.test.tsx": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
-    "sha256": "ddf0a2c198033c66702e1570e24879aeb9222c094744460c75853140625628ab"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "6ddda358eb4d3f8fcb16e2602de305f2d29228987cbdeb6a31c378edb6bddb68"
   },
   "src/features/knowledge/local/local-document-editor.tsx": {
     "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
@@ -236,8 +236,8 @@
     "sha256": "6c5610cb2336bd4890692312cd56c65563a64970aafc4a7f435b17158e019163"
   },
   "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "ace0943f2ac57ae3330e3e7fb9e7c51e013e86f10f1e942b67e38d3cc619a33d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "aab041d02307b5167e649257a1833c8741c2be534992ff71cba156d33d7b96ad"
   },
   "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -516,12 +516,12 @@
     "sha256": "ab24ba4a935d3d0875816e1cd2aea27869d88796ded8824028f1c294c6721370"
   },
   "src/features/knowledge/editor/block-modules/embed/embed-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "19120a63f4a13e1e404ddbd99c14fcfbfec6c3c87651bf05a7cfa64a80cdd86f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "7d7ac82e18e61b7ff96cb573378d9196a4aa24fd3d759513468a2c6753924972"
   },
   "src/features/knowledge/editor/block-modules/embed/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "b9412e7004e79653009344a43a8d9456aafcc27f88eef2b37706850e3d212873"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "d162e2cf91a3ed81e7aa9b45f76dac9c62d0831b7e240900b9ce34e378026196"
   },
   "src/features/knowledge/editor/block-modules/file/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
@@ -548,8 +548,8 @@
     "sha256": "033b3fd546e4bfbd80ba58d82facfb33f803d3dccaf474f5c8cdbe9b802d4fc7"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "66d5dd7a1a42e75f05e18e4a6f0aedf27c3634903ca590a08fa39170ca92f14d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "4fa197d10ce2742a34d10f333a5d38db3738d542b9dddd2c1c56e017a78a455f"
   },
   "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -724,8 +724,8 @@
     "sha256": "27c837924aed53e754b0755cd1288a9429217d17fe2c4613db0997255cf733ae"
   },
   "shared/src/knowledge/contracts/index.ts": {
-    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers.",
-    "sha256": "46dbb97c662e20820bf027b0bef1dfddd2c685b5e2f7b646aa42212b897c54f6"
+    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "5d1e21ff2b2bf3a0e9723692d39d4ae2a2d730d8465787b8e313d582f4bec7fc"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
@@ -782,5 +782,65 @@
   "src/features/knowledge/navigation/tree-model.test.ts": {
     "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
     "sha256": "9d5eeca71aa12335885ac0f7c25f6c075d8326b0ceebf302e4a4eea60b71b7c5"
+  },
+  "backend/server/src/modules/knowledge/import-export/body.test.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "569f62d0072acbb10c005cdcda64c68d11e0d4a5e12dd21a4162f582e5875156"
+  },
+  "backend/server/src/modules/knowledge/import-export/body.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "3324134b1b19ca5ada259690d2dbbdea658c1f32dfd20826c4b38ea65372b037"
+  },
+  "backend/server/src/modules/knowledge/import-export/notion-body.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "582bebac7d5863f1cb6d04bfdcc4cdc3cd262d9eb68b7e1d062c058a0cc88735"
+  },
+  "shared/src/knowledge/markdown/block-codecs.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "dad1c0869552126cfd5ec1310c7c8be4e7ddb882b9c10fbd1bf60c8e618093f1"
+  },
+  "shared/src/knowledge/schema/blocks.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "6923cede661a59d0f8adfbba14ec858f7988a212eae505b6b4745588795e9c67"
+  },
+  "shared/src/knowledge/schema/schema.test.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "2a062943a06a1ba707bc5002ea465cacfdfc2663c8a18b6cd580cdd940fb79c0"
+  },
+  "src/features/knowledge/editor/block-modules/index.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "f75df1b9a709ea52870f55ae37012d6bd306f2044ddfd4814d8d5e6f60774343"
+  },
+  "src/features/knowledge/editor/block-modules/media-core/media-block-view.messages.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "991026091d04782afbd96b0a2ab41eb7d37c0fa07abb75718cf0d8896db08750"
+  },
+  "src/features/knowledge/editor/commands/block-labels.messages.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "520e7bf748474a339269ce17dddffe599139b118e5fd59a5372255bf05906136"
+  },
+  "src/features/knowledge/editor/commands/slash-items.test.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "cb08c8632ebaaab5d56bedc49487854569951b33a8ab52bfc4a13f4d489e9bb2"
+  },
+  "src/features/knowledge/editor/commands/slash-paste.instance.test.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "1a19794f69aa6e197f2779210b014555f1fd1d1064e632545aad1758cff1d691"
+  },
+  "src/features/knowledge/editor/commands/slash-paste.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "7ad17a45b0b88fe75bb14caab7f8520f1c26770fa1a12bf11cba8d6219c72699"
+  },
+  "src/features/knowledge/editor/components/document-markdown-export.messages.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "7a2c7db2321fb1024422664c2dbab7d76c9d1641029f89a33fb92284fb83cd55"
+  },
+  "src/features/knowledge/editor/components/document-markdown-export.test.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "7205f8879483be4f327409975e1a5e90e8b736106ebc3692eb66647e1a088826"
+  },
+  "src/features/knowledge/editor/components/document-markdown-export.ts": {
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "412291aaddb02121bdbb5e5a0a1edf90133daecf285c508b4ae46d3661b9d39b"
   }
 }

@@ -72,7 +72,7 @@ describe('slash menu items', () => {
   test('the menu is generated from the registry slash metadata', () => {
     const items = buildSlashItems();
     const expected = KNOWLEDGE_BLOCKS.filter((definition) => definition.slash);
-    expect(new Set(items.map((item) => item.name.replace(/^heading[134]$/, 'heading')))).toEqual(
+    expect(new Set(items.map((item) => item.name === 'bilibili' ? 'embed' : item.name.replace(/^heading[134]$/, 'heading')))).toEqual(
       new Set(expected.map((definition) => definition.name)),
     );
     expect(items.slice(0, 4).map((item) => item.marker)).toEqual(['H1', 'H2', 'H3', 'H4']);
@@ -99,7 +99,7 @@ describe('slash menu items', () => {
       const editor = mountEditor(); // one empty paragraph, caret at its end
       expect(item.run(editor)).toBe(true);
       const names = nodeNames(editor);
-      expect(names).toContain(item.name.startsWith('heading') ? 'heading' : item.name);
+      expect(names).toContain(item.name.startsWith('heading') ? 'heading' : item.name === 'bilibili' ? 'embed' : item.name);
       editor.state.doc.check(); // every insertion leaves a valid document
       editor.destroy();
     }

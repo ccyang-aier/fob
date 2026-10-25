@@ -28,6 +28,7 @@ import { createMarkdownPipeline } from '@fob/shared/knowledge/markdown';
 import type { MarkdownPipeline } from '@fob/shared/knowledge/markdown';
 import { BLOCK_CLIPBOARD_SOURCE_ATTRIBUTE, safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
 import { detectPasteKind } from './markdown-detect';
+import { richContentUrl } from '@fob/shared/knowledge/rich-content';
 import { buildSlashItems, filterSlashItems } from './slash-items';
 import type { SlashMenuItem } from './slash-items';
 
@@ -284,6 +285,15 @@ export function handleClipboardPaste(
   const clipboard = event.clipboardData;
   if (!clipboard) return false;
   const html = clipboard.types.includes('text/html') ? clipboard.getData('text/html') : '';
+  // A standalone URL in an empty paragraph becomes a card with link/embed choices.
+  // Selected text, inline pastes, code blocks and internal clipboard copies keep their semantics.
+  const text = clipboard.types.includes('text/plain') ? clipboard.getData('text/plain') : '';
+  const url = richContentUrl(text);
+  const { selection, schema } = view.state;
+  if (url && (!html || !isInternalClipboard(html)) && selection.empty && selection.$from.depth === 1
+    && selection.$from.parent.type.name === 'paragraph' && !selection.$from.parent.content.size && schema.nodes.linkCard) {
+    if (insertPastedBlocks(view, [schema.nodes.linkCard.create({ url }), schema.nodes.paragraph.create()])) { event.preventDefault(); return true; }
+  }
   if (html) {
     if (isInternalClipboard(html)) return false;
     const nodes = parseClipboardHtml(view.state.schema, html);
@@ -291,7 +301,6 @@ export function handleClipboardPaste(
     event.preventDefault();
     return true;
   }
-  const text = clipboard.types.includes('text/plain') ? clipboard.getData('text/plain') : '';
   if (!text || detectPasteKind(text) !== 'markdown') return false;
   try {
     if (!insertPastedBlocks(view, topLevelChildren(parseMarkdown(text)))) return false;

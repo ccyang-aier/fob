@@ -82,6 +82,14 @@ describe('M03 createVaultResolver: Obsidian target spellings', () => {
 });
 
 describe('M03 importVaultBody: vault syntax to the knowledge document model', () => {
+  test('PDF blocks retain their authorized asset identity through an archive round trip', () => {
+    const document = markdownSchema().nodes.doc.create(null, [markdownSchema().nodes.pdf.create({ src: `asset:${HASH_PDF}`, title: 'report.pdf', blockId: 'pdf' })]);
+    const exported = exportVaultBody(document, exportContext());
+    const roundTrip = createVaultResolver([], [{ path: `_attachments/${HASH_PDF}.pdf`, hash: HASH_PDF, mime: 'application/pdf' }]);
+    const restored = importVaultBody(exported, 'Index', roundTrip);
+    expect(find(restored, 'pdf')[0].attrs.src).toBe(`asset:${HASH_PDF}`);
+    expect(collectAssetReferences(restored)).toEqual([HASH_PDF]);
+  });
   test('wiki links gain pageId by vault resolution; unresolved links keep their target text', () => {
     const document = importVaultBody('参见 [[Projects/roadmap|路线图]]、[[Index]] 与 [[Ghost]]。', 'Index', resolver);
     const links = find(document, 'wikiLink').map((row) => { const { knowledgeBaseId: _target, ...attrs } = row.attrs; return attrs; });

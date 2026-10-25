@@ -17,6 +17,7 @@ import { VideoModule } from './video';
 import { AudioModule } from './audio';
 import { FileModule } from './file';
 import { EmbedModule } from './embed';
+import { RichContentModules } from './rich-content';
 import { BlockReferenceModule } from './block-reference';
 import { PageLinkModule } from './page-link';
 import { DatabaseViewModule } from './database-view';
@@ -41,6 +42,7 @@ export const EDITOR_BLOCK_MODULES: readonly EditorBlockModule[] = [
   AudioModule,
   FileModule,
   EmbedModule,
+  ...RichContentModules,
   BlockReferenceModule,
   PageLinkModule,
   DatabaseViewModule,

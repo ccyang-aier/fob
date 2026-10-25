@@ -4,6 +4,7 @@ import { integerAttribute, nullableObject, nullableString, stringAttribute } fro
 import { defineBlock } from './types';
 import type { BlockDefinition } from './types';
 import { safeKnowledgeUrl } from './urls';
+import { RICH_CONTENT_BLOCKS } from './rich-blocks';
 
 const textBlock = (tag: string): NodeSpec => ({
   content: 'inline*',
@@ -199,10 +200,11 @@ export const KNOWLEDGE_BLOCKS: readonly BlockDefinition[] = Object.freeze([
   }),
   mediaBlock('image', '图片'), mediaBlock('video', '视频'), mediaBlock('audio', '音频'), mediaBlock('file', '文件'),
   defineBlock({
-    name: 'embed', schema: { atom: true, attrs: { url: stringAttribute, title: stringAttribute }, toDOM: (node) => ['div', { 'data-embed': safeKnowledgeUrl(node.attrs.url, 'media') }, node.attrs.title || node.attrs.url] },
+    name: 'embed', schema: { atom: true, attrs: { url: stringAttribute, title: stringAttribute, height: integerAttribute(400, 200, 1200) }, toDOM: (node) => ['div', { 'data-embed': safeKnowledgeUrl(node.attrs.url, 'media') }, node.attrs.title || node.attrs.url] },
     markdown: { fromMd: { directive: 'embed', kind: 'leaf' } }, index: { mode: 'text' },
-    slash: { title: '嵌入', keywords: ['embed', '嵌入'], group: 'media' },
+    slash: { title: '嵌入', keywords: ['embed', '嵌入', 'bilibili', 'b站', '哔哩哔哩', 'youtube', 'vimeo'], group: 'media' },
   }),
+  ...RICH_CONTENT_BLOCKS,
   defineBlock({
     name: 'blockReference', schema: { atom: true, attrs: { knowledgeBaseId: nullableString, pageId: nullableString, targetBlockId: nullableString }, toDOM: (node) => ['div', { 'data-block-reference': node.attrs.targetBlockId }, '块引用'] },
     markdown: { fromMd: { directive: 'block-reference', kind: 'leaf' } }, index: { mode: 'skip' },

@@ -1,0 +1,47 @@
+.root { position:relative; margin:20px 0; border:1px solid var(--resource-card-border); border-radius:8px; background:var(--panel); color:var(--ink); overflow:hidden; }
+.header { display:flex; align-items:center; gap:8px; min-height:38px; padding:4px 10px; border-bottom:var(--separator-width) solid var(--separator-color); }
+.header > svg { flex-shrink:0; color:var(--muted-strong); }
+.title { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+.titleInput { width:100%; min-width:0; padding:3px 5px; border:1px solid transparent; border-radius:4px; background:transparent; color:inherit; font-size:12px; }
+.titleInput:focus { border-color:var(--control-border); outline:none; box-shadow:none; }
+.actions { display:flex; align-items:center; flex-wrap:wrap; gap:3px; }
+.iconButton { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border:0; border-radius:5px; text-decoration:none; color:var(--ink-soft); }
+.action { min-height:28px; padding:3px 8px; border:0; border-radius:5px; font-size:12px; color:var(--ink-soft); text-decoration:none; }
+.body { min-height:0; overflow:auto; position:relative; }
+.resize { position:relative; width:100%; height:8px; }
+.root:fullscreen { width:100vw; height:100dvh; display:flex; flex-direction:column; border:0; border-radius:0; margin:0; }
+.root:fullscreen .body { flex:1; height:auto!important; }
+.root:fullscreen .resize { display:none; }
+.state { display:flex; min-height:140px; height:100%; padding:20px; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap; color:var(--muted-strong); font-size:12px; text-align:center; }
+.error { padding:8px 12px; color:var(--danger, #b4403b); font-size:12px; overflow-wrap:anywhere; }
+.form { display:grid; gap:10px; padding:16px; }
+.form input,.form textarea,.source { width:100%; min-width:0; padding:8px 10px; border:1px solid var(--control-border); border-radius:5px; background:var(--panel); color:var(--ink); outline:none; box-shadow:none; font-size:13px; }
+.form input:focus,.form textarea:focus,.source:focus { border-color:var(--ink-soft); }
+.form input::placeholder,.form textarea::placeholder,.source::placeholder { color:var(--muted); }
+.formActions { display:flex; justify-content:flex-end; gap:6px; }
+.source { display:block; height:100%; min-height:200px; border:0; border-radius:0; resize:none; font-family:var(--font-mono, monospace); line-height:1.6; tab-size:2; }
+.graphic { display:grid; place-items:center; width:100%; height:100%; min-height:160px; padding:16px; overflow:auto; }
+.graphic img { display:block; width:100%; height:100%; max-width:100%; max-height:100%; object-fit:contain; }
+.card { display:flex; min-height:112px; color:inherit; text-decoration:none; }
+.cardText { flex:1; min-width:0; padding:16px; }
+.cardTitle { display:block; font-size:14px; line-height:1.5; font-weight:600; overflow-wrap:anywhere; }
+.description { display:-webkit-box; margin:7px 0!important; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; font-size:12px; line-height:1.6; color:var(--muted-strong); }
+.site { display:block; margin-top:10px; font-size:11px; color:var(--muted-strong); overflow-wrap:anywhere; }
+.cover { width:160px; max-width:30%; object-fit:cover; border-left:1px solid var(--resource-card-border); }
+.footer { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:6px 10px; border-top:var(--separator-width) solid var(--separator-color); font-size:11px; color:var(--muted-strong); }
+.iframe { display:block; width:100%; height:100%; border:0; background:var(--surface-subtle); }
+.embedBody { display:flex; flex-direction:column; height:100%; min-height:0; }
+.embedBody .iframe { flex:1; min-height:0; }
+.embedBody .footer { flex-shrink:0; }
+.pdf { display:flex; flex-direction:column; height:100%; min-height:240px; }
+.pdf:fullscreen { height:100dvh!important; width:100vw; background:var(--panel); }
+.pdfReader { flex:1; min-height:0; position:relative; }
+.pdfTools { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px; padding:5px 8px; border-bottom:var(--separator-width) solid var(--separator-color); }
+.pageInput { width:48px; padding:3px; border:1px solid var(--control-border); border-radius:4px; background:var(--panel); color:inherit; text-align:center; font-size:12px; }
+.pdfTools select { border:1px solid var(--control-border); border-radius:4px; padding:3px; background:var(--panel); color:inherit; font-size:12px; }
+.dialog { position:fixed; inset:0; width:calc(100vw - 40px); max-width:1600px; height:calc(100dvh - 40px); max-height:none; padding:0; margin:auto; border:1px solid var(--control-border); border-radius:10px; background:var(--panel); color:var(--ink); overflow:hidden; }
+.dialog[open] { display:flex; flex-direction:column; }
+.dialog::backdrop { background:rgb(0 0 0 / .35); }
+.dialogHeader { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; padding:8px 12px; border-bottom:var(--separator-width) solid var(--separator-color); font-size:13px; }
+.canvas { flex:1; min-height:0; position:relative; }
+@media (max-width:600px) { .header { flex-wrap:wrap; } .cover { width:96px; } .dialog { width:100vw; height:100dvh; border-radius:0; } .footer { flex-wrap:wrap; } .diagram { display:block; place-items:normal; } .diagram img { margin:0; min-width:480px; max-width:none; } }

@@ -124,6 +124,43 @@ test('editing either local pane updates the other pane without echo writes or er
   );
 });
 
+test('inserting and editing a rich block survives intermediate local echoes in both panes', async () => {
+  const { LocalDocumentEditor } = await import('./local-document-editor');
+  const { buildSlashItems } = await import('../editor/commands/slash-items');
+  const { runSlashItem } = await import('../editor/commands/slash-paste');
+  const store = createLocalLibraryStore({ getItem: () => null, setItem: () => {} });
+  const page = { ...newLocalDocument('rich-base', 'Rich content'), body: { type: 'doc', content: [{ type: 'paragraph', attrs: { blockId: 'trigger' } }] } };
+  store.update(current => ({ ...current, documents: [page] }));
+  function Pane() {
+    const library = useSyncExternalStore(store.subscribe, store.getSnapshot, () => emptyLocalLibrary);
+    return <LocalDocumentEditor knowledgeBaseId="rich-base" store={store} document={library.documents[0]} folderName="" onBack={() => {}} onOpenSidebar={() => {}} onCreateDocument={() => {}} onChange={patch => {
+      store.update(current => ({ ...current, documents: current.documents.map(item => ({ ...item, ...patch })) })); return true;
+    }} />;
+  }
+  await act(async () => { root.render(<AppAlertProvider><Pane /><Pane /></AppAlertProvider>); await new Promise(resolve => setTimeout(resolve, 30)); });
+  const editors = Array.from(document.querySelectorAll('.ProseMirror[aria-label="页面正文"]')) as (HTMLElement & { editor: Editor })[];
+  await act(async () => {
+    const editor = editors[0].editor;
+    editor.view.dispatch(editor.state.tr.insertText('/mermaid', 1));
+    expect(runSlashItem(editor.view, buildSlashItems().find(item => item.name === 'mermaid')!)).toBe(true);
+  });
+  expect(editors[0].editor.state.doc.firstChild?.type.name).toBe('mermaid');
+  expect(editors[1].editor.state.doc.firstChild?.type.name).toBe('mermaid');
+  await act(async () => {
+    const editor = editors[0].editor, node = editor.state.doc.firstChild!;
+    editor.view.dispatch(editor.state.tr.setNodeMarkup(0, undefined, { ...node.attrs, source: 'flowchart LR\n A --> B' }));
+  });
+  expect(editors[0].editor.state.doc.firstChild?.attrs.source).toBe('flowchart LR\n A --> B');
+  expect(editors[1].editor.state.doc.firstChild?.attrs.source).toBe('flowchart LR\n A --> B');
+  expect(store.getSnapshot().documents[0].body.content?.[0].attrs?.source).toBe('flowchart LR\n A --> B');
+  await act(async () => {
+    const editor = editors[0].editor;
+    for (let index = 0; index < 50; index++) editor.view.dispatch(editor.state.tr.setNodeMarkup(0, undefined, { ...editor.state.doc.firstChild!.attrs, source: `flowchart LR\n A --> B${index}` }));
+  });
+  expect(editors[0].editor.state.doc.firstChild?.attrs.source).toBe('flowchart LR\n A --> B49');
+  expect(editors[1].editor.state.doc.firstChild?.attrs.source).toBe('flowchart LR\n A --> B49');
+});
+
 test('local page links and block references retain and open a target in another knowledge base', async () => {
   const { LocalDocumentEditor } = await import('./local-document-editor');
   const store = createLocalLibraryStore({ getItem: () => null, setItem: () => {} });

@@ -78,7 +78,7 @@ export class VaultBodyError extends Error {
 }
 
 const ASSET_SOURCE = /^asset:([a-f0-9]{64})$/;
-const MEDIA_BLOCKS = new Set(['image', 'video', 'audio', 'file']);
+const MEDIA_BLOCKS = new Set(['image', 'video', 'audio', 'file', 'pdf']);
 
 /** 附件扩展名:已知 mime 映射,未知一律 `.bin`(内容寻址文件名保证唯一)。 */
 export function attachmentExtension(mime: string): string {
@@ -229,7 +229,7 @@ function visit(node: MdNode, fromNotePath: string, resolver: VaultBodyResolver):
     return { ...node, attributes };
   }
   // 导出端会把视频/音频/文件块的资产源写成压缩包内附件路径,这里改回 asset:hash。
-  if (node.type === 'leafDirective' && (node.name === 'video' || node.name === 'audio' || node.name === 'file' || node.name === 'image')) {
+  if (node.type === 'leafDirective' && (node.name === 'video' || node.name === 'audio' || node.name === 'file' || node.name === 'image' || node.name === 'pdf')) {
     const attributes = { ...(node.attributes ?? {}) } as Record<string, string>;
     if (typeof attributes.src === 'string' && attributes.src !== '') {
       attributes.src = resolveImageReference(attributes.src, fromNotePath, resolver);

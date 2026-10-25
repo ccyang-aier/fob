@@ -2,6 +2,7 @@ import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
   chooseImageFile: ['请选择图片文件', 'Choose an image file'],
+  choosePdfFile: ['请选择 PDF 文件', 'Choose a PDF file'],
   chooseVideoFile: ['请选择视频文件', 'Choose a video file'],
   chooseAudioFile: ['请选择音频文件', 'Choose an audio file'],
   file: ['文件', 'File'],

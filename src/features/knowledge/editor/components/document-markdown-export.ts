@@ -33,6 +33,8 @@ const label = (node: ProseMirrorNode) =>
           audio: knowledgeT('audio'),
           file: knowledgeT('attachment'),
           embed: knowledgeT('embeddedContent'),
+          linkCard: knowledgeT('embeddedContent'),
+          pdf: 'PDF',
         } as Record<string, string>
       )[node.type.name] ||
       knowledgeT('image'),
@@ -179,6 +181,10 @@ function htmlBlock(node: ProseMirrorNode): string {
       return `<pre><code>${html(node.textContent)}</code></pre>`;
     case 'math':
       return `<p>${html(`$$${node.attrs.latex}$$`)}</p>`;
+    case 'mermaid':
+      return `<pre><code class="language-mermaid">${html(String(node.attrs.source || ''))}</code></pre>`;
+    case 'whiteboard':
+      return `<figure><figcaption>${html(String(node.attrs.title || knowledgeT('whiteboard')))}</figcaption><pre><code>${html(String(node.attrs.scene || ''))}</code></pre></figure>`;
     case 'horizontalRule':
       return '<hr>';
     case 'table':
@@ -195,6 +201,8 @@ function htmlBlock(node: ProseMirrorNode): string {
     case 'video':
     case 'audio':
     case 'file':
+    case 'pdf':
+    case 'linkCard':
     case 'embed': {
       const url = destination(node.attrs.src ?? node.attrs.url);
       const content = url
@@ -308,6 +316,16 @@ function block(node: ProseMirrorNode): string {
     }
     case 'math':
       return `$$\n${node.attrs.latex}\n$$`;
+    case 'mermaid': {
+      const source = String(node.attrs.source || '');
+      const fence = '`'.repeat(Math.max(3, ...Array.from(source.matchAll(/`+/g), match => match[0].length + 1)));
+      return `${fence}mermaid\n${source}\n${fence}`;
+    }
+    case 'whiteboard': {
+      const source = String(node.attrs.scene || '');
+      const fence = '`'.repeat(Math.max(3, ...Array.from(source.matchAll(/`+/g), match => match[0].length + 1)));
+      return `${text(String(node.attrs.title || knowledgeT('whiteboard')))}\n\n${fence}excalidraw\n${source || '{"elements":[],"appState":{},"files":{}}'}\n${fence}`;
+    }
     case 'horizontalRule':
       return '---';
     case 'table':
@@ -316,6 +334,8 @@ function block(node: ProseMirrorNode): string {
     case 'video':
     case 'audio':
     case 'file':
+    case 'pdf':
+    case 'linkCard':
     case 'embed': {
       const url = destination(node.attrs.src ?? node.attrs.url);
       const name = text(

@@ -12,6 +12,7 @@ import {
   Paperclip,
   PencilSimple,
   Video,
+  FilePdf,
 } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
@@ -22,7 +23,7 @@ import { useAssetUploads } from '../../../assets/use-asset-uploads';
 import { takeInsertedMedia } from './insert-media';
 import styles from './media-block.module.css';
 
-export type MediaKind = 'image' | 'video' | 'audio' | 'file';
+export type MediaKind = 'image' | 'video' | 'audio' | 'file' | 'pdf';
 export interface ResolvedMedia {
   url: string;
   name: string;
@@ -37,6 +38,7 @@ function LABELS(locale?: Locale): Record<MediaKind, string> {
     video: knowledgeT('video'),
     audio: knowledgeT('audio'),
     file: knowledgeT('file'),
+    pdf: 'PDF',
   };
 }
 const ACCEPT: Record<MediaKind, string> = {
@@ -44,6 +46,7 @@ const ACCEPT: Record<MediaKind, string> = {
   video: 'video/*',
   audio: 'audio/*',
   file: '*',
+  pdf: 'application/pdf,.pdf',
 };
 
 function useResolvedMedia(source: string, localKnowledgeBaseId?: string, knowledgeBaseId?: string) {
@@ -131,12 +134,14 @@ export function MediaBlockView({
   localKnowledgeBaseId,
   knowledgeBaseId,
   renderPreview,
+  children,
   ...props
 }: NodeViewProps & {
   kind: MediaKind;
   localKnowledgeBaseId?: string;
   knowledgeBaseId?: string;
   renderPreview: (source: ResolvedMedia) => ReactNode;
+  children?: ReactNode;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -167,10 +172,10 @@ export function MediaBlockView({
         setError({ key: 'documentIsNotConnectedToAssetStorage' });
         return;
       }
-      if (kind !== 'file' && !file.type.startsWith(kind + '/')) {
+      if (kind === 'pdf' ? file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name) : kind !== 'file' && !file.type.startsWith(kind + '/')) {
         setError({
           key:
-            kind === 'image'
+            kind === 'pdf' ? 'choosePdfFile' : kind === 'image'
               ? 'chooseImageFile'
               : kind === 'video'
                 ? 'chooseVideoFile'
@@ -219,7 +224,7 @@ export function MediaBlockView({
     <NodeViewWrapper
       as="figure"
       {...HTMLAttributes}
-      data-fob-node={kind}
+      data-fob-node={node.type.name}
       data-kind={kind}
       data-block-id={node.attrs.blockId}
       data-empty={String(!source)}
@@ -349,6 +354,7 @@ export function MediaBlockView({
           </button>
         </div>
       )}
+      {children}
       {source && (editor.isEditable || caption) && (
         <figcaption className={styles.caption} contentEditable={false}>
           {editor.isEditable ? (
@@ -367,6 +373,6 @@ export function MediaBlockView({
   );
 }
 function IconForMedia({ kind }: { kind: MediaKind }) {
-  const Icon = { image: ImageIcon, video: Video, audio: MusicNotes, file: Paperclip }[kind];
+  const Icon = { image: ImageIcon, video: Video, audio: MusicNotes, file: Paperclip, pdf: FilePdf }[kind];
   return <Icon size={16} aria-hidden />;
 }

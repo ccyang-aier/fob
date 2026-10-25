@@ -226,6 +226,18 @@ describe('slash menu', () => {
 });
 
 describe('clipboard paste', () => {
+  slowTest('a standalone URL becomes a card with identity; inline and code pastes stay ordinary text', () => {
+    const editor = mountEditor();
+    expect(pastePayload(editor, { 'text/plain': 'https://example.com/article' }).handled).toBe(true);
+    expect(blockTypes(editor)).toEqual(['linkCard', 'paragraph']);
+    expect(editor.state.doc.firstChild?.attrs.url).toBe('https://example.com/article');
+    assertMintedBlockIds(editor);
+    editor.commands.setContent('<p>Context </p>'); editor.commands.focus('end');
+    expect(pastePayload(editor, { 'text/plain': 'https://example.com/article' }).handled).toBe(false);
+    editor.commands.setContent('<pre><code></code></pre>'); editor.commands.focus('end');
+    expect(pastePayload(editor, { 'text/plain': 'https://example.com/article' }).handled).toBe(false);
+    editor.destroy();
+  });
   slowTest('markdown plain text lands as heading + bulletList blocks with fresh blockIds', () => {
     const editor = mountEditor();
     const paste = pastePayload(editor, { 'text/plain': '# 标题\n\n- 甲\n- 乙' });

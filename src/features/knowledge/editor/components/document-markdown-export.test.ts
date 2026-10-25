@@ -17,6 +17,15 @@ const parse = (markdown: string) => createMarkdownPipeline().parse(markdown);
 const render = (markdown: string) => renderToStaticMarkup(createElement(ReactMarkdown, null, markdown));
 
 describe('public Markdown export', () => {
+  it('preserves editable diagrams, whiteboard scene bytes, PDF labels and link card sources', () => {
+    const scene = '{"elements":[],"appState":{},"files":{}}';
+    const markdown = exportBody(node('mermaid', { source: 'flowchart LR\n A --> B' }), node('whiteboard', { scene, title: 'Workshop' }), node('pdf', { src: 'https://example.com/report.pdf', title: 'Report PDF' }), node('linkCard', { url: 'https://example.com/article', title: 'Article' }));
+    const restored = parse(markdown);
+    assert.ok(restored.content.content.some(block => block.type.name === 'mermaid' && block.attrs.source === 'flowchart LR\n A --> B'));
+    assert.ok(restored.content.content.some(block => block.type.name === 'whiteboard' && block.attrs.scene === scene));
+    assert.match(markdown, /Report PDF.*https:\/\/example.com\/report.pdf/);
+    assert.match(markdown, /Article.*https:\/\/example.com\/article/);
+  });
   it('exports ordinary Markdown rather than private identities, attributes or directives', () => {
     const source = doc(node('heading', { level: 2, blockId: 'heading_id' }, [text('设计概述')]), paragraph('正文 *不是斜体* &copy;'), node('codeBlock', { theme: 'dark', lineNumbers: false, language: 'ts' }, [text('const result = 1;')]));
     const markdown = exportDocumentMarkdown(source, '设计 [一]');

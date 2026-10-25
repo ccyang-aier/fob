@@ -1,156 +1,39 @@
 'use client';
 
-import { useUiMessage } from '../../../ui-message';
-import { useTranslation } from '@/lib/i18n';
-import { knowledgeMessages } from './embed-node-view.messages';
 import { useState } from 'react';
-import { ArrowSquareOut, Globe, LinkSimple, PencilSimple } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
-import { NodeViewWrapper } from '@tiptap/react';
-import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
-import styles from './embed.module.css';
+import { Globe, ArrowSquareOut, PencilSimple } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/lib/i18n';
+import { resolveEmbedTarget, richContentUrl } from '@fob/shared/knowledge/rich-content';
+import { RichBlockFrame } from '../rich-content/rich-block-frame';
+import { richMessages } from '../rich-content/messages';
+import styles from '../rich-content/rich-content.module.css';
 
-function previewUrl(value: string): string | null {
-  const safe = safeKnowledgeUrl(value, 'media');
-  if (!safe || !/^https?:\/\//i.test(safe)) return null;
-  const url = new URL(safe);
-  const hostname = url.hostname.replace(/^www\./, '');
-  if (hostname === 'youtube.com' || hostname === 'm.youtube.com') {
-    const id = url.pathname.startsWith('/shorts/')
-      ? url.pathname.split('/')[2]
-      : url.searchParams.get('v');
-    if (id && /^[\w-]{11}$/.test(id)) return `https://www.youtube-nocookie.com/embed/${id}`;
-  }
-  if (hostname === 'youtu.be') {
-    const id = url.pathname.slice(1);
-    if (/^[\w-]{11}$/.test(id)) return `https://www.youtube-nocookie.com/embed/${id}`;
-  }
-  if (hostname === 'vimeo.com') {
-    const id = url.pathname.split('/').filter(Boolean)[0];
-    if (id && /^\d+$/.test(id)) return `https://player.vimeo.com/video/${id}`;
-  }
-  return safe;
-}
-
-export function EmbedNodeView({ node, editor, updateAttributes, HTMLAttributes }: NodeViewProps) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-
-  const source = String(node.attrs.url || '');
-  const title = String(node.attrs.title || knowledgeT('webEmbed'));
-  const preview = previewUrl(source);
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(source);
-  const [error, setError] = useUiMessage(knowledgeMessages, '');
-
-  const save = () => {
-    const safe = previewUrl(draft);
-    if (!safe) {
-      setError({ key: 'enterACompleteHttpOrHttpsUrl' });
-      return;
-    }
-    updateAttributes({ url: draft.trim(), title: node.attrs.title || new URL(draft).hostname });
-    setError('');
-    setEditing(false);
-  };
-
-  return (
-    <NodeViewWrapper
-      as="div"
-      {...HTMLAttributes}
-      data-fob-node="embed"
-      data-block-id={node.attrs.blockId}
-      className={styles.root}
-    >
-      <div className={styles.header} contentEditable={false}>
-        <span className={styles.title}>
-          <Globe aria-hidden size={16} />
-          {title}
-        </span>
-        <span className={styles.actions}>
-          {preview ? (
-            <a
-              href={source}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={knowledgeT('openOriginalPage')}
-              aria-label={knowledgeT('openOriginalPage')}
-            >
-              <ArrowSquareOut aria-hidden size={16} />
-            </a>
-          ) : null}
-          {editor.isEditable && source ? (
-            <button
-              type="button"
-              title={knowledgeT('editEmbed')}
-              aria-label={knowledgeT('editEmbed')}
-              onClick={() => {
-                setDraft(source);
-                setEditing(true);
-              }}
-            >
-              <PencilSimple aria-hidden size={16} />
-            </button>
-          ) : null}
-        </span>
-      </div>
-      {preview && !editing ? (
-        <div className={styles.preview} contentEditable={false}>
-          <iframe
-            title={title}
-            src={preview}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            sandbox="allow-scripts allow-forms allow-popups allow-presentation"
-            allowFullScreen
-          />
-        </div>
-      ) : null}
-      {(!source || editing) && editor.isEditable ? (
-        <div className={styles.setup} contentEditable={false} data-document-export-omit>
-          <span className={styles.setupIcon}>
-            <LinkSimple aria-hidden size={22} />
-          </span>
-          <strong>{knowledgeT('embedWebpage')}</strong>
-          <p>{knowledgeT('supportsWebpageYoutubeAndVimeoLinks')}</p>
-          <input
-            aria-label={knowledgeT('embedTitle')}
-            value={String(node.attrs.title || '')}
-            placeholder={knowledgeT('titleOptional')}
-            onChange={(event) => updateAttributes({ title: event.target.value })}
-          />
-          <div className={styles.urlRow}>
-            <input
-              type="url"
-              aria-label={knowledgeT('embedUrl')}
-              value={draft}
-              placeholder="https://…"
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') save();
-              }}
-            />
-            <button type="button" onClick={save}>
-              {knowledgeT('embed')}
-            </button>
-          </div>
-          {error ? (
-            <span role="alert" className={styles.error}>
-              {error}
-            </span>
-          ) : null}
-          {editing ? (
-            <button type="button" className={styles.cancel} onClick={() => setEditing(false)}>
-              {knowledgeT('cancel')}
-            </button>
-          ) : null}
-        </div>
-      ) : null}
-      {preview && !editing ? (
-        <div className={styles.footer} contentEditable={false}>
-          <span>{new URL(source).hostname}</span>
-          <span>{knowledgeT('ifEmbeddingIsDeniedOpenTheOriginalPage')}</span>
-        </div>
-      ) : null}
-    </NodeViewWrapper>
-  );
+export function EmbedNodeView(props: NodeViewProps) {
+  const { t } = useTranslation(richMessages);
+  const source = richContentUrl(props.node.attrs.url), target = resolveEmbedTarget(source);
+  const [editing, setEditing] = useState(!source);
+  const [draft, setDraft] = useState(String(props.node.attrs.url || ''));
+  const [invalid, setInvalid] = useState(false), [failed, setFailed] = useState(false), [attempt, setAttempt] = useState(0);
+  return <RichBlockFrame props={props} icon={Globe} title={target?.provider === 'bilibili' ? t('bilibili') : t('embedTitle')} actions={<>
+    {source && <a className={`fob-action ${styles.iconButton}`} data-surface="plain" href={source} target="_blank" rel="noopener noreferrer" aria-label={t('open')} title={t('open')}><ArrowSquareOut size={16} aria-hidden /></a>}
+    {source && props.editor.isEditable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" aria-label={t('edit')} title={t('edit')} onClick={() => { setDraft(source); setEditing(value => !value); }}><PencilSimple size={16} aria-hidden /></button>}
+  </>}>
+    {editing && props.editor.isEditable ? <form className={styles.form} data-document-export-omit onSubmit={event => {
+      event.preventDefault(); const safe = richContentUrl(draft);
+      if (!safe) { setInvalid(true); return; }
+      props.updateAttributes({ url: safe }); setInvalid(false); setFailed(false); setEditing(false);
+    }}>
+      <input aria-label={t('url')} type="url" placeholder="https://…" value={draft} onChange={event => setDraft(event.target.value)} required />
+      <span className={styles.site}>{t('embedHint')}</span>
+      {invalid && <span className={styles.error} role="alert">{t('invalidUrl')}</span>}
+      <div className={styles.formActions}>{source && <Button type="button" size="sm" variant="ghost" onClick={() => setEditing(false)}>{t('cancel')}</Button>}<Button type="submit" size="sm">{t('embed')}</Button></div>
+    </form> : target ? <div className={styles.embedBody}>
+      {failed && <div className={styles.error} role="alert">{t('embedFailed')} <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => { setFailed(false); setAttempt(value => value + 1); }}>{t('retry')}</button></div>}
+      <iframe key={`${target.url}:${attempt}`} className={styles.iframe} title={String(props.node.attrs.title || (target.provider === 'bilibili' ? t('bilibili') : t('embedTitle')))} src={target.url} loading="lazy" referrerPolicy="strict-origin-when-cross-origin"
+        sandbox={`allow-scripts allow-forms allow-popups allow-presentation${target.provider === 'web' ? '' : ' allow-same-origin'}`} allow="fullscreen; picture-in-picture; encrypted-media" onError={() => setFailed(true)} />
+      <div className={styles.footer} data-document-export-omit><span>{new URL(target.url).hostname}</span><span>{t('embedUnavailable')}</span></div>
+    </div> : <div className={styles.state}>{t('invalidUrl')}</div>}
+  </RichBlockFrame>;
 }

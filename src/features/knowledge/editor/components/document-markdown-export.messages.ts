@@ -4,6 +4,8 @@ export const knowledgeMessages = defineMessages({
   video: ['视频', 'Video'],
   audio: ['音频', 'Audio'],
   attachment: ['附件', 'Attachment'],
+  whiteboard: ['白板', 'Whiteboard'],
+  mermaid: ['Mermaid 图表', 'Mermaid diagram'],
   embeddedContent: ['嵌入内容', 'Embedded content'],
   image: ['图片', 'Image'],
   pageLink: ['页面链接', 'Page link'],

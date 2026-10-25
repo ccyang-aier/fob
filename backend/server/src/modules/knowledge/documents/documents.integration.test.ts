@@ -130,15 +130,15 @@ describe('document sharing, permissions, history and statistics over real HTTP a
     await fixture.admin.query('UPDATE resources.document_invitation SET expires_at=now()-interval \'1 second\' WHERE knowledge_base_id=$1 AND id=$2', [root.knowledgeBaseId, expired.invitationId]);
     expect((await request('/api/document-invitations/accept', fixture.reader, expired)).status).toBe(404);
   });
-  test('document guests cannot probe unrelated attachments, upload without edit access, or revoke library assets', async () => {
+  test.each(['file', 'pdf'])('document guests cannot probe unrelated %s attachments, upload without edit access, or revoke library assets', async (kind) => {
     const { root } = await tree();
     const invitation = await (await request(`${base(root)}/invitations`, fixture.owner, { email: fixture.foreign.identity.email, level: 'view' })).json();
     expect((await request('/api/document-invitations/accept', fixture.foreign, invitation)).status).toBe(200);
-    const ownHash = 'a'.repeat(64), unrelatedHash = 'b'.repeat(64);
+    const ownHash = (kind === 'pdf' ? 'c' : 'a').repeat(64), unrelatedHash = (kind === 'pdf' ? 'd' : 'b').repeat(64);
     const storage = createKnowledgeAssetStorage({ endpoint: 'http://127.0.0.1:59000', region: 'us-east-1', bucket: 'fob-knowledge', accessKeyId: 'testing', secretAccessKey: 'testing' });
     await withKnowledgeBase(fixture.pool, root.knowledgeBaseId, async db => {
       await db.insert(asset).values([ownHash, unrelatedHash].map(hash => ({ knowledgeBaseId: root.knowledgeBaseId, hash, mime: 'text/plain', size: 12 })));
-      const encoded = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node('file', { src: `asset:${ownHash}`, name: 'allowed.txt' })]));
+      const encoded = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node(kind, { src: `asset:${ownHash}`, title: kind === 'pdf' ? 'allowed.pdf' : 'allowed.txt' })]));
       try { await db.insert(docState).values({ ...root, state: encoded.state, stateVector: encoded.stateVector }); }
       finally { encoded.ydoc.destroy(); }
     });
