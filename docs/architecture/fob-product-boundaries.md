@@ -123,6 +123,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 - 前端静态导出，由 Nginx 提供页面并反代 API/WebSocket；业务服务、作业 worker 和 Python 媒体服务分别运行。
 - `dev:init` 初始化开发环境，`dev:all` 保持源码热更新服务常驻。默认开发端口为 Web 3001、API/协作/MCP 8721、PostgreSQL 55433、Redis 56380、S3 59010/59011、媒体 8920。
+- `media:dev` 单独启动 Python 媒体服务，监听 `media_worker/` 的 Python 源码并自动重启；Windows 后台会话由 Node 监听器回收本次启动的 Python 进程树，再拉起新进程。媒体子进程只接收媒体配置与必要的系统环境，认证 token 和下载 origin 来自当前 Fob 配置。
 - 生产部署使用 `Dockerfile.web`、`Dockerfile.server`、媒体镜像、`compose.production.yaml` 及数据库、队列与存储初始化工具；配置 HTTPS Web/S3 origin、非超级用户运行角色和认证与存储密钥。
 
 ### 验收要求

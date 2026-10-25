@@ -32,7 +32,7 @@ pnpm dev:all
 
 开发服务日志位于 `.runtime/dev/`。`FOB_DEV_WORKER=1` 启动作业消费者；完整媒体解析仍需单独启动 Python 服务，真实 AI 功能仍需配置模型。访客可直接创建浏览器本地知识库；新产品初始不包含 Fouc 用户账号或知识内容。
 
-媒体服务在 `services/media-worker` 中建立自己的 `.venv`，安装该目录 `requirements.txt`（运行）或 `requirements-dev.txt`（测试）后，从仓库根目录运行 `pnpm media:dev`。启动适配只传递媒体配置，复用当前 Fob 的 token 与 S3 origin，不把数据库或模型密钥传入媒体子进程；Windows 的 WSL 存储地址也随当前配置使用。
+媒体服务在 `services/media-worker` 中建立自己的 `.venv`，安装该目录 `requirements.txt`（运行）或 `requirements-dev.txt`（测试）后，从仓库根目录运行 `pnpm media:dev`。该命令监听 `media_worker/` 下的 Python 源码并自动重启服务，Windows 后台开发会话也支持重载。启动适配只传递媒体配置，复用当前 Fob 的 token 与 S3 origin，不把数据库或模型密钥传入媒体子进程；Windows 的 WSL 存储地址也随当前配置使用。
 
 邮箱验证未配置 SMTP 时，验证链接只写入 Fob 自己的服务日志。正式使用应设置 SMTP 和对应 OAuth 应用；注册、登录、密码恢复等复用原身份实现，Cookie 使用 `fob` 前缀。
 
