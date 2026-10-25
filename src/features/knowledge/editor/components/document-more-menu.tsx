@@ -4,6 +4,10 @@ import { useUiMessage } from '../../ui-message';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-more-menu.messages';
 import { useRef, useState } from 'react';
+import { ChartBar } from '@/components/icons';
+import { DocumentShareDialog } from '../../sharing/document-share-dialog';
+import { DocumentStatisticsDialog } from '../../sharing/document-statistics-dialog';
+import { messages as collaborationMessages } from '../../sharing/collaboration.messages';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/core';
 import {
@@ -92,6 +96,9 @@ export function DocumentMoreMenu({
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const navigation = useDocumentNavigation();
+  const { t: collaborationT } = useTranslation(collaborationMessages);
+  const [permissionsOpen, setPermissionsOpen] = useState(false);
+  const [statisticsOpen, setStatisticsOpen] = useState(false);
   const { notify } = useAppAlert();
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -219,9 +226,13 @@ export function DocumentMoreMenu({
               onToggleStar={onToggleStar}
             />
             <SubscriptionMenuItem target={{ knowledgeBaseId: actions.target.knowledgeBaseId, pageId: actions.target.pageId }} source={actions.target.source} className={styles.item} />
-            <ReservedItem icon={<LockSimple aria-hidden />}>
+            <DropdownMenuItem className={styles.item} onSelect={() => setPermissionsOpen(true)}>
+              <LockSimple aria-hidden />
               {knowledgeT('permissions')}
-            </ReservedItem>
+            </DropdownMenuItem>
+            <DropdownMenuItem className={styles.item} disabled={actions.target.source !== 'server'} onSelect={() => setStatisticsOpen(true)}>
+              <ChartBar aria-hidden size={16} />{collaborationT('statistics')}
+            </DropdownMenuItem>
             <DropdownMenuItem className={styles.item} disabled={!editor?.isEditable} onSelect={() => setTemplateOpen(true)}><SquaresFour aria-hidden />{knowledgeT('createTemplate')}</DropdownMenuItem>
             {actions.onComments ? (
               <DropdownMenuItem className={styles.item} onSelect={actions.onComments}>
@@ -347,6 +358,8 @@ export function DocumentMoreMenu({
         </DropdownMenuContent>
       </DropdownMenu>
       {templateOpen && <SaveTemplateDialog sourcePageId={actions.target.pageId} title={title} getBody={() => editor?.getJSON()} onClose={() => setTemplateOpen(false)} />}
+      {permissionsOpen && <DocumentShareDialog title={title} target={actions.target} onClose={() => setPermissionsOpen(false)} settings />}
+      {statisticsOpen && <DocumentStatisticsDialog scope={actions.target} onClose={() => setStatisticsOpen(false)} />}
       <ModalDialog
         open={confirmDelete}
         width="w-[min(440px,calc(100vw-32px))]"

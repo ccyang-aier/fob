@@ -60,6 +60,8 @@ export function usePageMetadata(scope: PageScope) {
     loaded: Boolean(page),
     fetchError: pages.isError || (pages.isSuccess && !page),
     updatedAt: page?.updatedAt,
+    createdAt: page?.createdAt,
+    createdBy: page?.createdBy,
     icon: page?.icon,
     saveIcon: async (icon: string | null) => {
       if (!page) throw new Error('Page metadata unavailable');

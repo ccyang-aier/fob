@@ -4,12 +4,15 @@ import type { PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
 import type { KnowledgeRequestAuthenticator, KnowledgeRequestContext } from '../access';
 import { authorizePageAccess } from '../permissions';
+import { authUser } from '../../../platform/database/identity/schema';
+import { eq } from 'drizzle-orm';
 import { parsePageDocument } from '@fob/shared/knowledge/collaboration';
 
 export interface PageCollaborationContext {
   authority: KnowledgeRequestContext;
   pageId: string;
   level: PermissionLevel;
+  profile?: { id: string; name: string; image: string | null };
 }
 
 /** Indistinguishable rejection for missing, fenced and unauthorized pages. */
@@ -36,12 +39,15 @@ export function pageCollaborationExtension(deps: { authenticator: KnowledgeReque
       const scope = parsePageDocument(data.documentName);
       if (!scope) throw new PageCollaborationRejected();
       const authority = await deps.authenticator.authenticate(data.request, scope.knowledgeBaseId, ['read']);
-      const decision = await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, (db) =>
-        authorizePageAccess(db, { userId: authority.userId, scope, required: 'view' }));
+      const { decision, profile } = await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
+        const decision = await authorizePageAccess(db, { userId: authority.userId, scope, required: 'view' });
+        const [profile] = await db.select({ id: authUser.id, name: authUser.name, image: authUser.image }).from(authUser).where(eq(authUser.id, authority.userId));
+        return { decision, profile };
+      });
       if (decision.decision !== 'allow') throw new PageCollaborationRejected();
       data.connectionConfig.isAuthenticated = true;
       data.connectionConfig.readOnly = !writable.includes(decision.level) || !authority.scopes.includes('write');
-      return { authority, pageId: scope.pageId, level: decision.level };
+      return { authority, pageId: scope.pageId, level: decision.level, profile };
     },
   };
 }

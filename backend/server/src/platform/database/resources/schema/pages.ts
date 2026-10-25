@@ -85,6 +85,7 @@ export const docCheckpoint = resourcesNamespace.table('doc_checkpoint', {
   stateVector: bytea('state_vector').notNull(),
   authors: uuid('authors').array().notNull().default(sql`ARRAY[]::uuid[]`),
   label: varchar('label', { length: 200 }),
+  title: varchar('title', { length: 500 }),
   createdAt: instant('created_at').notNull().defaultNow(),
 }, (table) => [
   primaryKey({ columns: [table.knowledgeBaseId, table.id] }),

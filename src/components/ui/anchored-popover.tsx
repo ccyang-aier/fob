@@ -9,9 +9,10 @@ import styles from './anchored-popover.module.css';
 export type PopoverAnchor = HTMLElement | { left: number; top: number; right: number; bottom: number; width?: number; height?: number };
 
 /** A non-modal surface for small, anchored forms and context menus. */
-export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', role = 'dialog', className, restoreFocusTo }: {
+export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', role = 'dialog', className, restoreFocusTo, autoFocus = true, onMouseEnter, onMouseLeave }: {
   anchor: PopoverAnchor; onClose: () => void; label: string; children: ReactNode;
-  width?: number; align?: 'start' | 'end'; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
+  width?: number | 'max-content'; align?: 'start' | 'end'; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
+  autoFocus?: boolean; onMouseEnter?: () => void; onMouseLeave?: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -34,7 +35,7 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
     window.addEventListener('resize', position);
     window.addEventListener('scroll', position, true);
     const focus = panel.querySelector<HTMLElement>('[data-autofocus], [autofocus], [role^="menuitem"]:not([disabled])');
-    (focus ?? panel).focus({ preventScroll: true });
+    if (autoFocus) (focus ?? panel).focus({ preventScroll: true });
     return () => {
       observer.disconnect();
       window.removeEventListener('resize', position);
@@ -42,7 +43,7 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
       const trigger = restoreFocusTo ?? (anchor instanceof HTMLElement ? anchor : null);
       if (trigger?.isConnected && (panel.contains(document.activeElement) || document.activeElement === document.body)) trigger.focus({ preventScroll: true });
     };
-  }, [anchor, align, restoreFocusTo]);
+  }, [anchor, align, restoreFocusTo, autoFocus]);
 
   useEffect(() => {
     function pointerDown(event: Event) {
@@ -61,7 +62,7 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
   }, [anchor, onClose, restoreFocusTo]);
 
   return createPortal(<div ref={panelRef} role={role} aria-label={label} tabIndex={-1} data-density={role === 'menu' ? 'compact' : undefined} className={cn(styles.popover, role === 'menu' && 'menu-surface', className)}
-    style={{ width, visibility: 'hidden' }} onKeyDown={event => {
+    style={{ width, visibility: 'hidden' }} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onKeyDown={event => {
       if (role !== 'menu' || !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
       const items = [...event.currentTarget.querySelectorAll<HTMLElement>('[role^="menuitem"]:not([disabled]):not([aria-disabled="true"])')];
       if (!items.length) return;

@@ -12,3 +12,4 @@ export * from './ai';
 export * from './ai-tasks';
 export * from './agent-tools';
 export * from './pat';
+export * from './document-collaboration';

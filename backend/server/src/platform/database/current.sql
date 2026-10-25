@@ -248,6 +248,7 @@ CREATE TABLE "resources"."doc_checkpoint" (
 	"state_vector" "bytea" NOT NULL,
 	"authors" uuid[] DEFAULT ARRAY[]::uuid[] NOT NULL,
 	"label" varchar(200),
+	"title" varchar(500),
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "doc_checkpoint_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id")
 );
@@ -259,6 +260,32 @@ CREATE TABLE "resources"."doc_state" (
 	"state_vector" "bytea" NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "doc_state_knowledge_base_id_page_id_pk" PRIMARY KEY("knowledge_base_id","page_id")
+);
+
+CREATE TABLE "resources"."document_invitation" (
+	"knowledge_base_id" uuid NOT NULL,
+	"id" uuid NOT NULL,
+	"page_id" uuid NOT NULL,
+	"email" varchar(320) NOT NULL,
+	"token_hash" varchar(64) NOT NULL,
+	"level" "resources"."permission_level" DEFAULT 'view' NOT NULL,
+	"invited_by" uuid NOT NULL,
+	"expires_at" timestamp with time zone NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"accepted_at" timestamp with time zone,
+	"revoked_at" timestamp with time zone,
+	CONSTRAINT "document_invitation_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "document_invitation_token_valid" CHECK ("resources"."document_invitation"."token_hash" ~ '^[a-f0-9]{64}$')
+);
+
+CREATE TABLE "resources"."document_visit" (
+	"knowledge_base_id" uuid NOT NULL,
+	"page_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"views" integer DEFAULT 1 NOT NULL,
+	"last_viewed_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "document_visit_knowledge_base_id_page_id_user_id_pk" PRIMARY KEY("knowledge_base_id","page_id","user_id"),
+	CONSTRAINT "document_visit_views_positive" CHECK ("resources"."document_visit"."views" > 0)
 );
 
 CREATE TABLE "resources"."group" (
@@ -462,6 +489,7 @@ CREATE TABLE "resources"."share_link" (
 	"page_id" uuid NOT NULL,
 	"token_hash" varchar(64) NOT NULL,
 	"level" "resources"."permission_level" DEFAULT 'view' NOT NULL,
+	"encrypted_token" "bytea",
 	"created_by" uuid NOT NULL,
 	"expires_at" timestamp with time zone,
 	"revoked_at" timestamp with time zone,
@@ -524,6 +552,10 @@ ALTER TABLE "resources"."comment_thread" ADD CONSTRAINT "comment_thread_page_fk"
 ALTER TABLE "resources"."database_definition" ADD CONSTRAINT "database_definition_page_fk" FOREIGN KEY ("knowledge_base_id","teamspace_id","page_id","page_kind") REFERENCES "resources"."page"("knowledge_base_id","teamspace_id","id","kind") ON DELETE cascade ON UPDATE cascade;
 ALTER TABLE "resources"."doc_checkpoint" ADD CONSTRAINT "doc_checkpoint_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."doc_state" ADD CONSTRAINT "doc_state_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_visit" ADD CONSTRAINT "document_visit_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_visit" ADD CONSTRAINT "document_visit_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."group" ADD CONSTRAINT "group_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."group_member" ADD CONSTRAINT "group_member_group_fk" FOREIGN KEY ("knowledge_base_id","group_id") REFERENCES "resources"."group"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."group_member" ADD CONSTRAINT "group_member_membership_fk" FOREIGN KEY ("knowledge_base_id","user_id") REFERENCES "resources"."knowledge_base_member"("knowledge_base_id","user_id") ON DELETE cascade ON UPDATE no action;
@@ -574,6 +606,7 @@ CREATE INDEX "comment_thread_time_idx" ON "resources"."comment" USING btree ("kn
 CREATE INDEX "comment_author_idx" ON "resources"."comment" USING btree ("author_id");
 CREATE INDEX "comment_thread_page_idx" ON "resources"."comment_thread" USING btree ("knowledge_base_id","page_id","status");
 CREATE INDEX "doc_checkpoint_page_time_idx" ON "resources"."doc_checkpoint" USING btree ("knowledge_base_id","page_id","created_at");
+CREATE INDEX "document_invitation_page_idx" ON "resources"."document_invitation" USING btree ("knowledge_base_id","page_id");
 CREATE INDEX "group_member_user_idx" ON "resources"."group_member" USING btree ("knowledge_base_id","user_id");
 CREATE UNIQUE INDEX "knowledge_base_invitation_pending_email_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","email") WHERE "resources"."knowledge_base_invitation"."accepted_at" IS NULL AND "resources"."knowledge_base_invitation"."revoked_at" IS NULL;
 CREATE INDEX "knowledge_base_invitation_expiry_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","expires_at");

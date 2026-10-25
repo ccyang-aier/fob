@@ -53,6 +53,7 @@ export interface AwarenessIdentity {
   userId: string;
   name: string;
   image?: string | null;
+  timezone?: string;
 }
 
 /** One end of a cursor payload; either relative-position JSON or a blockId string. */
@@ -82,6 +83,7 @@ export function buildLocalAwarenessState(
     cursor,
     selection,
     isEditing,
+    ...(identity.timezone ? { timezone: identity.timezone } : {}),
   };
 }
 
@@ -93,6 +95,7 @@ export interface AwarenessMember {
   kind: 'human' | 'agent';
   isEditing: boolean;
   taskId?: string;
+  timezone?: string;
 }
 
 /** The same light validity check every reader applies before trusting a state. */
@@ -126,6 +129,7 @@ export function readAwarenessMembers(
       color: state.color,
       kind: state.kind,
       isEditing: state.isEditing === true,
+      timezone: typeof state.timezone === 'string' ? state.timezone : undefined,
     };
     if (typeof state.taskId === 'string') member.taskId = state.taskId;
     // Human identity is the account, not the tab. Agent tasks remain separate
@@ -347,6 +351,7 @@ export function createAwarenessPublisher(
   let view: EditorView | null = null;
   let scheduled = false;
   let lastEditAt = 0;
+  let idleTimer: ReturnType<typeof setTimeout> | undefined;
   const onFocusChange = () => {
     if (view) notify();
   };
@@ -379,8 +384,8 @@ export function createAwarenessPublisher(
       }
     }
     const selection = cursor !== null && !view.state.selection.empty ? { ...cursor } : null;
-    const isEditing = view.hasFocus() || Date.now() - lastEditAt < RECENT_EDIT_MS;
-    awareness.setLocalState(buildLocalAwarenessState(identity, cursor, selection, isEditing));
+    const isEditing = view.editable && (view.hasFocus() || Date.now() - lastEditAt < RECENT_EDIT_MS);
+    awareness.setLocalState(buildLocalAwarenessState({ ...identity, timezone: identity.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone }, cursor, selection, isEditing));
   };
 
   const schedule = () => {
@@ -390,7 +395,11 @@ export function createAwarenessPublisher(
   };
 
   const notify = (options?: { docChanged?: boolean }) => {
-    if (options?.docChanged) lastEditAt = Date.now();
+    if (options?.docChanged) {
+      lastEditAt = Date.now();
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(schedule, RECENT_EDIT_MS + 10);
+    }
     schedule();
   };
 
@@ -399,6 +408,7 @@ export function createAwarenessPublisher(
     view.dom.removeEventListener('focusin', onFocusChange);
     view.dom.removeEventListener('focusout', onFocusChange);
     view = null;
+    clearTimeout(idleTimer);
     scheduled = false;
     awareness.setLocalState(null);
   };

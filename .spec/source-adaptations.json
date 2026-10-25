@@ -28,8 +28,8 @@
     "sha256": "b9d17b8aebd95991c464e761985f5aa3b4b8dd6f43b2238c1f024f636ab03642"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
-    "sha256": "298a3744c637c2ddc631ea0cb32e57885f83cc285aee8b8bcda598ecbc72a71e"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail.",
+    "sha256": "ad594cb514f9f2201be1ae1463aa6052188086fec72619678904bfc07e60f804"
   },
   "src/features/knowledge/knowledge-base-header.messages.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -244,16 +244,16 @@
     "sha256": "4a9309d8b6ad225e5c4a59a9b2edeb0413c29876d06fd504f8c09baff98996bc"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "38715a9d61e4bcbe7b907aa9e3eaa67c74790bacec5514c016180ff5b7672e3a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls.",
+    "sha256": "023d365f73741c52cc2a62b3bc2d9aba9d08d4f1f55ad148488fdf9aa5c3e0fd"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
-    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
-    "sha256": "5e388444f3779ea93d13927ddaca47ddfa1dfe18a1025a678759d261e2a263de"
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder.",
+    "sha256": "150aa4d3b8975fecacbf2126822bea568919044062bb578fb10f41ea827b163d"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "d1c13eca5e7566209245d19b24c929314512bd7df15b62c8db8c5ceba024dd10"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu.",
+    "sha256": "9cb5cba5af8bd0520f8b048a88c0ab7dd827695219034badcdd923e3661e218e"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -320,12 +320,12 @@
     "sha256": "6e2cf6fd90658d1324cdffe6d5d7306e934ee0bbf390164dcd00e4608dcb38a1"
   },
   "backend/server/src/modules/knowledge/assets/service.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "c94c58e1ae4e25b7e01df71f8f90b5319bf8f3008da903c13ee7cdc819230ee1"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Keep document-only guests from probing unrelated library assets, uploading without page edit access or revoking shared assets.",
+    "sha256": "717b290b12d665d0bbc4c656d4a04bcceceeeb9f03393f277badd6b8f18000a8"
   },
   "backend/server/src/modules/knowledge/collaboration/page-collaboration-server.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "843e24c625e43b7ac5253852f9658707a31cea663917919bf6405b62725c9717"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Verify awareness identities and ownership; revalidate live sessions and permissions during sync and after permission changes.",
+    "sha256": "c94dfff62cdd776b670e78e23270b5dfbdfc4e0d846307e32165f01276c9083a"
   },
   "backend/server/src/modules/knowledge/notifications/service.integration.test.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
@@ -452,8 +452,8 @@
     "sha256": "80304e040f73db355bc13e1ced4f9b308ccc4935805d17fe3059b973ca0d2c4c"
   },
   "src/features/knowledge/editor/awareness/awareness-members.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "3bb2f29579fa6aedb4fcd83e5f987645ce2242afae33e15142b46af2c8388a56"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Render deduplicated live members and verified role, local time and activity in individual profile cards.",
+    "sha256": "dbe79ffdbf044af471608e2fa94e26572be4b2a93e00a688b5a001aae81624bb"
   },
   "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -632,8 +632,8 @@
     "sha256": "92bdceb5186b0868da4b449d1e21e8e2da6d4e194eb9b85956b3de90a86e4b41"
   },
   "src/features/knowledge/history/history-panel.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "24fa38545da6a1b7c85017f4771a85e5e329dcb88a2a556197fa1aa36b9f52fe"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Implement the reference history controls with version timeline, preview, difference highlighting, naming and confirmed restoration.",
+    "sha256": "b6d85995e82930100fc5eb1c52a0e07c390572949343c2d1b338caaa5f70f9fe"
   },
   "src/features/knowledge/knowledge-empty-state.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -664,8 +664,8 @@
     "sha256": "57528a6ef3376621c525a4de1ee7cecef7c8cad6b9cc8b15da38e2f1a444b08a"
   },
   "src/features/knowledge/sharing/document-share-dialog.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "ae60705c4a025ec14afcdf9911616c59a682b0a3a924c1a9af6d7d81f0dd47c0"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the copy-only stub with Outline-style sharing, real user/group grants, bound-email invitations, inheritance and revocable publication.",
+    "sha256": "9a3a86f1a2f8da52b1f24d1e45909188c3c9a95ef39492c7e17562509e8b3bf5"
   },
   "src/features/companion/companion-action-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -678,5 +678,53 @@
   "src/features/companion/companion-tool-button.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "535d9d02c4d81c527e075f0d7aad45a6a5f3328865aa63cbeea5f90cd21479c1"
+  },
+  "src/features/knowledge/collaboration/awareness.ts": {
+    "reason": "Publish actual editing state and time zone with idle cleanup for the reference member profile card.",
+    "sha256": "36015638dff0c2bfb2d7d62ce1791d020f8c934754b0aec556e6331d875e5217"
+  },
+  "src/features/knowledge/editor/awareness/awareness-members.module.css": {
+    "reason": "Reproduce Outline presence avatar and profile-card dimensions, colors, typography and shadow.",
+    "sha256": "310c998d9ece843b6575105491efe336fccc26cf92cb17db5d8ad5a6949ce410"
+  },
+  "src/features/knowledge/editor/use-page-metadata.ts": {
+    "reason": "Expose persisted creation metadata for accurate editor attribution.",
+    "sha256": "bf420deb4b35774cc476438adc64a7a48f799e4189f03a51c00fef486161db23"
+  },
+  "src/features/knowledge/history/history-api.ts": {
+    "reason": "Add abortable version pagination, author metadata, comparison and durable server restoration.",
+    "sha256": "8b9f2318eb807b02367f0d8953eddd4ae0fefbe7928bfdb58c8750152d9dbcd0"
+  },
+  "backend/server/src/modules/knowledge/api/checkpoint-routes.ts": {
+    "reason": "Authorize and expose scoped history pagination, comparison and durable live restoration with session revalidation.",
+    "sha256": "7e0a0d1a7d48516e47730d814b236d13a52d559647dd7bdf61ab525cfd07468a"
+  },
+  "backend/server/src/modules/knowledge/collaboration/checkpoints.ts": {
+    "reason": "Capture titles and deletion sets, preserve accurate authors, and save safety snapshots before durable live restoration.",
+    "sha256": "873553451acfced9766036890fdf22a73bd96e7d44d9308fdcc17ec900f9cffe"
+  },
+  "backend/server/src/modules/knowledge/collaboration/history.ts": {
+    "reason": "Read scope-bound cursor pages with authors and titles, including valid empty document previews.",
+    "sha256": "7282ac89f2bd2afddd881d7d559d804bb63f41a16f531251776f43d9fd0da8cf"
+  },
+  "backend/server/src/modules/knowledge/collaboration/page-collaboration.ts": {
+    "reason": "Load profile data from the verified collaboration identity and knowledge-base membership.",
+    "sha256": "9182276d6b2c522dd22e2c9190edf81ab449016137853d8da69c1e838f211443"
+  },
+  "backend/server/src/modules/knowledge/permissions/effective.test.ts": {
+    "reason": "Verify document guests require explicit user or group grants while regular members retain library defaults.",
+    "sha256": "b26af07f29afca2933d5d73479636f99427b8fdff9f79fa92e4c0e0d3f0fa517"
+  },
+  "backend/server/src/modules/knowledge/permissions/effective.ts": {
+    "reason": "Exclude document guests from knowledge-base default principals so invitations grant only authorized pages.",
+    "sha256": "76f964ba48fae8a17b00b65887164e3ad6418b6883ba2782acf2197bbab3a921"
+  },
+  "shared/src/knowledge/contracts/events.ts": {
+    "reason": "Allow validated IANA time-zone presence for member local-time display.",
+    "sha256": "27c837924aed53e754b0755cd1288a9429217d17fe2c4613db0997255cf733ae"
+  },
+  "shared/src/knowledge/contracts/index.ts": {
+    "reason": "Export strict document collaboration, publication, invitation and statistics contracts.",
+    "sha256": "587b7af855ff5026a1cd16286370aeca41a0d3654fe40a25a63e0246853fc646"
   }
 }

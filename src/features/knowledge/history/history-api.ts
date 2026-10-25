@@ -20,6 +20,8 @@ export interface PageCheckpointEntry {
   label: string | null;
   authors: string[];
   createdAt: string;
+  title?: string | null;
+  authorDetails?: { id: string; name: string; image: string | null }[];
 }
 
 export interface PageCheckpointPreview extends PageCheckpointEntry {
@@ -57,6 +59,8 @@ export function parseCheckpointList(body: unknown): PageCheckpointEntry[] {
         label: entry.label as string | null,
         authors: entry.authors as string[],
         createdAt: entry.createdAt,
+        ...(typeof entry.title === 'string' || entry.title === null ? { title: entry.title } : {}),
+        ...(Array.isArray(entry.authorDetails) ? { authorDetails: entry.authorDetails.filter((person): person is { id: string; name: string; image: string | null } => isRecord(person) && typeof person.id === 'string' && typeof person.name === 'string' && (person.image === null || typeof person.image === 'string')) } : {}),
       },
     ];
   });
@@ -67,13 +71,14 @@ export function createHistoryApi(
 ) {
   async function request<T>(
     path: string,
-    init: { method?: 'GET' | 'POST'; body?: unknown } = {},
+    init: { method?: 'GET' | 'POST'; body?: unknown; signal?: AbortSignal } = {},
   ): Promise<T> {
     const { origin } = await deps.resolveOrigin();
     const response = await deps.fetchImpl(`${origin}${path}`, {
       method: init.method ?? 'GET',
       credentials: 'include',
       cache: 'no-store',
+      signal: init.signal,
       headers: init.body === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });
@@ -102,23 +107,31 @@ export function createHistoryApi(
   const base = (knowledgeBaseId: string, pageId: string) =>
     `/api/knowledge/${knowledgeBaseId}/pages/${pageId}/checkpoints`;
   return {
-    list(knowledgeBaseId: string, pageId: string): Promise<{ checkpoints: PageCheckpointEntry[] }> {
-      return request<unknown>(base(knowledgeBaseId, pageId)).then((payload) => ({
+    list(knowledgeBaseId: string, pageId: string, cursor?: string): Promise<{ checkpoints: PageCheckpointEntry[]; nextCursor: string | null }> {
+      return request<unknown>(`${base(knowledgeBaseId, pageId)}${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`).then((payload) => ({
         checkpoints: parseCheckpointList(payload),
+        nextCursor: isRecord(payload) && typeof payload.nextCursor === 'string' ? payload.nextCursor : null,
       }));
     },
     preview(
       knowledgeBaseId: string,
       pageId: string,
       checkpointId: string,
+      signal?: AbortSignal,
     ): Promise<PageCheckpointPreview> {
-      return request<PageCheckpointPreview>(`${base(knowledgeBaseId, pageId)}/${checkpointId}`);
+      return request<PageCheckpointPreview>(`${base(knowledgeBaseId, pageId)}/${checkpointId}`, { signal });
     },
     name(knowledgeBaseId: string, pageId: string, label: string): Promise<NamedCheckpointResult> {
       return request<NamedCheckpointResult>(base(knowledgeBaseId, pageId), {
         method: 'POST',
         body: { label },
       });
+    },
+    compare(knowledgeBaseId: string, pageId: string, checkpointId: string, reference: string, signal?: AbortSignal) {
+      return request<{ differences: import('@fob/shared/knowledge/document-insights').DocumentDifference[]; beforeTitle: string | null; afterTitle: string | null }>(`${base(knowledgeBaseId, pageId)}/${checkpointId}/compare?with=${encodeURIComponent(reference)}`, { signal });
+    },
+    restore(knowledgeBaseId: string, pageId: string, checkpointId: string) {
+      return request<{ restored: true; checkpointId: string; safetyCheckpointId: string }>(`${base(knowledgeBaseId, pageId)}/${checkpointId}/restore`, { method: 'POST', body: {} });
     },
   };
 }

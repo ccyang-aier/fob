@@ -2,7 +2,8 @@
 
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
 
-import { formatDate, useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
+import { formatRelativeTime } from '@/lib/relative-time';
 import { knowledgeMessages } from './editor-surface.messages';
 /**
  * The editor surface of one page (E03): the Tiptap instance bound to the
@@ -49,11 +50,13 @@ import {
 } from './comments-integration';
 import { usePageMetadata } from './use-page-metadata';
 import { useSidebarCollections } from '../navigation/sidebar-collections';
-import { TaskProgress } from './block-modules/task-list/task-progress';
 import { recycleKnowledgePage } from '../data/pages-api';
 import { knowledgeQueryKeys } from '../data/query-keys';
 import { useDocumentReference } from './document-reference';
 import { useEditorLocale } from './use-editor-locale';
+import { useDocumentSharing, collaborationRequest, mutationReply } from '../sharing/collaboration-api';
+import { messages as collaborationMessages } from '../sharing/collaboration.messages';
+import historyStyles from '../history/history-panel.module.css';
 
 export function PageEditorSurface({
   scope,
@@ -88,6 +91,7 @@ export function PageEditorSurface({
   canCreateDocument: boolean;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: collaborationT } = useTranslation(collaborationMessages);
 
   const fixedPane = Boolean(useDocumentReference()?.fixed);
   const document = session.document;
@@ -167,16 +171,20 @@ export function PageEditorSurface({
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const collaboration = useDocumentSharing(scope);
+  useEffect(() => {
+    if (!navigationActive) return;
+    const controller = new AbortController();
+    void collaborationRequest({ knowledgeBaseId: scope.knowledgeBaseId, pageId: scope.pageId }, '/visits', mutationReply, {}, controller.signal).catch(() => {});
+    return () => controller.abort();
+  }, [scope.knowledgeBaseId, scope.pageId, navigationActive]);
   const queryClient = useQueryClient();
   const { collections, toggleStar } = useSidebarCollections(user?.id ?? '', scope.knowledgeBaseId);
   const pageTitle = usePageMetadata(scope);
-  const updatedLabel = pageTitle.updatedAt
-    ? knowledgeT('youUpdatedValue', {
-        v0: formatDate(
-          pageTitle.updatedAt,
-          { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' },
-          locale,
-        ),
+  const updatedLabel = pageTitle.createdAt
+    ? collaborationT(pageTitle.createdBy === user?.id ? 'createdByYou' : 'createdByPerson', {
+        time: formatRelativeTime(Date.parse(pageTitle.createdAt), locale),
+        name: collaboration.data?.people.find(person => person.id === pageTitle.createdBy)?.name ?? collaborationT('member'),
       })
     : knowledgeT('document');
 
@@ -200,7 +208,7 @@ export function PageEditorSurface({
         >
           <PageReviewRail editor={editor} editable={view.editable} />
           {historyOpen && (
-            <aside className="flex h-full w-[320px] shrink-0 flex-col border-l border-[var(--line)] bg-[var(--panel)]">
+            <aside className={historyStyles.rail}>
               <HistoryPanel
                 knowledgeBaseId={scope.knowledgeBaseId}
                 pageId={scope.pageId}
@@ -229,6 +237,8 @@ export function PageEditorSurface({
               <AwarenessMembers
                 awareness={session.awareness}
                 identity={{ userId: user.id, name: user.name, image: user.image }}
+                people={collaboration.data?.people}
+                connected={['synced', 'syncing'].includes(view.sync.badge)}
               />
             ) : undefined
           }
@@ -286,16 +296,7 @@ export function PageEditorSurface({
             metadata={
               <>
                 <span>{updatedLabel}</span>
-                <TaskProgress editor={editor} />
-                <SyncIndicator view={view.sync} />
-                <span>
-                  {level === 'view'
-                    ? knowledgeT('viewOnly')
-                    : level === 'comment'
-                      ? knowledgeT('canComment')
-                      : knowledgeT('canEdit')}
-                </span>
-                <span>{knowledgeT('viewed')}</span>
+                {view.sync.badge !== 'synced' && <SyncIndicator view={view.sync} />}
                 <PageCommentsTrigger
                   scope={scope}
                   open={commentsOpen}

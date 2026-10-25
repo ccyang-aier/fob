@@ -109,6 +109,7 @@ export const shareLink = resourcesNamespace.table('share_link', {
   pageId: uuid('page_id').notNull(),
   tokenHash: varchar('token_hash', { length: 64 }).notNull(),
   level: permissionLevel('level').notNull().default('view'),
+  encryptedToken: bytea('encrypted_token'),
   createdBy: uuid('created_by').notNull().references(() => authUser.id),
   expiresAt: instant('expires_at'),
   revokedAt: instant('revoked_at'),

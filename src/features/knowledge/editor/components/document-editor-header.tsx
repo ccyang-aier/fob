@@ -2,16 +2,10 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-editor-header.messages';
-import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/react';
-import { List, Plus, ShareNetwork } from '@/components/icons';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { List, Plus } from '@/components/icons';
+import { DocumentShareButton } from '../../sharing/document-share-dialog';
 import { DocumentMoreMenu, type DocumentMenuActions } from './document-more-menu';
 import { DocumentStarButton } from './document-star-button';
 import { useDocumentNavigation } from '../document-tools';
@@ -25,7 +19,6 @@ export function DocumentEditorHeader({
   onToggleStar,
   onCreateDocument,
   canCreateDocument = true,
-  shareDescription,
   menuActions,
   presence,
   pdfNavigation,
@@ -47,17 +40,6 @@ export function DocumentEditorHeader({
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const navigation = useDocumentNavigation();
-  const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
-  const copyContent = async () => {
-    try {
-      await navigator.clipboard.writeText(
-        `${title || knowledgeT('untitledDocument')}\n\n${editor?.getText() ?? ''}`,
-      );
-      setCopyState('copied');
-    } catch {
-      setCopyState('failed');
-    }
-  };
 
   return (
     <header className={styles.header}>
@@ -93,41 +75,7 @@ export function DocumentEditorHeader({
             </span>
           )}
         </span>
-        <DropdownMenu
-          onOpenChange={(open) => {
-            if (open) setCopyState('idle');
-          }}
-        >
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              aria-label={knowledgeT('share')}
-              className={`${styles.outlineButton} ${styles.shareButton}`}
-            >
-              <ShareNetwork aria-hidden size={16} />
-              <span className={styles.shareLabel}>{knowledgeT('share')}</span>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className={styles.shareMenu}>
-            <div className={styles.shareTitle}>{knowledgeT('shareDocument')}</div>
-            <p className={styles.shareDescription}>{shareDescription}</p>
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault();
-                void copyContent();
-              }}
-            >
-              {knowledgeT('copyTitleAndContent')}
-            </DropdownMenuItem>
-            {copyState !== 'idle' ? (
-              <p role="status" className={styles.shareStatus} data-status={copyState}>
-                {copyState === 'copied'
-                  ? knowledgeT('copiedToClipboard')
-                  : knowledgeT('unableToCopyCheckBrowserPermissions')}
-              </p>
-            ) : null}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DocumentShareButton target={menuActions.target} className={`${styles.outlineButton} ${styles.shareButton}`} />
         <button
           type="button"
           aria-label={knowledgeT('newDocument')}

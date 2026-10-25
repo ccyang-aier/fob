@@ -1,201 +1,87 @@
 'use client';
-
-import { useTranslation } from '@/lib/i18n';
-import { knowledgeMessages } from './awareness-members.messages';
-
-/**
- * The online-members bar of the page header (B07): a compact avatar stack of
- * unique accounts and agent tasks, plus the current user. The dropdown
- * exposes names and live editing status without crowding the document.
- */
-
-import { useCallback, useSyncExternalStore } from 'react';
-import { Sparkle } from '@/components/icons';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { Clock, Eye, PencilSimple, Sparkle } from '@/components/icons';
+import type { DocumentPerson } from '@fob/shared/knowledge/contracts';
 import type { Awareness } from 'y-protocols/awareness';
+import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { UserAvatar } from '@/components/user-avatar';
 import { awarenessColorFor, readAwarenessMembers } from '../../collaboration/awareness';
 import type { AwarenessIdentity, AwarenessMember } from '../../collaboration/awareness';
+import { knowledgeMessages } from './awareness-members.messages';
+import { messages } from '../../sharing/collaboration.messages';
 import styles from './awareness-members.module.css';
 
-interface AwarenessMembersSnapshot {
-  members: AwarenessMember[];
-  ownClientId: number;
-}
-
+interface AwarenessMembersSnapshot { members: AwarenessMember[]; ownClientId: number }
 const emptySnapshot: AwarenessMembersSnapshot = { members: [], ownClientId: 0 };
-
-/**
- * Cached snapshots per awareness instance: `useSyncExternalStore` requires a
- * stable value until the store reports a change, and the awareness is that
- * store (the 'change' event covers additions, updates and removals).
- */
 const snapshotCache = new WeakMap<Awareness, AwarenessMembersSnapshot>();
-
 function awarenessSnapshot(awareness: Awareness): AwarenessMembersSnapshot {
   const cached = snapshotCache.get(awareness);
   if (cached) return cached;
-  const snapshot: AwarenessMembersSnapshot = {
-    members: readAwarenessMembers(awareness, awareness.clientID),
-    ownClientId: awareness.clientID,
-  };
-  snapshotCache.set(awareness, snapshot);
-  return snapshot;
+  const snapshot = { members: readAwarenessMembers(awareness, awareness.clientID), ownClientId: awareness.clientID };
+  snapshotCache.set(awareness, snapshot); return snapshot;
 }
-
-/** Live members of one page session's awareness; empty while there is none. */
 export function useAwarenessMembers(awareness: Awareness | null): AwarenessMembersSnapshot {
-  const subscribe = useCallback(
-    (notify: () => void) => {
-      if (!awareness) return () => {};
-      snapshotCache.delete(awareness);
-      const onChange = () => {
-        snapshotCache.delete(awareness);
-        notify();
-      };
-      awareness.on('change', onChange);
-      return () => {
-        awareness.off('change', onChange);
-      };
-    },
-    [awareness],
-  );
-  const getSnapshot = useCallback(
-    () => (awareness ? awarenessSnapshot(awareness) : emptySnapshot),
-    [awareness],
-  );
+  const subscribe = useCallback((notify: () => void) => {
+    if (!awareness) return () => {};
+    snapshotCache.delete(awareness);
+    const onChange = () => { snapshotCache.delete(awareness); notify(); };
+    awareness.on('change', onChange);
+    return () => awareness.off('change', onChange);
+  }, [awareness]);
+  const getSnapshot = useCallback(() => awareness ? awarenessSnapshot(awareness) : emptySnapshot, [awareness]);
   return useSyncExternalStore(subscribe, getSnapshot, () => emptySnapshot);
 }
-
 const MAX_VISIBLE = 3;
-
-function memberKey(member: AwarenessMember): string {
-  return JSON.stringify([
-    member.kind,
-    member.user.id,
-    member.kind === 'agent' ? (member.taskId ?? member.clientId) : null,
-  ]);
+function memberKey(member: AwarenessMember) { return `${member.kind}:${member.user.id}:${member.taskId ?? ''}`; }
+function Avatar({ member, large = false }: { member: AwarenessMember; large?: boolean }) {
+  const { t } = useTranslation(messages);
+  return <span className={cn(styles.avatar, large && styles.largeAvatar)} title={`${member.user.name} · ${t(member.isEditing ? 'editing' : 'online')}`}>
+    <UserAvatar name={member.user.name} image={member.user.image} className="size-full" />
+    {member.kind === 'agent' && <span className={styles.agentBadge}><Sparkle size={9} /></span>}
+  </span>;
 }
-
-function MemberAvatar({ member, large = false }: { member: AwarenessMember; large?: boolean }) {
-  const { t } = useTranslation(knowledgeMessages);
-  const image = member.user.image;
-  return (
-    <span
-      title={`${member.user.name} · ${t(member.isEditing ? 'editing' : 'online')}`}
-      className={cn(styles.avatar, large && styles.largeAvatar)}
-    >
-      <UserAvatar name={member.user.name} image={image} className="size-full" />
-      {member.kind === 'agent' && (
-        <span aria-hidden className={styles.agentBadge}>
-          <Sparkle aria-hidden size={9} />
-        </span>
-      )}
-    </span>
-  );
+function Profile({ member, person, own, connected }: { member: AwarenessMember; person?: DocumentPerson; own: boolean; connected: boolean }) {
+  const { t, locale } = useTranslation(messages), [now, setNow] = useState(() => new Date());
+  useEffect(() => { const timer = setInterval(() => setNow(new Date()), 60_000); return () => clearInterval(timer); }, []);
+  let time: string | null = null;
+  try { if (member.timezone) time = new Intl.DateTimeFormat(locale, { timeZone: member.timezone, hour: '2-digit', minute: '2-digit', hour12: false }).format(now); } catch { /* Invalid remote zones are omitted. */ }
+  const verified = person ? { ...member, user: { ...member.user, name: person.name, image: person.image } } : member;
+  return <>
+    <div className={styles.profileHeading}><Avatar member={verified} large /><div className={styles.profileIdentity}>
+      <div className={styles.profileName}><strong>{verified.user.name}</strong>{person && (person.role === 'owner' || person.role === 'admin' || person.role === 'guest') && <span className={styles.roleBadge}>{t(person.role === 'owner' ? 'admin' : person.role)}</span>}</div>
+      <p>{t(connected ? 'online' : 'connecting')}</p>
+    </div></div>
+    <div className={styles.divider} />
+    {time && <div className={styles.infoRow}><Clock size={18} />{t('localTime', { time })}</div>}
+    <div className={styles.infoRow}>{member.isEditing ? <PencilSimple size={18} /> : <Eye size={18} />}{t(member.isEditing ? 'editing' : 'viewing')}{own ? ` (${t('you')})` : ''}</div>
+  </>;
 }
-
-/** One unified header stack, with a keyboard-accessible live member list. */
-export function AwarenessMembers({
-  awareness,
-  identity,
-}: {
-  awareness: Awareness | null;
-  identity: AwarenessIdentity;
-}) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-
+export function AwarenessMembers({ awareness, identity, people = [], connected = Boolean(awareness) }: { awareness: Awareness | null; identity: AwarenessIdentity; people?: DocumentPerson[]; connected?: boolean }) {
+  const { t } = useTranslation(knowledgeMessages), { t: copy } = useTranslation(messages);
   const { members } = useAwarenessMembers(awareness);
-  const own: AwarenessMember = {
-    clientId: awareness?.clientID ?? 0,
-    user: { id: identity.userId, name: identity.name, image: identity.image },
-    color: awarenessColorFor(identity.userId),
-    kind: 'human',
-    isEditing: false,
-  };
-  const participants = [
-    own,
-    ...members.filter((member) => member.kind !== 'human' || member.user.id !== identity.userId),
-  ];
-  const visible = participants.slice(0, MAX_VISIBLE);
-  const overflow = participants.length - visible.length;
-  const label = awareness
-    ? knowledgeT(participants.length === 1 ? 'oneMemberOnline' : 'valueMembersOnline', {
-        v0: participants.length,
-      })
-    : knowledgeT('currentDocumentMembers');
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          aria-label={label}
-          title={knowledgeT('viewDocumentMembers')}
-          className={styles.trigger}
-        >
-          <span aria-hidden className={styles.stack}>
-            {visible.map((member) => (
-              <MemberAvatar key={memberKey(member)} member={member} />
-            ))}
-            {overflow > 0 ? (
-              <span
-                className={styles.overflow}
-                title={knowledgeT(
-                  overflow === 1 ? 'oneMoreMemberOnline' : 'valueMoreMembersOnline',
-                  { v0: overflow },
-                )}
-              >
-                {overflow > 99 ? '99+' : `+${overflow}`}
-              </span>
-            ) : null}
-          </span>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={9}
-        className={styles.menu}
-        aria-label={knowledgeT('documentMembers')}
-      >
-        <div className={styles.menuHeading}>
-          <span>{knowledgeT('documentMembers')}</span>
-          <span className={styles.total}>{participants.length}</span>
-        </div>
-        <div className={styles.members}>
-          {participants.map((member, index) => (
-            <DropdownMenuItem
-              key={memberKey(member)}
-              className={styles.memberRow}
-              onSelect={(event) => event.preventDefault()}
-            >
-              <MemberAvatar member={member} large />
-              <span className={styles.memberInfo}>
-                <span className={styles.memberName}>
-                  <span className={styles.name}>{member.user.name}</span>
-                  {index === 0 ? <span className={styles.you}>{knowledgeT('you')}</span> : null}
-                  {member.kind === 'agent' ? (
-                    <span className={styles.agentLabel}>{knowledgeT('ai')}</span>
-                  ) : null}
-                </span>
-                <span className={cn(styles.memberStatus, member.isEditing && styles.editing)}>
-                  <span aria-hidden className={styles.statusDot} />
-                  {index === 0
-                    ? knowledgeT('currentDocument')
-                    : member.isEditing
-                      ? knowledgeT('editing')
-                      : knowledgeT('viewing')}
-                </span>
-              </span>
-            </DropdownMenuItem>
-          ))}
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  const [card, setCard] = useState<{ anchor: HTMLElement; member: AwarenessMember; overflow?: boolean } | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const own: AwarenessMember = { clientId: awareness?.clientID ?? 0, user: { id: identity.userId, name: identity.name, image: identity.image },
+    color: awarenessColorFor(identity.userId), kind: 'human', isEditing: awareness?.getLocalState()?.isEditing === true,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+  const participants = [own, ...members.filter(member => member.kind !== 'human' || member.user.id !== identity.userId)];
+  const visible = participants.slice(0, MAX_VISIBLE), overflow = participants.length - visible.length;
+  const label = awareness ? t(participants.length === 1 ? 'oneMemberOnline' : 'valueMembersOnline', { v0: participants.length }) : t('currentDocumentMembers');
+  const close = () => { clearTimeout(timer.current); setCard(null); };
+  const liveMember = card ? participants.find(member => memberKey(member) === memberKey(card.member)) : undefined;
+  return <span className={styles.stack} role="group" aria-label={label}>
+    {visible.map((member, index) => <button key={memberKey(member)} type="button" className={styles.trigger} aria-label={index === 0 ? label : member.user.name}
+      title={t('viewDocumentMembers')} aria-expanded={card?.member.user.id === member.user.id} onClick={event => { clearTimeout(timer.current); setCard(card?.member.user.id === member.user.id ? null : { anchor: event.currentTarget, member }); }}
+      onMouseEnter={event => { clearTimeout(timer.current); const anchor = event.currentTarget; timer.current = setTimeout(() => setCard({ anchor, member }), 500); }}
+      onMouseLeave={() => { clearTimeout(timer.current); timer.current = setTimeout(() => setCard(null), 150); }}><Avatar member={member} /></button>)}
+    {overflow > 0 && <button className={styles.overflow} title={t(overflow === 1 ? 'oneMoreMemberOnline' : 'valueMoreMembersOnline', { v0: overflow })} onClick={event => setCard({ anchor: event.currentTarget, member: own, overflow: true })}>+{overflow}</button>}
+    {card && liveMember && <AnchoredPopover anchor={card.anchor} onClose={close} label={card.overflow ? t('documentMembers') : liveMember.user.name} width={card.overflow ? 264 : 'max-content'} align="end" className={styles.profile} autoFocus={false}
+      onMouseEnter={() => clearTimeout(timer.current)} onMouseLeave={() => { timer.current = setTimeout(() => setCard(null), 150); }}>
+      {card.overflow ? <div className={styles.memberList}>{participants.map(member => <button key={memberKey(member)} className={`fob-action ${styles.memberRow}`} onClick={() => setCard({ ...card, member, overflow: false })}><Avatar member={member} /><span>{member.user.name}<small>{copy(member.isEditing ? 'editing' : 'viewing')}</small></span></button>)}</div>
+        : <Profile member={liveMember} person={people.find(person => person.id === liveMember.user.id)} own={liveMember.user.id === identity.userId} connected={connected} />}
+    </AnchoredPopover>}
+  </span>;
 }

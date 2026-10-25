@@ -35,10 +35,11 @@ test('breaking inheritance cuts ancestor and teamspace grants, and descendants i
   assert.deepEqual(compute([node(uid(5), null)], null), { view: [], comment: [], edit: [], full: [] });
 });
 
-test('only authenticated membership contributes group/knowledgeBase principals; links stay isolated', () => {
+test('guests receive explicit user/group grants while regular members receive knowledgeBase defaults', () => {
   const member = { knowledgeBaseId, userId, role: 'guest' as const };
   const principals = expandPrincipals({ knowledgeBaseId, userId, member, groups: [{ knowledgeBaseId, userId, groupId }] });
-  assert.deepEqual(principals, [user, group, knowledgeBase].sort());
+  assert.deepEqual(principals, [user, group].sort());
+  assert.deepEqual(expandPrincipals({ knowledgeBaseId, userId, member: { ...member, role: 'member' }, groups: [] }), [user, knowledgeBase].sort());
   const link = { knowledgeBaseId, id: uid(8) };
   assert.deepEqual(expandPrincipals({ knowledgeBaseId, userId: null, member: null, groups: [], links: [link] }), [principal('link', link.id)]);
   assert.throws(() => expandPrincipals({ knowledgeBaseId, userId, member: null, groups: [{ knowledgeBaseId, userId, groupId }] }), /Group membership/);

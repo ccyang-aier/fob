@@ -133,7 +133,7 @@ describe('document menu rendered interaction', () => {
     const permission = Array.from(document.querySelectorAll('[role="menuitem"]')).find((element) =>
       element.textContent?.startsWith('权限'),
     )!;
-    expect(permission.hasAttribute('data-disabled')).toBe(true);
+    expect(permission.hasAttribute('data-disabled')).toBe(false);
   });
   test('copy submenu includes four formats and disables unloaded content', async () => {
     await key(item('复制'), 'ArrowRight');

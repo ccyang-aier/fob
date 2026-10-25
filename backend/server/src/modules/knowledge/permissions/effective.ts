@@ -23,7 +23,8 @@ export function expandPrincipals(input: {
   if (input.userId) result.add(principal('user', input.userId));
   if (input.member) {
     if (input.member.knowledgeBaseId !== input.knowledgeBaseId || input.member.userId !== input.userId) throw new Error('Membership does not belong to this request');
-    result.add(principal('knowledgeBase', input.knowledgeBaseId));
+    // Guests invited to one document must not inherit library-wide defaults.
+    if (input.member.role !== 'guest') result.add(principal('knowledgeBase', input.knowledgeBaseId));
   }
   for (const group of input.groups) {
     if (!input.member || group.knowledgeBaseId !== input.knowledgeBaseId || group.userId !== input.userId) throw new Error('Group membership does not belong to this request');

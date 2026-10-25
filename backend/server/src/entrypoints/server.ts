@@ -16,6 +16,7 @@ import { createKnowledgeApiRoutes, createKnowledgePatRoutes } from '../modules/k
 import { createKnowledgeAssetStorage } from '../modules/knowledge/assets/storage';
 import { bindKnowledgeAssetStorage } from '../modules/knowledge/assets/runtime';
 import { createKnowledgeCheckpointRoutes } from '../modules/knowledge/api/checkpoint-routes';
+import { createDocumentCollaborationRoutes } from '../modules/knowledge/documents/http';
 import { createKnowledgeNotificationRoutes } from '../modules/knowledge/notifications';
 import { createKnowledgeTemplateRoutes } from '../modules/knowledge/templates';
 import { createKnowledgeSubscriptionRoutes } from '../modules/knowledge/subscriptions';
@@ -23,6 +24,7 @@ import { bindKnowledgeStreamingTasks, createKnowledgeStreamingTasks } from '../m
 import { createFobModelGateway } from '../platform/runtime/model-gateway';
 import { subscribeFobKnowledgeEvents } from '../platform/runtime/knowledge-events';
 import { createPageCollaborationListener } from '../modules/knowledge/collaboration/page-collaboration-bun';
+import { revalidatePageConnections } from '../modules/knowledge/collaboration/page-collaboration-server';
 import { createKnowledgeBaseEventRuntime } from '../modules/knowledge/collaboration/events';
 import { pageCheckpointExtension } from '../modules/knowledge/collaboration/checkpoints';
 import { createKnowledgeMcpAuthorizationRoutes } from '../modules/knowledge/mcp/oauth';
@@ -66,8 +68,10 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   bindKnowledgeAssetStorage(config.roles.includes('api') && config.storage ? createKnowledgeAssetStorage(config.storage) : undefined);
   const externalOrigin = new URL(config.auth.baseUrl).origin;
   const events = createKnowledgeBaseEventRuntime({ authenticator });
+  let activeCollaboration: ReturnType<typeof createPageCollaborationListener> | undefined;
+  const revalidateConnections = async (knowledgeBaseId: string) => { if (activeCollaboration) await revalidatePageConnections(activeCollaboration.hocuspocus, { authenticator, pool }, knowledgeBaseId); };
   const eventRelay = config.redisUrl ? await subscribeFobKnowledgeEvents(config.redisUrl,
-    ({ knowledgeBaseId, event }) => events.hub.publish(knowledgeBaseId, event)) : undefined;
+    ({ knowledgeBaseId, event }) => { events.hub.publish(knowledgeBaseId, event); if (event.type === 'acl.changed' || event.type === 'page.deleted') void revalidateConnections(knowledgeBaseId); }) : undefined;
   const checkpoints = config.roles.includes('collab') ? pageCheckpointExtension({ pool }) : undefined;
   const app = new Hono();
   app.route('/', createModelCatalogRoutes(createModelCatalogRepository(pool), auth.options.trustedOrigins as string[]));
@@ -83,6 +87,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   app.route('/', createKnowledgePatRoutes({ auth, pool }));
   app.route('/', createKnowledgeMcpAuthorizationRoutes({ auth, pool, externalOrigin }));
   app.route('/', createKnowledgeCheckpointRoutes({ auth, pool, checkpoints }));
+  app.route('/', createDocumentCollaborationRoutes({ auth, pool, publicationSecret: config.auth.secret, onPermissionsChanged: revalidateConnections }));
   app.route('/', createKnowledgeNotificationRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createKnowledgeTemplateRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createKnowledgeSubscriptionRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
@@ -100,6 +105,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
       return app.fetch(request, { clientAddress });
     },
   });
+  activeCollaboration = listener;
   if (config.roles.includes('mcp')) mcp = createKnowledgeMcpRequestHandler({ authenticator, pool, hocuspocus: listener.hocuspocus, oauth: { externalOrigin } });
   // J04: bind the streaming AI task service to the tRPC registry. Without
   // model credentials the gateway holds no platform binding and aiTask.*

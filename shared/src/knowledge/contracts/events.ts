@@ -42,6 +42,7 @@ export const awarenessStateSchema = z.strictObject({
   cursor: z.json().nullable(),
   selection: z.json().nullable(),
   isEditing: z.boolean(),
+  timezone: z.string().max(100).optional(),
   taskId: entityIdSchema.optional(),
 });
 
