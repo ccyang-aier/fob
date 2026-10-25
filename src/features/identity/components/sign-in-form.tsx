@@ -13,7 +13,7 @@ import { messages } from './i18n/sign-in-form.messages';
 import { useState, type FormEvent } from 'react';
 import { useIdentity } from '../identity-provider';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { authErrorCopyFor, isFobAuthFlowError } from '../auth-errors';
 import { fobAuthApi, type FobAuthApi } from '../auth-api';
@@ -137,7 +137,7 @@ export function SignInForm({
       ) : null}
       <Button type="submit" loading={submitting} className={styles.submit}>
         {submitting ? uiText('正在登录…') : (submitLabel ?? uiText('登录'))}
-        {!submitting ? <ArrowRight size={15} data-arrow aria-hidden /> : null}
+        {!submitting ? <ArrowRight size={14} data-arrow aria-hidden /> : null}
       </Button>
     </form>
   );

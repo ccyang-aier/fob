@@ -1,4 +1,4 @@
-import { Sparkle } from '@phosphor-icons/react';
+import { Sparkle } from '@/components/icons';
 import { insertBuiltNodes } from '../insert';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

@@ -26,7 +26,7 @@ import {
   TextAlignLeft,
   TextAlignRight,
   Trash,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { Editor } from '@tiptap/core';
 import { mergeCells, splitCell } from '@tiptap/pm/tables';
 import {
@@ -96,7 +96,7 @@ export function TableStyleMenu({
       disabled={!command(editor.state)}
       onSelect={() => run(command)}
     >
-      <Icon size={18} weight="bold" aria-hidden />
+      <Icon size={16} aria-hidden />
       <span>{label}</span>
     </Menu.Item>
   );
@@ -137,9 +137,9 @@ export function TableStyleMenu({
         >
           <Menu.Sub>
             <Menu.SubTrigger className={`${styles.menuItem} fob-menu-item`}>
-              <TextAlignLeft size={18} weight="bold" aria-hidden />
+              <TextAlignLeft size={16} aria-hidden />
               <span>{knowledgeT('alignment')}</span>
-              <CaretRight size={12} weight="fill" className={styles.caret} aria-hidden />
+              <CaretRight size={12} className={styles.caret} aria-hidden />
             </Menu.SubTrigger>
             <Menu.Portal>
               <Menu.SubContent
@@ -156,10 +156,10 @@ export function TableStyleMenu({
                     className={`${styles.menuItem} fob-menu-item`}
                     onSelect={() => run((s, d) => setTableAlignment(s, d, target, value))}
                   >
-                    <Icon size={18} weight="bold" aria-hidden />
+                    <Icon size={16} aria-hidden />
                     <span>{label}</span>
                     {align !== undefined && (align ?? 'left') === value ? (
-                      <Check size={18} weight="bold" className={styles.caret} aria-hidden />
+                      <Check size={16} className={styles.caret} aria-hidden />
                     ) : null}
                   </Menu.Item>
                 ))}
@@ -172,9 +172,9 @@ export function TableStyleMenu({
                 className={`${styles.menuItem} fob-menu-item`}
                 disabled={!sortTableColumn(editor.state, undefined, false)}
               >
-                <SortAscending size={18} weight="bold" aria-hidden />
+                <SortAscending size={16} aria-hidden />
                 <span>{knowledgeT('sort')}</span>
-                <CaretRight size={12} weight="fill" className={styles.caret} aria-hidden />
+                <CaretRight size={12} className={styles.caret} aria-hidden />
               </Menu.SubTrigger>
               <Menu.Portal>
                 <Menu.SubContent
@@ -196,9 +196,9 @@ export function TableStyleMenu({
           ) : null}
           <Menu.Sub>
             <Menu.SubTrigger className={`${styles.menuItem} fob-menu-item`}>
-              <Palette size={18} weight="fill" aria-hidden />
+              <Palette size={16} aria-hidden />
               <span>{knowledgeT('background')}</span>
-              <CaretRight size={12} weight="fill" className={styles.caret} aria-hidden />
+              <CaretRight size={12} className={styles.caret} aria-hidden />
             </Menu.SubTrigger>
             <Menu.Portal>
               <Menu.SubContent
@@ -263,7 +263,7 @@ export function TableStyleMenu({
                   if (hit) downloadTableCsv(hit.table, editor.view.dom.ownerDocument);
                 }}
               >
-                <DownloadSimple size={18} weight="bold" aria-hidden />
+                <DownloadSimple size={16} aria-hidden />
                 <span>{knowledgeT('exportCsv')}</span>
               </Menu.Item>
             </>

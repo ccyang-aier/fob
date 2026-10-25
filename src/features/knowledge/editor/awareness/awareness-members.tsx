@@ -10,7 +10,7 @@ import { knowledgeMessages } from './awareness-members.messages';
  */
 
 import { useCallback, useSyncExternalStore } from 'react';
-import { Sparkle } from '@phosphor-icons/react';
+import { Sparkle } from '@/components/icons';
 import type { Awareness } from 'y-protocols/awareness';
 import { cn } from '@/lib/utils';
 import {
@@ -94,7 +94,7 @@ function MemberAvatar({ member, large = false }: { member: AwarenessMember; larg
       <UserAvatar name={member.user.name} image={image} className="size-full" />
       {member.kind === 'agent' && (
         <span aria-hidden className={styles.agentBadge}>
-          <Sparkle aria-hidden size={9} weight="fill" />
+          <Sparkle aria-hidden size={9} />
         </span>
       )}
     </span>

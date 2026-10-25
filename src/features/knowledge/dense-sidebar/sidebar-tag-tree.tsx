@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './sidebar-tag-tree.messages';
-import { CaretDown, CaretRight, DotsThree, PencilSimple, Trash } from '@phosphor-icons/react';
+import { CaretDown, CaretRight, DotsThree, PencilSimple, Trash } from '@/components/icons';
 
 import {
   SidebarCreateIcon,
@@ -75,9 +75,9 @@ export function SidebarTagTreeNode({
             className="mr-0.5 inline-flex size-[17px] shrink-0 items-center justify-center rounded-[4px] outline-none transition-colors hover:text-foreground focus-visible:text-foreground"
           >
             {expanded ? (
-              <CaretDown aria-hidden="true" size={10} weight="bold" />
+              <CaretDown aria-hidden="true" size={12} />
             ) : (
-              <CaretRight aria-hidden="true" size={10} weight="bold" />
+              <CaretRight aria-hidden="true" size={12} />
             )}
           </IconButton>
         ) : (
@@ -117,19 +117,19 @@ export function SidebarTagTreeNode({
                   className={styles.actionButton}
                   onClick={(event) => event.stopPropagation()}
                 >
-                  <DotsThree aria-hidden="true" size={16} weight="bold" />
+                  <DotsThree aria-hidden="true" size={16} />
                 </IconButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[170px]">
                 <DropdownMenuItem onSelect={() => onTagAction(tag.id, 'rename')}>
-                  <PencilSimple size={15} /> {t('sidebar.rename')}
+                  <PencilSimple size={14} /> {t('sidebar.rename')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   variant="destructive"
                   onSelect={() => onTagAction(tag.id, 'delete')}
                 >
-                  <Trash size={15} /> {t('sidebar.delete')}
+                  <Trash size={14} /> {t('sidebar.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -159,7 +159,7 @@ export function SidebarTagTreeNode({
                   onClick={() => onSelectDocument(document.id)}
                   className="flex h-full min-w-0 flex-1 items-center text-left outline-none"
                 >
-                  <PageIcon value={document.icon} size={15} className={sidebarDocumentIconClass} />
+                  <PageIcon value={document.icon} size={14} className={sidebarDocumentIconClass} />
                   <span className={styles.documentLabel} title={document.title}>
                     {document.title}
                   </span>

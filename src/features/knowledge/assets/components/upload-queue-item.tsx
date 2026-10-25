@@ -19,7 +19,7 @@ import {
   SpeakerHigh,
   Trash,
   X,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { AssetUploadItem } from '../upload-machine';
 import { formatBytes, uploadErrorCopy, uploadPhaseView, uploadRetryHint } from '../upload-copy';
 
@@ -62,7 +62,7 @@ export function UploadQueueItem(props: {
           className={`flex size-7 shrink-0 items-center justify-center rounded-md bg-wash ${tint}`}
           aria-hidden="true"
         >
-          <Icon size={15} weight="regular" />
+          <Icon size={14} />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
@@ -104,7 +104,7 @@ export function UploadQueueItem(props: {
               aria-label={knowledgeT('cancelUploadOfValue', { v0: item.name })}
               title={knowledgeT('cancel')}
             >
-              <X size={13} />
+              <X size={14} />
             </button>
           )}
           {(item.phase === 'error' || item.phase === 'canceled') && (
@@ -116,7 +116,7 @@ export function UploadQueueItem(props: {
                 aria-label={knowledgeT('retryUploadOfValue', { v0: item.name })}
                 title={knowledgeT('retry')}
               >
-                <ArrowClockwise size={13} />
+                <ArrowClockwise size={14} />
               </button>
               <button
                 type="button"
@@ -125,7 +125,7 @@ export function UploadQueueItem(props: {
                 aria-label={knowledgeT('removeValue', { v0: item.name })}
                 title={knowledgeT('remove')}
               >
-                <Trash size={13} />
+                <Trash size={14} />
               </button>
             </>
           )}
@@ -137,7 +137,7 @@ export function UploadQueueItem(props: {
               aria-label={knowledgeT('removeValue', { v0: item.name })}
               title={knowledgeT('remove')}
             >
-              <Trash size={13} />
+              <Trash size={14} />
             </button>
           )}
         </span>
@@ -145,7 +145,7 @@ export function UploadQueueItem(props: {
 
       {item.phase === 'done' && item.result && (
         <p className="flex min-w-0 items-center gap-1.5 text-2xs text-ink-faint">
-          <CheckCircle size={12} weight="fill" className="shrink-0 text-ok" aria-hidden="true" />
+          <CheckCircle size={12} className="shrink-0 text-ok" aria-hidden="true" />
           {item.result.reused
             ? knowledgeT('reusedIdenticalContentAlreadyExistsInThisKnowledge')
             : knowledgeT('uploadedAndIntegrityVerified')}

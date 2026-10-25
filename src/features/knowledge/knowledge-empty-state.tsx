@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './knowledge-empty-state.messages';
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { FileText, Lightning, MagnifyingGlass, Plus, Question } from '@phosphor-icons/react';
+import { FileText, Lightning, MagnifyingGlass, Plus, Question } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { NavigationDialogPortal } from './navigation/navigation-dialog-portal';
 import { DialogButton, ModalDialog } from './organization/ui';
@@ -39,7 +39,7 @@ export function KnowledgeEmptyState({ onCreate }: { onCreate: () => void }) {
         </p>
         <div className={styles.actions}>
           <Button onClick={onCreate} className={styles.create}>
-            <Plus size={18} aria-hidden />
+            <Plus size={16} aria-hidden />
             {knowledgeT('newKnowledgeBase')}
           </Button>
           <Button
@@ -48,7 +48,7 @@ export function KnowledgeEmptyState({ onCreate }: { onCreate: () => void }) {
             onClick={() => setHelpOpen(true)}
             className={styles.learn}
           >
-            <Question size={20} aria-hidden />
+            <Question size={16} aria-hidden />
             {knowledgeT('aboutKnowledgeBases')}
           </Button>
         </div>
@@ -58,15 +58,15 @@ export function KnowledgeEmptyState({ onCreate }: { onCreate: () => void }) {
           </div>
           <ul className={styles.benefitList}>
             <li>
-              <FileText size={20} aria-hidden />
+              <FileText size={16} aria-hidden />
               {knowledgeT('organizedResources')}
             </li>
             <li>
-              <Lightning size={20} aria-hidden />
+              <Lightning size={16} aria-hidden />
               {knowledgeT('ideasPreserved')}
             </li>
             <li>
-              <MagnifyingGlass size={20} aria-hidden />
+              <MagnifyingGlass size={16} aria-hidden />
               {knowledgeT('alwaysEasyToFind')}
             </li>
           </ul>

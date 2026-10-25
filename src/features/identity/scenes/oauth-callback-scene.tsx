@@ -14,7 +14,7 @@ import { messages } from './i18n/oauth-callback-scene.messages';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { ArrowClockwise, CircleNotch, SignIn } from '@phosphor-icons/react';
+import { ArrowClockwise, CircleNotch, SignIn } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { oauthCallbackErrorCopy, parseOAuthCallbackQuery } from '../oauth-callback';
 import { consumeAuthReturnTo } from '../return-to';
@@ -147,7 +147,7 @@ export function OAuthCallbackScene() {
                 className="mt-5 h-9 w-full"
                 onClick={() => router.push(authEntryPath)}
               >
-                <SignIn className="size-4" weight="bold" aria-hidden />
+                <SignIn className="size-4" aria-hidden />
                 {uiText('前往登录')}
               </Button>
             </>
@@ -178,7 +178,7 @@ export function OAuthCallbackScene() {
           description={uiText('这一页用于接收企业登录的完成回跳。请从登录页选择企业账号发起登录。')}
         />
         <Button type="button" className="h-9 w-full" onClick={() => router.push(authEntryPath)}>
-          <SignIn className="size-4" weight="bold" aria-hidden />
+          <SignIn className="size-4" aria-hidden />
           {uiText('前往登录')}
         </Button>
       </AuthPanel>

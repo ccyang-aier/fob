@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-outline.messages';
 import { useState } from 'react';
-import { Minus, Plus } from '@phosphor-icons/react';
+import { Minus, Plus } from '@/components/icons';
 import styles from './document-outline.module.css';
 
 export function DocumentOutline({
@@ -109,7 +109,7 @@ export function DocumentOutline({
                       })
                     }
                   >
-                    {isCollapsed ? <Plus size={11} /> : <Minus size={11} />}
+                    {isCollapsed ? <Plus size={12} /> : <Minus size={12} />}
                   </button>
                 ) : (
                   <span className={styles.foldSpace} />

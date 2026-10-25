@@ -10,7 +10,7 @@ import { knowledgeMessages } from './table-header.messages';
  */
 
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Funnel, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
+import { ArrowDown, ArrowUp, CaretUpSolid, Funnel, PencilSimple, Plus, Trash } from '@/components/icons';
 import type { PropertyDefinition } from '@fob/shared/knowledge/contracts';
 import { cn } from '@/lib/utils';
 import { newOptionId, optionColorClass } from './cell-model';
@@ -94,7 +94,7 @@ export function ColumnHeaderCell({
         </span>
         {hasFilter ? (
           <span aria-hidden className="shrink-0 text-[10px] text-[var(--accent-ink)]">
-            ◕
+            <Funnel size={12} />
           </span>
         ) : null}
         {sortKey ? (
@@ -105,7 +105,7 @@ export function ColumnHeaderCell({
               sortKey.direction === 'desc' && 'rotate-180',
             )}
           >
-            ▲
+            <CaretUpSolid size={12} />
           </span>
         ) : null}
       </button>

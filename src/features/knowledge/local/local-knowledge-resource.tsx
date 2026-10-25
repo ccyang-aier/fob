@@ -9,7 +9,7 @@ import { knowledgeMessages } from './local-knowledge-resource.messages';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { updateDocumentNavigation } from '../navigation/document-navigation-location';
 import { usePageSessionState } from '@/lib/page-session-state';
-import { FilePlus } from '@phosphor-icons/react';
+import { FilePlus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -43,7 +43,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
-import { DotsThree } from '@phosphor-icons/react';
+import { DotsThree } from '@/components/icons';
 import { useDocumentTab, useTabDocumentSelection } from '../editor/document-tab-context';
 
 type View = 'all-documents' | 'starred' | 'drafts' | 'trash';
@@ -396,7 +396,7 @@ export function LocalKnowledgeResource({
                   aria-label={knowledgeT('documentActions')}
                   className="p-2 text-slate-500"
                 >
-                  <DotsThree size={17} weight="bold" />
+                  <DotsThree size={16} />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -462,7 +462,7 @@ export function LocalKnowledgeResource({
               </h1>
               {view !== 'trash' ? (
                 <Button size="sm" variant="outline" onClick={() => setCreation('document')}>
-                  <FilePlus size={15} />
+                  <FilePlus size={14} />
                   {knowledgeT('newDocument')}
                 </Button>
               ) : null}

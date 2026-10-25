@@ -24,8 +24,8 @@
     "deleted": true
   },
   "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "7db12174af30eaa63abeba0fadf57d85107176f1fb806abac3d73842b5fc01f3"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b9d17b8aebd95991c464e761985f5aa3b4b8dd6f43b2238c1f024f636ab03642"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
     "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
@@ -44,8 +44,8 @@
     "sha256": "5bd0b497b33b100e482be4584162518c1239af19b0af7a61aac477a0d70a1664"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
-    "sha256": "21d950a766900fb64f120acea25c5737c6a03f087b6cd9fdd03ed025a25009be"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "c8db8248fa276f0f2f3062648a32819893c21e80114c442dcc525f6084909243"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -64,8 +64,8 @@
     "sha256": "15bb1cca6de4ec7616d4572a076d5444fe9d64d82343d6e85d20c1b155e503b7"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
-    "sha256": "5da45de489e4e7ebbe93252b2c3a28cbfa58c78ec7faa09af94ec7830d8039b8"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "836eee50680dc6bf4ab991adced53ab7496fd0c00226798a4a7a5d09c16c2de0"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
@@ -80,16 +80,16 @@
     "sha256": "dabbcc88094042b06b65bec5e4b0572a157e8a2f4dff328e253b0e23f7675bb6"
   },
   "src/features/knowledge/navigation/page-tree-sidebar.tsx": {
-    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
-    "sha256": "b35ebaf0aa0ee1ee4075dab6f0780d3a0517ba60f44a2740ea98630543484bbc"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "6067a1b55055dcbb2a69f86527b33838a70be08cde09584b7056e9d882477b4d"
   },
   "src/features/knowledge/notifications/components/notification-bell.messages.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
     "sha256": "e64204b4b86cd7572c995123f3a00b3844984feb1ce81dcf0e49b5c96e664162"
   },
   "src/features/knowledge/notifications/components/notification-bell.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "aac68eb82cc1188846450267dec1ae6be51d2626d8413dcac348c84be83787a3"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "4f739c2cc22d2059c7a7b5a3be2a380a50f51812b0cd6f27b2f056b05184ee16"
   },
   "src/features/knowledge/notifications/notifications-bridge.test.ts": {
     "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
@@ -128,8 +128,8 @@
     "deleted": true
   },
   "src/features/knowledge/organization/organization-panel.tsx": {
-    "reason": "Manage the top-selected knowledge base members/groups/folders directly; remove nested selection, project guard and duplicate product breadcrumb.",
-    "sha256": "5777ea0327378c80cb8f1bf5a98f8d4347b9d9245fa695b680fcdaf26f516711"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "433207b03e2ff2c31e0b12a84634edf625d237b8ed2afcf8bd76415ad56e337c"
   },
   "src/features/knowledge/use-knowledge-base-selection.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -176,36 +176,36 @@
     "sha256": "81ab5bb35b8ef5f836181bcc8ce232ffa03499e5857c97d18da6d3481a9c2920"
   },
   "src/features/companion/companion-widget.tsx": {
-    "reason": "Render companion speech as a passive status bubble rather than an Escape-consuming controlled tooltip; preserve trigger, runtime, toolbar and character instance under the viewport layer.",
-    "sha256": "3e3578aa09c64514047752e6ade7a452849c8af1c3bc63280b09cfbd3ea17fbc"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "dfd631b5abc3cc1fb8c3e2d52b8f97c39142c00b5e9d3f3b8a085f405f3e5479"
   },
   "src/features/companion/companion-toolbar.tsx": {
-    "reason": "Use the single standard toolbar animation path when sharing the viewport layer; remove the obsolete reduced-motion alternative.",
-    "sha256": "0effb1914dfd47802f3cb95c11db881f3ee8abd227a28b90d03463c8e615b9a1"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "de71cddfe6c863addbc61eb06abe4a60f1ca06f48871bf1de5e3607b14149ef2"
   },
   "src/features/companion/companion-widget.module.css": {
     "reason": "Keep the passive speech bubble positioned and readable in the viewport, preserving shared tooltip material and pointer pass-through; remove the replaced tooltip animation and reduced-motion branches.",
     "sha256": "36e786d1f5f86224929eaaab9aeafaa5060686b7dd2a31ed3a8a0b6f32fc42b3"
   },
   "src/features/knowledge/assets/components/asset-uploader.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "c18fb96440f9bff4ff544bf7173a472168e7b1cfc2599fea2f5ba25dff33fd90"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "29b12f0c0a378b43c0808c6fb20a4f0144831c9aa46ca4626dec07a9558ed42b"
   },
   "src/features/knowledge/assets/components/upload-queue-item.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "7658dc6706f2b7113dae540c1e7c4a876a4926513888146979754863c2e1fcbe"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "31bd84524cab79c84bbbdebeb6143edb4ed9ca4123ec0bda1c5a258fc880da6d"
   },
   "src/features/knowledge/comments/components/comment-thread-card.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "02502e3984cee070000d97d25c2337f7d0c2852b0c83a53f4ad0a082e8843a1b"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "70aa9ec5d1af97b7795e46041af6e4f98abbc6eff6b6e8ba465f6befe5505fcb"
   },
   "src/features/knowledge/comments/components/selection-comment-popover.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "beea69108a8aea21cf20e9cc1cd516f0e60db4a0625666b5c687b1b68954ef28"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "2c430ca1bbca1d560c53a486ec47968803e0330ec4c2eb41e8b46ae15f9ed1d9"
   },
   "src/features/knowledge/dense-sidebar/document-action-menu-content.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "131534e04070587ddc9a641f0441c4740aec43cf09c8618d2d361d023a91f530"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "edcb0737fff64da47530f757654ecfdedbeca62cea9c9905bde362fe2d93113c"
   },
   "src/features/knowledge/dense-sidebar/draft-icon.tsx": {
     "deleted": true,
@@ -216,48 +216,48 @@
     "sha256": "4d2d76d4f3344555a70daa55c1545297ab572c7f87746e63d31aaf6103cad537"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "1da17f3908a893c2acc02768fe6c6f6acfa4ff14488774322adafa2772bed76a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "66a102c67eb3a83d033ce382060ac88af1ea75731af27fb4aef8b8895905d6f2"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
     "sha256": "0ae1a11d8af4cf5bd220c45cadbc97b076dbe51cd492188f042109aaea676ba6"
   },
   "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "1c18c5eb4123ee3ea49569db09efc5ac304ef87a57c555d2266156d8c50304c2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "7d66b664f95f6ced82b8803729d3ac8c9ead10e43dfab6dc0aeb4fdbd8185b1e"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "18e424d486cf5bd065aec821472374fa3b8e025a0ca956490fe396ef6134afce"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "53b3e4127d561802e4091ef0655f622dbaa110d7180a9a7a4b6e6530bda14324"
   },
   "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx": {
-    "reason": "Compose current knowledge-template/subscription tables and account coffee ledger with separate verified-account RLS; keep knowledge-resource isolation and current-only schema initialization.",
-    "sha256": "47c9ea7506ad866812d272fbc3226d3a6c71b33e71031cb5ba179c3d892e8aaf"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "6c5610cb2336bd4890692312cd56c65563a64970aafc4a7f435b17158e019163"
   },
   "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "faafefb01a764132e6f9532e3e09def32467baf7eb5af952eaaea7b9006f029f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ace0943f2ac57ae3330e3e7fb9e7c51e013e86f10f1e942b67e38d3cc619a33d"
   },
   "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "8e47942a7f5d57b75147be73ec994bc90cb11e24cadd9ea2471b9044c949a10c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "4a9309d8b6ad225e5c4a59a9b2edeb0413c29876d06fd504f8c09baff98996bc"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Remove the redundant containing-folder entry and slash divider from the document toolbar; keep outline/thumbnail navigation, stars, sharing, creation and document actions intact.",
-    "sha256": "ee1f1b10b616d3aa0faf47cde002022d9325226092d0fcb7c7eb38957808d3d2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "38715a9d61e4bcbe7b907aa9e3eaa67c74790bacec5514c016180ff5b7672e3a"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
     "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
     "sha256": "5e388444f3779ea93d13927ddaca47ddfa1dfe18a1025a678759d261e2a263de"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
-    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
-    "sha256": "f0eefe5c8412474f79e442c5b997cdc6ea2ea9082d46c99081e4637147512f04"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d1c13eca5e7566209245d19b24c929314512bd7df15b62c8db8c5ceba024dd10"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "769fb275667b9a7cc27f4db5be09af9742967fd8b525e538cb10e8c63b1d8877"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "fc2fb6448b0d13653880358e47c31707060d01e11f205f1918000d0b2b2111e5"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
     "deleted": true,
@@ -276,24 +276,24 @@
     "sha256": "2654de4978cd805871c2124503437ad74ade9f34a05bae4a86cb4fd7c502ed55"
   },
   "src/features/knowledge/editor/document-tools.tsx": {
-    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
-    "sha256": "3fcec90e6e02fe896c7ec64399a691822f8831a359345ed1560f7494eaf4c0a7"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "1b175a6a7b41c0cae885d8e246f03818762337e9b8a64cf63191b814663cc27e"
   },
   "src/features/knowledge/editor/editor-layout.module.css": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
     "sha256": "2ca22a7db1319390fdd34158ededc65907c6158d3c34d9953a1c7c7db2552d63"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "1394be51b1d1f93fc9ee46e8e77d2a1606d2607807ca79387c1e05bb64b77265"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "8e557ecff7731dea05ac83ec4858458af30996d066cc4ccf8237827cc2d1c581"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the shared theme panel surface so dark-theme document/folder lists remain readable.",
-    "sha256": "6f71a46c913ae1d3bef1e31122c768e4fc51bd253603abb3e992f22e906f9f7f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "bbbf8338986ff73e0a6a79d167c334a663b3742300a76994ca5afa827d242927"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
-    "sha256": "f4cddcdaf7d3e43778565e70bd755453f27d541a5bd1f1e04020bfe2f851a9e8"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "004e865f363abadbadd927bced1557425498b5e484153630d1ebef0ee2b3dda5"
   },
   "src/features/knowledge/notifications/notifications-api.test.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -352,15 +352,331 @@
     "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
   },
   "src/features/knowledge/editor/components/document-editor-header.module.css": {
-    "reason": "Remove the redundant containing-folder entry and slash divider from the document toolbar; keep outline/thumbnail navigation, stars, sharing, creation and document actions intact.",
-    "sha256": "5087572a75d2bae7d75efe40cc133d792e77f2227d10d23e167b4681cea0af95"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "a9e7841a9c10eb40e59508e635e7105238d0ea137f63fa65f443a5974d0d9616"
   },
   "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx": {
-    "reason": "Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "9418054192715dd2bfc629bc5ea450722301e7217e78ae57cb2d2b49f555fb2b"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "31e5b0b18a7fbe699d46bed0e9110421a7e33dba3f2721447a64905ea84c758d"
   },
   "src/features/knowledge/dense-sidebar/sidebar-tag-tree.tsx": {
-    "reason": "Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions. Restore original lightweight control glyphs, disclosure weights and stateful star treatment; retain filled resource icons.",
-    "sha256": "910f2e4c13c8be2029cc500cb3ab7b0dbf4f8daefbc5e2cb407d35dc2a1fa140"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b1cdf7bfb4058d707ccf22f1f00b3b6d77e14308ab0595793fb937b04098a5e6"
+  },
+  "src/features/knowledge/ai/ai-task-status.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "8171a846ddd011638734c922b104a7d916690586f21195ba18df1c105651c79d"
+  },
+  "src/features/knowledge/assistant-rail.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "dc7cdbc1085f23545a01f0c5b3b8e9edd4c776a97e152f587738e68b81051039"
+  },
+  "src/features/knowledge/canvas-states.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "9f359e3b5687bdb8881cb7868a90978b648bed2160cbba7a9a8e7195d3d9f55c"
+  },
+  "src/features/knowledge/comments/components/comment-composer.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "484157e010f0e4ed2034a7b5cf87a72f4bbe439ef1339d27ba41c91cd99b1959"
+  },
+  "src/features/knowledge/comments/components/comment-entry.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "5432066d70c609d006fcd68576197510d42b4eccff9b2ffbaa15eff42af4b761"
+  },
+  "src/features/knowledge/comments/components/comment-filters.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "2a4348ceff34f6e678f21bccc30f4fffd10d8712829abdef2ae297cc676d454a"
+  },
+  "src/features/knowledge/comments/components/comments-sidebar.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "097552225a9787599518f703c40ca5774274a0337a7c89b1522e184814c34928"
+  },
+  "src/features/knowledge/databases/database-table-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "a39ab954cbb2bbf4c14ac548bf23a0d805ca2fe32069c2920389ffe9e1dc83be"
+  },
+  "src/features/knowledge/databases/filter-sort-bar.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ae7aa3dbfe3db422e5d526cade4ba6602bb9b53ae8b0325e495d16e56eff5b1f"
+  },
+  "src/features/knowledge/databases/table-cells.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "75730d16cab86d22aab65953bbc7990a62762d0d51e1bfee04f4b82d9a4c9171"
+  },
+  "src/features/knowledge/databases/table-grid.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "bb3b2002bba145a817ef59e5f9d5c8d17a8ac9e27b9ccfcff61f777e10bba9dc"
+  },
+  "src/features/knowledge/databases/table-header.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "e3a7f6a838917fb9041f4008de30b1988ad309bc0c7a6ee411afdf7a94cfd265"
+  },
+  "src/features/knowledge/dense-sidebar/project-icon.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b26657e4ae7769d74a2f43369b2ed8d3035d570bfb17c5184be317719c8c95e6"
+  },
+  "src/features/knowledge/dense-sidebar/project-icons.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "aeba71fb641cb879da525fa61066160ff4874ebddc3901d9a08bbd23679a174d"
+  },
+  "src/features/knowledge/documents/document-collection.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d72c0305318721d1c94423b56cb3f6ed69c83226f4a2bc663ba9e331f36fb5ce"
+  },
+  "src/features/knowledge/documents/document-folders.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "62b9a47cdb9f4c1d236f6299f458b6214e1938121db152710347acd94c4035cf"
+  },
+  "src/features/knowledge/documents/document-visuals.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "5ab0ea222c4ebad35caacfacfb7f9bfb025e3239d19499bdb89fc6284aa19529"
+  },
+  "src/features/knowledge/documents/documents-page.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "1dab145344c1d6d7c05a81f8b24becf5a104a4e1e4b0ebe8a138e68cba48a295"
+  },
+  "src/features/knowledge/documents/documents-toolbar.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "0bef7dc7d3627d56ac3cb99b94dda7dbef46e65f43e96d4da4a8b1378f055cdc"
+  },
+  "src/features/knowledge/documents/local-document-import.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b0ed6353da29c7b7e538fae75c20d86a27fa589b751aa6cb1256454bc1afebbe"
+  },
+  "src/features/knowledge/documents/pdf-file-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "a9b928f77ea213fde04492d07a26ec465cce8205a8990cd4718e3ba8aac0aba0"
+  },
+  "src/features/knowledge/documents/text-file-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "80304e040f73db355bc13e1ced4f9b308ccc4935805d17fe3059b973ca0d2c4c"
+  },
+  "src/features/knowledge/editor/awareness/awareness-members.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "3bb2f29579fa6aedb4fcd83e5f987645ce2242afae33e15142b46af2c8388a56"
+  },
+  "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "aebda15902ddce2e6cbb032e9b92f706e602e582ea42e5aacc9ec4a4b7d50d73"
+  },
+  "src/features/knowledge/editor/block-modules/ai-block/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "1ae2eeb2138ff2fece179be1fdd79d7dd10708d10b4d019d91f9421ec8d9f585"
+  },
+  "src/features/knowledge/editor/block-modules/audio/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "65f133519a06222826825dceeecaec1f7f0982d5de52b35a16192ef2f72d176d"
+  },
+  "src/features/knowledge/editor/block-modules/block-reference/block-reference-picker.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "c388fd3971fff3432d1e79d9fd1295a3d0e33a0d2712c6da6d559cab918f7ba4"
+  },
+  "src/features/knowledge/editor/block-modules/block-reference/block-reference.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d3a70254213bf35c3f9f178e34721f8216d5ebd8aedf408386ff5cac5d2365c9"
+  },
+  "src/features/knowledge/editor/block-modules/block-reference/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "fbc786e9df6121c3b8afef7e281b69b0ab8f16619e83cdb5a3ccab5133b50041"
+  },
+  "src/features/knowledge/editor/block-modules/block-reference/local-block-reference.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "389cb69c3abe61b648e6f37972a956a70c1c6398b7df9f28bdc31e959c57c42a"
+  },
+  "src/features/knowledge/editor/block-modules/blockquote/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ae54a3e6fa701f9578e569d699ce17f7530cf83d7cb1888a4a0705b84feb7ac9"
+  },
+  "src/features/knowledge/editor/block-modules/bullet-list/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ce0fb1814a573628b13d47d1212c014bf2c65be042a17fd7e1fde2fa65717452"
+  },
+  "src/features/knowledge/editor/block-modules/callout/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ece88fca5bf7857d1f7d5ba33ff55cd11971d4c865d5ff1e96ae684b431580ee"
+  },
+  "src/features/knowledge/editor/block-modules/code-block/code-block-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "62c2e7f1c568b22c436ef436bc034008414bc3867a02f7c81e9574c8186796b2"
+  },
+  "src/features/knowledge/editor/block-modules/code-block/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "191bcc6362275da8ce8ae3952e89d5f5dcd22841dcba502981aa47fbc2538270"
+  },
+  "src/features/knowledge/editor/block-modules/columns/columns-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "79c52e8c36f23c540b4e6f1aa0b64e5b9dc51e81300ff8af5c3816fd4d744fca"
+  },
+  "src/features/knowledge/editor/block-modules/columns/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "60e3505357542aec84639bba2f126d1edb15a0585f15d73d545248b24b7dab1c"
+  },
+  "src/features/knowledge/editor/block-modules/database-view/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ab24ba4a935d3d0875816e1cd2aea27869d88796ded8824028f1c294c6721370"
+  },
+  "src/features/knowledge/editor/block-modules/embed/embed-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "19120a63f4a13e1e404ddbd99c14fcfbfec6c3c87651bf05a7cfa64a80cdd86f"
+  },
+  "src/features/knowledge/editor/block-modules/embed/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b9412e7004e79653009344a43a8d9456aafcc27f88eef2b37706850e3d212873"
+  },
+  "src/features/knowledge/editor/block-modules/file/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "c36f0c7630911e88dc1905ad95fdfd6320d2391e634bd7185aac827be657dd82"
+  },
+  "src/features/knowledge/editor/block-modules/heading/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "e630ed756dcc223f77ecc637b00bcff1b80c19a6cb7d63373458c73fe8e58164"
+  },
+  "src/features/knowledge/editor/block-modules/horizontal-rule/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "bf520999f30efe7eb990abbfa85bcc95f515d8b6386509741dc10a698d249122"
+  },
+  "src/features/knowledge/editor/block-modules/image/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d5291072849184b817c82e5cc5bbb29a4c6ce9b7d67100718bf057c7bea90933"
+  },
+  "src/features/knowledge/editor/block-modules/math/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "472b3997cf2daf7aa227af395341829a22437414a40ea869b5646dce410a3011"
+  },
+  "src/features/knowledge/editor/block-modules/math/math-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "033b3fd546e4bfbd80ba58d82facfb33f803d3dccaf474f5c8cdbe9b802d4fc7"
+  },
+  "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "66d5dd7a1a42e75f05e18e4a6f0aedf27c3634903ca590a08fa39170ca92f14d"
+  },
+  "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "30d309a395334305c977fb5c08229264096f2054c29b1c69694c6d0c51e092ce"
+  },
+  "src/features/knowledge/editor/block-modules/page-link/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "31b6a115ca0090a1b56bf2e12e3728512960eede52b3834127dfe8f8527dccaa"
+  },
+  "src/features/knowledge/editor/block-modules/paragraph/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "98aca8a1b96aab14019b13e82d3b3e38c80f991611ecb0e105a0583a5f1e9664"
+  },
+  "src/features/knowledge/editor/block-modules/table/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "fe55dc986f0fd993473d69f929db36f0254df2aae7b6c86733906cf439608c2a"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-color-menu-items.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "b8aeb63372aac881f3519cc20a62aef21a31f58a0ec4c063e50c959c5b713889"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-color-picker.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "f7cf03dd87a4cbff4800d4abfcbc8a135ab6cfb92943e5025e9a9c9af336622e"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-node-view.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "548f27eca207b3a93b81a0184de6d1d4200de487b7cdc15196d7d537c260f31a"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-selection-toolbar.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "58da4c34b61aa90811a8d4e9b3211e11219686db324d666dd175a111bed325ef"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-style-menu.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d618ce4e817d358b2442caed8350c4b9206398bc39bb91654a52d4c873302c0d"
+  },
+  "src/features/knowledge/editor/block-modules/task-list/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "5561eca241d6815ea920ced152ea568ca22612707102b34fa2b365c9d9a2e4a7"
+  },
+  "src/features/knowledge/editor/block-modules/task-list/task-progress.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "66a28f3b8c713b7d8a8176905f8b9c7a19449f6662dc548c69104861bbaedbc2"
+  },
+  "src/features/knowledge/editor/block-modules/video/index.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "fe4d73f0859a674f703ca01efd80f4de4bfdbd19b344de11d0c5aef013852720"
+  },
+  "src/features/knowledge/editor/commands/slash-items.ts": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "eea2b4fc518337118156223096fe6921460f1492e55b255c2ae3a24793ec3f5e"
+  },
+  "src/features/knowledge/editor/comments-integration.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "d1cf73915df10effc2da74e2c3d501c4bd09f4cd26f8ac82ae2936c1d988a71e"
+  },
+  "src/features/knowledge/editor/components/document-appearance-menu.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "599666ede53afc208f37bcf8b4f06275254a3d60f62906d94d62f5e3d85e89a4"
+  },
+  "src/features/knowledge/editor/components/document-outline.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "bc391022aa96a10acd47f1ed59011ca0d6d768ef49837ed0552baf944a298bf2"
+  },
+  "src/features/knowledge/editor/components/document-star-icon.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "7ea8d518584c074cc9afd3bdbe60ec6e8944f644f5049c1d809c43447c9fb464"
+  },
+  "src/features/knowledge/editor/components/sync-indicator.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "38a0bbfd1548e9a093a622bb0b77180b22dddd3219178211b9be6b5e8f63b65c"
+  },
+  "src/features/knowledge/editor/review/review-card.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "242031c48985d4a84a3fc517b9cde9532a6aa731bb0bb4ff34d10684f2d53211"
+  },
+  "src/features/knowledge/editor/review/review-panel.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "92bdceb5186b0868da4b449d1e21e8e2da6d4e194eb9b85956b3de90a86e4b41"
+  },
+  "src/features/knowledge/history/history-panel.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "24fa38545da6a1b7c85017f4771a85e5e329dcb88a2a556197fa1aa36b9f52fe"
+  },
+  "src/features/knowledge/knowledge-empty-state.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
+  },
+  "src/features/knowledge/navigation/page-icon-picker.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "a368b5a110a1842313d19bc3f1b40536e5d37d4177d2f20f778aeb411d207bf8"
+  },
+  "src/features/knowledge/organization/groups-section.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "7e57e980d38bbe48132d6154412cb932fa62abdb3c3d6d5694a03c1c0580082b"
+  },
+  "src/features/knowledge/organization/members-section.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ae949df4c5a9548157b37973c9bc5287f992ddd51460010a8a67bd0c743830dd"
+  },
+  "src/features/knowledge/organization/permission-select.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "8dfa796214a33fbf7c72fc2575f6f197027e88d9651e9b08710ef53b4af3366e"
+  },
+  "src/features/knowledge/organization/teamspaces-section.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "832ec1ade8d9a29e2a805016007736ff877d8a777795c0d4b589ebbab17b270c"
+  },
+  "src/features/knowledge/organization/ui.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "57528a6ef3376621c525a4de1ee7cecef7c8cad6b9cc8b15da38e2f1a444b08a"
+  },
+  "src/features/knowledge/sharing/document-share-dialog.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "ae60705c4a025ec14afcdf9911616c59a682b0a3a924c1a9af6d7d81f0dd47c0"
+  },
+  "src/features/companion/companion-action-menu.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "a85fa560ef459c71c614cd296a5ec414ba76490b77eee01f42a88029a9cc4678"
+  },
+  "src/features/companion/companion-character.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "c2543da8515bf45b65702573d6060c472645126202bac6c09e94e0a6d2429f10"
+  },
+  "src/features/companion/companion-tool-button.tsx": {
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
+    "sha256": "535d9d02c4d81c527e075f0d7aad45a6a5f3328865aa63cbeea5f90cd21479c1"
   }
 }

@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-block-reference.messages';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowSquareOut, Link, PencilSimple } from '@phosphor-icons/react';
+import { ArrowSquareOut, Link, PencilSimple } from '@/components/icons';
 import { DOMSerializer } from '@tiptap/pm/model';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import type { Extensions } from '@tiptap/core';
@@ -128,7 +128,7 @@ function LocalBlockReferenceCard({
       <span className={styles.localAccent} aria-hidden />
       <div className={styles.localBody}>
         <div className={styles.localHeader}>
-          <Link aria-hidden size={13} />
+          <Link aria-hidden size={14} />
           {sourcePage?.title ?? knowledgeT('blockReference')}
         </div>
         {notice ? (
@@ -145,7 +145,7 @@ function LocalBlockReferenceCard({
             title={knowledgeT('changeReference')}
             onClick={() => setEditing(true)}
           >
-            <PencilSimple aria-hidden size={15} />
+            <PencilSimple aria-hidden size={14} />
           </button>
         ) : null}
         {!notice ? (
@@ -157,7 +157,7 @@ function LocalBlockReferenceCard({
               requestOpenPageBlock({ knowledgeBaseId, pageId, blockId: targetBlockId })
             }
           >
-            <ArrowSquareOut aria-hidden size={15} />
+            <ArrowSquareOut aria-hidden size={14} />
           </button>
         ) : null}
       </div>

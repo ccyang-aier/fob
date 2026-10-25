@@ -8,7 +8,7 @@ import { messages } from './i18n/theme-section.messages';
  * 卡片内嵌按真实令牌配色渲染的迷你工作台预览；跟随系统为对角拼接的双主题预览。
  */
 
-import { Check, Monitor, Moon, Sun } from '@phosphor-icons/react';
+import { Check, Monitor, Moon, Sun } from '@/components/icons';
 
 import {
   THEME_PREFS,
@@ -109,12 +109,12 @@ export function ThemeSection({
                 )}
                 {selected ? (
                   <span className="absolute right-2 top-2 flex size-[18px] items-center justify-center rounded-full bg-[var(--accent)] text-[var(--accent-foreground)] shadow-sm">
-                    <Check className="size-3" weight="bold" />
+                    <Check className="size-3" />
                   </span>
                 ) : null}
               </span>
               <span className="mt-2 flex items-center gap-1.5 px-0.5">
-                <Icon className="size-3.5 shrink-0 text-[var(--muted)]" weight="fill" />
+                <Icon className="size-3.5 shrink-0 text-[var(--muted)]" />
                 <span
                   className={cn(
                     'text-[11.5px]',

@@ -1,4 +1,4 @@
-import { Table } from '@phosphor-icons/react';
+import { Table } from '@/components/icons';
 import type { NodeType, Node as ProseMirrorNode } from '@tiptap/pm/model';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { Extension } from '@tiptap/core';

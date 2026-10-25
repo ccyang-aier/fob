@@ -7,7 +7,7 @@
  */
 
 import type { ComponentProps, ReactNode } from "react"
-import type { Icon } from "@phosphor-icons/react"
+import type { Icon } from '@/components/icons'
 
 import { cn } from "@/lib/utils"
 
@@ -53,8 +53,7 @@ export function NavButton({
     >
       <Icon
         aria-hidden
-        size={18}
-        weight="fill"
+        size={16}
         className={cn(
           "sidebar-nav-icon shrink-0",
           item.iconClassName,

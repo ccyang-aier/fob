@@ -9,7 +9,7 @@ import { knowledgeMessages } from './groups-section.messages';
  */
 
 import { useMemo, useState } from 'react';
-import { CaretDown, PencilSimple, Plus, Trash, UsersThree, X } from '@phosphor-icons/react';
+import { CaretDown, PencilSimple, Plus, Trash, UsersThree, X } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -101,7 +101,7 @@ export function GroupsSection({
         action={
           canManage ? (
             <DialogButton variant="primary" onClick={() => setCreating(true)}>
-              <Plus className="size-3.5" weight="bold" />
+              <Plus className="size-3.5" />
               {knowledgeT('newGroup')}
             </DialogButton>
           ) : undefined
@@ -117,7 +117,7 @@ export function GroupsSection({
         emptyAction={
           canManage ? (
             <DialogButton variant="primary" onClick={() => setCreating(true)}>
-              <Plus className="size-3.5" weight="bold" />
+              <Plus className="size-3.5" />
               {knowledgeT('newGroup')}
             </DialogButton>
           ) : undefined
@@ -149,11 +149,9 @@ export function GroupsSection({
                         'size-3 shrink-0 text-[var(--muted)] transition-transform',
                         expanded ? '' : '-rotate-90',
                       )}
-                      weight="bold"
                     />
                     <UsersThree
                       className="size-3.5 shrink-0 text-[var(--muted-strong)]"
-                      weight="bold"
                     />
                     <span className="min-w-0 truncate text-[12px] font-medium text-[var(--ink)]">
                       {group.name}
@@ -344,7 +342,7 @@ function GroupMembersPanel({
                     onClick={() => void remove(row.userId)}
                     className="flex size-[18px] items-center justify-center rounded-full text-[var(--muted)] outline-none transition-colors hover:bg-[color-mix(in_srgb,var(--err-ink)_10%,transparent)] hover:text-[var(--err-ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] disabled:opacity-45"
                   >
-                    <X className="size-2.5" weight="bold" />
+                    <X className="size-2.5" />
                   </button>
                 ) : null}
               </span>
@@ -359,7 +357,7 @@ function GroupMembersPanel({
                   disabled={addMutation.isPending}
                   className="flex h-[26px] items-center gap-1 rounded-full border border-dashed border-[var(--line-strong)] px-2.5 text-[11px] text-[var(--muted-strong)] outline-none transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] disabled:opacity-45"
                 >
-                  <Plus className="size-3" weight="bold" />
+                  <Plus className="size-3" />
                   {knowledgeT('addMember')}
                 </button>
               </DropdownMenuTrigger>

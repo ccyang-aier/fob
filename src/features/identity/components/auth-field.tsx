@@ -10,7 +10,7 @@ import { messages } from './i18n/auth-field.messages';
  */
 
 import { useId, useState } from 'react';
-import { Eye, EyeSlash } from '@phosphor-icons/react';
+import { Eye, EyeSlash } from '@/components/icons';
 import styles from './auth-form.module.css';
 
 export function AuthTextField({
@@ -84,7 +84,7 @@ export function AuthTextField({
             aria-pressed={passwordVisible}
             onClick={() => setPasswordVisible((visible) => !visible)}
           >
-            {passwordVisible ? <EyeSlash size={17} aria-hidden /> : <Eye size={17} aria-hidden />}
+            {passwordVisible ? <EyeSlash size={16} aria-hidden /> : <Eye size={16} aria-hidden />}
           </button>
         ) : null}
       </div>

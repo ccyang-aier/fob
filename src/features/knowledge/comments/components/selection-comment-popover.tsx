@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './selection-comment-popover.messages';
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
-import { CaretDown, Quotes } from '@phosphor-icons/react';
+import { CaretDown, Quotes } from '@/components/icons';
 import { motion } from 'motion/react';
 import type { CommentComposePoint } from '../comment-compose-bridge';
 import { commentPopoverPlacement } from './comment-popover-placement';
@@ -56,12 +56,12 @@ export function SelectionCommentPopover({
     >
       <div className={styles.quote}>
         <span className={styles.quoteIcon}>
-          <Quotes size={16} weight="regular" aria-hidden />
+          <Quotes size={16} aria-hidden />
         </span>
         <p title={excerpt}>{excerpt}</p>
       </div>
       {children}
-      <CaretDown className={styles.pointer} size={18} weight="fill" aria-hidden />
+      <CaretDown className={styles.pointer} size={16} aria-hidden />
     </motion.div>
   );
 }

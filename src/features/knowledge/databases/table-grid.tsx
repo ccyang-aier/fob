@@ -14,7 +14,7 @@ import { knowledgeMessages } from './table-grid.messages';
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { FileText, Plus } from '@phosphor-icons/react';
+import { FileText, Plus } from '@/components/icons';
 import type {
   DatabaseRowSummary,
   Properties,

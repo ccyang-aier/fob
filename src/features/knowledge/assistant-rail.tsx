@@ -11,7 +11,7 @@ import { knowledgeMessages } from './assistant-rail.messages';
 
 import { useEffect } from 'react';
 import { usePageVisible } from '@/lib/page-visibility';
-import { ChatCircleDots, X } from '@phosphor-icons/react';
+import { ChatCircleDots, X } from '@/components/icons';
 import { motion } from 'motion/react';
 import { CanvasState } from './canvas-states';
 import { cn } from '@/lib/utils';
@@ -80,7 +80,7 @@ export function AssistantRail({ open, onClose }: { open: boolean; onClose: () =>
       </header>
       <div className="min-h-0 flex-1">
         <CanvasState
-          icon={<ChatCircleDots className="size-5" aria-hidden weight="regular" />}
+          icon={<ChatCircleDots className="size-5" aria-hidden />}
           title={knowledgeT('reviewAndAiAssistanceWillBeAvailableHere')}
           announce="polite"
         />

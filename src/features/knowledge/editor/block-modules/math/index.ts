@@ -1,4 +1,4 @@
-import { Function as FunctionIcon } from '@phosphor-icons/react';
+import { Function as FunctionIcon } from '@/components/icons';
 import { insertMathBlock } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { ReactNodeViewRenderer } from '@tiptap/react';

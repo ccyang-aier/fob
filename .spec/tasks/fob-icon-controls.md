@@ -1,5 +1,7 @@
 # Fob 控制图标修正
 
+> 历史验证记录。图标来源与尺寸现已由 [FA7 迁移记录](fob-fa7-icons.md)及[图标系统](../../docs/ui/icon-system.md)取代；下文自绘 SVG/Phosphor 描述不再是当前实现要求。
+
 当前造型规则见 [AI 前端规则](../../AI_FRONTEND_RULES.md#图标)与[全局界面组件](../../docs/architecture/fob-product-boundaries.md#全局界面组件)。
 
 ## 修正范围

@@ -1,5 +1,6 @@
 'use client';
 
+import { Check } from '@/components/icons';
 import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './table-cells.messages';
 /**
@@ -23,7 +24,7 @@ import {
   TextAa,
   Users,
   Hash,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { PropertyDefinition, PropertyValue } from '@fob/shared/knowledge/contracts';
 import { cn } from '@/lib/utils';
 import {
@@ -41,22 +42,22 @@ export const propertyTypeIcon = (type: PropertyDefinition['type']): ReactNode =>
   const className = 'size-3.5';
   switch (type) {
     case 'number':
-      return <Hash aria-hidden className={className} />;
+      return <Hash aria-hidden size={14} className={className} />;
     case 'date':
-      return <CalendarBlank aria-hidden className={className} />;
+      return <CalendarBlank aria-hidden size={14} className={className} />;
     case 'checkbox':
-      return <CheckSquare aria-hidden className={className} />;
+      return <CheckSquare aria-hidden size={14} className={className} />;
     case 'select':
     case 'multiSelect':
-      return <ListBullets aria-hidden className={className} />;
+      return <ListBullets aria-hidden size={14} className={className} />;
     case 'person':
-      return <Users aria-hidden className={className} />;
+      return <Users aria-hidden size={14} className={className} />;
     case 'url':
-      return <LinkIcon aria-hidden className={className} />;
+      return <LinkIcon aria-hidden size={14} className={className} />;
     case 'relation':
-      return <ArrowsLeftRight aria-hidden className={className} />;
+      return <ArrowsLeftRight aria-hidden size={14} className={className} />;
     default:
-      return <TextAa aria-hidden className={className} />;
+      return <TextAa aria-hidden size={14} className={className} />;
   }
 };
 
@@ -114,15 +115,7 @@ export function CellContent({
           )}
         >
           {value === true ? (
-            <svg viewBox="0 0 12 12" className="size-2.5" fill="none">
-              <path
-                d="M2.5 6.2 4.8 8.5 9.5 3.5"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Check size={12} />
           ) : null}
         </span>
       );

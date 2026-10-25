@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import type { PdfCommentAnchor } from '@fob/shared/knowledge/contracts';
-import { ChatCircleDots, X } from '@phosphor-icons/react';
+import { ChatCircleDots, X } from '@/components/icons';
 import 'pdfjs-dist/web/pdf_viewer.css';
 import { PdfPageSurface, type PdfHighlight } from './pdf-page-surface';
 import { readPdfSelection } from './pdf-selection';
@@ -273,7 +273,7 @@ export function PdfFileView({
               aria-label={knowledgeT('collapseThumbnails')}
               onClick={() => onThumbnailsChange(false)}
             >
-              <X size={15} />
+              <X size={14} />
             </button>
           </header>
           <div ref={thumbs} className={styles.pdfThumbnailList}>
@@ -396,7 +396,7 @@ export function PdfFileView({
               window.getSelection()?.removeAllRanges();
             }}
           >
-            <ChatCircleDots size={15} />
+            <ChatCircleDots size={14} />
             {knowledgeT('comments')}
           </button>,
           getOverlayRoot() ?? document.body,

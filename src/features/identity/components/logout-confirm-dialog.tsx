@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/logout-confirm-dialog.messages';
 
-import { SignOut } from '@phosphor-icons/react';
+import { SignOut } from '@/components/icons';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';

@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-link-node-view.messages';
 import { useEffect, useState } from 'react';
-import { ArrowRight, FileText, MagnifyingGlass, PencilSimple } from '@phosphor-icons/react';
+import { ArrowRight, FileText, MagnifyingGlass, PencilSimple } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { fetchReferencePages, type ReferencePageChoice } from '../../../data/reference-pages';
@@ -68,7 +68,7 @@ export function PageLinkNodeView({
       {pageId && targetKnowledgeBaseId && !open ? (
         <div className={styles.card} contentEditable={false}>
           <span className={styles.icon}>
-            <FileText aria-hidden size={20} weight="regular" />
+            <FileText aria-hidden size={16} />
           </span>
           <span className={styles.cardText}>
             <strong>{title}</strong>
@@ -92,13 +92,13 @@ export function PageLinkNodeView({
             aria-label={knowledgeT('openValue', { v0: title })}
             onClick={() => requestOpenPageBlock({ knowledgeBaseId: targetKnowledgeBaseId, pageId })}
           >
-            <ArrowRight aria-hidden size={17} />
+            <ArrowRight aria-hidden size={16} />
           </button>
         </div>
       ) : editor.isEditable ? (
         <div className={styles.picker} contentEditable={false}>
           <div className={styles.pickerTitle}>
-            <FileText aria-hidden size={17} />
+            <FileText aria-hidden size={16} />
             {knowledgeT('chooseAnAccessiblePage')}
           </div>
           <div className={styles.search}>
@@ -135,7 +135,7 @@ export function PageLinkNodeView({
                     setQuery('');
                   }}
                 >
-                  <FileText aria-hidden size={15} />
+                  <FileText aria-hidden size={14} />
                   <span>{page.title}</span>
                   {page.knowledgeBaseName ? <small>{page.knowledgeBaseName}</small> : null}
                 </button>

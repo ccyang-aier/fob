@@ -1,4 +1,4 @@
-import { SpeakerHigh } from '@phosphor-icons/react';
+import { SpeakerHigh } from '@/components/icons';
 import { insertMedia } from '../media-core/insert-media';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

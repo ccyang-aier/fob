@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/app-alert.messages';
 
 import type { ReactNode } from 'react';
-import { CheckCircle, Info, WarningCircle, X, XCircle } from '@phosphor-icons/react';
+import { CheckCircle, Info, WarningCircle, X, XCircle } from '@/components/icons';
 
 import { cn } from '@/lib/utils';
 import styles from './app-alert.module.css';
@@ -48,7 +48,7 @@ export function AppAlert({
       {markerColor ? (
         <span className={styles.marker} style={{ backgroundColor: markerColor }} aria-hidden />
       ) : (
-        <Icon className={styles.icon} weight="fill" aria-hidden />
+        <Icon className={styles.icon} aria-hidden />
       )}
       <div className={styles.message}>
         <span>{title}</span>
@@ -62,7 +62,7 @@ export function AppAlert({
           aria-label={uiText('关闭通知')}
           className={cn('fob-action', styles.close)}
         >
-          <X className="size-3" weight="bold" aria-hidden />
+          <X className="size-3" aria-hidden />
         </button>
       ) : null}
     </div>

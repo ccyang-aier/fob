@@ -31,7 +31,7 @@ import {
   Prohibit,
   Trash,
   Warning,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { withNodeView } from '../../extensions/with-node-view';
 import { PAGE_BODY_FRAGMENT } from '../../page-collaboration';
 import { requestOpenPageBlock } from '../../open-target';

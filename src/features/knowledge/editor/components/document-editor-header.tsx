@@ -5,7 +5,7 @@ import { knowledgeMessages } from './document-editor-header.messages';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/react';
-import { List, Plus, ShareNetwork } from '@phosphor-icons/react';
+import { List, Plus, ShareNetwork } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,7 +81,7 @@ export function DocumentEditorHeader({
           disabled={!pdfNavigation && !navigation?.onToggleOutline}
           onClick={pdfNavigation?.onToggle ?? navigation?.onToggleOutline}
         >
-          <List aria-hidden size={16} weight="bold" />
+          <List aria-hidden size={16} />
         </button>
         <DocumentStarButton starred={starred} onToggle={onToggleStar} />
       </div>
@@ -138,7 +138,7 @@ export function DocumentEditorHeader({
           }
           onClick={onCreateDocument}
         >
-          <Plus aria-hidden size={16} weight="bold" />
+          <Plus aria-hidden size={16} />
           <span className={styles.createLabel}>{knowledgeT('new')}</span>
         </button>
         <DocumentMoreMenu

@@ -1,4 +1,4 @@
-import { Link } from '@phosphor-icons/react';
+import { Link } from '@/components/icons';
 import { insertAtom } from '../insert';
 import type { EditorBlockModule } from '../types';
 import { applyBlockReferenceView } from './block-reference';

@@ -11,7 +11,7 @@ import { knowledgeMessages } from './comments-integration.messages';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/react';
 import type { PageScope, PermissionLevel } from '@fob/shared/knowledge/contracts';
-import { ChatCircleDots } from '@phosphor-icons/react';
+import { ChatCircleDots } from '@/components/icons';
 import { PageComments } from '../comments/comments-controller';
 import { usePageCommentThreads } from '../comments/comments-queries';
 import { levelSatisfies } from './editor-state';
@@ -42,7 +42,7 @@ export function PageCommentsTrigger({
         aria-expanded={open}
         onClick={onToggle}
       >
-        <ChatCircleDots aria-hidden size={15} />
+        <ChatCircleDots aria-hidden size={14} />
         <span>
           {knowledgeT('comments')}
           {count > 0 ? ` ${count}` : ''}

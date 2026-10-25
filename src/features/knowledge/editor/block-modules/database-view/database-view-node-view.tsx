@@ -14,7 +14,7 @@ import {
   MagnifyingGlass,
   Plus,
   Table,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import type {
@@ -130,7 +130,7 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
     >
       <div className={styles.header}>
         <span className={styles.heading}>
-          <Database aria-hidden size={17} weight="regular" />
+          <Database aria-hidden size={16} />
           {title}
         </span>
         {databaseId && editor.isEditable ? (
@@ -149,7 +149,7 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
           {scope ? (
             <>
               <div className={styles.search}>
-                <MagnifyingGlass aria-hidden size={15} />
+                <MagnifyingGlass aria-hidden size={14} />
                 <input
                   aria-label={knowledgeT('searchDatabases')}
                   value={query}
@@ -189,7 +189,7 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
                   disabled={creating}
                   onClick={() => void createDatabase()}
                 >
-                  <Plus aria-hidden size={15} />
+                  <Plus aria-hidden size={14} />
                   {creating ? knowledgeT('creating') : knowledgeT('createDatabase')}
                 </button>
               ) : null}
@@ -329,7 +329,7 @@ function BoardView({
             </h3>
             {items.map((row) => (
               <button type="button" key={row.pageId} onClick={() => onOpenRow(row.pageId)}>
-                <FileText aria-hidden size={15} />
+                <FileText aria-hidden size={14} />
                 {row.title || knowledgeT('untitled')}
               </button>
             ))}

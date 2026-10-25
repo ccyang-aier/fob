@@ -1,4 +1,4 @@
-import { ArrowUp, CircleHelp, Eye, EyeClosed, Heart, Moon, Orbit, Smile, SmilePlus, Sparkles, WandSparkles } from 'lucide-react';
+import { ArrowUp, CircleHelp, Eye, EyeClosed, Heart, Moon, Orbit, Smile, SmilePlus, Sparkles, WandSparkles } from '@/components/icons';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTranslation } from '@/lib/i18n/react';
 import { companionExpressions, companionMotions, messages, type CompanionAction } from './companion.messages';

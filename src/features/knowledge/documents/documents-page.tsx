@@ -3,7 +3,7 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './documents-page.messages';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { usePageSessionState, usePageScrollKey } from '@/lib/page-session-state';
-import { CaretRight, FileText, X } from '@phosphor-icons/react';
+import { CaretRight, FileText, X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import styles from './documents-page.module.css';
 import { formatOf } from './document-visuals';
@@ -228,7 +228,7 @@ export function DocumentsPage({
             aria-label={knowledgeT('closeUpload')}
             onClick={() => setUploadOpen(false)}
           >
-            <X size={20} />
+            <X size={16} />
           </button>
         </div>
         {uploadOpen ? upload : null}

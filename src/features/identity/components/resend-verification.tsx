@@ -14,7 +14,7 @@ import { messages } from './i18n/resend-verification.messages';
 
 import { verificationCallbackUrl } from '../verification-url';
 import { useEffect, useMemo, useState } from 'react';
-import { PaperPlaneTilt } from '@phosphor-icons/react';
+import { PaperPlaneTilt } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { authErrorCopyFor, isFobAuthFlowError } from '../auth-errors';
 import { fobAuthApi, type FobAuthApi } from '../auth-api';
@@ -116,7 +116,7 @@ export function ResendVerificationEntry({
         disabled={remainingSeconds > 0}
         onClick={() => void resend()}
       >
-        {!sending ? <PaperPlaneTilt className="size-3.5" weight="regular" aria-hidden /> : null}
+        {!sending ? <PaperPlaneTilt className="size-3.5" aria-hidden /> : null}
         {remainingSeconds > 0
           ? uiText('重新发送({0}s)', { '0': remainingSeconds })
           : uiText('重新发送验证邮件')}

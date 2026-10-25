@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 import { usePageScrollKey } from '@/lib/page-session-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { KnowledgeBaseDocumentImport } from '../documents/server-document-import';
-import { FilePlus, Folder, Plus } from '@phosphor-icons/react';
+import { FilePlus, Folder, Plus } from '@/components/icons';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeAccess } from '../data/hooks';
 import { useKnowledgePagesQuery } from '../data/pages-queries';
@@ -173,7 +173,7 @@ export function LibraryCanvas({
                 view === 'projects' ? onCreateFolder() : void actions.create(folder?.id)
               }
             >
-              {view === 'projects' ? <Plus size={15} /> : <FilePlus size={15} />}
+              {view === 'projects' ? <Plus size={14} /> : <FilePlus size={14} />}
               {view === 'projects' ? knowledgeT('newFolder') : knowledgeT('newDocument')}
             </button>
           ) : null}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { BookOpenText, Keyboard, Question, SquaresFour, X } from '@phosphor-icons/react';
+import { BookOpenText, Keyboard, Question, SquaresFour, X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { defineMessages, useTranslation } from '@/lib/i18n';
@@ -24,7 +24,7 @@ export function SidebarHelp({ compact, onNavigate }: { compact: boolean; onNavig
   const { t } = useTranslation(messages);
   const [open, setOpen] = useState(false);
   return <>
-    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${compact ? styles.iconButton : styles.settings}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={18} weight="fill" aria-hidden />{!compact && <span>{t('help')}</span>}</button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
+    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${compact ? styles.iconButton : styles.settings}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={16} aria-hidden />{!compact && <span>{t('help')}</span>}</button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
     {open && <HelpDialog onClose={() => setOpen(false)} onNavigate={onNavigate} />}
   </>;
 }
@@ -41,11 +41,11 @@ function HelpDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate: 
   function navigate(view: WorkbenchView) { onClose(); onNavigate(view); }
   return <dialog ref={dialogRef} className={help.dialog} aria-labelledby="fob-help-title" onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <div className={help.content}>
-      <header className={help.header}><h2 id="fob-help-title">{t('title')}</h2><button type="button" className={`fob-action ${help.close}`} aria-label={t('close')} onClick={onClose}><X size={15} aria-hidden /></button></header>
+      <header className={help.header}><h2 id="fob-help-title">{t('title')}</h2><button type="button" className={`fob-action ${help.close}`} aria-label={t('close')} onClick={onClose}><X size={14} aria-hidden /></button></header>
       <div className={help.guide}>
-        <section><BookOpenText size={18} aria-hidden /><div><h3>{t('knowledgeBase')}</h3><p>{t('knowledgeBaseHint')}</p></div></section>
-        <section><Keyboard size={18} aria-hidden /><div><h3>{t('search')}<kbd>Ctrl / ⌘ K</kbd></h3><p>{t('searchHint')}</p></div></section>
-        <section><SquaresFour size={18} aria-hidden /><div><h3>{t('storage')}</h3><p>{t('storageHint')}</p></div></section>
+        <section><BookOpenText size={16} aria-hidden /><div><h3>{t('knowledgeBase')}</h3><p>{t('knowledgeBaseHint')}</p></div></section>
+        <section><Keyboard size={16} aria-hidden /><div><h3>{t('search')}<kbd>Ctrl / ⌘ K</kbd></h3><p>{t('searchHint')}</p></div></section>
+        <section><SquaresFour size={16} aria-hidden /><div><h3>{t('storage')}</h3><p>{t('storageHint')}</p></div></section>
       </div>
       <footer className={help.footer}><Button variant="outline" onClick={() => navigate('templates')}>{t('templates')}</Button><Button onClick={() => navigate('knowledge')}>{t('openKnowledge')}</Button></footer>
     </div>

@@ -10,7 +10,7 @@ import { knowledgeMessages } from './members-section.messages';
  */
 
 import { useState } from 'react';
-import { CaretDown, Trash, UsersThree } from '@phosphor-icons/react';
+import { CaretDown, Trash, UsersThree } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -139,7 +139,7 @@ export function MembersSection({
                         className="flex h-[26px] items-center gap-1 rounded-[6px] border border-transparent px-1.5 outline-none transition-colors hover:border-[var(--line)] hover:bg-panel focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                       >
                         <RoleBadge role={member.role} />
-                        <CaretDown className="size-2.5 text-[var(--muted)]" weight="bold" />
+                        <CaretDown className="size-2.5 text-[var(--muted)]" />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="w-[150px]">

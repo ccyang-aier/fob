@@ -1,6 +1,6 @@
 import { createTranslator, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './index.messages';
-import { TextHOne } from '@phosphor-icons/react';
+import { TextHOne } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { HeadingInputRule } from './input-rule';

@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/account-profile.messages';
 
 import { useId, useState, type FormEvent } from 'react';
-import { CheckCircle } from '@phosphor-icons/react';
+import { CheckCircle } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { UserAvatar } from '@/components/user-avatar';
@@ -111,7 +111,7 @@ export function AccountProfile({ onClose }: { onClose: () => void }) {
               <div className={styles.emailValue}>
                 <span className={styles.emailAddress}>{user.email}</span>
                 <span className={user.emailVerified ? styles.verified : styles.unverified}>
-                  {user.emailVerified ? <CheckCircle size={12} weight="fill" aria-hidden /> : null}
+                  {user.emailVerified ? <CheckCircle size={12} aria-hidden /> : null}
                   {user.emailVerified ? uiText('已验证') : uiText('未验证')}
                 </span>
               </div>

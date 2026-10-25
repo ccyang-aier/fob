@@ -14,7 +14,7 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const key of ['window', 'document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle']) globals[key] = key === 'window' ? browser : (browser as unknown as Record<string, unknown>)[key];
   globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('@phosphor-icons/react', () => Object.fromEntries(['UserCircle', 'CircleNotch', 'SignOut', 'Warning', 'XCircle'].map(name => [name, () => <svg aria-hidden />])));
+  mock.module('@/components/icons', () => Object.fromEntries(['UserCircle', 'CircleNotch', 'SignOut', 'Warning', 'XCircle'].map(name => [name, () => <svg aria-hidden />])));
   mock.module('../data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ selectedKnowledgeBase: selected, scopeKey: selected ? `${principal}:${selected.source}:${selected.id}` : null }) }));
   mock.module('./organization-panel', () => ({ OrganizationPanel: ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
     mounted.push(knowledgeBaseId);

@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-tree-sidebar.messages';
 import type { ReactNode } from 'react';
-import { Warning, XCircle } from '@phosphor-icons/react';
+import { Warning, XCircle } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { CanvasState, TreeSkeletonRows } from '../canvas-states';
 import { KnowledgeNavigationPortal } from './system-navigation';
@@ -51,7 +51,7 @@ export function TreeError({ onRetry }: { onRetry: () => void }) {
       className="min-h-[200px] flex-1"
       tone="error"
       announce="assertive"
-      icon={<XCircle className="size-5" aria-hidden weight="fill" />}
+      icon={<XCircle className="size-5" aria-hidden />}
       title={knowledgeT('unableToLoadPageTree')}
       hint={knowledgeT('unableToReadFoldersRetryLater')}
       actions={
@@ -69,7 +69,7 @@ export function TreeForbidden() {
   return (
     <CanvasState
       className="min-h-[200px] flex-1"
-      icon={<Warning className="size-5" aria-hidden weight="fill" />}
+      icon={<Warning className="size-5" aria-hidden />}
       title={knowledgeT('unableToBrowsePageTree')}
       hint={knowledgeT('yourRoleCannotViewThisDirectoryContactThe')}
       announce="polite"

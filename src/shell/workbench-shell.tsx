@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { SystemIconScope } from '@/components/system-icon-scope';
 import { getKnowledgeUiSession } from '@/lib/knowledge-ui-session';
 import { KnowledgeUiSessionContext } from '@/lib/page-session-state';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -77,16 +76,16 @@ function WorkbenchChrome() {
     <div className="h-dvh w-full p-[var(--win-frame-inset)]">
       <div ref={frameRef} className={`${styles.frame} flex h-full w-full min-h-[320px] flex-col overflow-hidden text-[var(--ink)] shadow-[var(--win-shadow)]`}>
         <div className="flex min-h-0 flex-1">
-          <div className={`${styles.navigation} flex shrink-0`}><SystemIconScope><NavigationSidebar open={!sidebarCollapsed} onCollapse={() => setSidebarCollapsed(true)} onExpand={() => setSidebarCollapsed(false)} view={view} onViewChange={changeView} onKnowledgeBaseChange={() => {}} /></SystemIconScope></div>
+          <div className={`${styles.navigation} flex shrink-0`}><NavigationSidebar open={!sidebarCollapsed} onCollapse={() => setSidebarCollapsed(true)} onExpand={() => setSidebarCollapsed(false)} view={view} onViewChange={changeView} onKnowledgeBaseChange={() => {}} /></div>
           {!sidebarCollapsed && <button type="button" className={styles.navigationScrim} aria-label={t('收起主导航')} onClick={() => setSidebarCollapsed(true)} />}
           <div className={styles.workspace}>
-            <div className={styles.systemBar}><SystemIconScope><SystemBar onNavigate={changeView} navigation={navigation}>{tabs.ready ? <WorkbenchTabBar key={scopeKey ?? 'no-knowledge-base'} tabs={tabs.tabs} active={tabs.active} split={tabs.split} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={tabs.reorder} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onSplit={tabs.splitTab} onUnsplit={tabs.unsplit} onNew={tabs.newTab} /> : <div className="flex-1" />}</SystemBar></SystemIconScope></div>
+            <div className={styles.systemBar}><SystemBar onNavigate={changeView} navigation={navigation}>{tabs.ready ? <WorkbenchTabBar key={scopeKey ?? 'no-knowledge-base'} tabs={tabs.tabs} active={tabs.active} split={tabs.split} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={tabs.reorder} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onSplit={tabs.splitTab} onUnsplit={tabs.unsplit} onNew={tabs.newTab} /> : <div className="flex-1" />}</SystemBar></div>
             <main className={styles.content}>
               {tabs.ready && <WorkbenchPanels tabs={tabs.tabs} active={tabs.active} split={tabs.split} navigationOwner={navigationOwner} onActivateNavigation={tabs.activate} onReportDocument={tabs.reportDocument} onSplitDocument={tabs.splitTab} onTogglePin={tabs.pin} onResizeSplit={tabs.resizeSplit} />}
             </main>
           </div>
         </div>
-        <SystemIconScope><SettingsDialog open={settingsOpen} section={settingsSection} onSectionChange={setSettingsSection} onClose={closeSettings} /></SystemIconScope>
+        <SettingsDialog open={settingsOpen} section={settingsSection} onSectionChange={setSettingsSection} onClose={closeSettings} />
       </div>
     </div>
   </TooltipProvider></KnowledgeNavigationProvider>;

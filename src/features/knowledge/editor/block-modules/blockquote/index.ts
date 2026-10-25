@@ -1,4 +1,4 @@
-import { Quotes } from '@phosphor-icons/react';
+import { Quotes } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { BlockquoteInputRule } from './input-rule';

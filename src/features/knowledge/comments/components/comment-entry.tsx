@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './comment-entry.messages';
 import { useRef, useState, type ReactNode } from 'react';
-import { DotsThree, TrashSimple, ThumbsUp, PencilSimple, LinkSimple } from '@phosphor-icons/react';
+import { DotsThree, TrashSimple, ThumbsUp, ThumbsUpOutline, PencilSimple, LinkSimple } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,7 +100,7 @@ export function CommentEntryItem({
                   aria-label={knowledgeT('commentActions')}
                   disabled={deleting || edit.pending}
                 >
-                  <DotsThree size={18} weight="bold" aria-hidden />
+                  <DotsThree size={16} aria-hidden />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -120,7 +120,7 @@ export function CommentEntryItem({
                       setCopyStatus('idle');
                     }}
                   >
-                    <PencilSimple size={16} weight="bold" aria-hidden />
+                    <PencilSimple size={16} aria-hidden />
                     {knowledgeT('edit')}
                   </DropdownMenuItem>
                 )}
@@ -132,7 +132,7 @@ export function CommentEntryItem({
                     );
                   }}
                 >
-                  <LinkSimple size={16} weight="bold" aria-hidden />
+                  <LinkSimple size={16} aria-hidden />
                   {knowledgeT('copyLink')}
                 </DropdownMenuItem>
                 {isOwn && canComment && (
@@ -143,7 +143,7 @@ export function CommentEntryItem({
                       onSelect={() => onDelete(entry.id)}
                       disabled={deleting}
                     >
-                      <TrashSimple size={16} weight="bold" aria-hidden />
+                      <TrashSimple size={16} aria-hidden />
                       {knowledgeT('delete')}
                     </DropdownMenuItem>
                   </>
@@ -195,7 +195,7 @@ export function CommentEntryItem({
               data-pulse={likePulse > 0}
               aria-hidden
             >
-              <ThumbsUp size={16} weight={entry.liked ? 'fill' : 'regular'} />
+              {entry.liked ? <ThumbsUp size={16} /> : <ThumbsUpOutline size={16} />}
             </span>
             <span>{entry.likeCount || knowledgeT('like2')}</span>
           </button>

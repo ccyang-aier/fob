@@ -12,7 +12,7 @@ import {
   SidebarSimple,
   UploadSimple,
   X,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { ViewSwitcher } from '@/components/ui/view-switcher';
 import {
@@ -81,7 +81,7 @@ export function DocumentsToolbar({
             onClick={onExpandSidebar}
             className={styles.sidebarToggle}
           >
-            <SidebarSimple size={18} />
+            <SidebarSimple size={16} />
           </IconButton>
         ) : null}
         <h1>{knowledgeT('document')}</h1>
@@ -104,7 +104,7 @@ export function DocumentsToolbar({
               onClick={() => onSearch('')}
               className={styles.clearSearch}
             >
-              <X size={13} />
+              <X size={14} />
             </Button>
           ) : null}
         </label>
@@ -148,7 +148,7 @@ export function DocumentsToolbar({
           aria-label={knowledgeT('changeUpdatedTimeSort')}
           onClick={onSort}
         >
-          <ArrowsDownUp size={17} />
+          <ArrowsDownUp size={16} />
         </Button>
         <ViewSwitcher
           value={layout === 'table' ? 'list' : 'grid'}
@@ -159,7 +159,7 @@ export function DocumentsToolbar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className={styles.control} disabled={!canEdit}>
-              <Plus size={17} />
+              <Plus size={16} />
               {knowledgeT('new')}
               <CaretDown className={styles.caret} size={12} />
             </Button>
@@ -176,7 +176,7 @@ export function DocumentsToolbar({
           </DropdownMenuContent>
         </DropdownMenu>
         <Button size="sm" className={styles.upload} disabled={!canEdit} onClick={onUpload}>
-          <UploadSimple size={17} />
+          <UploadSimple size={16} />
           {knowledgeT('upload')}
         </Button>
         <DropdownMenu>
@@ -187,7 +187,7 @@ export function DocumentsToolbar({
               className={styles.more}
               aria-label={knowledgeT('moreDocumentViewActions')}
             >
-              <DotsThree size={19} weight="bold" />
+              <DotsThree size={16} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

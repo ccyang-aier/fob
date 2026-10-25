@@ -7,7 +7,7 @@
  * state. Label changes announce politely; the hint rides along as tooltip.
  */
 
-import { CheckCircle, SpinnerGap } from '@phosphor-icons/react';
+import { CheckCircle, SpinnerGap } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { SyncIndicatorView, SyncTone } from '../editor-state';
 
@@ -40,7 +40,7 @@ export function SyncIndicator({ view }: { view: SyncIndicatorView }) {
       {view.busy ? (
         <SpinnerGap aria-hidden className="size-3 animate-spin" />
       ) : view.tone === 'ok' ? (
-        <CheckCircle aria-hidden className="size-3.5" weight="fill" />
+        <CheckCircle aria-hidden className="size-3.5" />
       ) : (
         <span
           aria-hidden

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { X } from '@phosphor-icons/react';
+import { X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { useAppAlert } from '@/components/app-alert-provider';

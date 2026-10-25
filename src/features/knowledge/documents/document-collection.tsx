@@ -1,7 +1,7 @@
 import { formatDate, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-collection.messages';
 import type { ReactNode } from 'react';
-import { ArrowDown, CheckCircle, Desktop } from '@phosphor-icons/react';
+import { ArrowDown, CheckCircle, Desktop } from '@/components/icons';
 import { FileBadge, formatOf } from './document-visuals';
 import type { DocumentItem } from './types';
 import { documentIndexStatusLabel, documentSourceLabel } from './document-metadata';
@@ -113,7 +113,7 @@ export function DocumentCollection({
               <td>
                 <span className={styles.status} data-index-status={doc.status}>
                   {doc.status === 'indexed' ? (
-                    <CheckCircle size={17} weight="fill" />
+                    <CheckCircle size={16} />
                   ) : (
                     <span className={styles.statusDot} />
                   )}

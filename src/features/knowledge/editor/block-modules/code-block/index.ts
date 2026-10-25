@@ -1,4 +1,4 @@
-import { Code } from '@phosphor-icons/react';
+import { Code } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { CodeBlockInputRule } from './input-rule';

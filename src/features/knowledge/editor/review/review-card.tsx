@@ -12,7 +12,7 @@ import { knowledgeMessages } from './review-card.messages';
  * title, mirroring the honest matrix of `reviewActionsView`.
  */
 
-import { ArrowsLeftRight, Check, Minus, Plus, X } from '@phosphor-icons/react';
+import { ArrowsLeftRight, Check, Minus, Plus, X } from '@/components/icons';
 import type { SuggestionDecision } from '@fob/shared/knowledge/schema/suggestions';
 import { cn } from '@/lib/utils';
 import { authorBadgeGlyph } from './author';
@@ -148,7 +148,7 @@ export function ReviewCard({
               kind.className,
             )}
           >
-            <KindIcon aria-hidden className="size-2.5" weight="bold" />
+            <KindIcon aria-hidden className="size-2.5" />
             {kind.label}
           </span>
           {row.scope !== 'text' ? (
@@ -190,7 +190,7 @@ export function ReviewCard({
           reason={disabledReason}
           onClick={() => onDecide(row.suggestionId, 'reject')}
         >
-          <X aria-hidden className="size-3" weight="bold" />
+          <X aria-hidden className="size-3" />
           {knowledgeT('reject')}
         </DecisionButton>
         <DecisionButton
@@ -200,7 +200,7 @@ export function ReviewCard({
           reason={disabledReason}
           onClick={() => onDecide(row.suggestionId, 'accept')}
         >
-          <Check aria-hidden className="size-3" weight="bold" />
+          <Check aria-hidden className="size-3" />
           {knowledgeT('accept')}
         </DecisionButton>
       </div>

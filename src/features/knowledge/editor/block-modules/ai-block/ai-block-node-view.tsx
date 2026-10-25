@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './ai-block-node-view.messages';
 import { useState } from 'react';
-import { CheckCircle, CircleNotch, Pause, Play, Sparkle, Trash } from '@phosphor-icons/react';
+import { CheckCircle, CircleNotch, Pause, Play, Sparkle, Trash } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import type { PageScope } from '@fob/shared/knowledge/contracts';
@@ -29,7 +29,7 @@ export function AiBlockNodeView({ scope, ...props }: NodeViewProps & { scope?: P
       <div className={styles.header} contentEditable={false}>
         <span className={styles.title}>
           <span className={styles.sparkle}>
-            <Sparkle aria-hidden size={16} weight="fill" />
+            <Sparkle aria-hidden size={16} />
           </span>{' '}
           {knowledgeT('aiTaskBlock')}
         </span>
@@ -182,7 +182,7 @@ function AiTaskActions({
         <>
           {status === 'done' ? (
             <span className={styles.status}>
-              <CheckCircle aria-hidden size={15} />
+              <CheckCircle aria-hidden size={14} />
               {knowledgeT('generated')}
               {task.snapshot?.blocksWritten ?? 0} {knowledgeT('block')}
             </span>
@@ -197,7 +197,7 @@ function AiTaskActions({
             disabled={busy || !prompt.trim() || !blockId}
             onClick={() => void run()}
           >
-            <Play aria-hidden size={13} weight="fill" />
+            <Play aria-hidden size={14} />
             {status ? knowledgeT('regenerate') : knowledgeT('generate')}
           </button>
           {status ? (

@@ -2,7 +2,7 @@
 import { formatNumber, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './text-file-view.messages';
 import { useMemo, useState } from 'react';
-import { CaretDown, CaretRight, MagnifyingGlass } from '@phosphor-icons/react';
+import { CaretDown, CaretRight, MagnifyingGlass } from '@/components/icons';
 import { parseCsv } from './file-format';
 import styles from './file-preview.module.css';
 
@@ -53,7 +53,7 @@ export function TextFileView({ text, format }: { text: string; format: 'csv' | '
             {knowledgeT(columns === 1 ? 'oneColumn' : 'columns')}
           </span>
           <label>
-            <MagnifyingGlass size={15} />
+            <MagnifyingGlass size={14} />
             <input
               aria-label={knowledgeT('filterTableContent')}
               placeholder={knowledgeT('filterContent')}
@@ -181,7 +181,7 @@ function JsonNode({ value, name, depth }: { value: unknown; name?: string; depth
             aria-label={`${open ? knowledgeT('collapse') : knowledgeT('expand')}${name ?? knowledgeT('rootNode')}`}
             onClick={() => setOpen((current) => !current)}
           >
-            {open ? <CaretDown size={13} /> : <CaretRight size={13} />}
+            {open ? <CaretDown size={14} /> : <CaretRight size={14} />}
           </button>
         ) : (
           <span className={styles.jsonSpacer} />

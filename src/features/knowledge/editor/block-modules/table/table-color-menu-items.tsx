@@ -3,7 +3,7 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './table-color-menu-items.messages';
 import { useState } from 'react';
 import * as Menu from '@radix-ui/react-dropdown-menu';
-import { CaretRight, Check } from '@phosphor-icons/react';
+import { CaretRight, Check } from '@/components/icons';
 import { TABLE_COLORS } from './table-style';
 import { TableColorPicker } from './table-color-picker';
 import styles from './table.module.css';
@@ -46,7 +46,7 @@ export function TableColorMenuItems({
           />
           <span>{color.name}</span>
           {background?.toLowerCase() === color.value?.toLowerCase() && background !== undefined ? (
-            <Check size={18} weight="bold" className={styles.caret} aria-hidden />
+            <Check size={16} className={styles.caret} aria-hidden />
           ) : null}
         </Menu.Item>
       ))}
@@ -58,7 +58,7 @@ export function TableColorMenuItems({
         >
           <span className={`${styles.swatch} ${styles.customSwatch}`} aria-hidden />
           <span>{knowledgeT('custom')}</span>
-          <CaretRight size={12} weight="fill" className={styles.caret} aria-hidden />
+          <CaretRight size={12} className={styles.caret} aria-hidden />
         </Menu.SubTrigger>
         <Menu.Portal>
           <Menu.SubContent

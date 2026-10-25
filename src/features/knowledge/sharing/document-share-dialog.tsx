@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-share-dialog.messages';
 import { useState } from 'react';
-import { LinkSimple } from '@phosphor-icons/react';
+import { LinkSimple } from '@/components/icons';
 import { DialogButton, ModalDialog } from '../organization/ui';
 import { documentLink, type DocumentLinkTarget } from '../editor/document-link';
 
@@ -47,7 +47,7 @@ export function DocumentShareDialog({
         {title || knowledgeT('untitledDocument')}
       </p>
       <label className="flex items-center gap-2 rounded-md border border-[var(--line)] bg-[var(--surface-subtle)] px-3 py-2 text-[var(--muted-strong)]">
-        <LinkSimple size={16} weight="bold" className="shrink-0" aria-hidden />
+        <LinkSimple size={16} className="shrink-0" aria-hidden />
         <input
           aria-label={knowledgeT('documentShareLink')}
           className="min-w-0 flex-1 bg-transparent text-xs text-[var(--ink-soft)] outline-none"

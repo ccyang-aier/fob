@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/account-dialog.messages';
 
 import { useEffect, useRef } from 'react';
-import { X } from '@phosphor-icons/react';
+import { X } from '@/components/icons';
 import { useIdentity } from '../identity-provider';
 import { AuthEntryContent } from './auth-entry-content';
 import { AuthShowcase } from './auth-showcase';

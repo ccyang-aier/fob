@@ -5,7 +5,7 @@ import { knowledgeMessages } from './comments-sidebar.messages';
 import { useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { getOverlayRoot } from '@/lib/overlay-root';
-import { ChatsCircle, WarningCircle, X } from '@phosphor-icons/react';
+import { ChatsCircle, WarningCircle, X } from '@/components/icons';
 import type { CommentThreadKind } from '@fob/shared/knowledge/comments';
 import {
   defaultCommentFilters,

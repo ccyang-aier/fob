@@ -18,7 +18,7 @@ import {
   TextB,
   TextItalic,
   TextStrikethrough,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
 import {
   DropdownMenu,
@@ -80,7 +80,7 @@ function SelectionLink({
           title={knowledgeT('link')}
           aria-pressed={editor.isActive('link')}
         >
-          <LinkSimple size={18} />
+          <LinkSimple size={16} />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -258,7 +258,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
           aria-pressed={isBlock('blockquote')}
           onClick={() => block({ kind: 'blockquote' })}
         >
-          <Quotes size={17} weight="regular" />
+          <Quotes size={16} />
         </button>
       </div>
       <div className={styles.group}>
@@ -278,7 +278,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
             aria-pressed={isBlock(kind)}
             onClick={() => block({ kind })}
           >
-            <Icon size={18} />
+            <Icon size={16} />
           </button>
         ))}
       </div>
@@ -302,7 +302,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
             disabled={!editor.can().toggleMark(mark)}
             onClick={() => editor.chain().focus().toggleMark(mark).run()}
           >
-            <Icon size={18} />
+            <Icon size={16} />
           </button>
         ))}
       </div>
@@ -327,7 +327,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
               })
             }
           >
-            <Chat size={18} />
+            <Chat size={16} />
           </button>
         )}
       </div>

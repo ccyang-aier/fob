@@ -3,7 +3,7 @@
 import { useTranslation, createTranslator, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './math-node-view.messages';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, Copy, Function as FunctionIcon } from '@phosphor-icons/react';
+import { Check, Copy, Function as FunctionIcon } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import {
@@ -118,12 +118,12 @@ export function MathNodeView({ node, editor, updateAttributes, HTMLAttributes }:
                 aria-label={copied ? knowledgeT('latexCopied') : knowledgeT('copyLatex')}
                 onClick={copy}
               >
-                {copied ? <Check size={15} aria-hidden /> : <Copy size={15} aria-hidden />}
+                {copied ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
               </button>
             )}
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger aria-label={knowledgeT('equationShortcuts')}>
-                <FunctionIcon size={17} aria-hidden />
+                <FunctionIcon size={16} aria-hidden />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className={styles.symbols}>
                 {SYMBOLS(locale).map((symbol) => (

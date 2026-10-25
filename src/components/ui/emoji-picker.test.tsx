@@ -13,7 +13,7 @@ beforeAll(async () => {
   for (const key of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'FocusEvent', 'MouseEvent', 'PointerEvent', 'KeyboardEvent', 'ResizeObserver', 'MutationObserver', 'getComputedStyle']) globals[key] = (browser as unknown as Record<string, unknown>)[key];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
   browser.localStorage.setItem('fob.language', 'en-US');
-  mock.module('@phosphor-icons/react', () => ({ Smiley: () => <svg aria-hidden /> }));
+  mock.module('@/components/icons', () => ({ Smiley: () => <svg aria-hidden /> }));
   mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => document.body }));
   ({ EmojiPicker: Picker } = await import('./emoji-picker'));
   const { createRoot } = await import('react-dom/client');

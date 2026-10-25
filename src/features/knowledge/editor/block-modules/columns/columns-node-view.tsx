@@ -3,7 +3,7 @@
 import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './columns-node-view.messages';
 import { useRef, useState, type PointerEvent } from 'react';
-import { Columns, Minus, Plus } from '@phosphor-icons/react';
+import { Columns, Minus, Plus } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import {
@@ -155,7 +155,7 @@ export function ColumnsNodeView({
         <div className={styles.controls} contentEditable={false} data-document-export-omit>
           <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
             <DropdownMenuTrigger className={styles.trigger} aria-label={knowledgeT('columnLayout')}>
-              <Columns size={15} aria-hidden />
+              <Columns size={14} aria-hidden />
               {node.childCount} {knowledgeT('columns')}
             </DropdownMenuTrigger>
             <DropdownMenuContent

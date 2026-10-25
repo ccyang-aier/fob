@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Translate } from '@phosphor-icons/react';
+import { Check, Translate } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { setLocale, type Locale } from '@/lib/i18n/locale';
@@ -25,7 +25,7 @@ export function LanguageSettings() {
     <SettingsSection title={t('title')}>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <Translate size={19} className="text-[var(--muted-strong)]" aria-hidden />
+          <Translate size={16} className="text-[var(--muted-strong)]" aria-hidden />
           <div>
             <h3 className="text-[12px] font-medium">{t('label')}</h3>
             <p className="mt-1 text-[11.5px] text-[var(--muted)]">{t('description')}</p>
@@ -48,7 +48,7 @@ export function LanguageSettings() {
                 </span>
               </span>
               <Check
-                size={15}
+                size={14}
                 className={locale === option.value ? 'text-[var(--accent)]' : 'invisible'}
                 aria-hidden
               />

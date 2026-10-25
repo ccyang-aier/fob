@@ -1,6 +1,6 @@
 import { createTranslator, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './index.messages';
-import { CheckSquare } from '@phosphor-icons/react';
+import { CheckSquare } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { TaskListInputRule } from './input-rule';

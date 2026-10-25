@@ -9,7 +9,7 @@ import { knowledgeMessages } from './ai-task-status.messages';
  * 展示——建议块已随协作通道逐块出现在页面里，由 S01 审阅层负责接受/拒绝。
  */
 
-import { SpinnerGap, Stop, ArrowCounterClockwise } from '@phosphor-icons/react';
+import { SpinnerGap, Stop, ArrowCounterClockwise } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { AiStreamingTaskSnapshot } from '@fob/shared/knowledge/contracts';
 

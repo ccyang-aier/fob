@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './permission-select.messages';
-import { CaretDown, Check, ShieldCheck } from '@phosphor-icons/react';
+import { CaretDown, Check, ShieldCheck } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,7 +41,7 @@ export function PermissionSelect({
             className="group flex w-full items-center gap-3 rounded-lg border border-[var(--line)] bg-[var(--panel)] px-3 py-2.5 text-left outline-none transition-colors hover:border-[var(--line-strong)] hover:bg-[var(--surface-subtle)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-50"
           >
             <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-[var(--surface-subtle)] text-[var(--muted-strong)]">
-              <ShieldCheck size={18} />
+              <ShieldCheck size={16} />
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-[12px] font-medium text-[var(--ink)]">
@@ -53,7 +53,7 @@ export function PermissionSelect({
             </span>
             <CaretDown
               aria-hidden
-              size={13}
+              size={14}
               className="shrink-0 text-[var(--muted)] transition-transform group-data-[state=open]:rotate-180"
             />
           </button>
@@ -82,8 +82,7 @@ export function PermissionSelect({
               {option.value === value ? (
                 <Check
                   aria-label={knowledgeT('currentOption')}
-                  size={15}
-                  weight="bold"
+                  size={14}
                   className="shrink-0 text-[var(--accent-ink)]"
                 />
               ) : (

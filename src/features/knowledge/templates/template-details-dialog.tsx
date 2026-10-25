@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { KnowledgeTemplateSummary } from '@fob/shared/knowledge/templates';
-import { FileText, Folder, PencilSimple as Pencil, Trash as Trash2 } from '@phosphor-icons/react';
+import { FileText, Folder, PencilSimple as Pencil, Trash as Trash2 } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -70,7 +70,7 @@ export function TemplateDetailsDialog({ template, onClose }: { template: Knowled
   </>}>
     {mode === 'edit' ? <div className={styles.form}><TemplateFields name={name} description={description} onName={setName} onDescription={setDescription} /></div> : mode === 'delete' ? <p className={styles.deleteText}>{t('confirmDelete', { name: template.name })}</p> : <div className={styles.detailLayout}>
       <div className={styles.previewHost}>{detail.isPending ? <p className={styles.state}>{t('loading')}</p> : detail.isError ? <AppAlert tone="error" title={detail.error.message} action={<Button variant="ghost" onClick={() => void detail.refetch()}>{t('retry')}</Button>} /> : <TemplatePreview detail={detail.data} />}</div>
-      <aside className={styles.detailAside}><span className={styles.detailIcon}><FileText size={22} weight="fill" /></span><h3>{template.name}</h3>{template.description && <p>{template.description}</p>}<label className={styles.field}><span>{t('newTitle')}</span><input value={title} maxLength={500} onChange={event => setTitle(event.target.value)} disabled={busy} /></label><label className={styles.field}><span><Folder size={13} />{t('folder')}</span><select aria-label={t('folder')} value={destination} onChange={event => setFolder(event.target.value)} disabled={busy || folders.isFetching}>{base.source === 'local' && <option value="">{t('unfiled')}</option>}{choices.map(choice => <option key={choice.id} value={choice.id}>{choice.name}</option>)}</select></label>{base.source === 'server' && folders.isSuccess && !choices.length && <p className={styles.hint}>{t('noFolders')}</p>}{folders.isError && <AppAlert tone="error" title={t('failed')} action={<Button variant="ghost" onClick={() => void folders.refetch()}>{t('retry')}</Button>} />}</aside>
+      <aside className={styles.detailAside}><span className={styles.detailIcon}><FileText size={22} /></span><h3>{template.name}</h3>{template.description && <p>{template.description}</p>}<label className={styles.field}><span>{t('newTitle')}</span><input value={title} maxLength={500} onChange={event => setTitle(event.target.value)} disabled={busy} /></label><label className={styles.field}><span><Folder size={14} />{t('folder')}</span><select aria-label={t('folder')} value={destination} onChange={event => setFolder(event.target.value)} disabled={busy || folders.isFetching}>{base.source === 'local' && <option value="">{t('unfiled')}</option>}{choices.map(choice => <option key={choice.id} value={choice.id}>{choice.name}</option>)}</select></label>{base.source === 'server' && folders.isSuccess && !choices.length && <p className={styles.hint}>{t('noFolders')}</p>}{folders.isError && <AppAlert tone="error" title={t('failed')} action={<Button variant="ghost" onClick={() => void folders.refetch()}>{t('retry')}</Button>} />}</aside>
     </div>}
     {error && <AppAlert tone="error" title={error} />}
   </TemplateDialog>;

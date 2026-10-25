@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { X } from 'lucide-react';
+import { X } from '@/components/icons';
 import { AnimatePresence, MotionConfig } from 'motion/react';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n/react';

@@ -1,31 +1,12 @@
-import * as React from "react";
-import Image from "next/image";
+import type { IconProps } from '@/components/icons';
+import { getProjectIconDefinition } from './project-icons';
+import { cn } from '@/lib/utils';
 
-import { getProjectIconUrl } from "./project-icons";
-import { cn } from "@/lib/utils";
+export type ProjectIconProps = IconProps & { iconId?: string; alt?: string };
 
-type ProjectIconProps = Omit<
-  React.ComponentProps<typeof Image>,
-  "src" | "width" | "height" | "alt"
-> & {
-  iconId?: string;
-  alt?: string;
-};
-
-function ProjectIcon({ iconId, alt = "", className, ...props }: ProjectIconProps) {
-  return (
-    <Image
-      src={getProjectIconUrl(iconId)}
-      alt={alt}
-      width={512}
-      height={512}
-      sizes="36px"
-      draggable={false}
-      className={cn("block shrink-0 select-none", className)}
-      {...props}
-    />
-  );
+export function ProjectIcon({ iconId, alt = '', className, ...props }: ProjectIconProps) {
+  const definition = getProjectIconDefinition(iconId);
+  const Glyph = definition.icon;
+  return <Glyph aria-hidden={alt ? undefined : true} aria-label={alt || undefined}
+    data-project-icon={definition.id} className={cn('block shrink-0 select-none', className)} {...props} />;
 }
-
-export { ProjectIcon };
-export type { ProjectIconProps };

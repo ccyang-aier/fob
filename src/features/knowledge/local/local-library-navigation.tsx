@@ -12,7 +12,7 @@ import {
   Plus,
   Tag,
   Trash,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -161,7 +161,7 @@ export function LocalLibraryNavigation({
                 onClick={onCreateFolder}
                 className="rounded p-1 enabled:hover:bg-[var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <Plus size={15} />
+                <Plus size={14} />
               </IconButton>
             ) : undefined
           }
@@ -222,7 +222,7 @@ export function LocalLibraryNavigation({
                       >
                         <CaretRight
                           aria-hidden
-                          size={11} weight="bold"
+                          size={12}
                           className={cn(
                             'mr-[9px] shrink-0 text-[var(--muted)] transition-transform',
                             expanded && 'rotate-90',
@@ -230,8 +230,7 @@ export function LocalLibraryNavigation({
                         />
                         <Folder
                           aria-hidden
-                          size={15}
-                          weight="fill"
+                          size={14}
                           className="mr-2 shrink-0 text-[#7c8387]"
                         />
                         <span className="truncate">{folder.name}</span>
@@ -262,7 +261,7 @@ export function LocalLibraryNavigation({
                             tooltip={knowledgeT('more')}
                             className={styles.actionButton}
                           >
-                            <DotsThree size={15} weight="bold" />
+                            <DotsThree size={14} />
                           </IconButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -348,7 +347,7 @@ export function LocalLibraryNavigation({
                     title={knowledgeT('createAKnowledgeBaseFirst')}
                     className="mt-1 flex h-[30px] items-center gap-2 px-1 text-[12px] text-[var(--muted)] opacity-45 cursor-not-allowed"
                   >
-                    <Plus size={15} aria-hidden />
+                    <Plus size={14} aria-hidden />
                     {knowledgeT('newFolder')}
                   </button>
                 </>
@@ -379,7 +378,7 @@ export function LocalLibraryNavigation({
                 }}
                 className="rounded p-1 enabled:hover:bg-[var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <Plus size={15} />
+                <Plus size={14} />
               </IconButton>
             ) : undefined
           }
@@ -458,7 +457,7 @@ export function LocalLibraryNavigation({
                       >
                         <CaretRight
                           aria-hidden
-                          size={11} weight="bold"
+                          size={12}
                           className={cn(
                             'mr-[9px] shrink-0 text-[var(--muted)] transition-transform',
                             expanded && 'rotate-90',
@@ -497,7 +496,7 @@ export function LocalLibraryNavigation({
                             tooltip={knowledgeT('more')}
                             className={styles.actionButton}
                           >
-                            <DotsThree size={15} weight="bold" />
+                            <DotsThree size={14} />
                           </IconButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -561,7 +560,7 @@ export function LocalLibraryNavigation({
                 title={knowledgeT('createAKnowledgeBaseFirst')}
                 className="mt-1 flex h-[30px] items-center gap-2 px-1 text-[12px] text-[var(--muted)] opacity-45 cursor-not-allowed"
               >
-                <Plus size={15} aria-hidden />
+                <Plus size={14} aria-hidden />
                 {knowledgeT('newTag')}
               </button>
             ) : null}

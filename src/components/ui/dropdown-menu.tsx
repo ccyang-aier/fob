@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { Check, CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react"
+import { Check, CaretRight, MagnifyingGlass, X } from '@/components/icons'
 
 import { getOverlayRoot, OverlayRootContext } from "@/lib/overlay-root"
 import { cn } from "@/lib/utils"
@@ -142,7 +142,7 @@ function DropdownMenuCheckboxItem({
     >
       {indicator === "check" && <span className="fob-menu-checkbox absolute left-2.5" aria-hidden>
         <DropdownMenuPrimitive.ItemIndicator>
-          <Check className="size-3.5" weight="bold" />
+          <Check className="size-3.5" />
         </DropdownMenuPrimitive.ItemIndicator>
       </span>}
       {children}
@@ -158,7 +158,7 @@ function DropdownMenuRadioItem({ className, children, indicator = "check", empha
     data-emphasize-selection={emphasizeSelection ? undefined : 'false'}
     {...props}
   >
-    {indicator === "check" && <span className="absolute left-2.5 flex size-4 items-center justify-center"><DropdownMenuPrimitive.ItemIndicator><Check className="size-3.5" weight="bold" /></DropdownMenuPrimitive.ItemIndicator></span>}
+    {indicator === "check" && <span className="absolute left-2.5 flex size-4 items-center justify-center"><DropdownMenuPrimitive.ItemIndicator><Check className="size-3.5" /></DropdownMenuPrimitive.ItemIndicator></span>}
     {children}
   </DropdownMenuPrimitive.RadioItem>
 }

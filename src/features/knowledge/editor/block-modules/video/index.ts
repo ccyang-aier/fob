@@ -1,4 +1,4 @@
-import { Video } from '@phosphor-icons/react';
+import { Video } from '@/components/icons';
 import { insertMedia } from '../media-core/insert-media';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

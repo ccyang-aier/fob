@@ -10,7 +10,7 @@ import {
   Image as ImageIcon,
   LinkSimple,
   WarningCircle,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { commentBodySchema, type CommentThreadKind } from '@fob/shared/knowledge/comments';
 import { CommentEditor, type CommentEditorHandle } from './comment-editor';
 import { useAssetUploads } from '../../assets/use-asset-uploads';
@@ -215,7 +215,7 @@ export function CommentComposer({
                   aria-label={knowledgeT('mentionMember')}
                   title={knowledgeT('mentionMember')}
                 >
-                  <At size={18} weight="regular" aria-hidden />
+                  <At size={16} aria-hidden />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -247,7 +247,7 @@ export function CommentComposer({
               title={knowledgeT('uploadImage')}
               onClick={() => input.current?.click()}
             >
-              <ImageIcon size={18} weight="regular" aria-hidden />
+              <ImageIcon size={16} aria-hidden />
             </button>
             <input
               ref={input}
@@ -286,7 +286,7 @@ export function CommentComposer({
                   aria-label={knowledgeT('insertCommentLink')}
                   title={knowledgeT('insertLink')}
                 >
-                  <LinkSimple size={18} weight="regular" aria-hidden />
+                  <LinkSimple size={16} aria-hidden />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
@@ -374,7 +374,7 @@ export function CommentComposer({
                 title={`${submitLabel} · Ctrl / ⌘ + Enter`}
               >
                 <span>{sending ? sendingLabel : submitLabel}</span>
-                {sending && <CircleNotch size={15} className="animate-spin" aria-hidden />}
+                {sending && <CircleNotch size={14} className="animate-spin" aria-hidden />}
               </button>
             </>
           )}

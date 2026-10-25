@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './document-appearance-menu.messages';
 import { useState, type KeyboardEvent } from 'react';
-import { SlidersHorizontal } from '@phosphor-icons/react';
+import { SlidersHorizontal } from '@/components/icons';
 import {
   AppearanceSelect,
   AppearanceSizeControl,

@@ -11,7 +11,7 @@ import { knowledgeMessages } from './teamspaces-section.messages';
  */
 
 import { useState } from 'react';
-import { FolderOpen, PencilSimple, ShieldCheck, Trash } from '@phosphor-icons/react';
+import { FolderOpen, PencilSimple, ShieldCheck, Trash } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { validateOrganizationName } from '@/features/knowledge/organization/client';
 import type { MemberRole } from '@/features/knowledge/organization/client';
@@ -134,7 +134,7 @@ export function TeamspacesSection({
               key={teamspace.id}
               className="flex items-center gap-3 border-b border-[var(--line)] px-4 py-2.5 transition-colors last:border-b-0 hover:bg-[var(--surface-subtle)]"
             >
-              <FolderOpen className="size-4 shrink-0 text-[var(--muted-strong)]" weight="bold" />
+              <FolderOpen className="size-4 shrink-0 text-[var(--muted-strong)]" />
               <div className="min-w-0 flex-1">
                 <span className="block truncate text-[12px] font-medium text-[var(--ink)]">
                   {teamspace.name}
@@ -151,7 +151,7 @@ export function TeamspacesSection({
                     onClick={() => setAccessTarget(teamspace)}
                     className="flex h-[26px] items-center gap-1.5 rounded-[6px] border border-[var(--line)] bg-panel px-2 text-[10.5px] font-medium text-[var(--muted-strong)] outline-none transition-colors hover:border-[var(--line-strong)] hover:bg-[var(--surface-subtle)] hover:text-[var(--ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
                   >
-                    <ShieldCheck className="size-3.5" weight="bold" />
+                    <ShieldCheck className="size-3.5" />
                     {knowledgeT('defaultPermissions')}
                   </button>
                   <RowIconAction
@@ -435,7 +435,7 @@ function AccessDialog({
         <AccessOptions value={access} onChange={setAccess} disabled={busy} />
         {changed ? (
           <p className="flex gap-2 rounded-[8px] border border-[var(--warn-soft-line)] bg-[var(--warn-soft)] px-3 py-2.5 text-[10.5px] leading-relaxed text-[var(--warn-ink)]">
-            <ShieldCheck className="mt-0.5 size-3.5 shrink-0" weight="bold" />
+            <ShieldCheck className="mt-0.5 size-3.5 shrink-0" />
             {defaultAccessRebuildNotice(locale)}
           </p>
         ) : (

@@ -5,7 +5,7 @@ import { knowledgeMessages } from './knowledge-page.messages';
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { PageSessionNamespace, usePageSessionState } from '@/lib/page-session-state';
 import { useQueryClient } from '@tanstack/react-query';
-import { LockSimple, XCircle } from '@phosphor-icons/react';
+import { LockSimple, XCircle } from '@/components/icons';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/ui/button';
 import { useIdentity } from '@/features/identity/identity-provider';
@@ -277,7 +277,7 @@ function ServerKnowledgeResource({
     content = (
       <CanvasState
         tone="error"
-        icon={<XCircle size={20} />}
+        icon={<XCircle size={16} />}
         title={knowledgeT('unableToVerifySignInStatus')}
         hint={authErrorCopyFor(session.status === 'error' ? session.error : null).description}
         actions={
@@ -295,7 +295,7 @@ function ServerKnowledgeResource({
   } else if (phase === 'auth-required') {
     content = (
       <CanvasState
-        icon={<LockSimple size={20} />}
+        icon={<LockSimple size={16} />}
         title={knowledgeT('signInToAccessThisKnowledgeBase')}
         actions={<Button onClick={openSignIn}>{knowledgeT('signInAndContinue')}</Button>}
       />
@@ -315,7 +315,7 @@ function ServerKnowledgeResource({
   } else if (directoryState.status === 'success' && !baseAvailable) {
     content = (
       <CanvasState
-        icon={<LockSimple size={20} />}
+        icon={<LockSimple size={16} />}
         title={knowledgeT('unableToAccessThisKnowledgeBase')}
         hint={knowledgeT('thisKnowledgeBaseWasRemovedOrYourAccount')}
       />
@@ -332,7 +332,7 @@ function ServerKnowledgeResource({
   } else if (phase === 'knowledge-base-forbidden') {
     content = (
       <CanvasState
-        icon={<LockSimple size={20} />}
+        icon={<LockSimple size={16} />}
         title={knowledgeT('youDoNotHaveAccessToThisKnowledge')}
       />
     );

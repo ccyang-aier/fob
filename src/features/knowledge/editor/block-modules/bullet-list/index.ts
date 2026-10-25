@@ -1,4 +1,4 @@
-import { List } from '@phosphor-icons/react';
+import { List } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { BulletListInputRule } from './input-rule';

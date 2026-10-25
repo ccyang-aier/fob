@@ -9,7 +9,7 @@ import {
   ShareNetwork,
   Star,
   Trash,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import {
   DropdownMenuContent,
   DropdownMenuItem,
@@ -36,29 +36,29 @@ export function DocumentActionMenuContent({
   return (
     <DropdownMenuContent align="end" className={styles.documentMenu}>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'rename')}>
-        <PencilSimple weight="fill" />
+        <PencilSimple />
         {t('sidebar.rename')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'share')}>
-        <ShareNetwork weight="fill" />
+        <ShareNetwork />
         {knowledgeT('share')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'open-tab')}>
-        <ArrowSquareOut weight="bold" />
+        <ArrowSquareOut />
         {knowledgeT('openInNewTab')}
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-star')}>
-        <Star weight="fill" />
+        <Star />
         {t(starred ? 'sidebar.removeFavorite' : 'sidebar.addFavorite')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-draft')}>
-        <FileDashed weight="fill" />
+        <FileDashed />
         {knowledgeT('toggleDraftFlag')}
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem variant="destructive" onSelect={() => onAction(documentId, 'trash')}>
-        <Trash weight="fill" />
+        <Trash />
         {t('sidebar.moveToTrash')}
       </DropdownMenuItem>
     </DropdownMenuContent>

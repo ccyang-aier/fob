@@ -8,7 +8,7 @@ import { messages } from './i18n/font-section.messages';
  * 行内示例以当前选择实时渲染（字体族 + 字号），所见即所得。
  */
 
-import { CaretDown, Check, Minus, Plus } from '@phosphor-icons/react';
+import { CaretDown, Check, Minus, Plus } from '@/components/icons';
 
 import {
   getCodeFontOptions,
@@ -147,7 +147,7 @@ function FontFamilyMenu<T extends string>({
           >
             {active.label}
           </span>
-          <CaretDown className="size-3 shrink-0 text-[var(--muted)]" weight="bold" aria-hidden />
+          <CaretDown className="size-3 shrink-0 text-[var(--muted)]" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
@@ -160,7 +160,7 @@ function FontFamilyMenu<T extends string>({
               {option.label}
             </span>
             {option.id === selected ? (
-              <Check className="size-3.5 text-[var(--accent-ink)]!" weight="bold" aria-hidden />
+              <Check className="size-3.5 text-[var(--accent-ink)]!" aria-hidden />
             ) : null}
           </DropdownMenuItem>
         ))}
@@ -188,7 +188,7 @@ function SizeStepper({
         disabled={value <= range.min}
         onClick={() => onChange(value - 1)}
       >
-        <Minus className="size-3" weight="bold" aria-hidden />
+        <Minus className="size-3" aria-hidden />
       </StepperButton>
       <span
         className="w-[46px] text-center font-mono text-[10.5px] text-[var(--muted-strong)]"
@@ -201,7 +201,7 @@ function SizeStepper({
         disabled={value >= range.max}
         onClick={() => onChange(value + 1)}
       >
-        <Plus className="size-3" weight="bold" aria-hidden />
+        <Plus className="size-3" aria-hidden />
       </StepperButton>
     </div>
   );

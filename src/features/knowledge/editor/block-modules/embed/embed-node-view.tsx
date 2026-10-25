@@ -4,7 +4,7 @@ import { useUiMessage } from '../../../ui-message';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './embed-node-view.messages';
 import { useState } from 'react';
-import { ArrowSquareOut, Globe, LinkSimple, PencilSimple } from '@phosphor-icons/react';
+import { ArrowSquareOut, Globe, LinkSimple, PencilSimple } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';

@@ -1,5 +1,6 @@
 'use client';
 
+import { StarOutline } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './sidebar-navigation-primitives.messages';
 import * as React from 'react';
@@ -20,8 +21,8 @@ import {
   SquaresFour,
   Star,
   TrashSimple,
-  type Icon as PhosphorIcon,
-} from '@phosphor-icons/react';
+  type Icon as IconComponent,
+} from '@/components/icons';
 
 import { ProjectIcon } from '@/features/knowledge/dense-sidebar/project-icon';
 import type { ProjectIconId } from '@/features/knowledge/dense-sidebar/project-icons';
@@ -32,7 +33,7 @@ import { IconButton } from './icon-button';
 import { SidebarDocumentMenu } from '@/features/knowledge/dense-sidebar/sidebar-document-menu';
 import styles from './sidebar-interactions.module.css';
 
-export const sidebarIconMap: Record<SidebarIconName, PhosphorIcon> = {
+export const sidebarIconMap: Record<SidebarIconName, IconComponent> = {
   home: House,
   star: Star,
   archive: Archive,
@@ -56,7 +57,7 @@ export const sidebarIconToneClasses = {
 } satisfies Record<NonNullable<SidebarNavigationItem['tone']>, string>;
 
 export function SidebarCreateIcon() {
-  return <Plus aria-hidden="true" size={14} weight="regular" />;
+  return <Plus aria-hidden="true" size={14} />;
 }
 
 export const sidebarDocumentIconClass =
@@ -72,7 +73,7 @@ export function SidebarSectionHeader({
   actions,
   count,
 }: {
-  icon: PhosphorIcon;
+  icon: IconComponent;
   label: string;
   expanded: boolean;
   onToggle: () => void;
@@ -95,10 +96,10 @@ export function SidebarSectionHeader({
         onClick={onToggle}
         className="flex h-full min-w-0 flex-1 items-center text-left text-[13px] font-medium text-[var(--sidebar-heading)] outline-none"
       >
-        <Icon aria-hidden size={15} weight="fill" className="mr-2 shrink-0 text-[var(--muted-strong)]" />
+        <Icon aria-hidden size={14} className="mr-2 shrink-0 text-[var(--muted-strong)]" />
         <span className="truncate">{label}</span>
         <CaretRight
-          aria-hidden weight="regular"
+          aria-hidden
           className={cn(
             'ml-1 size-[10px] shrink-0 transition-transform duration-200',
             expanded && 'rotate-90',
@@ -153,7 +154,7 @@ export function SidebarRow({
   ...buttonProps
 }: {
   label: string;
-  icon?: PhosphorIcon;
+  icon?: IconComponent;
   selected?: boolean;
   count?: number;
   compact?: boolean;
@@ -184,8 +185,7 @@ export function SidebarRow({
         (Icon ? (
           <Icon
             aria-hidden="true"
-            size={15}
-            weight="fill"
+            size={14}
             data-icon-tone={iconTone}
             className={cn('shrink-0', !iconOnly && 'mr-2', iconTone ? sidebarIconToneClasses[iconTone] : 'text-[var(--sidebar-icon)]')}
           />
@@ -227,12 +227,15 @@ export function SidebarDocumentActions({
         label={starred ? knowledgeT('removeDocumentFavorite') : knowledgeT('favoriteDocument')}
         onClick={() => onAction(documentId, 'toggle-star')}
       >
-        <Star
+        {starred ? <Star
           aria-hidden="true"
           size={14}
-          weight={starred ? 'fill' : 'regular'}
           className={starred ? 'text-[#e5aa14]' : undefined}
-        />
+        /> : <StarOutline
+          aria-hidden="true"
+          size={14}
+          className={starred ? 'text-[#e5aa14]' : undefined}
+        />}
       </IconButton>
       <SidebarDocumentMenu documentId={documentId} starred={starred} onAction={onAction} />
     </div>
@@ -270,7 +273,7 @@ export function RecentNoteRow({
         onClick={onClick}
         className="flex h-full min-w-0 flex-1 items-center text-left outline-none"
       >
-        <PageIcon value={icon} size={15} className={sidebarDocumentIconClass} />
+        <PageIcon value={icon} size={14} className={sidebarDocumentIconClass} />
         <span className={styles.documentLabel} title={label}>
           {label}
         </span>
@@ -291,7 +294,7 @@ export function ProjectGlyph({
   iconId?: ProjectIconId;
   className?: string;
 }) {
-  if (!iconId || iconId === 'folder') return <Folder aria-hidden size={15} weight="fill" className={cn('mr-2 shrink-0 text-[var(--sidebar-icon)]', className)} />;
+  if (!iconId || iconId === 'folder') return <Folder aria-hidden size={14} className={cn('mr-2 shrink-0 text-[var(--sidebar-icon)]', className)} />;
   return (
     <ProjectIcon iconId={iconId} className={cn('mr-2 size-[15px] rounded-[4px]', className)} />
   );

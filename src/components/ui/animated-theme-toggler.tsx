@@ -1,6 +1,6 @@
 'use client';
 
-import { Moon, Sun } from '@phosphor-icons/react';
+import { Moon, Sun } from '@/components/icons';
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, type ComponentPropsWithoutRef } from 'react';
 import { flushSync } from 'react-dom';
 import { cn } from '@/lib/utils';
@@ -63,5 +63,5 @@ export const AnimatedThemeToggler = forwardRef<HTMLButtonElement, AnimatedThemeT
   }
 
   const Icon = theme === 'dark' ? Sun : Moon;
-  return <button {...props} type="button" ref={buttonRef} data-slot="animated-theme-toggler" onClick={toggleTheme} className={cn('fob-action', className)}><Icon size={18} weight="fill" aria-hidden /></button>;
+  return <button {...props} type="button" ref={buttonRef} data-slot="animated-theme-toggler" onClick={toggleTheme} className={cn('fob-action', className)}><Icon size={16} aria-hidden /></button>;
 });

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { X } from '@phosphor-icons/react';
+import { X } from '@/components/icons';
 import { createPortal } from 'react-dom';
 import { usePageVisible } from '@/lib/page-visibility';
 import { useTranslation } from '@/lib/i18n';

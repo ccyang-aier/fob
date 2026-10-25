@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { FileText, MagnifyingGlass, X } from '@phosphor-icons/react';
+import { FileText, MagnifyingGlass, X } from '@/components/icons';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
@@ -30,7 +30,7 @@ export function GlobalSearch({ onNavigate, className }: { onNavigate: (view: Wor
   }, []);
   return <>
     <Tooltip>
-      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('搜索知识')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={18} weight="regular" aria-hidden /></button></TooltipTrigger>
+      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('搜索知识')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={16} aria-hidden /></button></TooltipTrigger>
       <TooltipContent side="bottom">{t('搜索知识')} · Ctrl / ⌘ K</TooltipContent>
     </Tooltip>
     {open && <SearchDialog key={scopeKey ?? 'no-knowledge-base'} onClose={() => setOpen(false)} onNavigate={onNavigate} />}
@@ -91,7 +91,7 @@ function SearchDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate
   return <dialog ref={dialogRef} className={styles.dialog} aria-label={t('搜索知识')} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <form className={styles.form} onSubmit={event => { event.preventDefault(); if (results[activeIndex]) openDocument(results[activeIndex]); }}>
       <div className={styles.field}>
-        <MagnifyingGlass size={19} weight="regular" aria-hidden />
+        <MagnifyingGlass size={16} aria-hidden />
         <input type="search" role="combobox" maxLength={200} aria-label={t('搜索知识')} aria-expanded="true" aria-autocomplete="list" aria-controls={listId} aria-activedescendant={results.length ? `${listId}-${activeIndex}` : undefined} placeholder={t('搜索文档标题和正文')} value={query} onChange={event => { setQuery(event.target.value); setSelected(0); }} onKeyDown={event => {
           if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && results.length) {
             event.preventDefault(); setSelected((activeIndex + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length);
@@ -103,7 +103,7 @@ function SearchDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate
       <ScrollArea className={styles.results} viewportClassName={styles.resultList} style={{ height: Math.min(420, Math.max(96, results.length * 68 + 12)) }}>
         <div id={listId} role="listbox" aria-label={t('搜索结果')} aria-busy={pending}>
           {results.map((hit, index) => <button key={`${hit.source}:${hit.knowledgeBaseId}:${hit.pageId}`} id={`${listId}-${index}`} type="button" role="option" tabIndex={-1} aria-selected={index === activeIndex} data-highlighted={index === activeIndex ? '' : undefined} className={`fob-menu-item ${styles.result}`} onPointerMove={() => setSelected(index)} onMouseDown={event => event.preventDefault()} onClick={() => openDocument(hit)}>
-            <FileText size={17} aria-hidden /><span className={styles.resultText}><span className={styles.label}>{hit.title}</span>{hit.snippet && <span className={styles.detail}>{hit.snippet}</span>}</span>
+            <FileText size={16} aria-hidden /><span className={styles.resultText}><span className={styles.label}>{hit.title}</span>{hit.snippet && <span className={styles.detail}>{hit.snippet}</span>}</span>
           </button>)}
         </div>
         {!ready && <p className={styles.empty} role="status">{t('请先选择知识库')}</p>}

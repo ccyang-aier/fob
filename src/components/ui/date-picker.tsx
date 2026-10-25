@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarBlank, X } from '@phosphor-icons/react';
+import { CalendarBlank, X } from '@/components/icons';
 import { useCallback, useId, useRef, useState, type ComponentProps } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';

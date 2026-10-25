@@ -22,7 +22,7 @@ beforeAll(async () => {
   globals.requestAnimationFrame = browser.requestAnimationFrame.bind(browser);
   globals.cancelAnimationFrame = browser.cancelAnimationFrame.bind(browser);
   mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => overlay }));
-  mock.module('@phosphor-icons/react', () => Object.fromEntries(['Check', 'CaretRight', 'MagnifyingGlass', 'X'].map(name => [name, () => <svg aria-hidden />])));
+  mock.module('@/components/icons', () => Object.fromEntries(['Check', 'CaretRight', 'MagnifyingGlass', 'X'].map(name => [name, () => <svg aria-hidden />])));
   const { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSearch, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuCheckboxItem } = await import('./dropdown-menu');
   renderMenu = () => <DropdownMenu><DropdownMenuTrigger>Open menu</DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem>Move task</DropdownMenuItem></DropdownMenuContent></DropdownMenu>;
   function SearchMenu() {

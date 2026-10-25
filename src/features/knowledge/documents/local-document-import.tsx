@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { saveLocalAsset } from '../assets/local-assets';
 import { documentFileAccept, documentFileFormat, type DocumentFile } from './file-format';
-import { FilePlus } from '@phosphor-icons/react';
+import { FilePlus } from '@/components/icons';
 export function LocalDocumentImport({
   onImport,
   knowledgeBaseId,

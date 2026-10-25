@@ -3,7 +3,7 @@
 import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './organization-panel.messages';
 import { useState } from 'react';
-import { FolderOpen } from '@phosphor-icons/react';
+import { FolderOpen } from '@/components/icons';
 import { useIdentity } from '@/features/identity/identity-provider';
 import { cn } from '@/lib/utils';
 import { useKnowledgeAccessQuery } from '../data/hooks';

@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/settings-dialog.messages';
 
 import { useEffect, useRef } from 'react';
-import { X } from '@phosphor-icons/react';
+import { X } from '@/components/icons';
 
 import { SettingsCanvas, type SettingsSection } from './settings-canvas';
 import styles from './settings-dialog.module.css';
@@ -59,7 +59,7 @@ export function SettingsDialog({
             onClick={onClose}
             className={`fob-action ${styles.close}`}
           >
-            <X size={18} aria-hidden />
+            <X size={16} aria-hidden />
           </button>
           <SettingsCanvas initialSection={section} onSectionChange={onSectionChange} />
         </div>

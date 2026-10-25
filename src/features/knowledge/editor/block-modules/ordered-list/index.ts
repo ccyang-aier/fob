@@ -1,4 +1,4 @@
-import { ListNumbers } from '@phosphor-icons/react';
+import { ListNumbers } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 import { OrderedListInputRule } from './input-rule';

@@ -27,7 +27,7 @@ import {
   Presentation,
   FolderSimple,
   SquaresFour,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -153,7 +153,7 @@ export function DocumentMoreMenu({
             aria-label={knowledgeT('moreDocumentActions')}
             title={knowledgeT('moreDocumentActions')}
           >
-            <DotsThree aria-hidden size={24} weight="bold" />
+            <DotsThree aria-hidden size={16} />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className={styles.menu}>
@@ -304,7 +304,7 @@ export function DocumentMoreMenu({
                 navigation?.onTogglePin?.();
               }}
             >
-              <PushPin aria-hidden weight="regular" />
+              <PushPin aria-hidden />
               {navigation?.pinned ? knowledgeT('unpin') : knowledgeT('pin')}
             </DropdownMenuItem>
             <DropdownMenuItem

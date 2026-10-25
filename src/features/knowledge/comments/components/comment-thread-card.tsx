@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './comment-thread-card.messages';
-import { ArrowUpRight, Chat, CheckCircle, WarningCircle, Quotes } from '@phosphor-icons/react';
+import { ArrowUpRight, Chat, CheckCircle, WarningCircle, Quotes } from '@/components/icons';
 import type { ReactNode } from 'react';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import type { CommentThreadGroup, OrphanAnchorGroup } from '../comments-view-model';
@@ -68,7 +68,7 @@ export function CommentThreadCard({
   const quote =
     group.thread.anchorKind === 'selection' ? (
       <div className={styles.excerpt} data-unavailable={!group.anchor}>
-        <Quotes size={16} weight="regular" aria-hidden />
+        <Quotes size={16} aria-hidden />
         <div>
           <div className={styles.excerptHeading}>
             <span className={styles.excerptLabel}>{knowledgeT('quotedText')}</span>
@@ -84,7 +84,7 @@ export function CommentThreadCard({
               }
             >
               {knowledgeT('locateOriginalText')}
-              <ArrowUpRight size={13} aria-hidden />
+              <ArrowUpRight size={14} aria-hidden />
             </button>
           </div>
           <p title={group.excerpt}>
@@ -148,9 +148,9 @@ export function CommentThreadCard({
                 index === 0 && issue ? (
                   <span className={styles.issueBadge} data-resolved={resolved}>
                     {resolved ? (
-                      <CheckCircle size={14} weight="fill" />
+                      <CheckCircle size={14} />
                     ) : (
-                      <WarningCircle size={14} weight="fill" />
+                      <WarningCircle size={14} />
                     )}
                     {resolved ? knowledgeT('resolved') : knowledgeT('unresolved')}
                   </span>
@@ -162,7 +162,7 @@ export function CommentThreadCard({
                     disabled={resolvePending}
                     onSelect={() => (resolved ? onReopen : onResolve)(group.threadId)}
                   >
-                    <CheckCircle size={16} weight="bold" aria-hidden />
+                    <CheckCircle size={16} aria-hidden />
                     {resolvePending
                       ? resolved
                         ? knowledgeT('reopening')
@@ -198,7 +198,7 @@ export function CommentThreadCard({
                       }
                       onClick={() => (resolved ? onReopen : onResolve)(group.threadId)}
                     >
-                      <CheckCircle size={17} weight="bold" aria-hidden />
+                      <CheckCircle size={16} aria-hidden />
                       {resolvePending
                         ? knowledgeT('working')
                         : resolved

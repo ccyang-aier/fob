@@ -13,7 +13,7 @@ import {
   FileText,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { PdfComments } from './pdf-file-view';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import { documentFileFormat, decodeDocumentText, type DocumentFile } from './file-format';
@@ -234,7 +234,7 @@ function FilePreviewSession({
             }
           }}
         >
-          <ArrowsOut size={17} />
+          <ArrowsOut size={16} />
         </button>
         {url && (
           <a
@@ -243,13 +243,13 @@ function FilePreviewSession({
             aria-label={knowledgeT('downloadOriginalFile')}
             title={knowledgeT('downloadOriginalFile')}
           >
-            <DownloadSimple size={18} />
+            <DownloadSimple size={16} />
           </a>
         )}
       </header>
       {!file ? (
         <div className={styles.state}>
-          <FileText size={34} weight="regular" />
+          <FileText size={34} />
           <strong>{knowledgeT('attachAnOriginalFileToPreview')}</strong>
           <p>{knowledgeT('thisRecordOnlyContainsDocumentInformationItsOriginal')}</p>
           {attach}
@@ -312,7 +312,7 @@ function FilePreviewSession({
               </div>
             ) : format === 'doc' ? (
               <div className={styles.state}>
-                <FileText size={34} weight="regular" />
+                <FileText size={34} />
                 <strong>{knowledgeT('wordDocument')}</strong>
                 <p>
                   {source === 'local'

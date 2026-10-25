@@ -24,7 +24,7 @@ beforeAll(async () => {
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
   browser.localStorage.setItem('fob.language', 'en-US');
   const icon = () => <svg aria-hidden />;
-  mock.module('@phosphor-icons/react', () => ({ CalendarBlank: icon, CaretLeft: icon, CaretRight: icon, X: icon }));
+  mock.module('@/components/icons', () => ({ CalendarBlank: icon, CaretLeft: icon, CaretRight: icon, X: icon }));
   mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => document.body }));
   ({ DatePicker } = await import('./date-picker'));
   host = document.createElement('div'); document.body.append(host); root = createRoot(host);

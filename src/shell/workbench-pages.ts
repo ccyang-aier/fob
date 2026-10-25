@@ -1,4 +1,4 @@
-import { BookOpenText, UsersThree, SquaresFour, Coffee } from '@phosphor-icons/react';
+import { BookOpenText, UsersThree, SquaresFour, Coffee } from '@/components/icons';
 import type { WorkbenchView } from './workbench-view';
 
 export type WorkbenchPage = Exclude<WorkbenchView, 'settings'>;

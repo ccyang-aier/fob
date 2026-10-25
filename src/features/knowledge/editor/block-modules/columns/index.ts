@@ -1,4 +1,4 @@
-import { Columns } from '@phosphor-icons/react';
+import { Columns } from '@/components/icons';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { withNodeView } from '../../extensions/with-node-view';
 import { insertBuiltNodes } from '../insert';

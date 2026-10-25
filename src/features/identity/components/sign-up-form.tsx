@@ -11,7 +11,7 @@ import { messages } from './i18n/sign-up-form.messages';
 
 import { verificationCallbackUrl } from '../verification-url';
 import { useState, type FormEvent } from 'react';
-import { PaperPlaneTilt } from '@phosphor-icons/react';
+import { PaperPlaneTilt } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { authErrorCopyFor } from '../auth-errors';
 import { fobAuthApi, type FobAuthApi } from '../auth-api';
@@ -131,7 +131,7 @@ export function SignUpForm({ api = fobAuthApi }: { api?: FobAuthApi }) {
         <AppAlert tone="error" title={banner.title} description={banner.description} />
       ) : null}
       <Button type="submit" loading={submitting} className={styles.submit}>
-        {!submitting ? <PaperPlaneTilt className="size-4" weight="regular" aria-hidden /> : null}
+        {!submitting ? <PaperPlaneTilt className="size-4" aria-hidden /> : null}
         {submitting ? uiText('正在提交…') : uiText('创建账号')}
       </Button>
     </form>

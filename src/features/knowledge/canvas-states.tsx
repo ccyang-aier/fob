@@ -11,7 +11,7 @@ import { knowledgeMessages } from './canvas-states.messages';
  */
 
 import type { ReactNode } from 'react';
-import { CircleNotch, SignOut, Warning, XCircle } from '@phosphor-icons/react';
+import { CircleNotch, SignOut, Warning, XCircle } from '@/components/icons';
 import { cn } from '@/lib/utils';
 
 export function CanvasState({
@@ -93,7 +93,7 @@ export function CanvasError({
 
   return (
     <CanvasState
-      icon={<XCircle className="size-5" aria-hidden weight="fill" />}
+      icon={<XCircle className="size-5" aria-hidden />}
       title={title}
       hint={detail}
       tone="error"
@@ -127,7 +127,7 @@ export function CanvasForbidden({
 
   return (
     <CanvasState
-      icon={<Warning className="size-5" aria-hidden weight="fill" />}
+      icon={<Warning className="size-5" aria-hidden />}
       title={title}
       hint={detail}
       actions={actions}
@@ -141,7 +141,7 @@ export function CanvasRedirect({ detail }: { detail?: ReactNode }) {
 
   return (
     <CanvasState
-      icon={<SignOut className="size-5" aria-hidden weight="regular" />}
+      icon={<SignOut className="size-5" aria-hidden />}
       title={knowledgeT('openingSignIn')}
       hint={detail ?? knowledgeT('yourSessionNeedsVerificationYouWillReturnHere')}
       announce="polite"

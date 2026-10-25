@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight } from '@/components/icons';
 import type { ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
@@ -21,8 +21,8 @@ export function SystemBar({ onNavigate, navigation, children }: {
   const { t } = useTranslation(messages);
   return <header className={styles.bar}>
     <nav aria-label={t('页面历史')} className={styles.actions}>
-      <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('后退')} disabled={!navigation.canGoBack} onClick={navigation.goBack}><ArrowLeft size={19} weight="regular" aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('后退')}</TooltipContent></Tooltip>
-      <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('前进')} disabled={!navigation.canGoForward} onClick={navigation.goForward}><ArrowRight size={19} weight="regular" aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('前进')}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('后退')} disabled={!navigation.canGoBack} onClick={navigation.goBack}><ArrowLeft size={16} aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('后退')}</TooltipContent></Tooltip>
+      <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('前进')} disabled={!navigation.canGoForward} onClick={navigation.goForward}><ArrowRight size={16} aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('前进')}</TooltipContent></Tooltip>
     </nav>
     {children}
     <div className={`${styles.actions} ${styles.trailing}`}>

@@ -10,7 +10,7 @@ import { knowledgeMessages } from './asset-uploader.messages';
  */
 
 import { useCallback, useRef, useState } from 'react';
-import { CloudArrowUp } from '@phosphor-icons/react';
+import { CloudArrowUp } from '@/components/icons';
 import { useAssetUploads } from '../use-asset-uploads';
 import type { UploadedAsset, UseAssetUploadsOptions } from '../use-asset-uploads';
 import { UploadQueueItem } from './upload-queue-item';
@@ -80,7 +80,7 @@ export function AssetUploader(props: AssetUploaderProps) {
           ].join(' ')}
           aria-hidden="true"
         >
-          <CloudArrowUp size={20} weight="regular" />
+          <CloudArrowUp size={16} />
         </span>
         <p className="text-[13px] leading-5 text-ink">
           {knowledgeT('dropFilesHereOr')}

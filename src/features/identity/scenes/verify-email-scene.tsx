@@ -14,7 +14,7 @@ import { messages } from './i18n/verify-email-scene.messages';
 
 import { useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { SignIn } from '@phosphor-icons/react';
+import { SignIn } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { parseVerifyEmailQuery, verifyEmailErrorCopy } from '../verify-callback';
 import { readAuthPendingEmail } from '../return-to';
@@ -49,7 +49,7 @@ export function VerifyEmailScene() {
             className="mt-5 h-9 w-full"
             onClick={() => router.push(authEntryPath)}
           >
-            <SignIn className="size-4" weight="bold" aria-hidden />
+            <SignIn className="size-4" aria-hidden />
             {uiText('前往登录')}
           </Button>
         </AuthPanel>

@@ -2,7 +2,7 @@
 
 import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './comment-filters.messages';
-import { ArrowsDownUp, CaretDown, SlidersHorizontal } from '@phosphor-icons/react';
+import { ArrowsDownUp, CaretDown, SlidersHorizontal } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,7 +72,7 @@ export function CommentFilterControls({
             aria-label={knowledgeT('commentType')}
           >
             <span>{kinds(locale).find((option) => option[0] === value.kind)?.[1]}</span>
-            <CaretDown size={13} aria-hidden />
+            <CaretDown size={14} aria-hidden />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className={styles.filterMenu} align="start">

@@ -1,4 +1,4 @@
-import { Database } from '@phosphor-icons/react';
+import { Database } from '@/components/icons';
 import { insertAtom } from '../insert';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

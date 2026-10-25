@@ -14,7 +14,7 @@ import { knowledgeMessages } from './ui.messages';
 
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { Warning, WarningCircle, XCircle } from '@phosphor-icons/react';
+import { Warning, WarningCircle, XCircle } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { MemberRole } from '@/features/knowledge/organization/client';
 import type { TeamspaceAccess } from '../data/knowledge-catalog-client';

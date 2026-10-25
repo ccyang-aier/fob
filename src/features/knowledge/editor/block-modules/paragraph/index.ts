@@ -1,4 +1,4 @@
-import { TextT } from '@phosphor-icons/react';
+import { TextT } from '@/components/icons';
 import { setBlockFormat } from '../../extensions/format/block-format';
 import type { EditorBlockModule } from '../types';
 

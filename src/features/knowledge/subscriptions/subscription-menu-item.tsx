@@ -1,7 +1,7 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { BellSimple as Bell, BellSlash as BellOff } from '@phosphor-icons/react';
+import { BellSimple as Bell, BellSlash as BellOff } from '@/components/icons';
 import { knowledgeSubscriptionResultSchema, type KnowledgeSubscriptionTarget } from '@fob/shared/knowledge/subscriptions';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { ButtonLoading } from '@/components/ui/button-loading';
@@ -13,7 +13,7 @@ import { messages } from './messages';
 
 export function SubscriptionMenuItem({ target, source, className }: { target: KnowledgeSubscriptionTarget; source: 'local' | 'server'; className?: string }) {
   const { t } = useTranslation(messages);
-  return source === 'local' ? <DropdownMenuItem className={className} disabled title={t('unavailable')}><Bell size={16} weight="fill" aria-hidden />{t('subscribe')}</DropdownMenuItem> : <ServerSubscriptionMenuItem target={target} source={source} className={className} />;
+  return source === 'local' ? <DropdownMenuItem className={className} disabled title={t('unavailable')}><Bell size={16} aria-hidden />{t('subscribe')}</DropdownMenuItem> : <ServerSubscriptionMenuItem target={target} source={source} className={className} />;
 }
 
 function ServerSubscriptionMenuItem({ target, source, className }: { target: KnowledgeSubscriptionTarget; source: 'server'; className?: string }) {
@@ -30,7 +30,7 @@ function ServerSubscriptionMenuItem({ target, source, className }: { target: Kno
   const Icon = subscribed ? BellOff : Bell;
   const available = source === 'server' && principal !== 'guest';
   return <DropdownMenuItem className={className} disabled={!available || mutation.isPending || (query.isPending && !query.isError)} title={!available ? t('unavailable') : undefined} onSelect={event => { event.preventDefault(); if (query.isError) void query.refetch(); else mutation.mutate(); }}>
-    {mutation.isPending ? <span className="flex size-4 items-center justify-center"><ButtonLoading /></span> : <Icon size={16} weight="fill" aria-hidden />}
+    {mutation.isPending ? <span className="flex size-4 items-center justify-center"><ButtonLoading /></span> : <Icon size={16} aria-hidden />}
     {t(query.isError ? 'retry' : available && query.isPending ? 'loading' : subscribed ? 'unsubscribe' : 'subscribe')}
   </DropdownMenuItem>;
 }

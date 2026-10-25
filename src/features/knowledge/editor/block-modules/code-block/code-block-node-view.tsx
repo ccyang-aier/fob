@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './code-block-node-view.messages';
 import { useEffect, useRef, useState, type FC } from 'react';
-import { CaretDown, Check, Copy, DotsThree } from '@phosphor-icons/react';
+import { CaretDown, Check, Copy, DotsThree } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import {
@@ -116,7 +116,7 @@ export function CodeBlockNodeView({
             onClick={copy}
             aria-label={copied ? knowledgeT('codeCopied') : knowledgeT('copyCode')}
           >
-            {copied ? <Check size={15} aria-hidden /> : <Copy size={15} aria-hidden />}
+            {copied ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
           </button>
           {editor.isEditable && (
             <DropdownMenu modal={false}>
@@ -124,7 +124,7 @@ export function CodeBlockNodeView({
                 className={styles.iconButton}
                 aria-label={knowledgeT('codeBlockDisplaySettings')}
               >
-                <DotsThree size={20} weight="bold" aria-hidden />
+                <DotsThree size={16} aria-hidden />
               </DropdownMenuTrigger>
               <DropdownMenuContent className={styles.menu} align="end">
                 <DropdownMenuSub>

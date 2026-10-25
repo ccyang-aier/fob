@@ -1,6 +1,6 @@
 'use client';
 
-import { CaretLeft, CaretRight } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight } from '@/components/icons';
 import { useLayoutEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { AnchoredPopover } from './anchored-popover';

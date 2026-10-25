@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './task-progress.messages';
 import { useCallback, useSyncExternalStore } from 'react';
 import type { Editor } from '@tiptap/react';
-import { CheckCircle } from '@phosphor-icons/react';
+import { CheckCircle } from '@/components/icons';
 
 /** Metadata counts derive from the live editor document, including collaborative updates. */
 export function TaskProgress({ editor }: { editor: Editor | null }) {
@@ -31,7 +31,7 @@ export function TaskProgress({ editor }: { editor: Editor | null }) {
   const checked = useSyncExternalStore(subscribe, snapshot, () => 0);
   return (
     <span className="inline-flex items-center gap-1">
-      <CheckCircle size={14} weight="fill" className="text-[#0869cf]" aria-hidden />
+      <CheckCircle size={14} className="text-[#0869cf]" aria-hidden />
       {knowledgeT('completed')}
       {checked} {knowledgeT('tasks')}
     </span>

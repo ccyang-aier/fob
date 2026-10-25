@@ -12,7 +12,7 @@ import { messages } from './i18n/oauth-provider-list.messages';
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { ArrowClockwise, Fingerprint, GithubLogo, GoogleLogo } from '@phosphor-icons/react';
+import { ArrowClockwise, Fingerprint, GithubLogo, GoogleLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { authErrorCopyFor } from '../auth-errors';
 import { fobAuthApi, type FobOAuthProvider } from '../auth-api';

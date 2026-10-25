@@ -17,7 +17,7 @@ import {
   TextItalic,
   TextStrikethrough,
   Triangle,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { Editor } from '@tiptap/core';
 import { mergeCells, splitCell } from '@tiptap/pm/tables';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
@@ -76,7 +76,7 @@ function SelectionLink({
           data-on={tableSelectionHasMark(editor.state, 'link') || undefined}
           disabled={!setTableSelectionLink(editor.state, undefined, null)}
         >
-          <Link size={23} weight="bold" aria-hidden />
+          <Link size={16} aria-hidden />
         </button>
       </Menu.Trigger>
       <Menu.Portal>
@@ -177,7 +177,7 @@ export function TableSelectionToolbar({
       disabled={!command(editor.state)}
       onClick={() => run(command)}
     >
-      <Icon size={23} weight="bold" aria-hidden />
+      <Icon size={16} aria-hidden />
     </button>
   );
   const mark = (label: string, Icon: typeof TextB, name: string) =>
@@ -222,7 +222,7 @@ export function TableSelectionToolbar({
             disabled={!setTableSelectionHeading(editor.state, undefined, index + 1)}
             onClick={() => run((s, d) => setTableSelectionHeading(s, d, index + 1))}
           >
-            <Icon size={23} weight="bold" aria-hidden />
+            <Icon size={16} aria-hidden />
           </button>
         ))}
       </div>
@@ -242,7 +242,7 @@ export function TableSelectionToolbar({
               aria-label={knowledgeT('selectionBackground')}
               title={knowledgeT('selectionBackground')}
             >
-              <Palette size={23} weight="fill" aria-hidden />
+              <Palette size={16} aria-hidden />
             </button>
           </Menu.Trigger>
           <Menu.Portal>
@@ -281,10 +281,10 @@ export function TableSelectionToolbar({
             requestSelectionComment(editor, { x: bounds.left, y: bounds.bottom + 12 });
           }}
         >
-          <ChatText size={23} weight="bold" aria-hidden />
+          <ChatText size={16} aria-hidden />
         </button>
       </div>
-      <Triangle className={styles.toolbarArrow} size={16} weight="fill" aria-hidden />
+      <Triangle className={styles.toolbarArrow} size={16} aria-hidden />
     </div>
   );
 }

@@ -10,7 +10,7 @@ import { knowledgeMessages } from './history-panel.messages';
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ClockCounterClockwise, FloppyDisk, Spinner } from '@phosphor-icons/react';
+import { ClockCounterClockwise, FloppyDisk, Spinner } from '@/components/icons';
 import type { Editor } from '@tiptap/react';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { createHistoryApi } from './history-api';

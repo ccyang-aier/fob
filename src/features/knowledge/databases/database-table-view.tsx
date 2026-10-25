@@ -15,7 +15,7 @@ import { knowledgeMessages } from './database-table-view.messages';
 
 import { useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { CircleNotch, Plus, Table } from '@phosphor-icons/react';
+import { CircleNotch, Plus, Table } from '@/components/icons';
 import type {
   DatabaseFilter,
   PageScope,
@@ -298,7 +298,7 @@ export function DatabaseTableView({
             {icon ? (
               <span className="text-[15px] leading-none">{icon}</span>
             ) : (
-              <Table aria-hidden className="size-4" weight="regular" />
+              <Table aria-hidden className="size-4" />
             )}
           </span>
           <h1 className="min-w-0 truncate text-[17px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
@@ -378,7 +378,7 @@ export function DatabaseTableView({
         ) : loadedCount === 0 ? (
           <CanvasState
             tone="accent"
-            icon={<Table aria-hidden className="size-5" weight="regular" />}
+            icon={<Table aria-hidden className="size-5" />}
             title={
               filters.length > 0
                 ? knowledgeT('noRowsMatchTheFilters')

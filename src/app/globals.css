@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@fortawesome/fontawesome-svg-core/styles.css" layer(components);
 @import "tw-animate-css";
 @import "../components/ui/interaction-states.css";
 @import "../components/ui/resize-handle.css";

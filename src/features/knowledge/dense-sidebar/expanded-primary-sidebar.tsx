@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './expanded-primary-sidebar.messages';
 import * as React from 'react';
-import { Clock, Folder, Tag } from '@phosphor-icons/react';
+import { Clock, Folder, Tag } from '@/components/icons';
 
 import type { DocumentAction } from '@/features/knowledge/dense-sidebar/document-action-menu-content';
 import {

@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/view-switcher.messages';
 
-import { SquaresFour, Table } from '@phosphor-icons/react';
+import { SquaresFour, Table } from '@/components/icons';
 import { Button } from './button';
 import styles from './view-switcher.module.css';
 
@@ -40,7 +40,7 @@ export function ViewSwitcher({
             onClick={() => onValueChange(mode)}
             className={styles.option}
           >
-            <Icon data-icon="inline-start" size={16} weight="regular" />
+            <Icon data-icon="inline-start" size={16} />
           </Button>
         );
       })}

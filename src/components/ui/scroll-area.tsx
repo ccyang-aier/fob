@@ -1,5 +1,6 @@
 "use client";
 
+import { CaretLeftSolid, CaretRightSolid, CaretUpSolid, CaretDownSolid } from '@/components/icons';
 import { useEffect, useRef, useState, type ComponentPropsWithoutRef, type ElementType, type PointerEvent as ReactPointerEvent, type Ref } from "react";
 import { cn } from "@/lib/utils";
 import { usePageScrollKey } from '@/lib/page-session-state';
@@ -167,7 +168,7 @@ export function ScrollArea({ children, className, viewportClassName, viewportRef
                 onPointerUp={stopStepScroll}
                 onPointerCancel={stopStepScroll}
               >
-                <svg viewBox="-1 -1 7 10" className="h-2.5 fill-current stroke-current"><path d="M5 0v8L0 4Z" strokeWidth={1.5} strokeLinejoin="round" /></svg>
+                <CaretLeftSolid size={12} />
               </div>
               <div className="relative min-w-0 flex-1">
                 <div
@@ -187,7 +188,7 @@ export function ScrollArea({ children, className, viewportClassName, viewportRef
                 onPointerUp={stopStepScroll}
                 onPointerCancel={stopStepScroll}
               >
-                <svg viewBox="-1 -1 7 10" className="h-2.5 fill-current stroke-current"><path d="M0 0l5 4-5 4Z" strokeWidth={1.5} strokeLinejoin="round" /></svg>
+                <CaretRightSolid size={12} />
               </div>
             </>
           ) : (
@@ -198,7 +199,7 @@ export function ScrollArea({ children, className, viewportClassName, viewportRef
                 onPointerUp={stopStepScroll}
                 onPointerCancel={stopStepScroll}
               >
-                <svg viewBox="-1 -1 10 7" className="w-2.5 fill-current stroke-current"><path d="M4 0 8 5H0Z" strokeWidth={1.5} strokeLinejoin="round" /></svg>
+                <CaretUpSolid size={12} />
               </div>
               <div className="relative min-h-0 flex-1">
                 <div
@@ -218,7 +219,7 @@ export function ScrollArea({ children, className, viewportClassName, viewportRef
                 onPointerUp={stopStepScroll}
                 onPointerCancel={stopStepScroll}
               >
-                <svg viewBox="-1 -1 10 7" className="w-2.5 fill-current stroke-current"><path d="M0 0h8L4 5Z" strokeWidth={1.5} strokeLinejoin="round" /></svg>
+                <CaretDownSolid size={12} />
               </div>
             </>
           )}

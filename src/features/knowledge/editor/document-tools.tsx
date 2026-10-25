@@ -28,7 +28,7 @@ import {
   MagnifyingGlass,
   TextAa,
   X,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { DocumentOutline } from './components/document-outline';
 import { documentSearchKey, findDocumentMatches } from './extensions/document-search';
 import type { DocumentLinkTarget } from './document-link';
@@ -302,7 +302,7 @@ export function DocumentNavigationTools({
                 role="search"
                 aria-label={knowledgeT('searchDocument')}
               >
-                <MagnifyingGlass size={17} />
+                <MagnifyingGlass size={16} />
                 <input
                   ref={input}
                   aria-label={knowledgeT('searchTermInDocument')}
@@ -336,7 +336,7 @@ export function DocumentNavigationTools({
                     setCurrent(0);
                   }}
                 >
-                  <TextAa size={17} />
+                  <TextAa size={16} />
                 </button>
                 <button
                   type="button"
@@ -464,7 +464,7 @@ export function DocumentNavigationTools({
                   aria-label={knowledgeT('exitPresentation')}
                   onClick={closePresentation}
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               </header>
               <div className={styles.stage}>
@@ -496,7 +496,7 @@ export function DocumentNavigationTools({
                   disabled={slide === 0 || !slides.length}
                   onClick={() => setSlide((value) => value - 1)}
                 >
-                  <CaretLeft size={20} />
+                  <CaretLeft size={16} />
                 </button>
                 <span>{slides.length ? `${slide + 1} / ${slides.length}` : '…'}</span>
                 <button
@@ -505,7 +505,7 @@ export function DocumentNavigationTools({
                   disabled={slide >= slides.length - 1}
                   onClick={() => setSlide((value) => value + 1)}
                 >
-                  <CaretRight size={20} />
+                  <CaretRight size={16} />
                 </button>
               </footer>
             </>

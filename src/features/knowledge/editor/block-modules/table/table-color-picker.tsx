@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './table-color-picker.messages';
 import { useState, type CSSProperties, type PointerEvent } from 'react';
-import { Check, Copy } from '@phosphor-icons/react';
+import { Check, Copy } from '@/components/icons';
 import { clamp, formatTableColor, parseTableColor, type TableColor } from './table-color';
 import styles from './table.module.css';
 
@@ -178,7 +178,7 @@ export function TableColorPicker({
           }
           onClick={copy}
         >
-          {copyState === 'copied' ? <Check size={18} /> : <Copy size={18} />}
+          {copyState === 'copied' ? <Check size={16} /> : <Copy size={16} />}
         </button>
       </div>
       {copyState === 'failed' ? (

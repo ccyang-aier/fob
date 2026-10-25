@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { Star } from 'lucide-react';
+import { Star } from '@/components/icons';
 import styles from './companion-character.module.css';
 
 export function CompanionCharacter({ sceneRef }: {

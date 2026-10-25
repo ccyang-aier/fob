@@ -1,4 +1,4 @@
-import { Article } from '@phosphor-icons/react';
+import { Article } from '@/components/icons';
 import { insertAtom } from '../insert';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

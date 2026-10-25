@@ -1,4 +1,4 @@
-import { Image as ImageIcon } from '@phosphor-icons/react';
+import { Image as ImageIcon } from '@/components/icons';
 import { insertMedia } from '../media-core/insert-media';
 import type { EditorBlockModule } from '../types';
 import { createElement } from 'react';

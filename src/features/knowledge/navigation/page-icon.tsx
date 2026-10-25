@@ -36,7 +36,7 @@ import {
   Trophy,
   Users,
   type Icon,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 
 export const pageIconColors = [
   '#526175',
@@ -177,7 +177,6 @@ export function PageIcon({
       <Glyph
         aria-hidden
         size={size}
-        weight="fill"
         className={className}
         style={{ color: icon.color }}
         data-page-icon={value}
@@ -204,5 +203,5 @@ export function PageIcon({
         {value}
       </span>
     );
-  return <FileText aria-hidden size={size} weight="fill" className={className} />;
+  return <FileText aria-hidden size={size} className={className} />;
 }

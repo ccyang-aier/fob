@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpRight, Check, Coffee } from '@phosphor-icons/react';
+import { ArrowUpRight, Check, Coffee } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import resourceCard from '@/components/ui/resource-card.module.css';
 import { useTranslation } from '@/lib/i18n/react';
@@ -16,7 +16,7 @@ export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void 
   const summary = rewards.summary;
   return <section className={`${resourceCard.card} ${styles.sidebarCard}`} aria-label={t('daily')}>
     <div className={styles.cardHeading}>
-      <Coffee size={18} weight="fill" className={styles.coffeeIcon} aria-hidden />
+      <Coffee size={16} className={styles.coffeeIcon} aria-hidden />
       <strong>{t('daily')}</strong>
       <Button type="button" variant="ghost" size="icon-sm" className={styles.cardOpen} aria-label={t('open')} onClick={onOpen}>
         <ArrowUpRight size={14} aria-hidden />
@@ -32,7 +32,7 @@ export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void 
     <Button type="button" size="sm" variant={summary?.checkedInToday ? 'outline' : 'default'} className={styles.cardCta}
       loading={rewards.checkingIn} disabled={rewards.identityStatus === 'checking' || rewards.loading || summary?.checkedInToday}
       onClick={() => { if (!authenticated) rewards.openSignIn(); else if (rewards.error && !summary) rewards.refresh(); else void rewards.checkIn(); }}>
-      {summary?.checkedInToday ? <Check size={13} aria-hidden /> : null}
+      {summary?.checkedInToday ? <Check size={14} aria-hidden /> : null}
       {t(!authenticated ? 'signIn' : rewards.error && !summary ? 'retry' : summary?.checkedInToday ? 'checkedIn' : 'checkIn')}
     </Button>
   </section>;

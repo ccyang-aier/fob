@@ -1,5 +1,7 @@
 # Fob 系统实心图标
 
+> 历史验证记录。当前来源与尺寸以[图标系统](../../docs/ui/icon-system.md)和 [FA7 迁移记录](fob-fa7-icons.md)为准，Phosphor 与共享填充 Context 已移除。
+
 当前规范见 [AI 前端规则](../../AI_FRONTEND_RULES.md#图标)与[全局界面组件](../../docs/architecture/fob-product-boundaries.md#全局界面组件)。
 
 本页记录最初的实心图标调整；共享默认值与控制符号已按用户后续反馈修正，当前实现见[控制图标修正](fob-icon-controls.md)。

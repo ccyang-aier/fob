@@ -13,7 +13,7 @@ import { knowledgeMessages } from './filter-sort-bar.messages';
  */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDown, ArrowUp, Funnel } from '@phosphor-icons/react';
+import { ArrowDown, ArrowUp, Funnel } from '@/components/icons';
 import type {
   DatabaseFilter,
   PropertyDefinition,

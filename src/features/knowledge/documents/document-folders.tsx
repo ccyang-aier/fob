@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { DotsThree } from '@phosphor-icons/react';
+import { DotsThree } from '@/components/icons';
 import { FolderArtwork } from './document-visuals';
 import type { DocumentFolder } from './types';
 import styles from './documents-page.module.css';
@@ -44,7 +44,7 @@ export function DocumentFolders({
                 className={styles.folderMore}
                 aria-label={knowledgeT('valueFolderActions', { v0: folder.name })}
               >
-                <DotsThree size={18} weight="bold" />
+                <DotsThree size={16} />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -1,4 +1,4 @@
-import { Heart, Moon, Sparkle } from 'lucide-react';
+import { Heart, Moon, Sparkle } from '@/components/icons';
 import { motion, useIsPresent, type Variants } from 'motion/react';
 import { useTranslation } from '@/lib/i18n/react';
 import { CompanionActionMenu } from './companion-action-menu';

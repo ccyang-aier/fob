@@ -3,7 +3,7 @@
 import { useTranslation, createTranslator } from '@/lib/i18n';
 import { knowledgeMessages } from './block-reference-picker.messages';
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowRight, Link, MagnifyingGlass } from '@phosphor-icons/react';
+import { ArrowLeft, ArrowRight, Link, MagnifyingGlass } from '@/components/icons';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import type { PageScope } from '@fob/shared/knowledge/contracts';
 import { fetchReferencePages, type ReferencePageChoice } from '../../../data/reference-pages';
@@ -99,7 +99,7 @@ export function BlockReferencePicker({
     <div className={styles.picker} contentEditable={false}>
       <div className={styles.pickerHeader}>
         <span className={styles.pickerIcon}>
-          <Link aria-hidden size={17} />
+          <Link aria-hidden size={16} />
         </span>
         <strong>{knowledgeT('referenceDocumentContent')}</strong>
         {onCancel ? (
@@ -118,7 +118,7 @@ export function BlockReferencePicker({
               setBlocks([]);
             }}
           >
-            <ArrowLeft aria-hidden size={15} />
+            <ArrowLeft aria-hidden size={14} />
             {selected.title}
           </button>
           <div
@@ -148,7 +148,7 @@ export function BlockReferencePicker({
                     <small>{block.type}</small>
                     {block.label}
                   </span>
-                  <ArrowRight aria-hidden size={15} />
+                  <ArrowRight aria-hidden size={14} />
                 </button>
               ))
             ) : (
@@ -159,7 +159,7 @@ export function BlockReferencePicker({
       ) : (
         <>
           <div className={styles.search}>
-            <MagnifyingGlass aria-hidden size={15} />
+            <MagnifyingGlass aria-hidden size={14} />
             <input
               aria-label={knowledgeT('searchSourcePages')}
               placeholder={knowledgeT('searchSourcePages2')}
@@ -189,7 +189,7 @@ export function BlockReferencePicker({
                     {page.knowledgeBaseName ? <small>{page.knowledgeBaseName}</small> : null}
                     {page.title}
                   </span>
-                  <ArrowRight aria-hidden size={15} />
+                  <ArrowRight aria-hidden size={14} />
                 </button>
               ))
             ) : (

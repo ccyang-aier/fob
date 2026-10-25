@@ -12,7 +12,7 @@ import {
   Paperclip,
   PencilSimple,
   Video,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
@@ -258,7 +258,7 @@ export function MediaBlockView({
         <div className={styles.preview} contentEditable={false}>
           {kind === 'audio' && (
             <div className={styles.audioTitle}>
-              <MusicNotes size={20} aria-hidden />
+              <MusicNotes size={16} aria-hidden />
               <span>{title}</span>
             </div>
           )}
@@ -280,7 +280,7 @@ export function MediaBlockView({
             aria-label={knowledgeT('open') + LABELS(locale)[kind]}
             className={styles.action}
           >
-            <ArrowSquareOut size={15} aria-hidden />
+            <ArrowSquareOut size={14} aria-hidden />
           </a>
           {editor.isEditable && (
             <button
@@ -289,7 +289,7 @@ export function MediaBlockView({
               aria-label={knowledgeT('replace') + LABELS(locale)[kind]}
               onClick={() => inputRef.current?.click()}
             >
-              <PencilSimple size={15} aria-hidden />
+              <PencilSimple size={14} aria-hidden />
             </button>
           )}
         </div>
@@ -368,5 +368,5 @@ export function MediaBlockView({
 }
 function IconForMedia({ kind }: { kind: MediaKind }) {
   const Icon = { image: ImageIcon, video: Video, audio: MusicNotes, file: Paperclip }[kind];
-  return <Icon size={18} aria-hidden />;
+  return <Icon size={16} aria-hidden />;
 }

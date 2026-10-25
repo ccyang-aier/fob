@@ -11,7 +11,7 @@ import {
   User,
   UserCircle,
   CaretDown,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 import { useRef, useState } from 'react';
 import {
   DropdownMenu,
@@ -66,9 +66,9 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
         {user ? (
           <UserAvatar name={user.name} image={user.image} className={styles.avatar} />
         ) : session.status === 'checking' ? (
-          <CircleNotch size={17} className="animate-spin" />
+          <CircleNotch size={16} className="animate-spin" />
         ) : (
-          <User size={18} />
+          <User size={16} />
         )}
         {user ? (
           <span className={styles.presence} style={{ backgroundColor: status.color }}>
@@ -171,7 +171,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
                     <span>{option.label}</span>
                     <span className={styles.statusDescription}>{option.description}</span>
                   </span>
-                  {presencePreference === option.value ? <Check weight="bold" /> : null}
+                  {presencePreference === option.value ? <Check /> : null}
                 </DropdownMenuItem>
               ))}
               <p className={styles.statusNote}>{uiText('在线时，5 分钟无操作自动显示离开。')}</p>
@@ -184,7 +184,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               openSignIn();
             }}
           >
-            <UserCircle weight="fill" />
+            <UserCircle />
             {uiText('个人信息')}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -194,7 +194,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               openSwitchAccount();
             }}
           >
-            <Users weight="fill" />
+            <Users />
             {uiText('切换账户')}
           </DropdownMenuItem>
           <DropdownMenuSeparator className={styles.separator} />
@@ -206,7 +206,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               setLogoutOpen(true);
             }}
           >
-            <DoorOpen weight="fill" />
+            <DoorOpen />
             {uiText('退出登录')}
           </DropdownMenuItem>
         </DropdownMenuContent>}

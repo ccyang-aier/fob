@@ -11,7 +11,7 @@ import type {
 import { useEffect, useRef, useState } from 'react';
 import { CellSelection, columnResizingPluginKey, selectedRect } from '@tiptap/pm/tables';
 import { TextSelection } from '@tiptap/pm/state';
-import { Plus } from '@phosphor-icons/react';
+import { Plus } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper, useEditorState } from '@tiptap/react';
 import { insertTableAxis, selectTableAxis, tableNodeAt, type TableCommand } from './table-commands';
@@ -369,7 +369,7 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
                   onClick={() => insert(axis, index)}
                 >
                   <span className={styles.boundaryDot} />
-                  <Plus size={16} weight="bold" aria-hidden />
+                  <Plus size={16} aria-hidden />
                 </button>
               ),
             ),

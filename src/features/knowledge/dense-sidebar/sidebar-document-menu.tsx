@@ -1,6 +1,6 @@
 "use client";
 
-import { DotsThree } from "@phosphor-icons/react";
+import { DotsThree } from '@/components/icons';
 
 import {
   DocumentActionMenuContent,
@@ -34,7 +34,7 @@ export function SidebarDocumentMenu({
           className={styles.actionButton}
           onClick={(event) => event.stopPropagation()}
         >
-          <DotsThree aria-hidden="true" size={15} weight="bold" />
+          <DotsThree aria-hidden="true" size={14} />
         </IconButton>
       </DropdownMenuTrigger>
       <DocumentActionMenuContent documentId={documentId} starred={starred} onAction={onAction} />

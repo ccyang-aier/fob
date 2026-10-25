@@ -21,7 +21,7 @@ import { knowledgeMessages } from './review-panel.messages';
  */
 
 import { useEffect, useState } from 'react';
-import { Check, CheckCircle, Prohibit, X } from '@phosphor-icons/react';
+import { Check, CheckCircle, Prohibit, X } from '@/components/icons';
 import type { Editor } from '@tiptap/react';
 import { cn } from '@/lib/utils';
 import { authorBadgeGlyph } from './author';
@@ -210,7 +210,7 @@ export function ReviewPanel({ editor, editable }: { editor: Editor | null; edita
           reason={view.actions.disabledReason}
           onClick={() => view.decide('reject')}
         >
-          <Prohibit aria-hidden className="size-3" weight="bold" />
+          <Prohibit aria-hidden className="size-3" />
           {knowledgeT('rejectAll')}
         </BatchButton>
         <BatchButton
@@ -220,7 +220,7 @@ export function ReviewPanel({ editor, editable }: { editor: Editor | null; edita
           reason={view.actions.disabledReason}
           onClick={() => view.decide('accept')}
         >
-          <Check aria-hidden className="size-3" weight="bold" />
+          <Check aria-hidden className="size-3" />
           {knowledgeT('acceptAll')}
         </BatchButton>
       </div>

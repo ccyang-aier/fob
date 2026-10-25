@@ -4,7 +4,7 @@ import { useUiMessage } from '../ui-message';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-icon-picker.messages';
 import { useEffect, useRef, useState } from 'react';
-import { Check, MagnifyingGlass, Smiley } from '@phosphor-icons/react';
+import { Check, MagnifyingGlass, Smiley } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -100,7 +100,7 @@ export function PageIconPicker({
         {value ? (
           <PageIcon value={value} size={24} />
         ) : (
-          <Smiley size={24} weight="fill" aria-hidden />
+          <Smiley size={16} aria-hidden />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -198,7 +198,7 @@ export function PageIconPicker({
                     if (selected) void apply(encodePageIcon(selected.id, option), false);
                   }}
                 >
-                  {color === option && <Check size={13} weight="bold" aria-hidden />}
+                  {color === option && <Check size={14} aria-hidden />}
                 </button>
               ))}
             </div>
@@ -222,7 +222,7 @@ export function PageIconPicker({
                     title={label[language]}
                     data-selected={selected?.id === id}
                   >
-                    <Glyph size={24} weight="fill" style={{ color }} aria-hidden />
+                    <Glyph size={24} style={{ color }} aria-hidden />
                   </button>
                 </DropdownMenuItem>
               ))}

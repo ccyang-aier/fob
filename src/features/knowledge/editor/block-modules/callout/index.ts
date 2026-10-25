@@ -1,4 +1,4 @@
-import { Info } from '@phosphor-icons/react';
+import { Info } from '@/components/icons';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 import { withNodeView } from '../../extensions/with-node-view';
 import { insertBuiltNodes } from '../insert';

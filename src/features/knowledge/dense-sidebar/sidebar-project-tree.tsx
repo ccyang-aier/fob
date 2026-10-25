@@ -11,7 +11,7 @@ import {
   Star,
   Tag,
   Trash,
-} from '@phosphor-icons/react';
+} from '@/components/icons';
 
 import {
   ProjectGlyph,
@@ -100,9 +100,9 @@ export function SidebarProjectTreeNode({
             className="mr-0.5 inline-flex size-[17px] shrink-0 items-center justify-center rounded-[4px] outline-none transition-colors hover:text-foreground focus-visible:text-foreground"
           >
             {isExpanded ? (
-              <CaretDown aria-hidden="true" size={10} weight="bold" />
+              <CaretDown aria-hidden="true" size={12} />
             ) : (
-              <CaretRight aria-hidden="true" size={10} weight="bold" />
+              <CaretRight aria-hidden="true" size={12} />
             )}
           </IconButton>
         ) : !isDocument ? (
@@ -121,7 +121,7 @@ export function SidebarProjectTreeNode({
           className="flex h-full min-w-0 flex-1 items-center text-left outline-none"
         >
           {isDocument ? (
-            <PageIcon value={node.documentIcon} size={15} className={sidebarDocumentIconClass} />
+            <PageIcon value={node.documentIcon} size={14} className={sidebarDocumentIconClass} />
           ) : (
             <ProjectGlyph iconId={node.projectIconId} />
           )}
@@ -155,21 +155,21 @@ export function SidebarProjectTreeNode({
                     className={styles.actionButton}
                     onClick={(event) => event.stopPropagation()}
                   >
-                    <DotsThree aria-hidden="true" size={16} weight="bold" />
+                    <DotsThree aria-hidden="true" size={16} />
                   </IconButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[190px]">
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'rename')}>
-                    <PencilSimple size={15} /> {t('sidebar.rename')}
+                    <PencilSimple size={14} /> {t('sidebar.rename')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'new-document')}>
-                    <FilePlus size={15} /> {t('sidebar.addDocument')}
+                    <FilePlus size={14} /> {t('sidebar.addDocument')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'add-tag')}>
-                    <Tag size={15} /> {t('sidebar.addTag')}
+                    <Tag size={14} /> {t('sidebar.addTag')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'toggle-star')}>
-                    <Star size={15} />{' '}
+                    <Star size={14} />{' '}
                     {node.starred ? t('sidebar.removeFavorite') : t('sidebar.addFavorite')}
                   </DropdownMenuItem>
                   <FolderSubscriptionMenuItem folderId={node.id} />
@@ -178,7 +178,7 @@ export function SidebarProjectTreeNode({
                     variant="destructive"
                     onSelect={() => onProjectAction(node.id, 'delete')}
                   >
-                    <Trash size={15} /> {t('sidebar.delete')}
+                    <Trash size={14} /> {t('sidebar.delete')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

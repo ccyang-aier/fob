@@ -1,5 +1,5 @@
 /** The slash picker is only a view of the shared schema and browser block modules. */
-import { Article } from '@phosphor-icons/react';
+import { Article } from '@/components/icons';
 import { createKnowledgeRegistry } from '@fob/shared/knowledge/schema';
 import type { BlockRegistry } from '@fob/shared/knowledge/schema';
 import { editorBlockModuleByName } from '../block-modules';

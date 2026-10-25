@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from '@/components/icons';
 import { motion, type Variants } from 'motion/react';
 import { ButtonLoading } from '@/components/ui/button-loading';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -22,7 +22,7 @@ export function CompanionToolButton({ icon: Icon, label, loading = false, classN
       <Tooltip>
         <TooltipTrigger asChild>
           <button {...props} type="button" className={cn('fob-action', styles.tool, className)} aria-label={label} aria-busy={loading || undefined} disabled={disabled || loading}>
-            <span className={styles.glyph}>{loading ? <ButtonLoading /> : <Icon size={18} strokeWidth={1.65} aria-hidden />}</span>
+            <span className={styles.glyph}>{loading ? <ButtonLoading /> : <Icon size={16} strokeWidth={1.65} aria-hidden />}</span>
           </button>
         </TooltipTrigger>
         <TooltipContent side="left" sideOffset={12}>{label}</TooltipContent>

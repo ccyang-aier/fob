@@ -1,6 +1,6 @@
 'use client';
 
-import { Smiley } from '@phosphor-icons/react';
+import { Smiley } from '@/components/icons';
 import { useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -52,7 +52,7 @@ export function EmojiPicker({ onSelect, disabled = false, className }: {
     <button type="button" className={cn('fob-action', styles.trigger, className)} data-surface="plain" disabled={disabled}
       aria-label={t('chooseEmoji')} aria-haspopup="dialog" aria-expanded={Boolean(anchor)}
       onClick={event => { setQuery(''); setAnchor(anchor ? null : event.currentTarget); }}>
-      <Smiley size={16} weight="regular" aria-hidden />
+      <Smiley size={16} aria-hidden />
     </button>
     {anchor && !disabled && <AnchoredPopover anchor={anchor} onClose={() => setAnchor(null)} label={t('chooseEmoji')} width={272} align="start">
       <div className={styles.picker}>
