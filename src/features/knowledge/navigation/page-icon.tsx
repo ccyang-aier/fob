@@ -204,5 +204,5 @@ export function PageIcon({
         {value}
       </span>
     );
-  return <FileText aria-hidden size={size} weight="regular" className={className} />;
+  return <FileText aria-hidden size={size} weight="fill" className={className} />;
 }

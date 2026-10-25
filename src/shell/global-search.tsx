@@ -30,7 +30,7 @@ export function GlobalSearch({ onNavigate, className }: { onNavigate: (view: Wor
   }, []);
   return <>
     <Tooltip>
-      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('搜索知识')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={18} weight="regular" aria-hidden /></button></TooltipTrigger>
+      <TooltipTrigger asChild><button type="button" className={`fob-action ${className}`} aria-label={t('搜索知识')} aria-haspopup="dialog" aria-expanded={open} aria-keyshortcuts="Control+k Meta+k" onClick={() => setOpen(true)}><MagnifyingGlass size={18} weight="fill" aria-hidden /></button></TooltipTrigger>
       <TooltipContent side="bottom">{t('搜索知识')} · Ctrl / ⌘ K</TooltipContent>
     </Tooltip>
     {open && <SearchDialog key={scopeKey ?? 'no-knowledge-base'} onClose={() => setOpen(false)} onNavigate={onNavigate} />}
@@ -91,13 +91,13 @@ function SearchDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate
   return <dialog ref={dialogRef} className={styles.dialog} aria-label={t('搜索知识')} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <form className={styles.form} onSubmit={event => { event.preventDefault(); if (results[activeIndex]) openDocument(results[activeIndex]); }}>
       <div className={styles.field}>
-        <MagnifyingGlass size={19} weight="regular" aria-hidden />
+        <MagnifyingGlass size={19} weight="fill" aria-hidden />
         <input type="search" role="combobox" maxLength={200} aria-label={t('搜索知识')} aria-expanded="true" aria-autocomplete="list" aria-controls={listId} aria-activedescendant={results.length ? `${listId}-${activeIndex}` : undefined} placeholder={t('搜索文档标题和正文')} value={query} onChange={event => { setQuery(event.target.value); setSelected(0); }} onKeyDown={event => {
           if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && results.length) {
             event.preventDefault(); setSelected((activeIndex + (event.key === 'ArrowDown' ? 1 : -1) + results.length) % results.length);
           }
         }} />
-        <button type="button" className={`fob-action ${styles.close}`} aria-label={t('关闭搜索')} onClick={onClose}><X size={16} aria-hidden /></button>
+        <button type="button" className={`fob-action ${styles.close}`} aria-label={t('关闭搜索')} onClick={onClose}><X weight="bold" size={16} aria-hidden /></button>
       </div>
       {ready && <p className={styles.scope}>{t('搜索知识库', { name: selectedKnowledgeBase!.name })}</p>}
       <ScrollArea className={styles.results} viewportClassName={styles.resultList} style={{ height: Math.min(420, Math.max(96, results.length * 68 + 12)) }}>

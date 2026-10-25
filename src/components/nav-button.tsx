@@ -2,7 +2,7 @@
 
 /**
  * 通用侧栏导航行（展开 30px / 折叠 32px 图标态）：hover 浅灰底条，
- * 图标默认使用清晰线性轮廓，激活时保留同一造型。
+ * 系统导航统一使用实心图标，激活时保留同一造型。
  * 消费方：navigation-sidebar / settings-canvas。
  */
 
@@ -17,8 +17,6 @@ export type SidebarRowItem = {
   icon: Icon
   /** 图标的固定着色（如收藏金星），不随导航激活改变 */
   iconClassName?: string
-  /** 彩色功能入口可以显式使用填充图标。 */
-  iconWeight?: "regular" | "fill"
   /** 行尾附加节点（时间戳、红点等），仅展开态渲染 */
   trailing?: ReactNode
 }
@@ -56,7 +54,7 @@ export function NavButton({
       <Icon
         aria-hidden
         size={18}
-        weight={item.iconWeight ?? "regular"}
+        weight="fill"
         className={cn(
           "sidebar-nav-icon shrink-0",
           item.iconClassName,

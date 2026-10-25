@@ -89,7 +89,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
         disabled
         className="relative flex size-[30px] cursor-not-allowed items-center justify-center rounded-[7px] text-[var(--muted)] outline-none opacity-60"
       >
-        <BellSimple className="size-[18px]" weight="regular" aria-hidden />
+        <BellSimple className="size-[18px]" weight="fill" aria-hidden />
       </button>
     );
   }
@@ -120,7 +120,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
         >
           <BellSimple
             className={cn('size-[18px]', unreadCount > 0 && 'text-[var(--accent-ink)]')}
-            weight="regular"
+            weight="fill"
             aria-hidden
           />
           {badge ? (
@@ -136,7 +136,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
       <DropdownMenuContent align="end" sideOffset={8} className="w-[338px] rounded-[7px] p-0">
         <header className="flex items-center gap-2.5 border-b border-[var(--line)] px-3.5 py-3">
           <span className="flex size-8 shrink-0 items-center justify-center rounded-[9px] border border-[var(--accent-soft-line)] bg-[var(--accent-soft)] text-[var(--accent-ink)]">
-            <BellRinging aria-hidden className="size-4" weight="regular" />
+            <BellRinging aria-hidden className="size-4" weight="fill" />
           </span>
           <div className="min-w-0">
             <p className="text-[12px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
@@ -163,7 +163,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
             </p>
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-center gap-1.5 px-2.5 py-6 text-center">
-              <BellSlash aria-hidden className="size-5 text-[var(--muted)]" weight="regular" />
+              <BellSlash aria-hidden className="size-5 text-[var(--muted)]" weight="fill" />
               <p className="text-[11px] text-[var(--muted)]">{knowledgeT('noNotifications')}</p>
               <p className="text-[9.5px] text-[var(--muted-strong)]">
                 {knowledgeT('commentRepliesAndMentionsAppearHereInReal')}
@@ -201,9 +201,9 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
                     )}
                   >
                     {row.kind === 'comment.mention' ? (
-                      <At aria-hidden className="size-3.5" weight="bold" />
-                    ) : row.kind === 'folder.changed' ? <Folder aria-hidden className="size-3.5" weight="regular" /> : row.kind === 'page.changed' ? <FileText aria-hidden className="size-3.5" weight="regular" /> : (
-                      <ChatsCircle aria-hidden className="size-3.5" weight="regular" />
+                      <At aria-hidden className="size-3.5" weight="fill" />
+                    ) : row.kind === 'folder.changed' ? <Folder aria-hidden className="size-3.5" weight="fill" /> : row.kind === 'page.changed' ? <FileText aria-hidden className="size-3.5" weight="fill" /> : (
+                      <ChatsCircle aria-hidden className="size-3.5" weight="fill" />
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -260,7 +260,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
           disabled={unreadCount === 0 || allPending}
           className="fob-action flex h-9 w-full items-center justify-center gap-1.5 border-t border-[var(--line)] text-[10.5px] font-medium text-[var(--accent-ink)] disabled:cursor-default disabled:text-[var(--muted)]"
         >
-          <Checks aria-hidden className="size-3" weight="bold" />
+          <Checks aria-hidden className="size-3" weight="fill" />
           {allPending ? knowledgeT('working') : knowledgeT('markAllAsRead')}
         </button>
       </DropdownMenuContent>

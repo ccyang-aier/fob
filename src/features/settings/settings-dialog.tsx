@@ -59,7 +59,7 @@ export function SettingsDialog({
             onClick={onClose}
             className={`fob-action ${styles.close}`}
           >
-            <X size={18} aria-hidden />
+            <X weight="bold" size={18} aria-hidden />
           </button>
           <SettingsCanvas initialSection={section} onSectionChange={onSectionChange} />
         </div>

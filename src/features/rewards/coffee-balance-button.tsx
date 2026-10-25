@@ -1,6 +1,6 @@
 'use client';
 
-import { Coffee } from 'lucide-react';
+import { Coffee } from '@phosphor-icons/react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n/react';
 import { pushWorkbenchLocation } from '@/lib/navigation-history';
@@ -24,7 +24,7 @@ export function CoffeeBalanceButton({ onOpen = openRewardsPage }: { onOpen?: () 
     <TooltipTrigger asChild>
       <button type="button" className={`fob-action ${styles.balanceButton}`} aria-label={label}
         disabled={rewards.identityStatus === 'checking'} onClick={authenticated ? onOpen : rewards.openSignIn}>
-        <Coffee size={18} strokeWidth={1.8} aria-hidden />
+        <Coffee size={18} weight="fill" aria-hidden />
         {authenticated && rewards.summary ? <span className={styles.balanceNumber} aria-hidden>{rewards.summary.balance > 99 ? '99+' : rewards.summary.balance}</span> : null}
       </button>
     </TooltipTrigger>

@@ -24,7 +24,7 @@ export function SidebarHelp({ compact, onNavigate }: { compact: boolean; onNavig
   const { t } = useTranslation(messages);
   const [open, setOpen] = useState(false);
   return <>
-    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${compact ? styles.iconButton : styles.settings}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={18} weight="regular" aria-hidden />{!compact && <span>{t('help')}</span>}</button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
+    <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${compact ? styles.iconButton : styles.settings}`} aria-label={t('help')} aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}><Question size={18} weight="fill" aria-hidden />{!compact && <span>{t('help')}</span>}</button></TooltipTrigger><TooltipContent side={compact ? 'right' : 'top'}>{t('help')}</TooltipContent></Tooltip>
     {open && <HelpDialog onClose={() => setOpen(false)} onNavigate={onNavigate} />}
   </>;
 }
@@ -41,7 +41,7 @@ function HelpDialog({ onClose, onNavigate }: { onClose: () => void; onNavigate: 
   function navigate(view: WorkbenchView) { onClose(); onNavigate(view); }
   return <dialog ref={dialogRef} className={help.dialog} aria-labelledby="fob-help-title" onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
     <div className={help.content}>
-      <header className={help.header}><h2 id="fob-help-title">{t('title')}</h2><button type="button" className={`fob-action ${help.close}`} aria-label={t('close')} onClick={onClose}><X size={15} aria-hidden /></button></header>
+      <header className={help.header}><h2 id="fob-help-title">{t('title')}</h2><button type="button" className={`fob-action ${help.close}`} aria-label={t('close')} onClick={onClose}><X weight="bold" size={15} aria-hidden /></button></header>
       <div className={help.guide}>
         <section><BookOpenText size={18} aria-hidden /><div><h3>{t('knowledgeBase')}</h3><p>{t('knowledgeBaseHint')}</p></div></section>
         <section><Keyboard size={18} aria-hidden /><div><h3>{t('search')}<kbd>Ctrl / ⌘ K</kbd></h3><p>{t('searchHint')}</p></div></section>

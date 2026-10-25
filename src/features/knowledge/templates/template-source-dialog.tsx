@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { FileText, Search, ChevronRight } from 'lucide-react';
+import { FileText, MagnifyingGlass as Search, CaretRight as ChevronRight } from '@phosphor-icons/react';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { useTranslation } from '@/lib/i18n';

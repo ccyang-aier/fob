@@ -56,7 +56,7 @@ export const sidebarIconToneClasses = {
 } satisfies Record<NonNullable<SidebarNavigationItem['tone']>, string>;
 
 export function SidebarCreateIcon() {
-  return <Plus aria-hidden="true" size={14} weight="regular" />;
+  return <Plus aria-hidden="true" size={14} weight="bold" />;
 }
 
 export const sidebarDocumentIconClass =
@@ -95,11 +95,11 @@ export function SidebarSectionHeader({
         onClick={onToggle}
         className="flex h-full min-w-0 flex-1 items-center text-left text-[13px] font-medium text-[var(--sidebar-heading)] outline-none"
       >
-        <Icon aria-hidden size={15} className="mr-2 shrink-0 text-[var(--muted-strong)]" />
+        <Icon aria-hidden size={15} weight="fill" className="mr-2 shrink-0 text-[var(--muted-strong)]" />
         <span className="truncate">{label}</span>
         <CaretRight
           aria-hidden
-          weight="regular"
+          weight="fill"
           className={cn(
             'ml-1 size-[10px] shrink-0 transition-transform duration-200',
             expanded && 'rotate-90',
@@ -186,7 +186,7 @@ export function SidebarRow({
           <Icon
             aria-hidden="true"
             size={15}
-            weight={iconTone ? 'fill' : 'regular'}
+            weight="fill"
             data-icon-tone={iconTone}
             className={cn('shrink-0', !iconOnly && 'mr-2', iconTone ? sidebarIconToneClasses[iconTone] : 'text-[var(--sidebar-icon)]')}
           />
@@ -231,7 +231,7 @@ export function SidebarDocumentActions({
         <Star
           aria-hidden="true"
           size={14}
-          weight={starred ? 'fill' : 'regular'}
+          weight="fill"
           className={starred ? 'text-[#e5aa14]' : undefined}
         />
       </IconButton>
@@ -292,7 +292,7 @@ export function ProjectGlyph({
   iconId?: ProjectIconId;
   className?: string;
 }) {
-  if (!iconId || iconId === 'folder') return <Folder aria-hidden size={15} weight="regular" className={cn('mr-2 shrink-0 text-[var(--sidebar-icon)]', className)} />;
+  if (!iconId || iconId === 'folder') return <Folder aria-hidden size={15} weight="fill" className={cn('mr-2 shrink-0 text-[var(--sidebar-icon)]', className)} />;
   return (
     <ProjectIcon iconId={iconId} className={cn('mr-2 size-[15px] rounded-[4px]', className)} />
   );

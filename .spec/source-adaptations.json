@@ -88,8 +88,8 @@
     "sha256": "e64204b4b86cd7572c995123f3a00b3844984feb1ce81dcf0e49b5c96e664162"
   },
   "src/features/knowledge/notifications/components/notification-bell.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "f03d28395611f50bc8fe589b89db2cdf4f5c8134f7ceb818a7e9ea8dbe370b0c"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "2e8ae23069de7de0fdf7044870908459f460358d6ff067d5e76debb11e8dd97a"
   },
   "src/features/knowledge/notifications/notifications-bridge.test.ts": {
     "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
@@ -204,8 +204,8 @@
     "sha256": "beea69108a8aea21cf20e9cc1cd516f0e60db4a0625666b5c687b1b68954ef28"
   },
   "src/features/knowledge/dense-sidebar/document-action-menu-content.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "0e6432e6214561ca7a1bc1d2f79e5dd486e13fb076308b618037845b09aed9dd"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "1c2797fbc3b35cb7407e0a5747414ede3f2a9234169c7d51fe295db4082a3ba4"
   },
   "src/features/knowledge/dense-sidebar/draft-icon.tsx": {
     "deleted": true,
@@ -216,16 +216,16 @@
     "sha256": "4d2d76d4f3344555a70daa55c1545297ab572c7f87746e63d31aaf6103cad537"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "b089a676654d1a7be76f71a18140fdd8dcbbde4647553f97a800a376d4084248"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "2b90ef49e1fa456c2feb7d0ef6dcceec0a88ce90cd3ccd5fca25ae03a6d10cb3"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
     "sha256": "0ae1a11d8af4cf5bd220c45cadbc97b076dbe51cd492188f042109aaea676ba6"
   },
   "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "1c18c5eb4123ee3ea49569db09efc5ac304ef87a57c555d2266156d8c50304c2"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "9d3846f3477868d30808e663fed3db4c462f1dc2e8f1c7770b57671aff9b5984"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -284,16 +284,16 @@
     "sha256": "2ca22a7db1319390fdd34158ededc65907c6158d3c34d9953a1c7c7db2552d63"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "131234b8226c19c5216b9b4249e3fb62f2d99499bb8edb1fd13b485e1c7aee34"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "fb1a46d405e2700a2f1b220df555c41e6d62740fb281f03d15a74cb08e9437b6"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
     "reason": "Use the shared theme panel surface so dark-theme document/folder lists remain readable.",
     "sha256": "6f71a46c913ae1d3bef1e31122c768e4fc51bd253603abb3e992f22e906f9f7f"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "da1b58a8985053f0085afd00eaf1f4f08e0d6b7852a9beb08d5de1bd0dc2980e"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "f4cddcdaf7d3e43778565e70bd755453f27d541a5bd1f1e04020bfe2f851a9e8"
   },
   "src/features/knowledge/notifications/notifications-api.test.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -354,5 +354,13 @@
   "src/features/knowledge/editor/components/document-editor-header.module.css": {
     "reason": "Remove the redundant containing-folder entry and slash divider from the document toolbar; keep outline/thumbnail navigation, stars, sharing, creation and document actions intact.",
     "sha256": "5087572a75d2bae7d75efe40cc133d792e77f2227d10d23e167b4681cea0af95"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx": {
+    "reason": "Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "73a98ea301790a373100f4b664d9f58d04f5e02d4577e461bf7e334efba46cf4"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-tag-tree.tsx": {
+    "reason": "Unify system navigation and tools with Phosphor filled icons, retaining functional colors, user-selected page icons and resource actions.",
+    "sha256": "4045b93b201f6f01bf80dfd3ceccb710efd61d15738972f5deee7826c9298e50"
   }
 }

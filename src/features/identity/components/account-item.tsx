@@ -184,7 +184,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               openSignIn();
             }}
           >
-            <UserCircle weight="regular" />
+            <UserCircle weight="fill" />
             {uiText('个人信息')}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -194,7 +194,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               openSwitchAccount();
             }}
           >
-            <Users weight="regular" />
+            <Users weight="fill" />
             {uiText('切换账户')}
           </DropdownMenuItem>
           <DropdownMenuSeparator className={styles.separator} />
@@ -206,7 +206,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
               setLogoutOpen(true);
             }}
           >
-            <DoorOpen weight="regular" />
+            <DoorOpen weight="fill" />
             {uiText('退出登录')}
           </DropdownMenuItem>
         </DropdownMenuContent>}

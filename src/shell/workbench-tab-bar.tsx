@@ -86,7 +86,7 @@ export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate
     {edges.overflow && <button type="button" className={`fob-action ${styles.browse}`} aria-label={t('向右浏览页签')} title={t('向右浏览页签')} disabled={!edges.right} onClick={() => browse(1)}><CaretRight size={13} aria-hidden /></button>}
     <button ref={newButton} type="button" className={`fob-action ${styles.newTab}`} aria-label={t('新建标签页')} title={t('新建标签页')} aria-haspopup="menu" aria-expanded={Boolean(newContext)} onClick={() => newTab()}
       onContextMenu={event => { event.preventDefault(); setContext(null); setNewContext({ x: event.clientX, y: event.clientY }); }}
-      onKeyDown={event => { if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') { event.preventDefault(); const bounds = event.currentTarget.getBoundingClientRect(); setContext(null); setNewContext({ x: bounds.left, y: bounds.bottom }); } }}><Plus size={17} aria-hidden /></button>
+      onKeyDown={event => { if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') { event.preventDefault(); const bounds = event.currentTarget.getBoundingClientRect(); setContext(null); setNewContext({ x: bounds.left, y: bounds.bottom }); } }}><Plus weight="bold" size={17} aria-hidden /></button>
     {context && contextIndex >= 0 && <WorkbenchTabMenu key={context.instance} point={context} pinned={Boolean(tabs[contextIndex].pinned)} canSplit={Boolean(tabs[contextIndex].document)} inSplit={split?.left === tabs[contextIndex].key || split?.right === tabs[contextIndex].key} hasOthers={tabs.length > 1} onClose={() => setContext(null)} onAction={value => action(tabs[contextIndex].key, value)} onReturnFocus={focusSelected} />}
     {newContext && <WorkbenchNewTabMenu point={newContext} onClose={() => setNewContext(null)} onNew={newTab} onReturnFocus={() => newButton.current?.focus()} />}
   </div>;
@@ -112,7 +112,7 @@ function TabItem({ ref, tab, inSplit, title, closeLabel, selected, animatePositi
     {active && <motion.span layoutId="selected-tab" className={styles.active} transition={{ type: 'spring', stiffness: 480, damping: 40 }} />}
     <button type="button" id={workbenchTabId(tab.instance)} role="tab" className={styles.select} aria-selected={active} aria-controls={workbenchPanelId(tab.instance)} aria-haspopup="menu" tabIndex={active ? 0 : -1} title={title}
       onPointerDown={event => { if (event.button === 0) { moved.current = false; controls.start(event, { distanceThreshold: 5 }); } }}
-      onClick={event => { if (!moved.current || event.detail === 0) onActivate(); }} onKeyDown={onKeyDown}><Icon size={16} weight="regular" aria-hidden /><span>{title}</span>{inSplit && <SplitHorizontal size={12} aria-hidden />}{tab.pinned && <PushPin className={styles.pin} size={12} weight="regular" aria-hidden />}</button>
-    <button type="button" className={`fob-action ${styles.close}`} data-variant="nested" aria-label={closeLabel} tabIndex={active ? 0 : -1} onClick={onClose}><X size={13} aria-hidden /></button>
+      onClick={event => { if (!moved.current || event.detail === 0) onActivate(); }} onKeyDown={onKeyDown}><Icon size={16} weight="fill" aria-hidden /><span>{title}</span>{inSplit && <SplitHorizontal size={12} aria-hidden />}{tab.pinned && <PushPin className={styles.pin} size={12} weight="fill" aria-hidden />}</button>
+    <button type="button" className={`fob-action ${styles.close}`} data-variant="nested" aria-label={closeLabel} tabIndex={active ? 0 : -1} onClick={onClose}><X weight="bold" size={13} aria-hidden /></button>
   </Reorder.Item>;
 }

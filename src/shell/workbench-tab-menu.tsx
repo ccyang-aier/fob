@@ -31,14 +31,14 @@ export function WorkbenchTabMenu({ pinned, hasOthers, canSplit, inSplit, onActio
   const { t } = useTranslation(messages);
   const PinIcon = pinned ? PushPinSlash : PushPin;
   return <TabContextMenu {...props} label={t('页签操作')}>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('pin')}><PinIcon weight="regular" aria-hidden />{t(pinned ? '取消置顶' : '置顶')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('pin')}><PinIcon weight="fill" aria-hidden />{t(pinned ? '取消置顶' : '置顶')}</DropdownMenuItem>
     <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('reload')}><ArrowsClockwise aria-hidden />{t('重新加载')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('duplicate')}><CopySimple weight="regular" aria-hidden />{t('复制标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('duplicate')}><CopySimple weight="fill" aria-hidden />{t('复制标签页')}</DropdownMenuItem>
     {canSplit && <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction(inSplit ? 'unsplit' : 'split')}>{inSplit ? <Square aria-hidden /> : <SplitHorizontal aria-hidden />}{t(inSplit ? '结束拆分' : '在拆分视图打开')}</DropdownMenuItem>}
     <DropdownMenuSeparator className={styles.menuSeparator} />
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('current')}><X aria-hidden />{t('关闭')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} disabled={!hasOthers} onSelect={() => onAction('others')}><Tabs weight="regular" aria-hidden />{t('关闭其它标签页')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('all')}><XSquare weight="regular" aria-hidden />{t('关闭全部标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('current')}><X weight="bold" aria-hidden />{t('关闭')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} disabled={!hasOthers} onSelect={() => onAction('others')}><Tabs weight="fill" aria-hidden />{t('关闭其它标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('all')}><XSquare weight="fill" aria-hidden />{t('关闭全部标签页')}</DropdownMenuItem>
   </TabContextMenu>;
 }
 
@@ -48,7 +48,7 @@ export function WorkbenchNewTabMenu({ onNew, ...props }: ContextMenuProps & { on
     {newWorkbenchPages.map(view => {
       const page = workbenchPages[view];
       const Icon = page.icon;
-      return <DropdownMenuItem key={view} className={styles.menuItem} onSelect={() => onNew(view)}><Icon weight="regular" aria-hidden />{t(page.label)}</DropdownMenuItem>;
+      return <DropdownMenuItem key={view} className={styles.menuItem} onSelect={() => onNew(view)}><Icon weight="fill" aria-hidden />{t(page.label)}</DropdownMenuItem>;
     })}
   </TabContextMenu>;
 }

@@ -36,29 +36,29 @@ export function DocumentActionMenuContent({
   return (
     <DropdownMenuContent align="end" className={styles.documentMenu}>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'rename')}>
-        <PencilSimple weight="bold" />
+        <PencilSimple weight="fill" />
         {t('sidebar.rename')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'share')}>
-        <ShareNetwork weight="bold" />
+        <ShareNetwork weight="fill" />
         {knowledgeT('share')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'open-tab')}>
-        <ArrowSquareOut weight="bold" />
+        <ArrowSquareOut weight="fill" />
         {knowledgeT('openInNewTab')}
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-star')}>
-        <Star weight="regular" />
+        <Star weight="fill" />
         {t(starred ? 'sidebar.removeFavorite' : 'sidebar.addFavorite')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-draft')}>
-        <FileDashed weight="bold" />
+        <FileDashed weight="fill" />
         {knowledgeT('toggleDraftFlag')}
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem variant="destructive" onSelect={() => onAction(documentId, 'trash')}>
-        <Trash weight="bold" />
+        <Trash weight="fill" />
         {t('sidebar.moveToTrash')}
       </DropdownMenuItem>
     </DropdownMenuContent>
