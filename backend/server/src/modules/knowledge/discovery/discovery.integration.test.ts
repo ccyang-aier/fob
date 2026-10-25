@@ -8,6 +8,7 @@ import { docState, documentVisit, page } from '../../../platform/database/resour
 import { prosemirrorDocToYDoc } from '../import-export/y-encoding';
 import { refreshPageBlockIndex } from '../search/indexer';
 import { createKnowledgeDiscoveryRoutes } from './http';
+import { withAuthorizedPageTreeMutation } from '../permissions/mutations';
 
 let fixture: PermissionsFixture;
 beforeAll(async () => { fixture = await createPermissionsFixture({ mount(app, deps) { app.route('/', createKnowledgeDiscoveryRoutes({ ...deps, trustedOrigins: deps.auth.options.trustedOrigins as string[] })); } }); }, 60_000);
@@ -66,6 +67,47 @@ test('overview edits persist, protect revisions, and reject cross-folder pins an
   expect((await request(path, fixture.owner, { expectedRevision: 1, description: { type: 'script' } }, 'PATCH')).status).toBe(400);
   expect((await fixture.patchTeamspace(tree.teamspace, { name: 'Renamed from the directory' })).status).toBe(200);
   expect((await request(path, fixture.owner, { expectedRevision: 1, name: 'Stale overview rename' }, 'PATCH')).status).toBe(409);
+});
+
+test('document pins sort before pagination, include pinned children, and still honor search and ACL', async () => {
+  const tree = await fixture.tree({ defaultAccess: 'view', parents: [...Array.from({ length: 44 }, () => null), 0, 0], breaks: [45] });
+  // The fixture normally owns one root; this pagination case intentionally has a forest.
+  for (const root of tree.pages.slice(1).filter(node => node.parentId === null)) await withKnowledgeBase(fixture.pool, root.knowledgeBaseId, db => withAuthorizedPageTreeMutation(db, { knowledgeBaseId: root.knowledgeBaseId, pageId: root.pageId }, async () => {}));
+  await fixture.drain();
+  for (const [index, scope] of tree.pages.entries()) await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, db => db.update(page).set({ title: `Pinned order ${String(index).padStart(2, '0')}` }).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId))));
+  const ids = [tree.pages[43]!.pageId, tree.pages[44]!.pageId, tree.pages[45]!.pageId];
+  expect((await request(`folders/${tree.teamspace.id}`, fixture.owner, { expectedRevision: 0, pinnedPageIds: ids.slice(0, 2), sort: { field: 'title', direction: 'asc' } }, 'PATCH')).status).toBe(200);
+  // Simulate a previously pinned child that has since lost its reader ACL.
+  await fixture.admin.query('UPDATE resources.teamspace SET metadata=jsonb_set(metadata,\'{pinnedPageIds}\',$3::jsonb) WHERE knowledge_base_id=$1 AND id=$2', [fixture.alpha.id, tree.teamspace.id, JSON.stringify(ids)]);
+  const path = `folders/${tree.teamspace.id}?tab=documents`;
+  const first = folderOverviewSchema.parse(await (await request(path, fixture.reader)).json());
+  expect(first.documents.slice(0, 2).map(document => document.id)).toEqual(ids.slice(0, 2));
+  expect(first.documents.some(document => document.id === ids[2])).toBe(false);
+  expect(first.folder.metadata.pinnedPageIds).toEqual(ids.slice(0, 2));
+  const last = folderOverviewSchema.parse(await (await request(`${path}&offset=40`, fixture.reader)).json());
+  expect(new Set([...first.documents, ...last.documents].map(document => document.id)).size).toBe(45);
+  expect(last.documents).toHaveLength(5);
+  const search = folderOverviewSchema.parse(await (await request(`${path}&q=order%2001`, fixture.reader)).json());
+  expect(search.documents.map(document => document.title)).toEqual(['Pinned order 01']);
+  expect((await request(`folders/${tree.teamspace.id}`, fixture.owner, { expectedRevision: 1, pinnedPageIds: [] }, 'PATCH')).status).toBe(200);
+  const unpinned = folderOverviewSchema.parse(await (await request(path, fixture.reader)).json());
+  expect(unpinned.documents[0]!.title).toBe('Pinned order 00');
+  expect(unpinned.documents.some(document => document.id === ids[1])).toBe(false);
+}, 20_000);
+
+test('folder icon changes and removal reach the directory without exposing overview metadata', async () => {
+  const tree = await fixture.tree({ defaultAccess: 'view' }); await fixture.drain();
+  const path = `folders/${tree.teamspace.id}`, icon = 'glyph:flask:#20b9eb';
+  const directory = async () => {
+    const response = await fetch(`${fixture.server.origin}/api/knowledge-bases/${fixture.alpha.id}/teamspaces?limit=100`, { headers: { cookie: fixture.owner.cookie } });
+    expect(response.status).toBe(200);
+    const result = await response.json() as { items: { id: string; icon: string | null; metadata?: unknown }[] };
+    return result.items.find(item => item.id === tree.teamspace.id)!;
+  };
+  expect((await request(path, fixture.owner, { expectedRevision: 0, icon, pinnedPageIds: [tree.root.pageId] }, 'PATCH')).status).toBe(200);
+  const selected = await directory(); expect(selected.icon).toBe(icon); expect(selected.metadata).toBeUndefined();
+  expect((await request(path, fixture.owner, { expectedRevision: 1, icon: null }, 'PATCH')).status).toBe(200);
+  expect((await directory()).icon).toBeNull();
 });
 
 test('a manager downgraded while waiting for the knowledge-base lock cannot save folder metadata', async () => {

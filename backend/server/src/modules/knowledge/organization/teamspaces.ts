@@ -13,7 +13,7 @@ import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
 
 const targetTeamspace = (scope: TeamspaceScope) => and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, scope.teamspaceId));
-const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, name: row.name, defaultAccess: row.defaultAccess });
+const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, name: row.name, defaultAccess: row.defaultAccess, icon: row.metadata.icon ?? null });
 
 async function loadTeamspace(db: ResourceTransaction, scope: TeamspaceScope, lock = false) {
   const query = db.select().from(teamspace).where(targetTeamspace(scope));

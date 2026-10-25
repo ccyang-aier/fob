@@ -37,3 +37,16 @@
 .bulkPosition .bulkBar { max-width:calc(100vw - 24px); }
 @container(max-width:450px) { .folderToolbar { position:relative; }.tabs { top:0; } }
 @media(max-width:600px) { .bulkPosition { bottom:80px; } }
+
+.tabBar { position:sticky; top:54px; z-index:2; display:flex; align-items:center; gap:16px; margin-bottom:12px; border-bottom:1px solid var(--collection-divider); background:var(--panel); }
+.tabBar .tabs { position:static; min-width:0; flex:1; margin:0; border:0; }
+.sortControl { flex:none; max-width:180px; height:28px; padding:0 6px; font-size:12px; }
+.sortControl>span { overflow:hidden; text-overflow:ellipsis; }
+.rowStar[data-starred=true] { --action-state-ink:var(--knowledge-star-color); color:var(--knowledge-star-color); opacity:1; }
+.documentRow:hover .rowStar[data-starred=true],.documentRow:focus-within .rowStar[data-starred=true] { opacity:1; }
+.bulkButton[data-starred=true]>span { color:var(--knowledge-star-color); }
+.pinButton[aria-pressed=false]>span { opacity:.45; }
+.pinButton[aria-pressed=true]>span { color:var(--ink); }
+.rowActions:has(.pinButton[aria-pressed=true]) { opacity:1; }
+@container(max-width:760px) { .sortControl>span { display:none; } }
+@container(max-width:450px) { .tabBar { top:0; gap:8px; }.rowActions>.pinButton { display:grid; } }

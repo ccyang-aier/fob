@@ -101,7 +101,7 @@ export function LibraryCanvas({
       />
     );
   const recycled = recycledRootPages(pages);
-  if (view === 'overview' && folder) return <><ServerFolderOverview knowledgeBaseId={knowledgeBaseId} folder={folder} folders={teamspaces} onOpen={onOpenPage} onCreate={() => void actions.create(folder.id)} renderMenu={id => <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />} upload={<KnowledgeBaseDocumentImport knowledgeBaseId={knowledgeBaseId} teamspaceId={folder.id} />} />{actions.dialogs}</>;
+  if (view === 'overview' && folder) return <><ServerFolderOverview key={folder.id} knowledgeBaseId={knowledgeBaseId} folder={folder} folders={teamspaces} onOpen={onOpenPage} onCreate={() => void actions.create(folder.id)} renderMenu={id => <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />} upload={<KnowledgeBaseDocumentImport knowledgeBaseId={knowledgeBaseId} teamspaceId={folder.id} />} />{actions.dialogs}</>;
   if (view === 'all-documents')
     return (
       <>

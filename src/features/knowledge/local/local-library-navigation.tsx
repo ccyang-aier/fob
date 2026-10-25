@@ -217,11 +217,11 @@ export function LocalLibraryNavigation({
                         onClick={() => onSelectFolder?.(folder.id)}
                         className="flex h-full min-w-0 flex-1 items-center pl-1 pr-1 text-left outline-none"
                       >
-                        <Folder
+                        {folder.metadata?.icon ? <PageIcon value={folder.metadata.icon} size={14} className="mr-2 shrink-0" /> : <Folder
                           aria-hidden
                           size={14}
                           className="mr-2 shrink-0 text-[#7c8387]"
-                        />
+                        />}
                         <span className="truncate">{folder.name}</span>
                         <span
                           className={cn(

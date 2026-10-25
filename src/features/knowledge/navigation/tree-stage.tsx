@@ -122,6 +122,7 @@ export function KnowledgeTreeStage({
     label: section.title,
     count: documents.filter((page) => page.teamspaceId === section.id).length,
     projectIconId: 'folder',
+    folderIcon: section.icon,
     starred: collections.starred.includes(section.id),
     expandable: section.pages.length > 0,
     defaultExpanded: true,

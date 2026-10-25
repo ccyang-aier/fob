@@ -231,11 +231,11 @@ export function SidebarDocumentActions({
         {starred ? <Star
           aria-hidden="true"
           size={14}
-          className={starred ? 'text-[#e5aa14]' : undefined}
+          className={starred ? 'text-[var(--knowledge-star-color)]' : undefined}
         /> : <StarOutline
           aria-hidden="true"
           size={14}
-          className={starred ? 'text-[#e5aa14]' : undefined}
+          className={starred ? 'text-[var(--knowledge-star-color)]' : undefined}
         />}
       </IconButton>
       <SidebarDocumentMenu documentId={documentId} starred={starred} onAction={onAction} />

@@ -30,6 +30,7 @@ export interface SidebarProjectNode {
   projectIconId?: ProjectIconId;
   icon?: SidebarIconName;
   documentIcon?: string | null;
+  folderIcon?: string | null;
   expandable?: boolean;
   defaultExpanded?: boolean;
   starred?: boolean;

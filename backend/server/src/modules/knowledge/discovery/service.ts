@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNull, sql, type SQL } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNull, or, sql, type SQL } from 'drizzle-orm';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import type { KnowledgeRequestContext } from '../access';
 import { authUser } from '../../../platform/database/identity/schema';
@@ -65,9 +65,10 @@ export async function folderOverview(db: ResourceTransaction, authority: Knowled
   const sort = metadata.sort ?? { field: 'position' as const, direction: 'asc' as const };
   const selectedOrder: Record<string, SQL | typeof page.position | typeof page.title | typeof page.createdAt> = { position: page.position, title: page.title, updatedAt: updated, createdAt: page.createdAt };
   const order = tab.data === 'popular' ? desc(views) : tab.data === 'updated' || tab.data === 'overview' ? desc(updated) : tab.data === 'oldest' ? asc(updated) : tab.data === 'alphabetical' ? sql`lower(${page.title}) collate "C" asc` : sort.direction === 'asc' ? asc(selectedOrder[sort.field]!) : desc(selectedOrder[sort.field]!);
-  const q = (input.q ?? '').trim().slice(0, 200), limit = tab.data === 'overview' ? 6 : 40;
-  const items = tab.data === 'overview' ? [] : await documents(db).where(and(scope, tab.data === 'documents' ? isNull(page.parentId) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(order, asc(page.id)).limit(limit + 1).offset(offset);
   const pinnedIds = metadata.pinnedPageIds ?? [];
+  const q = (input.q ?? '').trim().slice(0, 200), limit = tab.data === 'overview' ? 6 : 40;
+  const pinnedFirst = tab.data === 'documents' && pinnedIds.length ? [sql`case when ${inArray(page.id, pinnedIds)} then 0 else 1 end`] : [];
+  const items = tab.data === 'overview' ? [] : await documents(db).where(and(scope, tab.data === 'documents' ? or(isNull(page.parentId), pinnedIds.length ? inArray(page.id, pinnedIds) : undefined) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(...pinnedFirst, order, asc(page.id)).limit(limit + 1).offset(offset);
   const pinned = pinnedIds.length ? await documents(db).where(and(scope, inArray(page.id, pinnedIds))) : [];
   const visiblePinned = pinnedIds.flatMap(id => pinned.filter(row => row.id === id).map(serialize));
   const visibleIds = tab.data === 'overview' ? [] : [...new Set([...items.slice(0, limit), ...pinned].map(item => item.id))];

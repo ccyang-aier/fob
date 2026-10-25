@@ -32,9 +32,10 @@ export const revokeKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema
 export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email() });
 export const teamspaceSchema = knowledgeBaseScopeSchema.extend({
   id: entityIdSchema, name: resourceNameSchema, defaultAccess: permissionLevelSchema.nullable(),
+  icon: z.string().max(200).nullable().optional(),
 });
 export const teamspaceScopeSchema = knowledgeBaseScopeSchema.extend({ teamspaceId: entityIdSchema });
-export const createTeamspaceInputSchema = teamspaceSchema.omit({ id: true }).extend({ defaultAccess: teamspaceSchema.shape.defaultAccess.default(null) });
+export const createTeamspaceInputSchema = teamspaceSchema.omit({ id: true, icon: true }).extend({ defaultAccess: teamspaceSchema.shape.defaultAccess.default(null) });
 export const listTeamspacesInputSchema = listOrganizationInputSchema;
 export const updateTeamspaceInputSchema = teamspaceScopeSchema.extend({
   name: resourceNameSchema.optional(), defaultAccess: teamspaceSchema.shape.defaultAccess.optional(),

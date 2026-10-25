@@ -134,6 +134,18 @@ test('failed persistence keeps the picker available, read-only metadata has no e
   expect(document.querySelector('[aria-label="更改文档图标"]')).toBeNull();
   expect(document.querySelector('[data-page-icon]')?.textContent).toBe('🎓');
 });
+
+test('folder pickers can deselect the current glyph and use the smaller selected artwork size', async () => {
+  function Harness() {
+    const [value, setValue] = useState<string | null>(encodePageIcon('flask', '#20b9eb'));
+    return <PageIconPicker iconSize={34} toggleSelected value={value} onChange={async next => setValue(next)} />;
+  }
+  await act(async () => root.render(<Harness />));
+  expect((document.querySelector('[data-page-icon]') as SVGElement)?.style.width).toBe('32px');
+  await openPicker(); await click('[aria-label="实验"]');
+  expect(document.querySelector('[data-page-icon]')).toBeNull();
+  expect(document.querySelector('[aria-label="添加文档图标"]')).not.toBeNull();
+});
 test('collapse hides the real descendants, survives changed positions, and leaf navigation stays independent', async () => {
   let navigation = -1;
   const headings = [

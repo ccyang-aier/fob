@@ -119,6 +119,8 @@ export function SidebarProjectTreeNode({
         >
           {isDocument ? (
             <PageIcon value={node.documentIcon} size={14} className={sidebarDocumentIconClass} />
+          ) : node.folderIcon ? (
+            <PageIcon value={node.folderIcon} size={14} className={sidebarDocumentIconClass} />
           ) : (
             <ProjectGlyph iconId={node.projectIconId} />
           )}

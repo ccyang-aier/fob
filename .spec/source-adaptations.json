@@ -168,8 +168,8 @@
     "sha256": "5751796247370f72ab946af90b9f8964aface89f848eec41d15e0129500794c9"
   },
   "shared/src/knowledge/contracts/organization.ts": {
-    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts.",
-    "sha256": "a678c99ceb68913177bba29d39e9d0dd5aeea4e41d50d3359567d5128238685a"
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "41f180d8ee37ed0f0efe39c6329e3f1df3b070e9cd80b545db924dc475671fc2"
   },
   "src/features/companion/companion-layer.tsx": {
     "reason": "Keep the global companion in one viewport-sized manual popover with scoped menus/tooltips, escaping dialog transform/overflow without remounting the character or disabling native modal interactivity.",
@@ -216,16 +216,16 @@
     "sha256": "d5ee342de07aa45777d5fa7dc805af15792ccf2ca15ab0c4e9f14d2a1eb022df"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "ebc192272b0e58cfbba8ec5b91e38dc30b1877c085235e9a3862d9c617ce1c8d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "89ede81b313c12d0a32f06e2bc70bb0a069b2024a044f3a41103bfc46f06f13f"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "0ae1a11d8af4cf5bd220c45cadbc97b076dbe51cd492188f042109aaea676ba6"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "d06775564725454748b63ea388700c67a160944c38670eeeb761c9bab080ae0c"
   },
   "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Folder names open the real overview; disclosure controls only expand the resource tree.",
-    "sha256": "12526c83af3e5c50218e064a2387f3185a1b11f2b5dea4e98893b5931d989a3d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Folder names open the real overview; disclosure controls only expand the resource tree. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "c5f908ec0670bbfcf087822e55bff7ee77834564793f0a94ddc998e7378b38a3"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -284,12 +284,12 @@
     "sha256": "ed0a400ac5d90ce919f8a2c08684082a82a93b8e1e56726e4a0d1af0a41e1abe"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder.",
-    "sha256": "268ba9a9ac372b08c1a17a8f88cfe885fc162ba971c2e121dc9b908442b86de9"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "4416e141de10fb54a6f56a63189580b21c588da54c4ec1d0149260fbb859ff85"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
-    "sha256": "aab7f7509a7d211e54843bd8c2f98a1970325e55dfb717377265d16c06eb087f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "32ab881ecc653ff6ea11fa2ab85b0c32954b131bc1f547580132e853bb69fad8"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
     "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
@@ -336,8 +336,8 @@
     "sha256": "dde4d314811b12f3891e9f3dd9bc11488a801ef5c15555cc36257ebee2f8d596"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them.",
-    "sha256": "8dc683bfa97adca7bfdf2c2c340ba9e7dec682e4b14ca1dd45c596747f151d8f"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "d0f514077a737316b9ea9cdda1d3207902da0f55d7a3e2abe13075e0e4c24d7a"
   },
   "backend/server/src/modules/knowledge/pages/tree.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
@@ -640,8 +640,8 @@
     "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
   },
   "src/features/knowledge/navigation/page-icon-picker.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
-    "sha256": "2973f79fa92fcc1a14ef8dbfc0a56e1b7d56442a5d6c779bcaaa08bba47e5cd6"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "346c749e456d447b497d485d71746005a04419a7effafa9b63b91af293a2962f"
   },
   "src/features/knowledge/organization/groups-section.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -652,8 +652,8 @@
     "sha256": "ae949df4c5a9548157b37973c9bc5287f992ddd51460010a8a67bd0c743830dd"
   },
   "src/features/knowledge/organization/permission-select.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "8dfa796214a33fbf7c72fc2575f6f197027e88d9651e9b08710ef53b4af3366e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "62c5a380030ec6774e2ed6a743914bdd0fcf78296006b09a2eb08f6f196201ff"
   },
   "src/features/knowledge/organization/teamspaces-section.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -744,16 +744,16 @@
     "sha256": "63f79718adea6b17a4e6e3040624e63bd5c44dd4681d6ee0a3c5123b513121c0"
   },
   "src/features/knowledge/navigation/page-icon.test.tsx": {
-    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation.",
-    "sha256": "5dc63d14137290032777dd1c9110a28f44c38650c24b94fb00de58e508607e71"
+    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "6f36405012b2b25f18ea8c6ed3219ea49c1a773ce89ca5fa7ae10990b5fc5f7c"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
     "reason": "Localize unavailable local folder links and document-list recovery.",
     "sha256": "c55a25b60469441db96f73def6cdc7c04b48a17b9190c50a3efaae8255cdc675"
   },
   "src/features/knowledge/navigation/tree-stage.tsx": {
-    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target.",
-    "sha256": "4fdd172c1a6b6fba873115eef7bd3964bdd34d929b38f54cbb304854936136e8"
+    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "ce67bfb5cd630432dc4fbb45f5258cd86ef01d5509888c4ab6785e2a1dfd6c41"
   },
   "backend/server/src/modules/knowledge/search/keyword.ts": {
     "reason": "Intersect folder and author conditions with the existing indexed ACL predicate before BM25 ranking and limiting.",
@@ -774,5 +774,13 @@
   "src/features/knowledge/editor/block-modules/types.ts": {
     "reason": "Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
     "sha256": "0cb7d5c5aed815030f068bd9b74580eea85bdbcef9af6e7ceee7419cc5c40b03"
+  },
+  "src/features/knowledge/navigation/tree-model.ts": {
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "5bb5972ddade32c8dacec2846d3cf211c6f507a112518f6b918247dfea034833"
+  },
+  "src/features/knowledge/navigation/tree-model.test.ts": {
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
+    "sha256": "9d5eeca71aa12335885ac0f7c25f6c075d8326b0ceebf302e4a4eea60b71b7c5"
   }
 }

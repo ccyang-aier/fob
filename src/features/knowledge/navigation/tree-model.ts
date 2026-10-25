@@ -27,6 +27,7 @@ export type NavigationSection = {
   /** Teamspace id; the selection target of the skeleton tree. */
   id: string;
   title: string;
+  icon?: string | null;
   /** Root-level pages of the teamspace, in fractional-index order. */
   pages: NavigationPageNode[];
   /** Every live page of the teamspace, roots and descendants included. */
@@ -92,6 +93,7 @@ export function buildNavigationSections(
     return {
       id: teamspace.id,
       title: teamspace.name,
+      icon: teamspace.icon ?? null,
       pages: roots.sort(byPosition).map(toNode),
       pageCount: visible,
     };

@@ -27,12 +27,14 @@ export function PageIconPicker({
   onChange,
   iconSize = 24,
   fallbackIcon,
+  toggleSelected = false,
 }: {
   value?: string | null;
   editable?: boolean;
   onChange: (icon: string | null) => Promise<void>;
   iconSize?: number;
   fallbackIcon?: ReactNode;
+  toggleSelected?: boolean;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
   const language = locale === 'zh-CN' ? 'zh' : 'en';
@@ -216,7 +218,7 @@ export function PageIconPicker({
                   disabled={saving}
                   onSelect={(event) => {
                     event.preventDefault();
-                    void apply(encodePageIcon(id, color));
+                    void apply(toggleSelected && selected?.id === id ? null : encodePageIcon(id, color));
                   }}
                 >
                   <button
@@ -225,6 +227,7 @@ export function PageIconPicker({
                     aria-label={label[language]}
                     title={label[language]}
                     data-selected={selected?.id === id}
+                    aria-pressed={selected?.id === id}
                   >
                     <Glyph size={24} style={{ color }} aria-hidden />
                   </button>
@@ -244,7 +247,7 @@ export function PageIconPicker({
                         disabled={saving}
                         onSelect={(event) => {
                           event.preventDefault();
-                          void apply(emoji);
+                          void apply(toggleSelected && value === emoji ? null : emoji);
                         }}
                       >
                         <button
@@ -253,6 +256,7 @@ export function PageIconPicker({
                           aria-label={language === 'zh' ? chinese : english}
                           title={language === 'zh' ? chinese : english}
                           data-selected={value === emoji}
+                          aria-pressed={value === emoji}
                         >
                           {emoji}
                         </button>

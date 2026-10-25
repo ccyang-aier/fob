@@ -43,6 +43,11 @@ const tsA = 'a0000000-0000-4000-8000-00000000000a';
 const tsB = 'b0000000-0000-4000-8000-00000000000b';
 
 describe('buildNavigationSections', () => {
+  test('folder icons carry the catalog value and removing the value restores the default glyph', () => {
+    const folder = { ...teamspace(tsA, '产品'), icon: 'glyph:flask:#20b9eb' };
+    expect(buildNavigationSections([folder], [])[0].icon).toBe(folder.icon);
+    expect(buildNavigationSections([{ ...folder, icon: null }], [])[0].icon).toBeNull();
+  });
   test('one section per teamspace, sections without pages included', () => {
     const sections = buildNavigationSections([teamspace(tsA, '产品'), teamspace(tsB, '运营')], []);
     expect(sections.map((section) => section.title)).toEqual(['产品', '运营']);
