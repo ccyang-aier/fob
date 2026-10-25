@@ -32,7 +32,7 @@ export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () =
   return <>
     <DropdownMenu open={menuOpen} onOpenChange={open => { setMenuOpen(open); if (open) setQuery(''); }}>
       <DropdownMenuTrigger asChild><button type="button" className={`fob-action ${styles.trigger}`} aria-label={t('switch')}>
-        {selectedKnowledgeBase ? <SwitcherAvatar base={selectedKnowledgeBase} principal={principal} /> : <span className={styles.avatar}><BookOpenText size={17} weight="duotone" /></span>}
+        {selectedKnowledgeBase ? <SwitcherAvatar base={selectedKnowledgeBase} principal={principal} /> : <span className={styles.avatar}><BookOpenText size={17} weight="regular" /></span>}
         <span className={styles.name}>{selectedKnowledgeBase?.name ?? t(status === 'loading' ? 'loading' : 'select')}</span><CaretUpDown size={13} className={styles.chevrons} />
       </button></DropdownMenuTrigger>
       {menuOpen && <DropdownMenuContent className={styles.menu} align="start" side="bottom" sideOffset={6} aria-label={t('switch')}>
@@ -54,11 +54,11 @@ export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () =
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={openCreateKnowledgeBase}><Plus size={16} />{t('create')}</DropdownMenuItem>
         {selectedKnowledgeBase && <>
-          {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem onSelect={() => setAction({ kind: 'rename', knowledgeBase: selectedKnowledgeBase })}><PencilSimple size={16} weight="duotone" />{t('rename')}</DropdownMenuItem>}
-          <DropdownMenuSub><DropdownMenuSubTrigger><Palette size={16} weight="duotone" />{t('palette')}</DropdownMenuSubTrigger><DropdownMenuSubContent>
+          {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem onSelect={() => setAction({ kind: 'rename', knowledgeBase: selectedKnowledgeBase })}><PencilSimple size={16} weight="regular" />{t('rename')}</DropdownMenuItem>}
+          <DropdownMenuSub><DropdownMenuSubTrigger><Palette size={16} weight="regular" />{t('palette')}</DropdownMenuSubTrigger><DropdownMenuSubContent>
             {KNOWLEDGE_BASE_AVATAR_PALETTES.map(palette => <DropdownMenuItem key={palette.id} role="menuitemradio" aria-checked={activePalette === palette.id} onSelect={() => choosePalette(palette.id)}><KnowledgeBaseAvatar seed={selectedKnowledgeBase.id} palette={palette.id} preview className={styles.palettePreview} /><span>{t(palette.id)}</span>{activePalette === palette.id && <Check size={14} className="ml-auto" />}</DropdownMenuItem>)}
           </DropdownMenuSubContent></DropdownMenuSub>
-          {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: 'remove', knowledgeBase: selectedKnowledgeBase })}><Trash size={16} weight="duotone" />{t('remove')}</DropdownMenuItem>}
+          {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: 'remove', knowledgeBase: selectedKnowledgeBase })}><Trash size={16} weight="regular" />{t('remove')}</DropdownMenuItem>}
         </>}
       </DropdownMenuContent>}
     </DropdownMenu>

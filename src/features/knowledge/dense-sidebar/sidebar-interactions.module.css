@@ -90,10 +90,6 @@
 .documentMenu { width:196px; }
 .documentMenu svg { width:16px; height:16px; color:currentColor; }
 
-@media (prefers-reduced-motion:reduce) {
-  .row,.iconButton,.actionButton,.actions { transition:none; }
-}
-
 .actionButton {
   display: inline-flex;
   height: 22px;
@@ -123,7 +119,7 @@
   color: var(--foreground);
 }
 
-.row[data-selected="true"] > svg {
+.row[data-selected="true"] > svg:not([data-icon-tone]) {
   color: var(--ink);
 }
 

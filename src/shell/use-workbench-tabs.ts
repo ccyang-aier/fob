@@ -1,9 +1,11 @@
 'use client';
 
-import { useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { TabDocument } from '@/features/knowledge/editor/document-tab-context';
 import { PAGE_SESSION_FLUSH, KnowledgeUiSessionContext } from '@/lib/page-session-state';
 import { pushWorkbenchLocation, replaceWorkbenchLocation } from '@/lib/navigation-history';
 import { closeSettings } from '@/lib/settings-navigation';
+import { clampSplitRatio, reportWorkbenchDocument, splitWorkbenchTab } from './workbench-tabs';
 import type { WorkbenchPage } from './workbench-pages';
 import { addWorkbenchTab, closeWorkbenchTab, createWorkbenchStartup, createWorkbenchTabs, findWorkbenchTab, knowledgeScopedSearch, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget, workbenchPanelId, type TabCloseAction, type WorkbenchTab, type WorkbenchTabsState } from './workbench-tabs';
 
@@ -87,9 +89,10 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
     commit(openWorkbenchTab(remembered, next));
   }
   function activate(key: string) {
+    if (key === state.active) return;
     const remembered = rememberLocation(state);
     const tab = remembered.tabs.find(tab => tab.key === key);
-    if (tab) commit({ ...remembered, active: tab.key });
+    if (tab) commit({ ...remembered, active: tab.key, split: remembered.split && [remembered.split.left, remembered.split.right].includes(key) ? remembered.split : undefined });
   }
   function close(key: string, action: TabCloseAction = 'current') {
     const remembered = rememberLocation(state);
@@ -125,5 +128,19 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
     if (session && !session.copyPage(tab.instance, remembered.nextInstance)) return;
     commit(addWorkbenchTab(remembered, tab, key));
   }
-  return { ...state, revealRequest, ready: boot, open, activate, close, reorder, newTab, pin, reload, duplicate };
+  const reportDocument = useCallback((key: string, document: TabDocument | null) => {
+    setMemory(previous => ({ ...previous, state: reportWorkbenchDocument(previous.state, key, document) }));
+  }, []);
+  const resizeSplit = useCallback((ratio: number) => {
+    setMemory(previous => previous.state.split ? { ...previous, state: { ...previous.state, split: { ...previous.state.split, ratio: clampSplitRatio(ratio) } } } : previous);
+  }, []);
+  function split(key: string, document?: TabDocument) {
+    const remembered = rememberLocation(state);
+    const tab = remembered.tabs.find(tab => tab.key === key);
+    if (tab) flushPage(tab);
+    if (session && tab && !session.copyPage(tab.instance, remembered.nextInstance)) return;
+    commit(splitWorkbenchTab(remembered, key, document));
+  }
+  function unsplit() { setStored(current => ({ ...current, split: undefined })); }
+  return { ...state, revealRequest, ready: boot, open, activate, close, reorder, newTab, pin, reload, duplicate, reportDocument, splitTab: split, unsplit, resizeSplit };
 }

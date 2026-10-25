@@ -2,11 +2,11 @@
 
 /**
  * 通用侧栏导航行（展开 30px / 折叠 32px 图标态）：hover 浅灰底条，
- * 图标默认采用深灰轮廓与浅灰局部填充，激活时保留同一造型和灰度。
+ * 图标默认使用清晰线性轮廓，激活时保留同一造型。
  * 消费方：navigation-sidebar / settings-canvas。
  */
 
-import type { ReactNode } from "react"
+import type { ComponentProps, ReactNode } from "react"
 import type { Icon } from "@phosphor-icons/react"
 
 import { cn } from "@/lib/utils"
@@ -17,8 +17,8 @@ export type SidebarRowItem = {
   icon: Icon
   /** 图标的固定着色（如收藏金星），不随导航激活改变 */
   iconClassName?: string
-  /** 图标权重：默认 duotone，明确的功能图标可覆盖 */
-  iconWeight?: "regular" | "duotone" | "fill"
+  /** 彩色功能入口可以显式使用填充图标。 */
+  iconWeight?: "regular" | "fill"
   /** 行尾附加节点（时间戳、红点等），仅展开态渲染 */
   trailing?: ReactNode
 }
@@ -29,23 +29,25 @@ export function NavButton({
   compact = false,
   nested = false,
   onSelect,
+  ...buttonProps
 }: {
   item: SidebarRowItem
   active: boolean
   compact?: boolean
   nested?: boolean
   onSelect: (id: string) => void
-}) {
+} & Omit<ComponentProps<'button'>, 'onSelect'>) {
   const Icon = item.icon
   return (
     <button
+      {...buttonProps}
       type="button"
-      onClick={() => onSelect(item.id)}
+      onClick={event => { buttonProps.onClick?.(event); if (!event.defaultPrevented) onSelect(item.id) }}
       aria-current={active ? "page" : undefined}
       aria-label={compact ? item.label : undefined}
       data-active={active}
       className={cn(
-        "sidebar-nav-row group flex items-center rounded-[6px] text-[11px] leading-none outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]",
+        "sidebar-nav-row group flex items-center rounded-[6px] text-[12px] leading-none outline-none",
         compact
           ? "mx-auto size-8 justify-center"
           : cn("h-[30px] w-full gap-2 pr-2", nested ? "pl-5" : "pl-2"),
@@ -53,8 +55,8 @@ export function NavButton({
     >
       <Icon
         aria-hidden
-        size={compact ? 18 : 16}
-        weight={item.iconWeight ?? "duotone"}
+        size={18}
+        weight={item.iconWeight ?? "regular"}
         className={cn(
           "sidebar-nav-icon shrink-0",
           item.iconClassName,

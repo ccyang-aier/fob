@@ -2,6 +2,7 @@
 import type { sidebarMessages } from './messages';
 export type SidebarMessageKey = keyof typeof sidebarMessages;
 export type SidebarIconName =
+  | 'home'
   | 'star'
   | 'archive'
   | 'trash'
@@ -10,7 +11,6 @@ export type SidebarIconName =
   | 'sprout'
   | 'image'
   | 'file'
-  | 'draft'
   | 'folder'
   | 'tasks'
   | 'blocks';
@@ -18,6 +18,7 @@ export interface SidebarNavigationItem {
   id: string;
   labelKey: SidebarMessageKey;
   icon: SidebarIconName;
+  tone?: 'teal' | 'amber' | 'indigo' | 'rose';
   count?: number;
 }
 import type { ProjectIconId } from './project-icons';
@@ -43,10 +44,10 @@ export interface SidebarRecentNote {
   starred?: boolean;
 }
 export const SIDEBAR_MAIN_ITEMS: SidebarNavigationItem[] = [
-  { id: 'all-documents', labelKey: 'sidebar.home', icon: 'file' },
-  { id: 'starred', labelKey: 'sidebar.starred', icon: 'star' },
-  { id: 'drafts', labelKey: 'sidebar.drafts', icon: 'draft' },
-  { id: 'trash', labelKey: 'sidebar.trash', icon: 'trash' },
+  { id: 'all-documents', labelKey: 'sidebar.home', icon: 'home', tone: 'teal' },
+  { id: 'starred', labelKey: 'sidebar.starred', icon: 'star', tone: 'amber' },
+  { id: 'drafts', labelKey: 'sidebar.drafts', icon: 'file', tone: 'indigo' },
+  { id: 'trash', labelKey: 'sidebar.trash', icon: 'trash', tone: 'rose' },
 ];
 
 export type TagSummary = { id: string; name: string; color: string };

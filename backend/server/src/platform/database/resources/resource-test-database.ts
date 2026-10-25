@@ -103,6 +103,8 @@ export async function seedResourceTestData(admin: Pool) {
       const scope = { knowledgeBaseId, pageId: ids.page };
       const state = { state: new Uint8Array([0, 0]), stateVector: new Uint8Array([0]) };
       await db.insert(tables.docState).values({ ...scope, ...state });
+      await db.insert(tables.knowledgeTemplate).values({ knowledgeBaseId, id: randomUUID(), sourcePageId: ids.page, name: 'Research template', title: `${name} template`, createdBy: userId, document: { type: 'doc', content: [{ type: 'paragraph' }] } });
+      await db.insert(tables.knowledgeSubscription).values({ knowledgeBaseId, id: randomUUID(), userId, pageId: ids.page });
       await db.insert(tables.docCheckpoint).values({ ...scope, ...state, id: ids.checkpoint, authors: [userId] });
       await db.insert(tables.pageAcl).values({ ...scope, principal, level: 'full' });
       await db.insert(tables.pageEffectiveAcl).values({ ...scope, view: [principal], comment: [principal], edit: [principal], full: [principal] });

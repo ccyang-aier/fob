@@ -40,7 +40,7 @@ export function ViewSwitcher({
             onClick={() => onValueChange(mode)}
             className={styles.option}
           >
-            <Icon data-icon="inline-start" size={16} weight={value === mode ? 'fill' : 'regular'} />
+            <Icon data-icon="inline-start" size={16} weight="regular" />
           </Button>
         );
       })}

@@ -1,6 +1,6 @@
 /* ── 中性侧栏导航行 ──
    hover 使用更浅的底条，激活保留当前页面反馈；普通鼠标焦点不保留底色。
-   图标默认深灰轮廓与浅灰局部填充，激活时保持相同造型与灰度。
+   图标使用圆润线性轮廓，四个知识主入口保留明确的浅彩色填充。
    消费方：navigation-sidebar / settings-canvas。 */
 html .sidebar-nav-row {
   --action-state-bg: var(--sidebar-row-hover-bg);

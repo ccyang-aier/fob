@@ -1,9 +1,10 @@
-import { and, desc, eq, inArray, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import type { Principal } from '@fob/shared/knowledge/contracts';
 import { entityIdSchema, timestampSchema, knowledgeBaseScopeSchema } from '@fob/shared/knowledge/contracts';
 import type { NotificationItem } from '@fob/shared/knowledge/notifications';
-import { groupMember, member, notification, page } from '../../../platform/database/resources/schema';
+import { notificationItemSchema } from '@fob/shared/knowledge/notifications';
+import { groupMember, member, notification, page, teamspace } from '../../../platform/database/resources/schema';
 import { authUser } from '../../../platform/database/identity/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { expandPrincipals } from '../permissions/effective';
@@ -47,15 +48,24 @@ async function recipientPrincipals(db: ResourceTransaction, knowledgeBaseId: str
  * The inbox predicate: the recipient's own rows, and — mirroring creation-time
  * filtering — only while the anchored page is still viewable by that recipient
  * (recycled pages and a still-rebuilding materialized ACL fail closed).
- * Page-less kinds stay visible by definition.
+ * Folder notices recheck live directory rights and existence instead of using
+ * the page-less branch; losing membership/directory access hides their names.
  */
 function inboxCondition(db: ResourceTransaction, knowledgeBaseId: string, userId: string, principals: readonly Principal[]) {
   const viewablePages = db.select({ id: page.id }).from(page)
     .where(effectivePageAccessCondition({ knowledgeBaseId, principals, required: 'view' }));
+  const viewableFolder = sql`EXISTS (
+    SELECT 1 FROM ${teamspace} INNER JOIN ${member}
+      ON ${member.knowledgeBaseId} = ${teamspace.knowledgeBaseId}
+    WHERE ${teamspace.knowledgeBaseId} = ${knowledgeBaseId}
+      AND ${teamspace.id}::text = ${notification.payload}->>'teamspaceId'
+      AND ${member.userId} = ${userId} AND ${member.role} <> 'guest'
+  )`;
   return and(
     eq(notification.knowledgeBaseId, knowledgeBaseId),
     eq(notification.userId, userId),
-    or(isNull(notification.pageId), inArray(notification.pageId, viewablePages)),
+    or(and(eq(notification.kind, 'folder.changed'), viewableFolder),
+      and(ne(notification.kind, 'folder.changed'), or(isNull(notification.pageId), inArray(notification.pageId, viewablePages)))),
   );
 }
 
@@ -63,6 +73,9 @@ function inboxCondition(db: ResourceTransaction, knowledgeBaseId: string, userId
 async function decorate(db: ResourceTransaction, knowledgeBaseId: string, rows: NotificationRow[]): Promise<NotificationItem[]> {
   const pageIds = [...new Set(rows.map((row) => row.pageId).filter((id): id is string => id !== null))];
   const actorIds = [...new Set(rows.map((row) => (row.payload as { actorId?: unknown }).actorId).filter((id): id is string => typeof id === 'string'))];
+  const folderIds = [...new Set(rows.filter((row) => row.kind === 'folder.changed').map((row) => row.payload.teamspaceId).filter((id): id is string => typeof id === 'string'))];
+  const folders = folderIds.length ? await db.select({ id: teamspace.id, name: teamspace.name }).from(teamspace)
+    .where(and(eq(teamspace.knowledgeBaseId, knowledgeBaseId), inArray(teamspace.id, folderIds))) : [];
   const pages = pageIds.length
     ? await db.select({ id: page.id, title: page.title }).from(page).where(and(eq(page.knowledgeBaseId, knowledgeBaseId), inArray(page.id, pageIds)))
     : [];
@@ -70,19 +83,19 @@ async function decorate(db: ResourceTransaction, knowledgeBaseId: string, rows: 
     ? await db.select({ id: authUser.id, name: authUser.name }).from(authUser).where(inArray(authUser.id, actorIds))
     : [];
   return rows.map((row) => {
-    const payload = row.payload as { threadId: string; commentId: string; actorId: string };
-    return {
+    const payload = row.payload as { actorId: string };
+    return notificationItemSchema.parse({
       knowledgeBaseId: row.knowledgeBaseId,
       id: row.id,
-      // varchar column; the comment service is the only producer and writes exactly these kinds.
-      kind: row.kind as NotificationItem['kind'],
+      kind: row.kind,
       pageId: row.pageId,
       page: pages.find((entry) => entry.id === row.pageId) ?? null,
+      ...(row.kind === 'folder.changed' ? { folder: folders.find((entry) => entry.id === row.payload.teamspaceId) } : {}),
       actor: actors.find((entry) => entry.id === payload.actorId) ?? null,
       payload,
       readAt: row.readAt?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),
-    };
+    });
   });
 }
 
@@ -127,12 +140,16 @@ export async function countUnreadNotifications(db: ResourceTransaction, input: u
 /** Marks one of the caller's own notifications read; a foreign id is a plain 404 (no existence oracle). */
 export async function markNotificationRead(db: ResourceTransaction, input: unknown): Promise<NotificationItem> {
   const parsed = parse(readTargetInputSchema, input);
+  const principals = await recipientPrincipals(db, parsed.knowledgeBaseId, parsed.userId);
+  if (!principals) throw new KnowledgeNotificationError('NOTIFICATION_NOT_FOUND');
+  const visible = inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals);
   const [updated] = await db.update(notification)
     .set({ readAt: new Date() })
     .where(and(
       eq(notification.knowledgeBaseId, parsed.knowledgeBaseId),
       eq(notification.userId, parsed.userId),
       eq(notification.id, parsed.notificationId),
+      visible,
       isNull(notification.readAt),
     ))
     .returning();
@@ -143,6 +160,7 @@ export async function markNotificationRead(db: ResourceTransaction, input: unkno
         eq(notification.knowledgeBaseId, parsed.knowledgeBaseId),
         eq(notification.userId, parsed.userId),
         eq(notification.id, parsed.notificationId),
+        visible,
       ));
     if (!existing) throw new KnowledgeNotificationError('NOTIFICATION_NOT_FOUND');
     return (await decorate(db, parsed.knowledgeBaseId, [existing]))[0]!;

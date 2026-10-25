@@ -10,6 +10,7 @@
     "./knowledge/*": "./src/knowledge/*/index.ts",
     "./model-catalog": "./src/model-catalog.ts",
     "./resources": "./src/resources/index.ts",
+    "./rewards": "./src/rewards/index.ts",
     "./development-workbench": "./src/development-workbench.ts"
   },
   "scripts": {

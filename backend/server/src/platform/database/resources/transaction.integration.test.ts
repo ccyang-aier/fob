@@ -9,7 +9,7 @@ import type { ResourceTestDatabase } from './resource-test-database';
 
 let database: ResourceTestDatabase;
 let data: Awaited<ReturnType<typeof seedResourceTestData>>;
-const knowledgeTables = resourceTables;
+const knowledgeTables = resourceTables.filter(table => table === knowledgeBase || getTableConfig(table).columns.some(column => column.name === 'knowledge_base_id'));
 const scopeColumn = (table: typeof knowledgeBase | typeof resourceTables[number]) => sql.identifier(table === knowledgeBase ? 'id' : 'knowledge_base_id');
 
 function postgresError(error: unknown): { code: string; message: string } | undefined {

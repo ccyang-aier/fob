@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import * as Y from 'yjs';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
-import type { Hocuspocus } from '@hocuspocus/server';
 import { eq } from 'drizzle-orm';
 import {
   agentCreatePageToolInputSchema,
@@ -224,7 +223,7 @@ export const knowledgeAgentWriteTools = [
       return withKnowledgeBase(write.pool, input.knowledgeBaseId, async (db) => {
         const decision = await authorizePageAccess(db, { userId: write.authority.userId, scope: { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId }, required: 'edit' });
         if (decision.decision !== 'allow') throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'update_properties');
-        return updateAuthorizedPage(db, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId, patch: input.patch });
+        return updateAuthorizedPage(db, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId, patch: input.patch }, write.authority.userId);
       });
     },
   }),

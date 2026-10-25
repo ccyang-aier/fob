@@ -249,7 +249,7 @@ function FilePreviewSession({
       </header>
       {!file ? (
         <div className={styles.state}>
-          <FileText size={34} weight="duotone" />
+          <FileText size={34} weight="regular" />
           <strong>{knowledgeT('attachAnOriginalFileToPreview')}</strong>
           <p>{knowledgeT('thisRecordOnlyContainsDocumentInformationItsOriginal')}</p>
           {attach}
@@ -312,7 +312,7 @@ function FilePreviewSession({
               </div>
             ) : format === 'doc' ? (
               <div className={styles.state}>
-                <FileText size={34} weight="duotone" />
+                <FileText size={34} weight="regular" />
                 <strong>{knowledgeT('wordDocument')}</strong>
                 <p>
                   {source === 'local'

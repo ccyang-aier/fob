@@ -79,9 +79,9 @@ function WorkbenchChrome() {
           <div className={`${styles.navigation} flex shrink-0`}><NavigationSidebar open={!sidebarCollapsed} onCollapse={() => setSidebarCollapsed(true)} onExpand={() => setSidebarCollapsed(false)} view={view} onViewChange={changeView} onKnowledgeBaseChange={() => {}} /></div>
           {!sidebarCollapsed && <button type="button" className={styles.navigationScrim} aria-label={t('收起主导航')} onClick={() => setSidebarCollapsed(true)} />}
           <div className={styles.workspace}>
-            <div className={styles.systemBar}><SystemBar onNavigate={changeView} navigation={navigation}>{tabs.ready ? <WorkbenchTabBar key={scopeKey ?? 'no-knowledge-base'} tabs={tabs.tabs} active={tabs.active} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={tabs.reorder} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onNew={tabs.newTab} /> : <div className="flex-1" />}</SystemBar></div>
+            <div className={styles.systemBar}><SystemBar onNavigate={changeView} navigation={navigation}>{tabs.ready ? <WorkbenchTabBar key={scopeKey ?? 'no-knowledge-base'} tabs={tabs.tabs} active={tabs.active} split={tabs.split} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={tabs.reorder} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onSplit={tabs.splitTab} onUnsplit={tabs.unsplit} onNew={tabs.newTab} /> : <div className="flex-1" />}</SystemBar></div>
             <main className={styles.content}>
-              {tabs.ready && <WorkbenchPanels tabs={tabs.tabs} active={tabs.active} navigationOwner={navigationOwner} onActivateNavigation={tabs.activate} />}
+              {tabs.ready && <WorkbenchPanels tabs={tabs.tabs} active={tabs.active} split={tabs.split} navigationOwner={navigationOwner} onActivateNavigation={tabs.activate} onReportDocument={tabs.reportDocument} onSplitDocument={tabs.splitTab} onTogglePin={tabs.pin} onResizeSplit={tabs.resizeSplit} />}
             </main>
           </div>
         </div>

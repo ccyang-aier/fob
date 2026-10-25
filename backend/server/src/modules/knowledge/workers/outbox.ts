@@ -6,6 +6,7 @@ import type { ResourceTransaction } from '../../../platform/database/resources/t
 import { outbox } from '../../../platform/database/resources/schema';
 import { KnowledgeJobError } from './types';
 import type { OutboxReference } from './types';
+import { recordSubscriptionChange } from '../subscriptions/service';
 
 export const DISPATCH_TASK = 'resources.dispatch';
 export const consumerTask = (name: string) => `resources.consume.${name}`;
@@ -39,6 +40,7 @@ export async function appendKnowledgeOutbox(
     .onConflictDoNothing().returning({ id: outbox.id });
   if (inserted.length) {
     await enqueueKnowledgeJob(db, DISPATCH_TASK, { knowledgeBaseId: event.knowledgeBaseId, outboxId: id });
+    if (event.topic === 'doc.changed') for (const notice of await recordSubscriptionChange(db, { knowledgeBaseId: event.knowledgeBaseId, pageId: event.pageId, actorId: event.actor.userId, change: 'updated' })) await appendKnowledgeOutbox(db, notice);
     return { id, created: true };
   }
   const existing = await db.select({ matches: sql<boolean>`${outbox.payload} = ${JSON.stringify(event)}::jsonb` })

@@ -68,7 +68,7 @@ export function PageLinkNodeView({
       {pageId && targetKnowledgeBaseId && !open ? (
         <div className={styles.card} contentEditable={false}>
           <span className={styles.icon}>
-            <FileText aria-hidden size={20} weight="duotone" />
+            <FileText aria-hidden size={20} weight="regular" />
           </span>
           <span className={styles.cardText}>
             <strong>{title}</strong>

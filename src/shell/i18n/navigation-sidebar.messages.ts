@@ -1,6 +1,9 @@
 import { defineMessages } from '@/lib/i18n';
 export const messages = defineMessages({
   成员: ['成员', 'Members'], 知识库: ['知识库', 'Knowledge'],
+  模板: ['模板', 'Templates'], 咖啡: ['咖啡', 'Coffee'], 帮助: ['帮助', 'Help'],
+  拆分视图: ['拆分视图', 'Split view'], 调整拆分视图: ['调整拆分视图', 'Resize split view'],
+  在拆分视图打开: ['在拆分视图打开', 'Open in split view'], 结束拆分: ['结束拆分', 'End split view'],
   主导航: ['主导航', 'Main navigation'], '主导航（已收起）': ['主导航（已收起）', 'Main navigation (collapsed)'],
   展开主导航: ['展开主导航', 'Expand main navigation'], 收起主导航: ['收起主导航', 'Collapse main navigation'],
   知识库导航: ['知识库导航', 'Knowledge navigation'], 设置: ['设置', 'Settings'],

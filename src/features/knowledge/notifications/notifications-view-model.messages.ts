@@ -3,6 +3,11 @@ import { defineMessages } from '@/lib/i18n';
 export const knowledgeMessages = defineMessages({
   oneMinuteAgo: ['{v0} 分钟前', '{v0} minute ago'],
   someone: ['有人', 'Someone'],
+  createdSubscribedDocument: ['在你订阅的文件夹中新增了文档', 'created a document in a folder you follow'],
+  renamedSubscribedDocument: ['重命名了你订阅的文档', 'renamed a document you follow'],
+  updatedSubscribedDocument: ['更新了你订阅的文档', 'updated a document you follow'],
+  updatedSubscribedFile: ['更新了你订阅的文件', 'updated a file you follow'],
+  renamedSubscribedFolder: ['重命名了你订阅的文件夹', 'renamed a folder you follow'],
   knowledgeBasePage: ['知识库页面', 'Knowledge base page'],
   repliedToACommentYouParticipateIn: [
     '回复了你参与的评论',

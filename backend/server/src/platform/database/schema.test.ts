@@ -18,6 +18,7 @@ import {
   docCheckpoint,
   docState,
   resourceTables,
+  coffeeLedger,
   identityTables,
   knowledgeBase,
   memberRole,
@@ -54,7 +55,7 @@ describe('knowledgeBase-owned current Drizzle schema', () => {
   });
 
   test('knowledge-base children carry the real library key and consistent composite relations', () => {
-    for (const table of resourceTables.filter((item) => item !== knowledgeBase)) {
+    for (const table of resourceTables.filter((item) => item !== knowledgeBase && item !== coffeeLedger)) {
       const config = getTableConfig(table);
       expect(config.columns.find((column) => column.name === 'knowledge_base_id')?.notNull, config.name).toBe(true);
       for (const foreignKey of config.foreignKeys) {
@@ -65,6 +66,13 @@ describe('knowledgeBase-owned current Drizzle schema', () => {
         expect(reference.foreignColumns[scopeIndex]?.name).toBe('knowledge_base_id');
       }
     }
+  });
+
+  test('coffee is owned by an account and never by a knowledge workspace', () => {
+    const config = getTableConfig(coffeeLedger);
+    expect(config.columns.some(column => column.name === 'knowledge_base_id')).toBe(false);
+    expect(config.columns.find(column => column.name === 'user_id')?.notNull).toBe(true);
+    expect(config.foreignKeys.some(key => getTableConfig(key.reference().foreignTable).schema === 'auth')).toBe(true);
   });
 
   test('the knowledge base is the sole workspace root and folders reference it directly', () => {

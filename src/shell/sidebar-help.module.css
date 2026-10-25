@@ -1,0 +1,25 @@
+.dialog {
+  width: min(420px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  margin: auto;
+  overflow: auto;
+  padding: 0;
+  border: 1px solid var(--floating-border);
+  border-radius: 12px;
+  background: var(--elevated);
+  color: var(--ink);
+  box-shadow: var(--floating-shadow);
+}
+.dialog::backdrop { background: var(--modal-backdrop); }
+.content { padding: 18px; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.header h2 { margin: 0; font-size: 14px; font-weight: 600; }
+.close { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 6px; color: var(--muted-strong); cursor: pointer; outline: none; }
+.guide { display: flex; flex-direction: column; gap: 20px; margin: 20px 0 22px; }
+.guide section { display: flex; align-items: flex-start; gap: 11px; }
+.guide section > svg { flex: none; margin-top: 1px; color: var(--sidebar-icon); }
+.guide h3 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; font-size: 12px; font-weight: 500; }
+.guide p { margin: 5px 0 0; color: var(--muted-strong); font-size: 11px; line-height: 1.7; }
+.guide kbd { padding: 2px 5px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); font-family: inherit; font-size: 9px; font-weight: 400; }
+.footer { display: flex; justify-content: flex-end; gap: 7px; border-top: 1px solid var(--line); padding-top: 14px; }
+.dialog .footer button { box-shadow: none; }

@@ -114,7 +114,7 @@ export function ThemeSection({
                 ) : null}
               </span>
               <span className="mt-2 flex items-center gap-1.5 px-0.5">
-                <Icon className="size-3.5 shrink-0 text-[var(--muted)]" weight="fill" />
+                <Icon className="size-3.5 shrink-0 text-[var(--muted)]" weight="regular" />
                 <span
                   className={cn(
                     'text-[11.5px]',

@@ -257,10 +257,6 @@ export function DocumentNavigationTools({
     }
     if (event.key === 'Escape') closePresentation();
   }
-  const reportTitle = reference?.reportTitle;
-  useEffect(() => {
-    reportTitle?.(title);
-  }, [title, reportTitle]);
   const reportPrimaryDocument = reference?.reportPrimaryDocument;
   const { knowledgeBaseId, pageId, source } = target;
   useEffect(() => {

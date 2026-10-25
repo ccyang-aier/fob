@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, expect, mock, test } from 'bun:test';
 import { Window } from 'happy-dom';
 import { act, useEffect, useState, type ReactNode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
-import { addWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, reloadWorkbenchTab, tabTarget, type WorkbenchTabsState } from './workbench-tabs';
+import { addWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, reloadWorkbenchTab, splitWorkbenchTab, tabTarget, type WorkbenchTabsState } from './workbench-tabs';
 
 let browser: Window;
 let root: Root;
@@ -20,14 +20,16 @@ function ExamplePage({ name }: { name: string }) {
 beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3100/' });
   const globals = globalThis as Record<string, unknown>;
-  for (const name of ['document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'Element', 'Node', 'Event']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
+  for (const name of ['document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'Element', 'Node', 'Event', 'ResizeObserver']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser;
   globals.IS_REACT_ACT_ENVIRONMENT = true;
   mock.module('@/features/knowledge/data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ scopeKey: scope }) }));
   mock.module('@/features/knowledge/knowledge-page', () => ({ KnowledgePage: () => <ExamplePage name="knowledge" /> }));
   mock.module('@/features/knowledge/organization/knowledge-members-page', () => ({ KnowledgeMembersPage: () => <ExamplePage name="members" /> }));
+  mock.module('@/features/knowledge/templates/templates-page', () => ({ TemplatesPage: () => <ExamplePage name="templates" /> }));
+  mock.module('@/features/rewards', () => ({ RewardsPage: () => <ExamplePage name="rewards" /> }));
   const { WorkbenchPanels } = await import('./workbench-panels');
-  renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} />;
+  renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} split={state.split} onReportDocument={() => {}} onTogglePin={() => {}} onSplitDocument={() => {}} onResizeSplit={() => {}} />;
   host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
@@ -68,4 +70,20 @@ test('duplicate tabs are independent, reordering preserves hosts, and reload rem
   expect(host.querySelector('#workbench-panel-0')).toBe(original);
   expect(host.querySelector('#workbench-panel-1')).not.toBe(duplicate);
   expect(mounts.get('knowledge')).toBe(3);
+});
+
+test('split panes preserve both editor hosts and do not add a second tab strip', async () => {
+  let state = createWorkbenchTabs(scope, tabTarget('knowledge', '?document=one&knowledgeBase=base-a&source=local'));
+  await act(async () => root.render(renderPanels(state)));
+  const original = host.querySelector('input')!;
+  state = splitWorkbenchTab(state, state.active, { title: 'One', target: { pageId: 'one', knowledgeBaseId: 'base-a', source: 'local' } });
+  await act(async () => root.render(renderPanels(state)));
+  expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(2);
+  expect(host.querySelector('input')).toBe(original);
+  expect(host.querySelectorAll('[role="tablist"]')).toHaveLength(0);
+  expect(host.querySelectorAll('[role="separator"]')).toHaveLength(1);
+  expect(mounts.get('knowledge')).toBe(2);
+  await act(async () => root.render(renderPanels({ ...state, split: undefined })));
+  expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(1);
+  expect(host.querySelector('input')).toBe(original);
 });

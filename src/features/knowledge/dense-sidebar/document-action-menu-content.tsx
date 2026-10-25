@@ -49,7 +49,7 @@ export function DocumentActionMenuContent({
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-star')}>
-        <Star weight={starred ? 'fill' : 'bold'} />
+        <Star weight="regular" />
         {t(starred ? 'sidebar.removeFavorite' : 'sidebar.addFavorite')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'toggle-draft')}>

@@ -130,7 +130,7 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
     >
       <div className={styles.header}>
         <span className={styles.heading}>
-          <Database aria-hidden size={17} weight="duotone" />
+          <Database aria-hidden size={17} weight="regular" />
           {title}
         </span>
         {databaseId && editor.isEditable ? (

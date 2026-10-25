@@ -17,6 +17,8 @@ import { createKnowledgeAssetStorage } from '../modules/knowledge/assets/storage
 import { bindKnowledgeAssetStorage } from '../modules/knowledge/assets/runtime';
 import { createKnowledgeCheckpointRoutes } from '../modules/knowledge/api/checkpoint-routes';
 import { createKnowledgeNotificationRoutes } from '../modules/knowledge/notifications';
+import { createKnowledgeTemplateRoutes } from '../modules/knowledge/templates';
+import { createKnowledgeSubscriptionRoutes } from '../modules/knowledge/subscriptions';
 import { bindKnowledgeStreamingTasks, createKnowledgeStreamingTasks } from '../modules/knowledge/ai';
 import { createFobModelGateway } from '../platform/runtime/model-gateway';
 import { subscribeFobKnowledgeEvents } from '../platform/runtime/knowledge-events';
@@ -32,6 +34,7 @@ import { createDocumentPdfRoutes } from '../modules/knowledge/export/http';
 import { startFobKnowledgeWorker } from './worker';
 import { createModelCatalogRoutes } from '../modules/models/http';
 import { createModelCatalogRepository } from '../modules/models/repository';
+import { createRewardsRoutes, createRewardsService } from '../modules/rewards';
 
 const mcpPathPattern = /^\/api\/knowledge\/[a-zA-Z0-9-]+\/mcp\/?$/;
 
@@ -73,6 +76,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   app.route('/', createDocumentPdfRoutes(auth.options.trustedOrigins as string[], html => documentPdf.render(html)));
   const socketTickets = createFobSocketTickets();
   app.route('/', createFobAuthRoutes(auth, (context) => context.env.clientAddress as string, socketTickets));
+  app.route('/', createRewardsRoutes(auth, createRewardsService(pool)));
   app.route('/', createKnowledgeOrganizationRoutes(auth, createKnowledgeOrganizationService(pool)));
   app.route('/', createKnowledgeCatalogRoutes(auth, createKnowledgeCatalogService(pool, { permissions: teamspacePermissionInvalidator })));
   app.route('/', createKnowledgeApiRoutes({ auth, pool }));
@@ -80,6 +84,8 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   app.route('/', createKnowledgeMcpAuthorizationRoutes({ auth, pool, externalOrigin }));
   app.route('/', createKnowledgeCheckpointRoutes({ auth, pool, checkpoints }));
   app.route('/', createKnowledgeNotificationRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
+  app.route('/', createKnowledgeTemplateRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
+  app.route('/', createKnowledgeSubscriptionRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
 
   let mcp: ReturnType<typeof createKnowledgeMcpRequestHandler> | undefined;
   const listener = createPageCollaborationListener({ authenticator, pool }, {

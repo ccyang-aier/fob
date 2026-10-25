@@ -71,7 +71,7 @@ export function DocumentEditorHeader({
           onClick={onOpenSidebar}
           title={knowledgeT('expandKnowledgeBaseSidebarValue', { v0: folderName })}
         >
-          <FolderSimple aria-hidden size={18} weight="duotone" />
+          <FolderSimple aria-hidden size={18} weight="regular" />
           <span className={styles.folderName}>{folderName}</span>
         </button>
         <span className={styles.divider} aria-hidden>

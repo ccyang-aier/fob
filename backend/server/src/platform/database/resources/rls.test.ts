@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { getTableConfig } from 'drizzle-orm/pg-core';
-import { resourceTables, knowledgeBase, member } from './schema';
+import { resourceTables, knowledgeBase, member, coffeeLedger } from './schema';
 import { resourceRlsSql, resourcePoliciesForTable } from './rls';
 
 describe('resource RLS installation definition', () => {
@@ -18,8 +18,13 @@ describe('resource RLS installation definition', () => {
     expect(ddl).not.toContain('ALTER TABLE "auth"');
   });
 
-  test('every resource is directly knowledge-base scoped and the root uses its own ID', () => {
-    for (const table of resourceTables) expect(resourcePoliciesForTable(table).some((policy) => policy.name === 'knowledge_base_scope')).toBe(true);
+  test('knowledge resources are library scoped; account assets have only verified-account read and award policies', () => {
+    for (const table of resourceTables.filter(table => table !== coffeeLedger)) expect(resourcePoliciesForTable(table).some((policy) => policy.name === 'knowledge_base_scope')).toBe(true);
+    const account = resourcePoliciesForTable(coffeeLedger);
+    expect(account.map(policy => policy.command)).toEqual(['SELECT', 'INSERT']);
+    expect(account[0].using).toContain('app.auth_session_id');
+    expect(account[1].check).toContain("AT TIME ZONE 'Asia/Shanghai'");
+    expect(account.some(policy => policy.name === 'knowledge_base_scope')).toBe(false);
     const root = resourcePoliciesForTable(knowledgeBase).find((policy) => policy.name === 'knowledge_base_scope')!;
     expect(root.using).toMatch(/^"id" =/);
   });

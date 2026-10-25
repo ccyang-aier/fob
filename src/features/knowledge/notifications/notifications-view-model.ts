@@ -8,10 +8,12 @@ import { knowledgeMessages } from './notifications-view-model.messages';
  */
 
 import type { NotificationItem, NotificationKind } from '@fob/shared/knowledge/notifications';
+import type { SubscriptionChange } from '@fob/shared/knowledge/subscriptions';
 
 export interface NotificationRowModel {
   id: string;
   kind: NotificationKind;
+  change?: SubscriptionChange;
   unread: boolean;
   /** The acting member's display name, falling back to an anonymous copy. */
   actorName: string;
@@ -19,6 +21,7 @@ export interface NotificationRowModel {
   pageLabel: string;
   /** Where a click navigates; null when there is nothing to open. */
   targetPageId: string | null;
+  targetFolderId?: string;
   timeText: string;
   createdAt: string;
 }
@@ -30,12 +33,15 @@ export function actorNameOf(item: NotificationItem, locale: Locale = getLocale()
 
 export function pageLabelOf(item: NotificationItem, locale: Locale = getLocale()): string {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
+  if (item.kind === 'folder.changed') return item.folder.name;
   return item.page?.title?.trim() || knowledgeT('knowledgeBasePage');
 }
 
 /** Per-kind action copy: 「回复了你参与的评论」 / 「在评论中提到了你」. */
-export function notificationVerb(kind: NotificationKind, locale: Locale = getLocale()): string {
+export function notificationVerb(kind: NotificationKind, locale: Locale = getLocale(), change?: SubscriptionChange): string {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
+  if (kind === 'folder.changed') return knowledgeT('renamedSubscribedFolder');
+  if (kind === 'page.changed') return knowledgeT(change === 'created' ? 'createdSubscribedDocument' : change === 'renamed' ? 'renamedSubscribedDocument' : change === 'file.changed' ? 'updatedSubscribedFile' : 'updatedSubscribedDocument');
   return kind === 'comment.reply'
     ? knowledgeT('repliedToACommentYouParticipateIn')
     : knowledgeT('mentionedYouInAComment');
@@ -86,10 +92,12 @@ export function deriveNotificationRows(
   return items.map((item) => ({
     id: item.id,
     kind: item.kind,
+    change: item.kind === 'page.changed' ? item.payload.change : undefined,
     unread: item.readAt === null,
     actorName: actorNameOf(item, locale),
     pageLabel: pageLabelOf(item, locale),
     targetPageId: item.pageId,
+    targetFolderId: item.kind === 'folder.changed' ? item.folder.id : undefined,
     timeText: formatNotificationTime(item.createdAt, now, locale),
     createdAt: item.createdAt,
   }));

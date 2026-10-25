@@ -2,17 +2,19 @@
 
 import { useId, useRef, useState, type KeyboardEvent, type MouseEvent, type Ref } from 'react';
 import { AnimatePresence, LayoutGroup, motion, Reorder, useDragControls, useIsPresent } from 'motion/react';
-import { CaretLeft, CaretRight, PushPin, Plus, X } from '@phosphor-icons/react';
+import { CaretLeft, CaretRight, PushPin, Plus, X, FileText, SplitHorizontal } from '@phosphor-icons/react';
 import { useTranslation } from '@/lib/i18n';
 import { workbenchPages, type WorkbenchPage } from './workbench-pages';
-import { workbenchPanelId, workbenchTabId, type TabAction, type TabCloseAction, type WorkbenchTab } from './workbench-tabs';
+import { workbenchPanelId, workbenchTabId, type TabAction, type TabCloseAction, type WorkbenchTab, type WorkbenchSplit } from './workbench-tabs';
 import { WorkbenchNewTabMenu, WorkbenchTabMenu } from './workbench-tab-menu';
 import { useWorkbenchTabScroll } from './use-workbench-tab-scroll';
 import { messages } from './i18n/navigation-sidebar.messages';
 import styles from './workbench-tab-bar.module.css';
 
-export function WorkbenchTabBar({ tabs, active, revealRequest, onActivate, onClose, onReorder, onPin, onReload, onDuplicate, onNew }: {
+export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate, onClose, onReorder, onPin, onReload, onDuplicate, onSplit, onUnsplit, onNew }: {
   tabs: WorkbenchTab[]; active: string; revealRequest: number;
+  split?: WorkbenchSplit;
+  onSplit: (key: string) => void; onUnsplit: () => void;
   onActivate: (key: string) => void; onClose: (key: string, action?: TabCloseAction) => void; onReorder: (instances: number[]) => void;
   onPin: (key: string) => void; onReload: (key: string) => void; onDuplicate: (key: string) => void; onNew: (view: WorkbenchPage) => void;
 }) {
@@ -37,6 +39,8 @@ export function WorkbenchTabBar({ tabs, active, revealRequest, onActivate, onClo
     if (value === 'pin') onPin(key);
     else if (value === 'reload') onReload(key);
     else if (value === 'duplicate') { onDuplicate(key); focusSelected(); }
+    else if (value === 'split') { onSplit(key); focusSelected(); }
+    else if (value === 'unsplit') onUnsplit();
     else close(key, value);
   }
   function keyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
@@ -67,9 +71,9 @@ export function WorkbenchTabBar({ tabs, active, revealRequest, onActivate, onClo
         <AnimatePresence initial={false} mode="popLayout">
           {tabs.map((tab, index) => {
             const page = workbenchPages[tab.view];
-            const title = t(page.label);
+            const title = tab.document?.title || t(page.label);
             const selected = tab.key === active;
-            return <TabItem key={tab.instance} tab={tab} title={title} closeLabel={t('关闭页面', { name: title })} selected={selected} animatePosition={layout.reorder}
+            return <TabItem key={tab.instance} tab={tab} inSplit={split?.left === tab.key || split?.right === tab.key} title={title} closeLabel={t('关闭页面', { name: title })} selected={selected} animatePosition={layout.reorder}
               onActivate={() => activate(tab.key)} onClose={() => close(tab.key)} onKeyDown={event => keyDown(event, index)}
               onDragStart={() => { dragging.current = true; activate(tab.key); }} onDragEnd={() => { dragging.current = false; revealSelected(); }}
               onContextMenu={event => { event.preventDefault(); setNewContext(null); setContext({ instance: tab.instance, x: event.clientX, y: event.clientY }); }} />;
@@ -83,13 +87,14 @@ export function WorkbenchTabBar({ tabs, active, revealRequest, onActivate, onClo
     <button ref={newButton} type="button" className={`fob-action ${styles.newTab}`} aria-label={t('新建标签页')} title={t('新建标签页')} aria-haspopup="menu" aria-expanded={Boolean(newContext)} onClick={() => newTab()}
       onContextMenu={event => { event.preventDefault(); setContext(null); setNewContext({ x: event.clientX, y: event.clientY }); }}
       onKeyDown={event => { if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') { event.preventDefault(); const bounds = event.currentTarget.getBoundingClientRect(); setContext(null); setNewContext({ x: bounds.left, y: bounds.bottom }); } }}><Plus size={17} aria-hidden /></button>
-    {context && contextIndex >= 0 && <WorkbenchTabMenu key={context.instance} point={context} pinned={Boolean(tabs[contextIndex].pinned)} hasOthers={tabs.length > 1} onClose={() => setContext(null)} onAction={value => action(tabs[contextIndex].key, value)} onReturnFocus={focusSelected} />}
+    {context && contextIndex >= 0 && <WorkbenchTabMenu key={context.instance} point={context} pinned={Boolean(tabs[contextIndex].pinned)} canSplit={Boolean(tabs[contextIndex].document)} inSplit={split?.left === tabs[contextIndex].key || split?.right === tabs[contextIndex].key} hasOthers={tabs.length > 1} onClose={() => setContext(null)} onAction={value => action(tabs[contextIndex].key, value)} onReturnFocus={focusSelected} />}
     {newContext && <WorkbenchNewTabMenu point={newContext} onClose={() => setNewContext(null)} onNew={newTab} onReturnFocus={() => newButton.current?.focus()} />}
   </div>;
 }
 
-function TabItem({ ref, tab, title, closeLabel, selected, animatePosition, onActivate, onClose, onKeyDown, onContextMenu, onDragStart, onDragEnd }: {
+function TabItem({ ref, tab, inSplit, title, closeLabel, selected, animatePosition, onActivate, onClose, onKeyDown, onContextMenu, onDragStart, onDragEnd }: {
   ref?: Ref<HTMLDivElement>; tab: WorkbenchTab; title: string; closeLabel: string; selected: boolean; animatePosition: boolean;
+  inSplit?: boolean;
   onActivate: () => void; onClose: () => void; onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void;
   onContextMenu: (event: MouseEvent<HTMLDivElement>) => void; onDragStart: () => void; onDragEnd: () => void;
 }) {
@@ -98,7 +103,7 @@ function TabItem({ ref, tab, title, closeLabel, selected, animatePosition, onAct
   const moved = useRef(false);
   const [dragging, setDragging] = useState(false);
   const active = selected && present;
-  const Icon = workbenchPages[tab.view].icon;
+  const Icon = tab.document ? FileText : workbenchPages[tab.view].icon;
   return <Reorder.Item ref={ref} as="div" value={tab.instance} layout="position" dragListener={false} dragControls={controls} dragMomentum={false} dragTransition={{ bounceStiffness: 600, bounceDamping: 40 }}
     data-dragging={dragging} data-selected={active} data-pinned={Boolean(tab.pinned)} aria-hidden={!present || undefined} inert={!present} className={`fob-action ${styles.item}`}
     style={{ width: 128 + (tab.pinned ? 16 : 0) }} initial={{ opacity: 0, scale: .96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: .96, transition: { duration: .12 } }} whileDrag={{ scale: 1.015 }} transition={{ type: 'spring', stiffness: 430, damping: 38, mass: .7, layout: animatePosition ? { type: 'spring', stiffness: 430, damping: 38, mass: .7 } : { duration: 0 } }}
@@ -107,7 +112,7 @@ function TabItem({ ref, tab, title, closeLabel, selected, animatePosition, onAct
     {active && <motion.span layoutId="selected-tab" className={styles.active} transition={{ type: 'spring', stiffness: 480, damping: 40 }} />}
     <button type="button" id={workbenchTabId(tab.instance)} role="tab" className={styles.select} aria-selected={active} aria-controls={workbenchPanelId(tab.instance)} aria-haspopup="menu" tabIndex={active ? 0 : -1} title={title}
       onPointerDown={event => { if (event.button === 0) { moved.current = false; controls.start(event, { distanceThreshold: 5 }); } }}
-      onClick={event => { if (!moved.current || event.detail === 0) onActivate(); }} onKeyDown={onKeyDown}><Icon size={16} weight="duotone" aria-hidden /><span>{title}</span>{tab.pinned && <PushPin className={styles.pin} size={12} weight="duotone" aria-hidden />}</button>
+      onClick={event => { if (!moved.current || event.detail === 0) onActivate(); }} onKeyDown={onKeyDown}><Icon size={16} weight="regular" aria-hidden /><span>{title}</span>{inSplit && <SplitHorizontal size={12} aria-hidden />}{tab.pinned && <PushPin className={styles.pin} size={12} weight="regular" aria-hidden />}</button>
     <button type="button" className={`fob-action ${styles.close}`} data-variant="nested" aria-label={closeLabel} tabIndex={active ? 0 : -1} onClick={onClose}><X size={13} aria-hidden /></button>
   </Reorder.Item>;
 }

@@ -7,7 +7,6 @@ import { useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { Editor } from '@tiptap/core';
 import {
-  Bell,
   ChatCircleDots,
   ClockCounterClockwise,
   Copy,
@@ -47,6 +46,8 @@ import { documentLink, type DocumentLinkTarget } from '../document-link';
 import { useDocumentNavigation } from '../document-tools';
 import { DocumentAppearanceMenu } from './document-appearance-menu';
 import { DocumentStarMenuItem } from './document-star-menu-item';
+import { SubscriptionMenuItem } from '../../subscriptions/subscription-menu-item';
+import { SaveTemplateDialog } from '../../templates/save-template-dialog';
 import {
   documentContent,
   downloadDocument,
@@ -95,6 +96,7 @@ export function DocumentMoreMenu({
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [templateOpen, setTemplateOpen] = useState(false);
   const [deleteError, setDeleteError] = useUiMessage(knowledgeMessages, '');
   const action = async (work: () => Promise<void> | void, success: string, failure?: string) => {
     if (busyRef.current) return;
@@ -216,13 +218,11 @@ export function DocumentMoreMenu({
               starred={starred}
               onToggleStar={onToggleStar}
             />
-            <ReservedItem icon={<Bell aria-hidden />}>{knowledgeT('subscribe')}</ReservedItem>
+            <SubscriptionMenuItem target={{ knowledgeBaseId: actions.target.knowledgeBaseId, pageId: actions.target.pageId }} source={actions.target.source} className={styles.item} />
             <ReservedItem icon={<LockSimple aria-hidden />}>
               {knowledgeT('permissions')}
             </ReservedItem>
-            <ReservedItem icon={<SquaresFour aria-hidden />}>
-              {knowledgeT('createTemplate')}
-            </ReservedItem>
+            <DropdownMenuItem className={styles.item} disabled={!editor?.isEditable} onSelect={() => setTemplateOpen(true)}><SquaresFour aria-hidden />{knowledgeT('createTemplate')}</DropdownMenuItem>
             {actions.onComments ? (
               <DropdownMenuItem className={styles.item} onSelect={actions.onComments}>
                 <ChatCircleDots aria-hidden />
@@ -304,7 +304,7 @@ export function DocumentMoreMenu({
                 navigation?.onTogglePin?.();
               }}
             >
-              <PushPin aria-hidden weight={navigation?.pinned ? 'fill' : 'regular'} />
+              <PushPin aria-hidden weight="regular" />
               {navigation?.pinned ? knowledgeT('unpin') : knowledgeT('pin')}
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -346,6 +346,7 @@ export function DocumentMoreMenu({
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      {templateOpen && <SaveTemplateDialog sourcePageId={actions.target.pageId} title={title} getBody={() => editor?.getJSON()} onClose={() => setTemplateOpen(false)} />}
       <ModalDialog
         open={confirmDelete}
         width="w-[min(440px,calc(100vw-32px))]"

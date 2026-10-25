@@ -116,7 +116,7 @@ export function ResendVerificationEntry({
         disabled={remainingSeconds > 0}
         onClick={() => void resend()}
       >
-        {!sending ? <PaperPlaneTilt className="size-3.5" weight="fill" aria-hidden /> : null}
+        {!sending ? <PaperPlaneTilt className="size-3.5" weight="regular" aria-hidden /> : null}
         {remainingSeconds > 0
           ? uiText('重新发送({0}s)', { '0': remainingSeconds })
           : uiText('重新发送验证邮件')}

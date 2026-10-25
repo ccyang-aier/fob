@@ -68,7 +68,7 @@ export function CommentThreadCard({
   const quote =
     group.thread.anchorKind === 'selection' ? (
       <div className={styles.excerpt} data-unavailable={!group.anchor}>
-        <Quotes size={16} weight="fill" aria-hidden />
+        <Quotes size={16} weight="regular" aria-hidden />
         <div>
           <div className={styles.excerptHeading}>
             <span className={styles.excerptLabel}>{knowledgeT('quotedText')}</span>

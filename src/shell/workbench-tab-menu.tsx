@@ -2,7 +2,7 @@
 
 import { useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { ArrowsClockwise, CopySimple, PushPin, PushPinSlash, Tabs, X, XSquare } from '@phosphor-icons/react';
+import { ArrowsClockwise, CopySimple, PushPin, PushPinSlash, Tabs, X, XSquare, SplitHorizontal, Square } from '@phosphor-icons/react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import { useTranslation } from '@/lib/i18n';
@@ -25,19 +25,20 @@ function TabContextMenu({ point, label, onClose, onReturnFocus, children }: Cont
   </DropdownMenu>;
 }
 
-export function WorkbenchTabMenu({ pinned, hasOthers, onAction, ...props }: ContextMenuProps & {
-  pinned: boolean; hasOthers: boolean; onAction: (action: TabAction) => void;
+export function WorkbenchTabMenu({ pinned, hasOthers, canSplit, inSplit, onAction, ...props }: ContextMenuProps & {
+  pinned: boolean; hasOthers: boolean; canSplit?: boolean; inSplit?: boolean; onAction: (action: TabAction) => void;
 }) {
   const { t } = useTranslation(messages);
   const PinIcon = pinned ? PushPinSlash : PushPin;
   return <TabContextMenu {...props} label={t('页签操作')}>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('pin')}><PinIcon weight="duotone" aria-hidden />{t(pinned ? '取消置顶' : '置顶')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('pin')}><PinIcon weight="regular" aria-hidden />{t(pinned ? '取消置顶' : '置顶')}</DropdownMenuItem>
     <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('reload')}><ArrowsClockwise aria-hidden />{t('重新加载')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('duplicate')}><CopySimple weight="duotone" aria-hidden />{t('复制标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('duplicate')}><CopySimple weight="regular" aria-hidden />{t('复制标签页')}</DropdownMenuItem>
+    {canSplit && <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction(inSplit ? 'unsplit' : 'split')}>{inSplit ? <Square aria-hidden /> : <SplitHorizontal aria-hidden />}{t(inSplit ? '结束拆分' : '在拆分视图打开')}</DropdownMenuItem>}
     <DropdownMenuSeparator className={styles.menuSeparator} />
     <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('current')}><X aria-hidden />{t('关闭')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} disabled={!hasOthers} onSelect={() => onAction('others')}><Tabs weight="duotone" aria-hidden />{t('关闭其它标签页')}</DropdownMenuItem>
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('all')}><XSquare weight="duotone" aria-hidden />{t('关闭全部标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} disabled={!hasOthers} onSelect={() => onAction('others')}><Tabs weight="regular" aria-hidden />{t('关闭其它标签页')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('all')}><XSquare weight="regular" aria-hidden />{t('关闭全部标签页')}</DropdownMenuItem>
   </TabContextMenu>;
 }
 
@@ -47,7 +48,7 @@ export function WorkbenchNewTabMenu({ onNew, ...props }: ContextMenuProps & { on
     {newWorkbenchPages.map(view => {
       const page = workbenchPages[view];
       const Icon = page.icon;
-      return <DropdownMenuItem key={view} className={styles.menuItem} onSelect={() => onNew(view)}><Icon weight="duotone" aria-hidden />{t(page.label)}</DropdownMenuItem>;
+      return <DropdownMenuItem key={view} className={styles.menuItem} onSelect={() => onNew(view)}><Icon weight="regular" aria-hidden />{t(page.label)}</DropdownMenuItem>;
     })}
   </TabContextMenu>;
 }

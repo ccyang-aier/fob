@@ -131,7 +131,7 @@ export function SignUpForm({ api = fobAuthApi }: { api?: FobAuthApi }) {
         <AppAlert tone="error" title={banner.title} description={banner.description} />
       ) : null}
       <Button type="submit" loading={submitting} className={styles.submit}>
-        {!submitting ? <PaperPlaneTilt className="size-4" weight="fill" aria-hidden /> : null}
+        {!submitting ? <PaperPlaneTilt className="size-4" weight="regular" aria-hidden /> : null}
         {submitting ? uiText('正在提交…') : uiText('创建账号')}
       </Button>
     </form>

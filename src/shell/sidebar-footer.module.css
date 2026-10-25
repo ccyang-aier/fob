@@ -1,15 +1,26 @@
+.footer {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 5px;
+  padding-bottom: 9px;
+}
+
+.utilityNavigation {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rewards { display: flex; min-width: 0; flex-direction: column; }
+
 .dock {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin-top: 8px;
-  padding: 10px 0 8px;
+  padding-top: 5px;
   border-top: 1px solid var(--line);
-}
-
-.account {
-  min-width: 0;
-  flex: 1;
 }
 
 .iconButton {
@@ -21,12 +32,29 @@
   border-radius: 6px;
   color: var(--sidebar-icon);
   cursor: pointer;
+  outline: none;
+}
+
+.settings {
+  display: flex;
+  min-height: 30px;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 0 7px;
+  border-radius: 6px;
+  color: var(--sidebar-icon);
+  cursor: pointer;
+  font-size: 12px;
+  outline: none;
 }
 
 .dock[data-compact='true'] {
   flex-direction: column;
 }
 
-.dock[data-compact='true'] .account {
+.dock[data-compact='true'] .settings {
   flex: none;
+  justify-content: center;
+  padding: 0;
 }

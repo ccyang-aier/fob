@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { IconButton } from './icon-button';
 import styles from './sidebar-interactions.module.css';
+import { FolderSubscriptionMenuItem } from '../subscriptions/subscription-menu-item';
 import { PageIcon } from '../navigation/page-icon';
 
 export type SidebarProjectAction = 'new-document' | 'rename' | 'add-tag' | 'toggle-star' | 'delete';
@@ -171,6 +172,7 @@ export function SidebarProjectTreeNode({
                     <Star size={15} />{' '}
                     {node.starred ? t('sidebar.removeFavorite') : t('sidebar.addFavorite')}
                   </DropdownMenuItem>
+                  <FolderSubscriptionMenuItem folderId={node.id} />
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     variant="destructive"

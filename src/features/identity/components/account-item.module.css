@@ -107,6 +107,25 @@
   background: transparent;
 }
 
+.topbar {
+  width: auto;
+  max-width: 182px;
+  min-height: 34px;
+  padding: 3px 5px;
+  border-radius: 8px;
+}
+.topbar.compact { width:34px; }
+.topbar .identityText { max-width:112px; }
+.topbar .name { font-size:11px; font-weight:400; color:var(--ink-soft); }
+.topbarCaret { flex:none; color:var(--muted-strong); }
+@media(max-width:850px) { .topbar { width:34px; padding:1px; justify-content:center; } .topbar .identityText,.topbarCaret { display:none; } }
+
+.topbar .avatarWrap,
+.topbar .avatar {
+  width: 27px;
+  height: 27px;
+}
+
 .guestCompact.guestCompact {
   --action-state-bg: transparent;
   --action-state-ink: var(--ink);

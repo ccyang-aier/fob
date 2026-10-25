@@ -18,6 +18,8 @@ import {
   BellRinging,
   BellSimple,
   BellSlash,
+  FileText,
+  Folder,
   ChatsCircle,
   Check,
   Checks,
@@ -85,17 +87,18 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
         aria-label={knowledgeT('notifications')}
         title={knowledgeT('openAKnowledgeBaseToViewNotifications')}
         disabled
-        className="relative flex size-7 cursor-not-allowed items-center justify-center rounded-[7px] text-[var(--muted)] outline-none opacity-60"
+        className="relative flex size-[30px] cursor-not-allowed items-center justify-center rounded-[7px] text-[var(--muted)] outline-none opacity-60"
       >
-        <BellSimple className="size-[15px]" weight="duotone" aria-hidden />
+        <BellSimple className="size-[18px]" weight="regular" aria-hidden />
       </button>
     );
   }
 
-  const openItem = (row: { id: string; targetPageId: string | null; unread: boolean }) => {
+  const openItem = (row: { id: string; targetPageId: string | null; targetFolderId?: string; unread: boolean }) => {
     if (row.unread) withPending(row.id, () => snapshot.markRead(row.id));
-    snapshot.openPage(row.targetPageId);
-    onOpenWorkbench?.();
+    if (row.targetFolderId) snapshot.openFolder?.(row.targetFolderId);
+    else if (row.targetPageId) snapshot.openPage(row.targetPageId);
+    else onOpenWorkbench?.();
     setOpen(false);
   };
 
@@ -113,11 +116,11 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
               : knowledgeT('notifications')
           }
           title={knowledgeT('notifications')}
-          className="fob-action relative flex size-7 items-center justify-center rounded-[7px] text-[var(--muted-strong)]"
+          className="fob-action relative flex size-[30px] items-center justify-center rounded-[7px] text-[var(--sidebar-icon)]"
         >
           <BellSimple
-            className={cn('size-[15px]', unreadCount > 0 && 'text-[var(--accent-ink)]')}
-            weight="duotone"
+            className={cn('size-[18px]', unreadCount > 0 && 'text-[var(--accent-ink)]')}
+            weight="regular"
             aria-hidden
           />
           {badge ? (
@@ -133,7 +136,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
       <DropdownMenuContent align="end" sideOffset={8} className="w-[338px] rounded-[7px] p-0">
         <header className="flex items-center gap-2.5 border-b border-[var(--line)] px-3.5 py-3">
           <span className="flex size-8 shrink-0 items-center justify-center rounded-[9px] border border-[var(--accent-soft-line)] bg-[var(--accent-soft)] text-[var(--accent-ink)]">
-            <BellRinging aria-hidden className="size-4" weight="duotone" />
+            <BellRinging aria-hidden className="size-4" weight="regular" />
           </span>
           <div className="min-w-0">
             <p className="text-[12px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
@@ -160,7 +163,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
             </p>
           ) : rows.length === 0 ? (
             <div className="flex flex-col items-center gap-1.5 px-2.5 py-6 text-center">
-              <BellSlash aria-hidden className="size-5 text-[var(--muted)]" weight="duotone" />
+              <BellSlash aria-hidden className="size-5 text-[var(--muted)]" weight="regular" />
               <p className="text-[11px] text-[var(--muted)]">{knowledgeT('noNotifications')}</p>
               <p className="text-[9.5px] text-[var(--muted-strong)]">
                 {knowledgeT('commentRepliesAndMentionsAppearHereInReal')}
@@ -199,8 +202,8 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
                   >
                     {row.kind === 'comment.mention' ? (
                       <At aria-hidden className="size-3.5" weight="bold" />
-                    ) : (
-                      <ChatsCircle aria-hidden className="size-3.5" weight="fill" />
+                    ) : row.kind === 'folder.changed' ? <Folder aria-hidden className="size-3.5" weight="regular" /> : row.kind === 'page.changed' ? <FileText aria-hidden className="size-3.5" weight="regular" /> : (
+                      <ChatsCircle aria-hidden className="size-3.5" weight="regular" />
                     )}
                   </span>
                   <span className="min-w-0 flex-1">
@@ -212,7 +215,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
                         )}
                       >
                         <span className="font-semibold">{row.actorName}</span>{' '}
-                        {notificationVerb(row.kind)}
+                        {notificationVerb(row.kind, locale, row.change)}
                       </span>
                       <span className="ml-auto shrink-0 text-[9px] text-[var(--muted)]">
                         {row.timeText}

@@ -156,7 +156,7 @@ export function LibraryCanvas({
   return (
     <section
       aria-label={knowledgeT('knowledgeBaseDocuments')}
-      className="min-h-0 flex-1 overflow-y-auto bg-white"
+      className="min-h-0 flex-1 overflow-y-auto bg-[var(--panel)]"
       data-page-scroll={scrollKey}
     >
       <div className={styles.libraryView}>

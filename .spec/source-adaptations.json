@@ -24,8 +24,8 @@
     "deleted": true
   },
   "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.tsx": {
-    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
-    "sha256": "e52073bd87588e1742b0445d35800bd160b3ca5c8582edec4a661af81c9f364a"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "7db12174af30eaa63abeba0fadf57d85107176f1fb806abac3d73842b5fc01f3"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
     "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
@@ -44,16 +44,16 @@
     "sha256": "5bd0b497b33b100e482be4584162518c1239af19b0af7a61aac477a0d70a1664"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
-    "sha256": "d148dedefc981f7578aa86da23bedd18b3d7ef286e8410f1e61ae2fb9cb4d083"
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "21d950a766900fb64f120acea25c5737c6a03f087b6cd9fdd03ed025a25009be"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
     "deleted": true
   },
   "src/features/knowledge/knowledge-workbench.tsx": {
-    "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
-    "sha256": "48b1dca4616e6a958d7df3e28a963b1916de4b3d52108431c6cf363b7da89ac1"
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "833e91a1843e97c854784de27a6e7d65fb3e84362b68414b8ddcd645ea4e4839"
   },
   "src/features/knowledge/local/local-document-editor.instance.test.tsx": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
@@ -64,8 +64,8 @@
     "sha256": "15bb1cca6de4ec7616d4572a076d5444fe9d64d82343d6e85d20c1b155e503b7"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
-    "sha256": "04726aea5ea3c984a02d40787af6b65238b08dd9f331f160107840aa58827db9"
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "5da45de489e4e7ebbe93252b2c3a28cbfa58c78ec7faa09af94ec7830d8039b8"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
@@ -84,24 +84,24 @@
     "sha256": "b35ebaf0aa0ee1ee4075dab6f0780d3a0517ba60f44a2740ea98630543484bbc"
   },
   "src/features/knowledge/notifications/components/notification-bell.messages.ts": {
-    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
-    "sha256": "3fdaba0b0dced758250f18dee0ed8575f18cefe08156123a3c872354370a89bb"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "e64204b4b86cd7572c995123f3a00b3844984feb1ce81dcf0e49b5c96e664162"
   },
   "src/features/knowledge/notifications/components/notification-bell.tsx": {
-    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
-    "sha256": "570af3db3796e83aba57e15bd1dc90c7969b26912bd46f95d86a0d7f193bc81f"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "f03d28395611f50bc8fe589b89db2cdf4f5c8134f7ceb818a7e9ea8dbe370b0c"
   },
   "src/features/knowledge/notifications/notifications-bridge.test.ts": {
     "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
     "sha256": "de519398cf1b9e6316210ebfdd93871bfc018e519cd25346ed049ee791b1e602"
   },
   "src/features/knowledge/notifications/notifications-bridge.ts": {
-    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
-    "sha256": "ee3cc62a305d23a2702882397ac97ad79c8585d8250b6dd16b56272012cdd8cf"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "3da8f8a8e4feeb79daf9836f2531a4e77a8e33c98f035568377d00d3299176e8"
   },
   "src/features/knowledge/notifications/notifications-queries.ts": {
-    "reason": "Notifications publish/clear by navigation owner; hidden tabs cannot replace active state and unsupported local notifications accurately stay disabled.",
-    "sha256": "42877fb511d029afa2e9732a44133258c2718b97ec8217ded49a0ca3d35aea5a"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "8c30dd8f12feaf1d71812eb3d9f4268e9b37491cb2fd5e6e87adaeda0989bf63"
   },
   "src/features/knowledge/organization/client.test.ts": {
     "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
@@ -186,5 +186,169 @@
   "src/features/companion/companion-widget.module.css": {
     "reason": "Keep the passive speech bubble positioned and readable in the viewport, preserving shared tooltip material and pointer pass-through; remove the replaced tooltip animation and reduced-motion branches.",
     "sha256": "36e786d1f5f86224929eaaab9aeafaa5060686b7dd2a31ed3a8a0b6f32fc42b3"
+  },
+  "src/features/knowledge/assets/components/asset-uploader.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "c18fb96440f9bff4ff544bf7173a472168e7b1cfc2599fea2f5ba25dff33fd90"
+  },
+  "src/features/knowledge/assets/components/upload-queue-item.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "7658dc6706f2b7113dae540c1e7c4a876a4926513888146979754863c2e1fcbe"
+  },
+  "src/features/knowledge/comments/components/comment-thread-card.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "02502e3984cee070000d97d25c2337f7d0c2852b0c83a53f4ad0a082e8843a1b"
+  },
+  "src/features/knowledge/comments/components/selection-comment-popover.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "beea69108a8aea21cf20e9cc1cd516f0e60db4a0625666b5c687b1b68954ef28"
+  },
+  "src/features/knowledge/dense-sidebar/document-action-menu-content.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "0e6432e6214561ca7a1bc1d2f79e5dd486e13fb076308b618037845b09aed9dd"
+  },
+  "src/features/knowledge/dense-sidebar/draft-icon.tsx": {
+    "deleted": true,
+    "reason": "Retire the old nested document-tab labels or gray draft glyph after their behavior moved to the top-level workbench tabs and copied Dense primary icons."
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-interactions.module.css": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "4d2d76d4f3344555a70daa55c1545297ab572c7f87746e63d31aaf6103cad537"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "b089a676654d1a7be76f71a18140fdd8dcbbde4647553f97a800a376d4084248"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "0ae1a11d8af4cf5bd220c45cadbc97b076dbe51cd492188f042109aaea676ba6"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "1c18c5eb4123ee3ea49569db09efc5ac304ef87a57c555d2266156d8c50304c2"
+  },
+  "src/features/knowledge/documents/file-document-preview.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "18e424d486cf5bd065aec821472374fa3b8e025a0ca956490fe396ef6134afce"
+  },
+  "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx": {
+    "reason": "Compose current knowledge-template/subscription tables and account coffee ledger with separate verified-account RLS; keep knowledge-resource isolation and current-only schema initialization.",
+    "sha256": "47c9ea7506ad866812d272fbc3226d3a6c71b33e71031cb5ba179c3d892e8aaf"
+  },
+  "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "faafefb01a764132e6f9532e3e09def32467baf7eb5af952eaaea7b9006f029f"
+  },
+  "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "8e47942a7f5d57b75147be73ec994bc90cb11e24cadd9ea2471b9044c949a10c"
+  },
+  "src/features/knowledge/editor/components/document-editor-header.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "ea9be21c6a20c765f357f3eb6276acbe1850aabb20aaf82f1a54c955d533ad2a"
+  },
+  "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
+    "sha256": "5e388444f3779ea93d13927ddaca47ddfa1dfe18a1025a678759d261e2a263de"
+  },
+  "src/features/knowledge/editor/components/document-more-menu.tsx": {
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests.",
+    "sha256": "f0eefe5c8412474f79e442c5b997cdc6ea2ea9082d46c99081e4637147512f04"
+  },
+  "src/features/knowledge/editor/components/selection-toolbar.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "769fb275667b9a7cc27f4db5be09af9742967fd8b525e538cb10e8c63b1d8877"
+  },
+  "src/features/knowledge/editor/document-reference.messages.ts": {
+    "deleted": true,
+    "reason": "Retire the old nested document-tab labels or gray draft glyph after their behavior moved to the top-level workbench tabs and copied Dense primary icons."
+  },
+  "src/features/knowledge/editor/document-reference.test.tsx": {
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "54d1d78814d48328d05976fa00f8827543bf1833fc2e3be75f4e3a37ca1a6f6c"
+  },
+  "src/features/knowledge/editor/document-reference.tsx": {
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "f5e9db0538fe5deda9e6935e06d6d4dbb596e47e48225e71012558f9dd7f665a"
+  },
+  "src/features/knowledge/editor/document-tools.module.css": {
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "2654de4978cd805871c2124503437ad74ade9f34a05bae4a86cb4fd7c502ed55"
+  },
+  "src/features/knowledge/editor/document-tools.tsx": {
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
+    "sha256": "3fcec90e6e02fe896c7ec64399a691822f8831a359345ed1560f7494eaf4c0a7"
+  },
+  "src/features/knowledge/editor/editor-layout.module.css": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "2ca22a7db1319390fdd34158ededc65907c6158d3c34d9953a1c7c7db2552d63"
+  },
+  "src/features/knowledge/local/local-library-navigation.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "131234b8226c19c5216b9b4249e3fb62f2d99499bb8edb1fd13b485e1c7aee34"
+  },
+  "src/features/knowledge/navigation/library-canvas.tsx": {
+    "reason": "Use the shared theme panel surface so dark-theme document/folder lists remain readable.",
+    "sha256": "6f71a46c913ae1d3bef1e31122c768e4fc51bd253603abb3e992f22e906f9f7f"
+  },
+  "src/features/knowledge/navigation/page-icon.tsx": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "da1b58a8985053f0085afd00eaf1f4f08e0d6b7852a9beb08d5de1bd0dc2980e"
+  },
+  "src/features/knowledge/notifications/notifications-api.test.ts": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "2124b056e9dc3ba10030824cdaa10d9e5c0eb8f94fabfd423c3b4a5e46135cff"
+  },
+  "src/features/knowledge/notifications/notifications-view-model.messages.ts": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "3f77cc86a4f114f6f47cc484ee6767000ec74c68a1984faaae41ab32ffefd8f6"
+  },
+  "src/features/knowledge/notifications/notifications-view-model.test.ts": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "b5257cb470b80f48b1f953e0886937cb02b892429ad743e91a1b411b5bc84d1d"
+  },
+  "src/features/knowledge/notifications/notifications-view-model.ts": {
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
+    "sha256": "c0d32085666f97683a97f790290ff60c39d7ab005b1797475ac5ea1ba5d1ae92"
+  },
+  "backend/server/src/modules/knowledge/ai/tools/write.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "be3c4976d00a832bdc5e156514c16acfc1726e081c1f866873ec05475da182e3"
+  },
+  "backend/server/src/modules/knowledge/api/page-routes.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "6e2cf6fd90658d1324cdffe6d5d7306e934ee0bbf390164dcd00e4608dcb38a1"
+  },
+  "backend/server/src/modules/knowledge/assets/service.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "c94c58e1ae4e25b7e01df71f8f90b5319bf8f3008da903c13ee7cdc819230ee1"
+  },
+  "backend/server/src/modules/knowledge/collaboration/page-collaboration-server.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "843e24c625e43b7ac5253852f9658707a31cea663917919bf6405b62725c9717"
+  },
+  "backend/server/src/modules/knowledge/notifications/service.integration.test.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "5d290d20ba311ce27cb73b1f4b944b4fec2f34728a41ae01f94d9f9b0edc473f"
+  },
+  "backend/server/src/modules/knowledge/notifications/service.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "dde4d314811b12f3891e9f3dd9bc11488a801ef5c15555cc36257ebee2f8d596"
+  },
+  "backend/server/src/modules/knowledge/organization/teamspaces.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "7d86b5dc8b277ea61fc55415438f73a0c893a8debd68eddc3d669171e4acf897"
+  },
+  "backend/server/src/modules/knowledge/pages/tree.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "162c32f6e43f0d120f5b042ecfbd83243cc4a14b55be2c352686c28be32a417d"
+  },
+  "backend/server/src/modules/knowledge/workers/outbox.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "dce930a61457b6e5a4203db8e3d7a1d979299733217070d82312d2c87724a8b2"
+  },
+  "shared/src/knowledge/notifications/index.ts": {
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
+    "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
   }
 }

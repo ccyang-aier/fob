@@ -1,7 +1,7 @@
 'use client';
 
-import { GearSix, SidebarSimple } from '@phosphor-icons/react';
-import { AccountItem } from '@/features/identity/components/account-item';
+import { GearSix } from '@phosphor-icons/react';
+import { RewardsCard } from '@/features/rewards';
 import { KnowledgeBaseSwitcher } from '@/features/knowledge/knowledge-base-switcher';
 import { KnowledgeNavigationOutlet } from '@/features/knowledge/navigation/system-navigation';
 import { NavButton, type SidebarRowItem } from '@/components/nav-button';
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import type { WorkbenchView } from './workbench-view';
 import { messages } from './i18n/navigation-sidebar.messages';
 import { SidebarThemeSwitch } from './sidebar-theme-switch';
+import { SidebarHelp } from './sidebar-help';
 import { workbenchPages, type WorkbenchPage } from './workbench-pages';
 import styles from './sidebar-footer.module.css';
 import layout from './navigation-sidebar.module.css';
@@ -33,21 +34,26 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
     <header className={layout.header} data-compact={!open}>
       {open && <div className={layout.switcher}><KnowledgeBaseSwitcher onSwitch={onKnowledgeBaseChange} /></div>}
       <Tooltip>
-        <TooltipTrigger asChild><button type="button" className={`fob-action ${layout.toggle}`} aria-label={t(open ? '收起主导航' : '展开主导航')} onClick={open ? onCollapse : onExpand}><SidebarSimple size={18} weight="duotone" /></button></TooltipTrigger>
+        <TooltipTrigger asChild><button type="button" className={`fob-action ${layout.toggle}`} aria-label={t(open ? '收起主导航' : '展开主导航')} onClick={open ? onCollapse : onExpand}>
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="3" width="3.5" height="10" rx="1.25" fill="currentColor" opacity="0.55" />
+            <rect x="6.5" y="3" width="7.5" height="10" rx="1.5" fill="currentColor" />
+          </svg>
+        </button></TooltipTrigger>
         <TooltipContent side="bottom">{t(open ? '收起主导航' : '展开主导航')}</TooltipContent>
       </Tooltip>
     </header>
-    <KnowledgeNavigationOutlet hidden={!open} />
-    {!open && <nav aria-label={t('知识库导航')} className="flex-1 px-1 pt-2">{row('knowledge')}</nav>}
-    <footer className={cn('flex shrink-0 flex-col gap-0.5 pt-2', open ? 'px-3' : 'px-1')}>
-      <nav aria-label={t('知识库导航')}>{row('members')}</nav>
+    <KnowledgeNavigationOutlet compact={!open} />
+    <footer className={cn(styles.footer, open ? 'px-3' : 'px-1')}>
+      <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>{row('members')}{row('templates')}</nav>
+      <div className={styles.rewards}><RewardsCard compact={!open} onOpen={() => onViewChange('rewards')} /></div>
       <div className={styles.dock} data-compact={!open}>
-        <div className={styles.account}><AccountItem compact={!open} /></div>
-        {open && <><SidebarThemeSwitch />
         <Tooltip>
-          <TooltipTrigger asChild><button type="button" className={`fob-action ${styles.iconButton}`} aria-label={t('设置')} aria-haspopup="dialog" onClick={() => onViewChange('settings')}><GearSix size={18} weight="duotone" aria-hidden /></button></TooltipTrigger>
-          <TooltipContent side="top">{t('设置')}</TooltipContent>
-        </Tooltip></>}
+          <TooltipTrigger asChild><button type="button" className={cn('fob-action', styles.settings, !open && styles.iconButton)} aria-label={t('设置')} aria-haspopup="dialog" onClick={() => onViewChange('settings')}><GearSix size={18} weight="regular" aria-hidden />{open && <span>{t('设置')}</span>}</button></TooltipTrigger>
+          <TooltipContent side={open ? 'top' : 'right'}>{t('设置')}</TooltipContent>
+        </Tooltip>
+        <SidebarHelp compact={!open} onNavigate={onViewChange} />
+        <SidebarThemeSwitch compact={!open} />
       </div>
     </footer>
     {open && <SidebarResizeHandle className={layout.resizeHandle} dragging={dragging} onPointerDown={startResize} />}

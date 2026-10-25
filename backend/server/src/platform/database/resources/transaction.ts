@@ -61,6 +61,12 @@ export async function withFobIdentity<T>(
   return withResourceScope(pool, { knowledgeBaseId: '', sessionId, readOnly: true }, operation);
 }
 
+/** Verified account-owned resources may write without acquiring a knowledge scope. */
+export async function withFobAccount<T>(pool: Pool, sessionId: string, operation: (db: ResourceTransaction) => Promise<T>): Promise<T> {
+  if (!entityIdSchema.safeParse(sessionId).success) throw new TypeError('Invalid session ID');
+  return withResourceScope(pool, { knowledgeBaseId: '', sessionId, readOnly: false }, operation);
+}
+
 async function withResourceScope<T>(
   pool: Pool,
   scope: { knowledgeBaseId: string; sessionId: string; readOnly: boolean },

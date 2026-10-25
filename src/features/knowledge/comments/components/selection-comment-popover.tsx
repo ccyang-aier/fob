@@ -56,7 +56,7 @@ export function SelectionCommentPopover({
     >
       <div className={styles.quote}>
         <span className={styles.quoteIcon}>
-          <Quotes size={16} weight="fill" aria-hidden />
+          <Quotes size={16} weight="regular" aria-hidden />
         </span>
         <p title={excerpt}>{excerpt}</p>
       </div>

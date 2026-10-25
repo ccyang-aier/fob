@@ -15,10 +15,10 @@ export const knowledgeMessages = defineMessages({
   ],
   noNotifications: ['暂无通知', 'No notifications'],
   commentRepliesAndMentionsAppearHereInReal: [
-    '评论中的回复与提及会实时出现在这里',
-    'Comment replies and mentions appear here in real time',
+    '订阅更新、评论回复与提及会出现在这里',
+    'Updates you follow, replies and mentions appear here',
   ],
-  valueValueOnPageValue: ['{v0} {v1}，来自页面 {v2}', '{v0} {v1} on page {v2}'],
+  valueValueOnPageValue: ['{v0} {v1}，{v2}', '{v0} {v1}, {v2}'],
   markAsRead: ['标为已读', 'Mark as read'],
   markNotificationFromValueAsRead: [
     '将 {v0} 的通知标为已读',

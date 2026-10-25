@@ -14,15 +14,19 @@ const verifiedIdentityUser = `(SELECT s.user_id FROM auth.session s
     AND s.expires_at > clock_timestamp() AND u.email_verified IS TRUE)`;
 
 export interface ResourceRlsPolicy {
-  name: 'knowledge_base_scope' | 'own_identity' | 'reference_read' | 'backlink_target';
+  name: 'knowledge_base_scope' | 'own_identity' | 'reference_read' | 'backlink_target' | 'account_read' | 'account_award';
   command: 'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
   using?: string;
   check?: string;
 }
 
-/** Every business resource belongs directly to one knowledge base. */
+/** Knowledge resources use a library scope; account assets use verified identity only. */
 export function resourcePoliciesForTable(table: PgTable): ResourceRlsPolicy[] {
   const config = getTableConfig(table);
+  if (config.name === 'coffee_ledger') return [
+    { name: 'account_read', command: 'SELECT', using: `"user_id" = ${verifiedIdentityUser}` },
+    { name: 'account_award', command: 'INSERT', check: `"user_id" = ${verifiedIdentityUser} AND "day" = (clock_timestamp() AT TIME ZONE 'Asia/Shanghai')::date` },
+  ];
   const predicate = config.name === 'knowledge_base' ? `"id" = ${currentKnowledgeBase}` : knowledgeBasePredicate;
   const readPredicate = `${config.name === 'knowledge_base' ? '"id"' : '"knowledge_base_id"'} = ${readKnowledgeBase}`;
   const policies: ResourceRlsPolicy[] = [{ name: 'knowledge_base_scope', command: 'ALL', using: predicate, check: predicate }];

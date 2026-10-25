@@ -1,12 +1,14 @@
 import type { WorkbenchPage } from './workbench-pages';
 import { workbenchPages } from './workbench-pages';
+import type { TabDocument } from '@/features/knowledge/editor/document-tab-context';
 
 /** Target keys group routes; tab keys identify independent views of those routes. */
 export type TabTarget = { key: string; view: WorkbenchPage; search: string };
-export type WorkbenchTab = TabTarget & { instance: number; pinned?: boolean; revision?: number };
-export type WorkbenchTabsState = { scope: string | null; tabs: WorkbenchTab[]; active: string; nextInstance: number };
+export type WorkbenchTab = TabTarget & { instance: number; pinned?: boolean; revision?: number; document?: TabDocument };
+export type WorkbenchSplit = { left: string; right: string; ratio: number };
+export type WorkbenchTabsState = { scope: string | null; tabs: WorkbenchTab[]; active: string; nextInstance: number; split?: WorkbenchSplit };
 export type TabCloseAction = 'current' | 'others' | 'all';
-export type TabAction = TabCloseAction | 'pin' | 'reload' | 'duplicate';
+export type TabAction = TabCloseAction | 'pin' | 'reload' | 'duplicate' | 'split' | 'unsplit';
 export const newWorkbenchPages: readonly WorkbenchPage[] = ['knowledge'];
 export const workbenchTabId = (instance: number) => `workbench-tab-${instance}`;
 export const workbenchPanelId = (instance: number) => `workbench-panel-${instance}`;
@@ -77,11 +79,14 @@ export function restoreWorkbenchTabs(scope: string | null, value: unknown): Work
   for (const item of raw.tabs) {
     if (!item || !Object.hasOwn(workbenchPages, item.view) || typeof item.key !== 'string' || !item.key || typeof item.search !== 'string' || !Number.isSafeInteger(item.instance) || item.instance < 0) continue;
     const target = tabTarget(item.view, item.search);
-    if (!tabs.some(tab => tab.key === item.key || tab.instance === item.instance)) tabs.push({ ...identifyTab(target, item.key, item.instance), pinned: Boolean(item.pinned), revision: Number.isSafeInteger(item.revision) && item.revision! >= 0 ? item.revision : 0 });
+    const document = item.document && typeof item.document.title === 'string' && item.document.target?.pageId === new URLSearchParams(item.search).get('document') ? item.document : undefined;
+    if (!tabs.some(tab => tab.key === item.key || tab.instance === item.instance)) tabs.push({ ...identifyTab(target, item.key, item.instance), document, pinned: Boolean(item.pinned), revision: Number.isSafeInteger(item.revision) && item.revision! >= 0 ? item.revision : 0 });
   }
   if (!tabs.length) return null;
   const nextInstance = Math.max(...tabs.map(tab => tab.instance)) + 1;
-  return ensureKnowledgeNavigation({ scope, tabs: pinnedFirst(tabs), active: tabs.some(tab => tab.key === raw.active) ? raw.active! : tabs[0].key, nextInstance: Math.max(nextInstance, Number.isSafeInteger(raw.nextInstance) ? raw.nextInstance! : 0) });
+  const active = tabs.some(tab => tab.key === raw.active) ? raw.active! : tabs[0].key;
+  const split = raw.split && raw.split.left !== raw.split.right && [raw.split.left, raw.split.right].every(key => tabs.some(tab => tab.key === key)) && [raw.split.left, raw.split.right].includes(active) ? { ...raw.split, ratio: clampSplitRatio(raw.split.ratio) } : undefined;
+  return ensureKnowledgeNavigation({ scope, tabs: pinnedFirst(tabs), active, split, nextInstance: Math.max(nextInstance, Number.isSafeInteger(raw.nextInstance) ? raw.nextInstance! : 0) });
 }
 
 export function openWorkbenchTab(state: WorkbenchTabsState, target: TabTarget): WorkbenchTabsState {
@@ -92,6 +97,7 @@ export function openWorkbenchTab(state: WorkbenchTabsState, target: TabTarget): 
     ...state,
     tabs: existing ? state.tabs.map(tab => tab === existing ? { ...tab, ...next } : tab) : [...state.tabs, next],
     active: next.key,
+    split: state.split && [state.split.left, state.split.right].includes(next.key) ? state.split : undefined,
     nextInstance: state.nextInstance + Number(!existing),
   };
 }
@@ -103,7 +109,7 @@ export function addWorkbenchTab(state: WorkbenchTabsState, target: TabTarget, af
   const tabs = [...state.tabs];
   const index = afterKey ? tabs.findIndex(item => item.key === afterKey) : -1;
   tabs.splice(index >= 0 ? index + 1 : tabs.length, 0, tab);
-  return { ...state, tabs: pinnedFirst(tabs), active: tab.key, nextInstance: state.nextInstance + 1 };
+  return { ...state, tabs: pinnedFirst(tabs), active: tab.key, split: undefined, nextInstance: state.nextInstance + 1 };
 }
 
 export function pinWorkbenchTab(state: WorkbenchTabsState, key: string): WorkbenchTabsState {
@@ -125,9 +131,30 @@ export function closeWorkbenchTab(state: WorkbenchTabsState, key: string, action
   if (index < 0) return state;
   const tabs = state.tabs.filter(tab => action === 'current' ? tab.key !== key : action === 'others' ? tab.key === key : false);
   if (tabs.length === state.tabs.length) return state;
-  if (!tabs.length) return { ...state, tabs: [{ ...tabTarget('knowledge'), instance: state.nextInstance }], active: 'knowledge', nextInstance: state.nextInstance + 1 };
+  if (!tabs.length) return { ...state, tabs: [{ ...tabTarget('knowledge'), instance: state.nextInstance }], active: 'knowledge', split: undefined, nextInstance: state.nextInstance + 1 };
   const activeIndex = state.tabs.findIndex(tab => tab.key === state.active);
   const neighbor = state.tabs.slice(0, activeIndex).reverse().find(tab => tabs.includes(tab)) ?? tabs[0];
-  return ensureKnowledgeNavigation({ ...state, tabs, active: tabs.some(tab => tab.key === state.active) ? state.active : neighbor.key });
+  const split = state.split && [state.split.left, state.split.right].every(key => tabs.some(tab => tab.key === key)) ? state.split : undefined;
+  const survivor = state.split && !split ? tabs.find(tab => tab.key === state.split!.left || tab.key === state.split!.right) : null;
+  return ensureKnowledgeNavigation({ ...state, tabs, split, active: tabs.some(tab => tab.key === state.active) ? state.active : survivor?.key ?? neighbor.key });
 }
 
+export const clampSplitRatio = (ratio: number) => Number.isFinite(ratio) ? Math.max(25, Math.min(75, ratio)) : 50;
+
+export function splitWorkbenchTab(state: WorkbenchTabsState, key: string, document?: TabDocument): WorkbenchTabsState {
+  const original = state.tabs.find(tab => tab.key === key);
+  if (!original || original.view !== 'knowledge' || !(document ?? original.document)) return state;
+  const target = document ?? original.document!;
+  const params = new URLSearchParams(original.search);
+  params.set('document', target.target.pageId);
+  params.set('knowledgeBase', target.target.knowledgeBaseId);
+  params.set('source', target.target.source);
+  const next = addWorkbenchTab(state, tabTarget('knowledge', `?${params}`), key);
+  return { ...next, tabs: next.tabs.map(tab => tab.key === next.active ? { ...tab, document: target } : tab), split: { left: key, right: next.active, ratio: 50 } };
+}
+
+export function reportWorkbenchDocument(state: WorkbenchTabsState, key: string, document: TabDocument | null): WorkbenchTabsState {
+  const tab = state.tabs.find(tab => tab.key === key);
+  if (!tab || (tab.document?.title === document?.title && tab.document?.target.pageId === document?.target.pageId)) return state;
+  return { ...state, tabs: state.tabs.map(tab => tab.key === key ? { ...tab, document: document ?? undefined } : tab) };
+}

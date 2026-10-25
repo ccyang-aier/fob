@@ -9,8 +9,6 @@ import type { DocumentAction } from '@/features/knowledge/dense-sidebar/document
 import {
   SidebarCollapsibleContent,
   SidebarCreateIcon,
-  sidebarIconMap,
-  SidebarRow,
   SidebarSectionHeader,
 } from '@/features/knowledge/dense-sidebar/sidebar-navigation-primitives';
 import {
@@ -23,7 +21,8 @@ import {
 } from '@/features/knowledge/dense-sidebar/sidebar-tag-tree';
 import { SidebarRecentNotes } from '@/features/knowledge/dense-sidebar/sidebar-recent-notes';
 import { IconButton } from './icon-button';
-import { SIDEBAR_MAIN_ITEMS } from '@/features/knowledge/dense-sidebar/sidebar-navigation';
+import { KnowledgeMainNavigation } from './knowledge-main-navigation';
+import { useKnowledgeNavigationCompact } from '../navigation/system-navigation';
 import type {
   SidebarProjectNode,
   SidebarRecentNote,
@@ -97,6 +96,7 @@ export function ExpandedPrimarySidebar({
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const { t } = useI18n();
+  const compact = useKnowledgeNavigationCompact();
   const [tagPopoverOpen, setTagPopoverOpen] = React.useState(false);
   const [tagName, setTagName] = React.useState('');
 
@@ -112,6 +112,8 @@ export function ExpandedPrimarySidebar({
     [onCreateTag, tagName],
   );
 
+  if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={onNavigateMain} />;
+
   return (
     <nav
       aria-label={t('nav.primary')}
@@ -126,22 +128,7 @@ export function ExpandedPrimarySidebar({
       {header}
       <div className="min-h-0 flex flex-1 flex-col px-[11px] pb-4 pt-2">
         <div className="scrollbar-hidden min-h-0 shrink overflow-y-auto pr-px">
-          <nav aria-label={t('sidebar.library')} className="space-y-0.5">
-            {SIDEBAR_MAIN_ITEMS.map((item) => {
-              const Icon = sidebarIconMap[item.icon];
-              return (
-                <SidebarRow
-                  key={item.id}
-                  label={t(item.labelKey)}
-                  icon={Icon}
-                  count={counts[item.id] ?? 0}
-
-                  selected={activeItem === item.id}
-                  onClick={() => onNavigateMain(item.id)}
-                />
-              );
-            })}
-          </nav>
+          <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={onNavigateMain} />
 
           <section className="mt-[15px]">
             <SidebarSectionHeader

@@ -35,7 +35,7 @@ function capturingFetch(respond: () => { status: number; body: string }) {
   return { requests, fetchImpl };
 }
 
-const item = (overrides: Partial<NotificationListResult['items'][number]> = {}): NotificationListResult['items'][number] => ({
+const item = (overrides: Partial<Extract<NotificationListResult['items'][number], { kind: 'comment.reply' | 'comment.mention' }>> = {}): NotificationListResult['items'][number] => ({
   knowledgeBaseId: knowledgeBase,
   id: notificationId,
   kind: 'comment.mention',

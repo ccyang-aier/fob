@@ -179,6 +179,19 @@ CREATE TABLE "resources"."block_index" (
 	CONSTRAINT "block_index_acl_revision_nonnegative" CHECK ("resources"."block_index"."acl_revision" >= 0)
 );
 
+CREATE TABLE "resources"."coffee_ledger" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
+	"day" date NOT NULL,
+	"amount" smallint DEFAULT 1 NOT NULL,
+	"kind" varchar(32) DEFAULT 'daily_check_in' NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "coffee_ledger_account_day_unique" UNIQUE("user_id","day"),
+	CONSTRAINT "coffee_ledger_daily_amount" CHECK ("resources"."coffee_ledger"."amount" = 1),
+	CONSTRAINT "coffee_ledger_daily_kind" CHECK ("resources"."coffee_ledger"."kind" = 'daily_check_in'),
+	CONSTRAINT "coffee_ledger_beijing_day" CHECK ("resources"."coffee_ledger"."day" = ("resources"."coffee_ledger"."created_at" AT TIME ZONE 'Asia/Shanghai')::date)
+);
+
 CREATE TABLE "resources"."comment" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
@@ -292,6 +305,36 @@ CREATE TABLE "resources"."knowledge_base_invitation" (
 	CONSTRAINT "knowledge_base_invitation_token_hash" CHECK ("resources"."knowledge_base_invitation"."token_hash" ~ '^[a-f0-9]{64}$'),
 	CONSTRAINT "knowledge_base_invitation_expiry" CHECK ("resources"."knowledge_base_invitation"."expires_at" > "resources"."knowledge_base_invitation"."created_at"),
 	CONSTRAINT "knowledge_base_invitation_state" CHECK (("resources"."knowledge_base_invitation"."accepted_at" IS NULL OR "resources"."knowledge_base_invitation"."revoked_at" IS NULL) AND ("resources"."knowledge_base_invitation"."accepted_by" IS NULL OR "resources"."knowledge_base_invitation"."accepted_at" IS NOT NULL))
+);
+
+CREATE TABLE "resources"."knowledge_subscription" (
+	"knowledge_base_id" uuid NOT NULL,
+	"id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"page_id" uuid,
+	"teamspace_id" uuid,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "knowledge_subscription_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "knowledge_subscription_one_target" CHECK (num_nonnulls("resources"."knowledge_subscription"."page_id", "resources"."knowledge_subscription"."teamspace_id") = 1)
+);
+
+CREATE TABLE "resources"."knowledge_template" (
+	"knowledge_base_id" uuid NOT NULL,
+	"id" uuid NOT NULL,
+	"source_page_id" uuid NOT NULL,
+	"name" varchar(120) NOT NULL,
+	"description" text DEFAULT '' NOT NULL,
+	"title" varchar(500) NOT NULL,
+	"icon" varchar(200),
+	"cover" varchar(2048),
+	"document" jsonb NOT NULL,
+	"created_by" uuid NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "knowledge_template_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "knowledge_template_name_valid" CHECK (length(btrim("resources"."knowledge_template"."name")) BETWEEN 1 AND 120),
+	CONSTRAINT "knowledge_template_description_valid" CHECK (length("resources"."knowledge_template"."description") <= 1000),
+	CONSTRAINT "knowledge_template_document_valid" CHECK (jsonb_typeof("resources"."knowledge_template"."document") = 'object' AND "resources"."knowledge_template"."document"->>'type' = 'doc')
 );
 
 CREATE TABLE "resources"."knowledge_base_member" (
@@ -471,6 +514,7 @@ ALTER TABLE "resources"."backlink" ADD CONSTRAINT "backlink_target_page_fk" FORE
 ALTER TABLE "resources"."block_embedding_model" ADD CONSTRAINT "block_embedding_model_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."block_embedding_staging" ADD CONSTRAINT "block_embedding_staging_block_fk" FOREIGN KEY ("knowledge_base_id","page_id","block_id") REFERENCES "resources"."block_index"("knowledge_base_id","page_id","block_id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."block_index" ADD CONSTRAINT "block_index_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."coffee_ledger" ADD CONSTRAINT "coffee_ledger_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_author_id_user_id_fk" FOREIGN KEY ("author_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_thread_fk" FOREIGN KEY ("knowledge_base_id","thread_id") REFERENCES "resources"."comment_thread"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_reply_target_fk" FOREIGN KEY ("knowledge_base_id","reply_to_comment_id") REFERENCES "resources"."comment"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
@@ -486,6 +530,11 @@ ALTER TABLE "resources"."group_member" ADD CONSTRAINT "group_member_membership_f
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_accepted_by_user_id_fk" FOREIGN KEY ("accepted_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_member_fk" FOREIGN KEY ("knowledge_base_id","user_id") REFERENCES "resources"."knowledge_base_member"("knowledge_base_id","user_id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_folder_fk" FOREIGN KEY ("knowledge_base_id","teamspace_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_template" ADD CONSTRAINT "knowledge_template_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_template" ADD CONSTRAINT "knowledge_template_source_fk" FOREIGN KEY ("knowledge_base_id","source_page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_member" ADD CONSTRAINT "knowledge_base_member_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_member" ADD CONSTRAINT "knowledge_base_member_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."model_credential" ADD CONSTRAINT "model_credential_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
@@ -528,6 +577,10 @@ CREATE INDEX "doc_checkpoint_page_time_idx" ON "resources"."doc_checkpoint" USIN
 CREATE INDEX "group_member_user_idx" ON "resources"."group_member" USING btree ("knowledge_base_id","user_id");
 CREATE UNIQUE INDEX "knowledge_base_invitation_pending_email_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","email") WHERE "resources"."knowledge_base_invitation"."accepted_at" IS NULL AND "resources"."knowledge_base_invitation"."revoked_at" IS NULL;
 CREATE INDEX "knowledge_base_invitation_expiry_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","expires_at");
+CREATE UNIQUE INDEX "knowledge_subscription_page_unique" ON "resources"."knowledge_subscription" USING btree ("knowledge_base_id","user_id","page_id") WHERE "resources"."knowledge_subscription"."page_id" IS NOT NULL;
+CREATE UNIQUE INDEX "knowledge_subscription_folder_unique" ON "resources"."knowledge_subscription" USING btree ("knowledge_base_id","user_id","teamspace_id") WHERE "resources"."knowledge_subscription"."teamspace_id" IS NOT NULL;
+CREATE INDEX "knowledge_subscription_target_idx" ON "resources"."knowledge_subscription" USING btree ("knowledge_base_id","page_id","teamspace_id");
+CREATE INDEX "knowledge_template_source_idx" ON "resources"."knowledge_template" USING btree ("knowledge_base_id","source_page_id");
 CREATE INDEX "member_user_idx" ON "resources"."knowledge_base_member" USING btree ("user_id","knowledge_base_id");
 CREATE INDEX "model_credential_user_idx" ON "resources"."model_credential" USING btree ("user_id");
 CREATE INDEX "notification_user_time_idx" ON "resources"."notification" USING btree ("knowledge_base_id","user_id","created_at");

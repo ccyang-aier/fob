@@ -93,6 +93,7 @@ async function key(element: Element, value: string) {
 }
 async function open() {
   const trigger = document.querySelector('[aria-label="更多文档操作"]')!;
+  if (trigger.getAttribute('aria-expanded') === 'true') await key(trigger, 'Enter');
   await key(trigger, 'Enter');
 }
 function item(label: string) {

@@ -200,7 +200,7 @@ describe('notification inbox service', () => {
     expect(seen).toHaveLength(5);
     expect(new Set(seen.map((item) => item.id)).size).toBe(5);
     // Every walked notification belongs to this test's five waves, order strictly descending.
-    expect(seen.every((item) => commentIds.includes(item.payload.commentId))).toBe(true);
+    expect(seen.every((item) => (item.kind === 'comment.reply' || item.kind === 'comment.mention') && commentIds.includes(item.payload.commentId))).toBe(true);
     for (let index = 1; index < seen.length; index += 1) {
       expect(seen[index - 1]!.createdAt >= seen[index]!.createdAt).toBe(true);
     }

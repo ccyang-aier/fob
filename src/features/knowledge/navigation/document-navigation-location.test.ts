@@ -30,3 +30,11 @@ test('returning to a list consumes the old linked document and emits the sole dr
   expect(query.get('source')).toBe('local');
   expect(actions).toBe(1);
 });
+
+test('an external document open uses the owning knowledge tab even while templates is selected', () => {
+  browser.history.replaceState({}, '', '?view=templates&tab=tab%3A8&knowledgeBase=new-base&source=local');
+  updateDocumentNavigation({ knowledgeBaseId: 'new-base', pageId: 'created', source: 'local' }, '?tab=tab%3A2');
+  expect(new URL(browser.location.href).searchParams.get('tab')).toBe('tab:2');
+  updateDocumentNavigation({ knowledgeBaseId: 'new-base', pageId: 'primary', source: 'local' }, '');
+  expect(new URL(browser.location.href).searchParams.has('tab')).toBe(false);
+});

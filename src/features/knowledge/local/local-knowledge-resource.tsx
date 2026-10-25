@@ -44,7 +44,7 @@ import {
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
 import { DotsThree } from '@phosphor-icons/react';
-import { currentDocumentLinkTarget } from '../editor/document-link';
+import { useDocumentTab, useTabDocumentSelection } from '../editor/document-tab-context';
 
 type View = 'all-documents' | 'starred' | 'drafts' | 'trash';
 type Store = ReturnType<typeof createLocalLibraryStore>;
@@ -71,12 +71,13 @@ export function LocalKnowledgeResource({
   const knowledgeBaseId = base?.id ?? '';
   const [view, setView] = usePageSessionState<View>('view', 'all-documents');
   const [folderId, setFolderId] = usePageSessionState<string | null>('folder', null);
-  const linkedPage = currentDocumentLinkTarget(knowledgeBaseId, 'local')?.pageId ?? null;
-  const [selectedId, setStoredSelectedId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
+  const tab = useDocumentTab();
+  const tabSearch = tab?.search;
+  const [selectedId, setStoredSelectedId] = useTabDocumentSelection(knowledgeBaseId, 'local');
   const setSelectedId = useCallback((id: string | null) => {
     setStoredSelectedId(id);
-    if (navigationActive) updateDocumentNavigation(id ? { knowledgeBaseId, pageId: id, source: 'local' } : null);
-  }, [setStoredSelectedId, navigationActive, knowledgeBaseId]);
+    if (navigationActive) updateDocumentNavigation(id ? { knowledgeBaseId, pageId: id, source: 'local' } : null, tabSearch);
+  }, [setStoredSelectedId, navigationActive, knowledgeBaseId, tabSearch]);
   const [activeTagId, setActiveTagId] = usePageSessionState<string | null>('tag', null);
   const [creation, setCreation] = useState<'document' | 'folder' | null>(null);
   const { notify } = useAppAlert();
@@ -159,49 +160,6 @@ export function LocalKnowledgeResource({
   const title = SIDEBAR_MAIN_ITEMS.find((item) => item.id === view)?.labelKey;
   return (
     <KnowledgeWorkbench
-      onCloseDocument={() => setSelectedId(null)}
-      renderFixedDocument={(fixed, onClose) => {
-        const document = live.find((item) => item.id === fixed.target.pageId);
-        if (
-          !document ||
-          fixed.target.source !== 'local' ||
-          fixed.target.knowledgeBaseId !== knowledgeBaseId
-        )
-          return (
-            <div role="status" className="p-8 text-sm text-[var(--muted-strong)]">
-              {knowledgeT('documentDeletedOrInaccessible')}
-            </div>
-          );
-        const folderName =
-          folders.find((folder) => folder.id === document.folderId)?.name ?? knowledgeT('unfiled');
-        const onChange = (patch: Partial<LocalDocument>) => updateDocument(document.id, patch);
-        const fileProps = {
-          knowledgeBaseId,
-          document,
-          folderName,
-          onChange,
-          onBack: onClose,
-          onOpenSidebar: expandSidebar,
-          onCreateDocument: () => setCreation('document'),
-        };
-        return document.file ||
-          (documentFileFormat(document.title) &&
-            documentFileFormat(document.title) !== 'markdown') ? (
-          <LocalFileDocument
-            key={document.id}
-            {...fileProps}
-            attach={(setFile) => (
-              <LocalDocumentImport
-                knowledgeBaseId={knowledgeBaseId}
-                onImport={(items) => (items[0] ? setFile(items[0].file) : false)}
-              />
-            )}
-          />
-        ) : (
-          <LocalDocumentEditor key={document.id} {...fileProps} store={store} />
-        );
-      }}
-      navigationScope={`local:${knowledgeBaseId}:${base?.id ?? 'none'}`}
       documentOpen={Boolean(selected)}
       sidebar={
         <PageTreeSidebar

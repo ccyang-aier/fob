@@ -23,6 +23,7 @@ export interface KnowledgeNotificationsBridgeSnapshot {
   markAllRead(): void;
   /** Jumps the knowledge canvas to a page (the notification's anchor). */
   openPage(pageId: string | null): void;
+  openFolder?(folderId: string): void;
 }
 
 type Listener = () => void;

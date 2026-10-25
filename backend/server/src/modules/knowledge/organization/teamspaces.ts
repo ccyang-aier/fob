@@ -9,6 +9,8 @@ import type { FobIdentity } from '../../../platform/identity/identity';
 import { inKnowledgeBase, requireDirectory } from './context';
 import { currentIdentity, pageOf, requireManager } from '../../../platform/resources/context';
 import { ResourceRequestError, parseInput } from '../../../platform/resources/errors';
+import { recordFolderSubscriptionChange } from '../subscriptions/service';
+import { appendKnowledgeOutbox } from '../workers/outbox';
 
 const targetTeamspace = (scope: TeamspaceScope) => and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, scope.teamspaceId));
 const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, name: row.name, defaultAccess: row.defaultAccess });
@@ -42,14 +44,14 @@ export interface TeamspacePermissionInvalidator {
 }
 
 export function teamspaceOperations(pool: Pool, permissions: TeamspacePermissionInvalidator) {
-  function mutate<T>(identity: FobIdentity, scope: TeamspaceScope, operation: (db: ResourceTransaction, record: typeof teamspace.$inferSelect) => Promise<T>) {
-    return inKnowledgeBase(pool, identity, scope.knowledgeBaseId, true, async ({ db, role }) => {
+  function mutate<T>(identity: FobIdentity, scope: TeamspaceScope, operation: (db: ResourceTransaction, record: typeof teamspace.$inferSelect, actorId: string) => Promise<T>) {
+    return inKnowledgeBase(pool, identity, scope.knowledgeBaseId, true, async ({ db, role, actor }) => {
       requireManager(role);
       // FOR UPDATE conflicts with a new page's FK key-share lock. The empty
       // check and a container mutation cannot race a committed child insertion.
       const record = await loadTeamspace(db, scope, true);
       await currentIdentity(db, identity); // Its expiry may pass while waiting here.
-      return operation(db, record);
+      return operation(db, record, actor.userId);
     });
   }
 
@@ -80,12 +82,13 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
     },
     async updateTeamspace(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(updateTeamspaceInputSchema, input);
-      return mutate(identity, parsed, async (db, existing) => {
+      return mutate(identity, parsed, async (db, existing, actorId) => {
         const [updated] = await db.update(teamspace).set({ name: parsed.name, defaultAccess: parsed.defaultAccess, updatedAt: sql`clock_timestamp()` })
           .where(targetTeamspace(parsed)).returning();
         if (parsed.defaultAccess !== undefined && parsed.defaultAccess !== existing.defaultAccess) {
           await permissions.invalidate(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId });
         }
+        if (parsed.name !== undefined && parsed.name !== existing.name) for (const event of await recordFolderSubscriptionChange(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId, actorId })) await appendKnowledgeOutbox(db, event);
         return teamspaceView(updated!);
       });
     },

@@ -5,3 +5,6 @@ export * from './knowledge';
 export * from './pages';
 export * from './content';
 export * from './operations';
+export * from './rewards';
+export * from './knowledge-templates';
+export * from './knowledge-subscriptions';

@@ -1,0 +1,57 @@
+.coffeeIcon { color: #906143; }
+.balanceButton { height: 28px; gap: 7px; padding-inline: 10px; border: 1px solid var(--control-border); border-radius: 999px; color: var(--ink); box-shadow: none; }
+.balanceNumber { min-width: 12px; font-size: 11px; font-variant-numeric: tabular-nums; line-height: 1; }
+.coffeeBadge { display: inline-grid; width: 34px; height: 34px; flex-shrink: 0; place-items: center; border-radius: 11px; background: #f2e9df; color: #906143; }
+.sidebarCard { margin: 8px 12px; padding: 13px; border: 1px solid var(--resource-card-border); border-radius: 13px; color: var(--ink); }
+.cardHeading { display: flex; align-items: center; gap: 9px; }
+.cardHeading > div { min-width: 0; }
+.cardHeading strong { display: block; font-size: 12px; font-weight: 600; }
+.cardHeading p { margin-top: 2px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+.cardOpen { width: 24px; height: 24px; margin-left: auto; border-radius: 6px; }
+.monthCaption { display: flex; justify-content: space-between; gap: 8px; margin-top: 13px; color: var(--muted-strong); font-size: 10px; font-variant-numeric: tabular-nums; }
+.progress { height: 3px; margin-top: 7px; overflow: hidden; border-radius: 2px; background: var(--separator-color); }
+.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--ink-soft); }
+.cardCta { width: 100%; height: 28px; margin-top: 12px; border-radius: 7px; font-size: 11px; box-shadow: none; }
+.cardStatus { margin-top: 11px; color: var(--muted); font-size: 10px; }
+.compactCard { position: relative; align-self: center; margin: 8px auto; }
+.collectedDot { position: absolute; top: 4px; right: 3px; width: 5px; height: 5px; border: 1px solid var(--wt-sidebar-bg, var(--panel)); border-radius: 50%; background: var(--ink-soft); }
+.page { width: min(100%, 1000px); margin-inline: auto; padding: 44px 48px 36px; color: var(--ink); }
+.pageHeading { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.pageHeading h1 { font-size: 25px; font-weight: 650; letter-spacing: -.03em; }
+.overview { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, 1fr); gap: 18px; margin-top: 20px; }
+.balancePanel, .calendarPanel, .ledgerPanel { border: 1px solid var(--resource-card-border); border-radius: 15px; padding: 22px 24px; }
+.balancePanel { display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { color: var(--muted-strong); font-size: 12px; }
+.total { display: flex; align-items: center; gap: 12px; margin: 18px 0 24px; }
+.total strong { font-size: 44px; font-weight: 550; line-height: 1; letter-spacing: -.055em; font-variant-numeric: tabular-nums; }
+.total > span { align-self: flex-end; padding-bottom: 3px; color: var(--muted); font-size: 12px; }
+.checkInRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.checkInRow > button { height: 30px; box-shadow: none; }
+.checkInRow > span { color: var(--muted-strong); font-size: 11px; }
+.timezone { margin-top: 14px; color: var(--muted); font-size: 10px; }
+.sectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sectionHeading h2, .rules h2 { font-size: 13px; font-weight: 600; }
+.sectionHeading > span { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px 8px; margin-top: 16px; }
+.weekday { text-align: center; color: var(--muted); font-size: 10px; line-height: 23px; }
+.calendarDay { display: grid; width: 26px; height: 26px; margin-inline: auto; place-items: center; border: 1px solid transparent; border-radius: 50%; color: var(--muted-strong); font-size: 10px; font-variant-numeric: tabular-nums; }
+.calendarDay[data-checked='true'] { background: var(--interaction-active-bg); color: var(--ink); }
+.calendarDay[data-today='true'] { border-color: var(--control-border); color: var(--ink); font-weight: 600; }
+.ledgerPanel { margin-top: 22px; }
+.ledgerScroll { overflow-x: auto; }
+.ledger { width: 100%; margin-top: 20px; border-collapse: collapse; text-align: left; font-size: 12px; }
+.ledger th { padding-bottom: 10px; color: var(--muted); font-size: 10px; font-weight: 400; }
+.ledger td { padding-block: 13px; border-top: 1px solid var(--separator-color); color: var(--muted-strong); }
+.ledger th:last-child, .ledger td:last-child { text-align: right; }
+.ledgerSource { display: inline-flex; align-items: center; gap: 8px; }
+.ledgerSource svg { color: #906143; }
+.ledger td.credit { color: var(--ink); font-weight: 550; font-variant-numeric: tabular-nums; }
+.loadMore { display: flex; margin: 14px auto 0; }
+.empty { padding: 35px 0 19px; color: var(--muted); font-size: 12px; }
+.muted { padding-block: 16px; color: var(--muted); font-size: 12px; }
+.rules { margin-top: 28px; padding-inline: 2px; }
+.rules ul { margin-top: 11px; padding-left: 16px; color: var(--muted); font-size: 11px; line-height: 1.9; list-style: disc; }
+:global(html[data-theme='dark']) .coffeeIcon, :global(html[data-theme='dark']) .ledgerSource svg { color: #d4ae86; }
+:global(html[data-theme='dark']) .coffeeBadge { color: #d4ae86; background: #332b25; }
+@media (max-width: 1000px) { .page { padding: 30px 28px; } .overview { grid-template-columns: 1fr; } }
+@media (max-width: 540px) { .page { padding: 24px 18px; } .balancePanel, .calendarPanel, .ledgerPanel { padding: 19px; } .pageHeading h1 { font-size: 22px; } }

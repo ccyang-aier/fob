@@ -66,7 +66,7 @@ export const knowledgePageRouterRecord = {
       await lockPermissionKnowledgeBase(db, input.knowledgeBaseId);
       await requirePageAccess(db, authority.userId, input, 'edit');
       const { knowledgeBaseId, pageId, ...patch } = input;
-      await updateAuthorizedPage(db, { knowledgeBaseId, pageId, patch });
+      await updateAuthorizedPage(db, { knowledgeBaseId, pageId, patch }, authority.userId);
       const [updated] = await db.select().from(page).where(and(eq(page.knowledgeBaseId, knowledgeBaseId), eq(page.id, pageId)));
       return serializePage(updated!);
     })),

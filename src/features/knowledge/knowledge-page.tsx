@@ -17,6 +17,7 @@ import { useKnowledgeAccessQuery } from './data/hooks';
 import { knowledgeKeysForSegments, knowledgeBaseRootKey } from './data/invalidation';
 import { KnowledgeQueryProvider } from './data/provider';
 import { invalidateKnowledgeQueries } from './data/query-client';
+import { knowledgeQueryKeys } from './data/query-keys';
 import { flattenKnowledgeBaseList, useKnowledgeTeamspacesQuery } from './data/catalog-queries';
 import { deriveKnowledgeEntryPhase, knowledgeErrorCodeOf, type KnowledgeQuerySlice } from './entry-state';
 import { useKnowledgeNotificationsBridge } from './notifications/notifications-queries';
@@ -34,7 +35,7 @@ import { NavigationDialogPortal } from './navigation/navigation-dialog-portal';
 import { usePageTreeOperations } from './navigation/page-operations';
 import { canEditTree } from './navigation/tree-actions';
 import { useCreateTeamspaceMutation } from './organization/hooks';
-import { currentDocumentLinkTarget } from './editor/document-link';
+import { useDocumentTab, useTabDocumentSelection } from './editor/document-tab-context';
 import { KnowledgeEmptyState } from './knowledge-empty-state';
 import { useKnowledgeNavigation, useKnowledgeNavigationActive } from './navigation/system-navigation';
 import { updateDocumentNavigation } from './navigation/document-navigation-location';
@@ -158,12 +159,12 @@ function ServerKnowledgeResource({
 
   const [libraryView, setLibraryView] = usePageSessionState<LibraryView>('view', 'all-documents');
   const [selectedTeamspaceId, setSelectedTeamspaceId] = usePageSessionState<string | null>('folder', null);
-  const linkedPage = activeBaseId ? currentDocumentLinkTarget(activeBaseId, 'server')?.pageId ?? null : null;
-  const [selectedPageId, setStoredSelectedPageId] = usePageSessionState<string | null>('page', linkedPage, { preferInitial: Boolean(linkedPage) });
+  const tabSearch = useDocumentTab()?.search;
+  const [selectedPageId, setStoredSelectedPageId] = useTabDocumentSelection(activeBaseId ?? '', 'server');
   const setSelectedPageId = useCallback((id: string | null) => {
     setStoredSelectedPageId(id);
-    if (navigationActive) updateDocumentNavigation(id && activeBaseId ? { knowledgeBaseId: activeBaseId, pageId: id, source: 'server' } : null);
-  }, [setStoredSelectedPageId, navigationActive, activeBaseId]);
+    if (navigationActive) updateDocumentNavigation(id && activeBaseId ? { knowledgeBaseId: activeBaseId, pageId: id, source: 'server' } : null, tabSearch);
+  }, [setStoredSelectedPageId, navigationActive, activeBaseId, tabSearch]);
   const [createTeamspaceOpen, setCreateTeamspaceOpen] = useState(false);
   const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
   const { notify } = useAppAlert();
@@ -173,7 +174,10 @@ function ServerKnowledgeResource({
     },
     [setSelectedPageId],
   );
-  useKnowledgeNotificationsBridge({ active: stageActive, knowledgeBaseId: activeId, openPage });
+  useKnowledgeNotificationsBridge({ active: stageActive, knowledgeBaseId: activeId,
+    openPage: id => { openPage(id); if (activeId) void queryClient.invalidateQueries({ queryKey: knowledgeQueryKeys.pages(activeId) }); void teamspacesQuery.refetch(); },
+    openFolder: id => { setSelectedTeamspaceId(id); setLibraryView('overview'); setSelectedPageId(null); void teamspacesQuery.refetch(); },
+  });
   useEffect(
     () =>
       stageActive && navigationActive
@@ -357,21 +361,7 @@ function ServerKnowledgeResource({
 
   return (
     <KnowledgeWorkbench
-      navigationScope={`server:${authenticated ? session.user.id : 'guest'}:${activeBaseId ?? 'none'}`}
       documentOpen={documentOpen}
-      onCloseDocument={closeDocument}
-      renderFixedDocument={(document, onClose) =>
-        stageActive &&
-        document.target.source === 'server' &&
-        document.target.knowledgeBaseId === activeId ? (
-          renderEditor(document.target.pageId, onClose)
-        ) : (
-          <CanvasState
-            title={knowledgeT('unableToAccessThisDocument')}
-            hint={knowledgeT('checkYourKnowledgeBaseAndDocumentPermissions')}
-          />
-        )
-      }
       sidebar={
         <PageTreeSidebar
           treeArea={treeArea}

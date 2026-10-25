@@ -10,6 +10,7 @@ import {
   DoorOpen,
   User,
   UserCircle,
+  CaretDown,
 } from '@phosphor-icons/react';
 import { useRef, useState } from 'react';
 import {
@@ -30,7 +31,7 @@ import { presenceDisplay, getPresenceOptions } from '../presence';
 import { LogoutConfirmDialog } from './logout-confirm-dialog';
 import styles from './account-item.module.css';
 
-export function AccountItem({ compact = false }: { compact?: boolean }) {
+export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?: boolean; variant?: 'sidebar' | 'topbar' }) {
   const { t: uiText, locale } = useTranslation(messages);
   const presenceOptions = getPresenceOptions(locale);
   const { session, openSignIn, openSwitchAccount, presence, presencePreference, setPresence } =
@@ -42,6 +43,8 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
   const label =
     user?.name ?? (session.status === 'checking' ? uiText('正在确认身份') : session.status === 'error' ? uiText('登录服务暂不可用') : uiText('未登录'));
   const status = presenceDisplay(presence, locale);
+  const avatarOnly = compact || (variant === 'topbar' && !user);
+  const tooltipSide = variant === 'topbar' ? 'bottom' : 'right';
   const button = (
     <button
       type="button"
@@ -57,7 +60,7 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
             : uiText('登录 Fob 账户')
       }
       onClick={user ? undefined : openSignIn}
-      className={`fob-action ${styles.trigger} ${compact ? styles.compact : ''} ${compact && !user ? styles.guestCompact : ''}`}
+      className={`fob-action ${styles.trigger} ${avatarOnly ? styles.compact : ''} ${variant === 'topbar' ? styles.topbar : ''} ${avatarOnly && !user ? styles.guestCompact : ''}`}
     >
       <span aria-hidden className={`${styles.avatarWrap} ${!user ? styles.guestAvatar : ''}`}>
         {user ? (
@@ -77,16 +80,17 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
           </span>
         ) : null}
       </span>
-      {!compact ? (
+      {!avatarOnly ? (
         <span className={styles.identityText}><span className={styles.name}>{label}</span></span>
       ) : null}
+      {variant === 'topbar' && user && <CaretDown className={styles.topbarCaret} size={12} aria-hidden />}
     </button>
   );
   if (!user)
-    return compact ? (
+    return avatarOnly ? (
       <Tooltip>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent side="right">{uiText('点击登录')}</TooltipContent>
+        <TooltipContent side={tooltipSide}>{uiText('点击登录')}</TooltipContent>
       </Tooltip>
     ) : (
       button
@@ -95,12 +99,12 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
   return (
     <>
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-        {compact ? (
+        {avatarOnly ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
             </TooltipTrigger>
-            <TooltipContent side="right">
+            <TooltipContent side={tooltipSide}>
               {label} · {status.label}
             </TooltipContent>
           </Tooltip>
@@ -108,8 +112,8 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
           <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
         )}
         {menuOpen && <DropdownMenuContent
-          side={compact ? 'right' : 'top'}
-          align="start"
+          side={variant === 'topbar' ? 'bottom' : compact ? 'right' : 'top'}
+          align={variant === 'topbar' ? 'end' : 'start'}
           sideOffset={8}
           className={styles.menu}
           onCloseAutoFocus={(event) => {
@@ -180,7 +184,7 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
               openSignIn();
             }}
           >
-            <UserCircle weight="duotone" />
+            <UserCircle weight="regular" />
             {uiText('个人信息')}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -190,7 +194,7 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
               openSwitchAccount();
             }}
           >
-            <Users weight="duotone" />
+            <Users weight="regular" />
             {uiText('切换账户')}
           </DropdownMenuItem>
           <DropdownMenuSeparator className={styles.separator} />
@@ -202,7 +206,7 @@ export function AccountItem({ compact = false }: { compact?: boolean }) {
               setLogoutOpen(true);
             }}
           >
-            <DoorOpen weight="duotone" />
+            <DoorOpen weight="regular" />
             {uiText('退出登录')}
           </DropdownMenuItem>
         </DropdownMenuContent>}

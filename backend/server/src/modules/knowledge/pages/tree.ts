@@ -1,4 +1,5 @@
 import { and, asc, eq, isNull, ne, sql } from 'drizzle-orm';
+import { isDeepStrictEqual } from 'node:util';
 import { z } from 'zod';
 import {
   createPageInputSchema,
@@ -16,6 +17,8 @@ import { lockPermissionPage } from '../permissions/locking';
 import { withAuthorizedPageTreeMutation } from '../permissions/mutations';
 import { KnowledgePageError } from './errors';
 import { PositionExhaustedError, distributePositions, positionBetween } from './ordering';
+import { recordSubscriptionChange, removeRecycledPageSubscriptions } from '../subscriptions/service';
+import { appendKnowledgeOutbox } from '../workers/outbox';
 
 function parse<S extends z.ZodType>(schema: S, input: unknown): z.output<S> {
   const parsed = schema.safeParse(input);
@@ -74,6 +77,7 @@ async function allocatePosition(db: ResourceTransaction, scope: PlacementScope, 
 export async function createAuthorizedPage(db: ResourceTransaction, input: unknown, createdBy: string): Promise<PagePlacement> {
   const parsed = parse(createPageInputSchema, input);
   if (!entityIdSchema.safeParse(createdBy).success) throw new KnowledgePageError('INVALID_PAGE_INPUT');
+  let inserted = false;
   const { value } = await withAuthorizedPageTreeMutation(db, { knowledgeBaseId: parsed.knowledgeBaseId, pageId: parsed.id }, async () => {
     const [existing] = await db.select().from(page).where(and(eq(page.knowledgeBaseId, parsed.knowledgeBaseId), eq(page.id, parsed.id)));
     if (existing) return placement(existing);
@@ -95,8 +99,10 @@ export async function createAuthorizedPage(db: ResourceTransaction, input: unkno
       inheritsPermissions: parsed.inheritsPermissions,
       createdBy,
     }).returning();
+    inserted = true;
     return placement(created!);
   });
+  if (inserted) for (const event of await recordSubscriptionChange(db, { knowledgeBaseId: parsed.knowledgeBaseId, pageId: parsed.id, actorId: createdBy, change: 'created' })) await appendKnowledgeOutbox(db, event);
   return value;
 }
 
@@ -123,13 +129,17 @@ const pagePatchSchema = z.strictObject({
   }).refine((value) => Object.keys(value).length > 0, 'at least one field'),
 });
 
-export async function updateAuthorizedPage(db: ResourceTransaction, input: unknown): Promise<PagePlacement> {
+export async function updateAuthorizedPage(db: ResourceTransaction, input: unknown, actorId?: string): Promise<PagePlacement> {
   const parsed = parse(pagePatchSchema, input);
   const scope = { knowledgeBaseId: parsed.knowledgeBaseId, pageId: parsed.pageId };
   const node = await lockPermissionPage(db, scope);
   if (!node || node.deletedAt !== null) throw new KnowledgePageError('PAGE_NOT_FOUND');
   await db.update(page).set({ ...parsed.patch, updatedAt: sql`clock_timestamp()` })
     .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId)));
+  const renamed = parsed.patch.title !== undefined && parsed.patch.title !== node.title;
+  const isFile = typeof node.properties.fileAsset === 'string' || typeof parsed.patch.properties?.fileAsset === 'string';
+  const fileChanged = isFile && Object.entries(parsed.patch).some(([key, value]) => !isDeepStrictEqual(value, node[key as keyof typeof node]));
+  if (actorId && (renamed || fileChanged)) for (const event of await recordSubscriptionChange(db, { ...scope, actorId, change: fileChanged && !renamed ? 'file.changed' : 'renamed' })) await appendKnowledgeOutbox(db, event);
   return placement({ ...node, ...parsed.patch });
 }
 
@@ -168,6 +178,7 @@ export async function recycleAuthorizedPage(db: ResourceTransaction, input: unkn
     const node = await lockPermissionPage(db, scope);
     if (!node) throw new KnowledgePageError('PAGE_NOT_FOUND');
     if (node.deletedAt !== null) return lifecycle(node);
+    await removeRecycledPageSubscriptions(db, scope, node.path);
     const [updated] = await db.update(page).set({ deletedAt: sql`clock_timestamp()`, updatedAt: sql`clock_timestamp()` })
       .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId))).returning({ deletedAt: page.deletedAt });
     return { knowledgeBaseId: scope.knowledgeBaseId, pageId: scope.pageId, deletedAt: updated!.deletedAt!.toISOString() };

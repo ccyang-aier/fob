@@ -38,7 +38,7 @@ function FilePreview({ source, title }: { source: ResolvedMedia; title: string }
   return (
     <div className="flex w-full items-center gap-3 p-5 text-left">
       <span className="grid size-11 shrink-0 place-items-center rounded-[9px] bg-[#edf3fb] text-[#3a72b9]">
-        <FileText aria-hidden size={23} weight="duotone" />
+        <FileText aria-hidden size={23} weight="regular" />
       </span>
       <span className="min-w-0 flex-1">
         <strong className="block truncate text-[13px] font-semibold text-[var(--ink)]">

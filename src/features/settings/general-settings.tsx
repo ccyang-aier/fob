@@ -44,7 +44,7 @@ export function GeneralSettings() {
       <LanguageSettings />
       <section className="mt-5 overflow-hidden rounded-[12px] border border-[var(--line)] bg-panel shadow-[0_1px_2px_rgba(23,25,27,0.04)]">
         <header className="flex items-center gap-2 border-b border-[var(--line)] px-5 py-3.5">
-          <Plugs className="size-[15px] text-[var(--muted)]" weight="fill" aria-hidden />
+          <Plugs className="size-[15px] text-[var(--muted)]" weight="regular" aria-hidden />
           <h2 className="text-[13px] font-medium">{uiText('运行状态')}</h2>
         </header>
         <dl className="px-5 py-2">

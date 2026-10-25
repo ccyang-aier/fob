@@ -13,6 +13,7 @@ import { parsePageDocument } from '@fob/shared/knowledge/collaboration';
 import { pageCollaborationRedisExtension } from './page-collaboration-redis';
 import type { PageCollaborationBroadcast } from './page-collaboration-redis';
 import type { PageCheckpointExtension } from './checkpoints';
+import { actorSchema } from '@fob/shared/knowledge/contracts';
 
 export interface PageCollaborationPersistence {
   /** Store debounce window; production default 2s per the design contract. */
@@ -56,7 +57,8 @@ export function pageCollaborationConfiguration(deps: { authenticator: KnowledgeR
       const stateVector = Buffer.from(Y.encodeStateVector(data.document));
       // Server-internal stores without a connection context persist the body
       // but emit no event: actor attribution must never be fabricated.
-      const actor = data.lastContext?.authority?.actor;
+      const attribution = actorSchema.safeParse(data.lastContext?.authority?.actor ?? (data.lastContext as unknown as { actor?: unknown } | undefined)?.actor);
+      const actor = attribution.success ? attribution.data : undefined;
       await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async (db) => {
         await db.insert(docState).values({ ...scope, state, stateVector })
           .onConflictDoUpdate({ target: [docState.knowledgeBaseId, docState.pageId], set: { state, stateVector, updatedAt: sql`clock_timestamp()` } });

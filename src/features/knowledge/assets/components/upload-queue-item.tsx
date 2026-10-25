@@ -62,7 +62,7 @@ export function UploadQueueItem(props: {
           className={`flex size-7 shrink-0 items-center justify-center rounded-md bg-wash ${tint}`}
           aria-hidden="true"
         >
-          <Icon size={15} weight="duotone" />
+          <Icon size={15} weight="regular" />
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">

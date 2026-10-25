@@ -12,6 +12,7 @@ import { KnowledgeBaseDialog } from '../knowledge-base-dialog';
 import { messages } from '../knowledge-base-switcher.messages';
 import type { KnowledgeBaseResource, KnowledgeBaseSource } from '../knowledge-base';
 import { removeLocalKnowledgeBaseAssets } from '../assets/local-assets';
+import { removeLocalKnowledgeBaseTemplates } from '../templates/use-local-templates';
 
 export type { KnowledgeBaseResource, KnowledgeBaseSource } from '../knowledge-base';
 type Status = 'loading' | 'ready' | 'error';
@@ -200,6 +201,7 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
     try {
       if (resource.source === 'local') {
         if (!local.store) throw new Error(resourceT('localUnavailable'));
+        removeLocalKnowledgeBaseTemplates(id);
         await removeLocalKnowledgeBaseAssets(id);
         local.store.update(library => ({ ...library, bases: library.bases.filter(item => item.id !== id), folders: library.folders.filter(item => item.knowledgeBaseId !== id), documents: library.documents.filter(item => item.baseId !== id), tags: library.tags.filter(item => item.baseId !== id) }));
       } else {

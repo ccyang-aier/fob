@@ -25,10 +25,9 @@ import { IconButton } from '../dense-sidebar/icon-button';
 import {
   SidebarRow,
   SidebarSectionHeader,
-  sidebarIconMap,
 } from '../dense-sidebar/sidebar-navigation-primitives';
-import { SIDEBAR_MAIN_ITEMS } from '../dense-sidebar/sidebar-navigation';
-import { useI18n } from '../dense-sidebar/use-i18n';
+import { KnowledgeMainNavigation } from '../dense-sidebar/knowledge-main-navigation';
+import { useKnowledgeNavigationCompact } from '../navigation/system-navigation';
 import styles from '../dense-sidebar/sidebar-interactions.module.css';
 import { PageIcon } from '../navigation/page-icon';
 import type { LocalDocument, LocalLibrary, LocalTag } from './local-library';
@@ -80,7 +79,7 @@ export function LocalLibraryNavigation({
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
-  const { t } = useI18n();
+  const compact = useKnowledgeNavigationCompact();
   const [foldersOpen, setFoldersOpen] = useState(true);
   const [expandedFolderIds, setExpandedFolderIds] = useState<string[]>([]);
   const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
@@ -135,21 +134,12 @@ export function LocalLibraryNavigation({
     );
   }
 
+  const activeItem = !selectedId && !activeTagId ? view : null;
+  if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />;
+
   return (
     <div className="min-h-0 flex-1 overflow-auto px-3 py-3">
-      <nav aria-label={knowledgeT('localKnowledgeBaseNavigation')} className="space-y-1">
-        {SIDEBAR_MAIN_ITEMS.map((item) => (
-          <SidebarRow
-            key={item.id}
-            icon={sidebarIconMap[item.icon]}
-
-            label={t(item.labelKey)}
-            count={counts[item.id as MainView]}
-            selected={!selectedId && !activeTagId && item.id === view}
-            onClick={() => onSelectMain(item.id as MainView)}
-          />
-        ))}
-      </nav>
+      <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />
 
       <section className="mt-5" aria-label={knowledgeT('folder')}>
         <SidebarSectionHeader
@@ -242,7 +232,7 @@ export function LocalLibraryNavigation({
                         <Folder
                           aria-hidden
                           size={15}
-                          weight="fill"
+                          weight="regular"
                           className="mr-2 shrink-0 text-[#7c8387]"
                         />
                         <span className="truncate">{folder.name}</span>

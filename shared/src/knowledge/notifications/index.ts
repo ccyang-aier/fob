@@ -1,45 +1,49 @@
 import { z } from 'zod';
 import { entityIdSchema, timestampSchema, knowledgeBaseScopeSchema } from '../contracts/primitives';
+import { subscriptionChangeSchema } from '../subscriptions';
 
 /**
  * Notification inbox wire contracts (N03, design §4.6 / §5.3).
  *
- * Rows are created by the N01 comment service inside the comment transaction
- * (recipients already permission-filtered at creation); this module covers the
- * read side — the inbox list, the unread badge count and the mark-read writes —
- * plus the re-visibility rule: an inbox item is only returned while its page
- * is still viewable by the recipient. Kinds are exactly the two comment
- * notices N01 emits today; dates cross the wire as ISO strings.
- *
- * Kept as a standalone module (not re-exported by `contracts/index.ts`) until
- * the router task owns the merge; import as `@fob/shared/knowledge/notifications`.
+ * Comments and subscriptions create rows atomically with the business write.
+ * Recipients are permission-filtered at creation and again on inbox/mark-read
+ * reads; an ex-member or a recipient without current page access sees nothing.
+ * Dates cross the wire as ISO strings. Import this standalone contract as
+ * `@fob/shared/knowledge/notifications`.
  */
 
-export const notificationKinds = ['comment.reply', 'comment.mention'] as const;
+export const notificationKinds = ['comment.reply', 'comment.mention', 'page.changed', 'folder.changed'] as const;
 export const notificationKindSchema = z.enum(notificationKinds);
 export type NotificationKind = z.infer<typeof notificationKindSchema>;
 
 /** The comment-service payload: which thread/comment, and who acted. */
-export const notificationPayloadSchema = z.strictObject({
+export const commentNotificationPayloadSchema = z.strictObject({
   threadId: entityIdSchema,
   commentId: entityIdSchema,
   actorId: entityIdSchema,
 });
+export const subscriptionNotificationPayloadSchema = z.strictObject({ actorId: entityIdSchema, change: subscriptionChangeSchema, teamspaceId: entityIdSchema });
+export const folderNotificationPayloadSchema = z.strictObject({ actorId: entityIdSchema, teamspaceId: entityIdSchema, change: z.literal('renamed') });
+export const notificationPayloadSchema = z.union([commentNotificationPayloadSchema, subscriptionNotificationPayloadSchema]);
 export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
 
-export const notificationItemSchema = z.strictObject({
+const notificationItemBaseSchema = z.strictObject({
   knowledgeBaseId: entityIdSchema,
   id: entityIdSchema,
-  kind: notificationKindSchema,
-  /** null only for future kinds without a page anchor; comment notices always carry one. */
+  /** Folder notices have no page anchor. */
   pageId: entityIdSchema.nullable(),
   /** Display fields joined server-side; null when the row or actor is gone. */
   page: z.strictObject({ id: entityIdSchema, title: z.string() }).nullable(),
   actor: z.strictObject({ id: entityIdSchema, name: z.string() }).nullable(),
-  payload: notificationPayloadSchema,
   readAt: timestampSchema.nullable(),
   createdAt: timestampSchema,
 });
+export const notificationItemSchema = z.discriminatedUnion('kind', [
+  notificationItemBaseSchema.extend({ kind: z.enum(['comment.reply', 'comment.mention']), payload: commentNotificationPayloadSchema }),
+  notificationItemBaseSchema.extend({ kind: z.literal('page.changed'), payload: subscriptionNotificationPayloadSchema }),
+  notificationItemBaseSchema.extend({ kind: z.literal('folder.changed'), pageId: z.null(), page: z.null(),
+    folder: z.strictObject({ id: entityIdSchema, name: z.string() }), payload: folderNotificationPayloadSchema }),
+]);
 export type NotificationItem = z.infer<typeof notificationItemSchema>;
 
 export const notificationListInputSchema = knowledgeBaseScopeSchema.extend({

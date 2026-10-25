@@ -258,7 +258,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
           aria-pressed={isBlock('blockquote')}
           onClick={() => block({ kind: 'blockquote' })}
         >
-          <Quotes size={17} weight="fill" />
+          <Quotes size={17} weight="regular" />
         </button>
       </div>
       <div className={styles.group}>

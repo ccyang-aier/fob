@@ -80,7 +80,7 @@ export function AssetUploader(props: AssetUploaderProps) {
           ].join(' ')}
           aria-hidden="true"
         >
-          <CloudArrowUp size={20} weight="duotone" />
+          <CloudArrowUp size={20} weight="regular" />
         </span>
         <p className="text-[13px] leading-5 text-ink">
           {knowledgeT('dropFilesHereOr')}

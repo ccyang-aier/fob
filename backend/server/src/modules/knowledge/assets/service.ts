@@ -1,14 +1,15 @@
 import { createHash, randomUUID } from 'node:crypto';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { assetDownloadInputSchema, assetRevokeInputSchema, assetUploadInputSchema } from '@fob/shared/knowledge/contracts';
 import type { AssetConfirmResult, AssetDownloadResult, AssetDownloadInput, AssetRevokeInput, AssetRevokeResult, AssetUploadInput, AssetUploadPrepareResult } from '@fob/shared/knowledge/contracts';
 import { z } from 'zod';
-import { asset } from '../../../platform/database/resources/schema';
+import { asset, page } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { expandRequestPrincipals } from '../permissions/authorization';
 import { appendKnowledgeOutbox } from '../workers/outbox';
 import { KnowledgeAssetError } from './errors';
 import type { KnowledgeAssetStorage } from './storage';
+import { recordSubscriptionChange } from '../subscriptions/service';
 
 const uploadGrantSeconds = 600;
 const downloadGrantSeconds = 300;
@@ -132,5 +133,7 @@ export async function revokeKnowledgeBaseAsset(db: ResourceTransaction, input: A
     topic: 'knowledgeBase.event',
     event: { knowledgeBaseId: parsed.knowledgeBaseId, id: randomUUID(), occurredAt: new Date().toISOString(), type: 'asset.updated', hash: parsed.hash },
   });
+  const files = await db.select({ id: page.id }).from(page).where(and(eq(page.knowledgeBaseId, parsed.knowledgeBaseId), sql`${page.properties}->>'fileAsset' = ${`asset:${parsed.hash}`}`));
+  for (const file of files) for (const event of await recordSubscriptionChange(db, { knowledgeBaseId: parsed.knowledgeBaseId, pageId: file.id, actorId: parsed.userId, change: 'file.changed' })) await appendKnowledgeOutbox(db, event);
   return { status: 'revoked', changed: true };
 }

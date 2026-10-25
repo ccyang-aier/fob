@@ -17,6 +17,6 @@ export function KnowledgeMembersPage() {
   }
   return <section className="flex h-full min-h-0 flex-col" aria-label={t('members')}>
     <header className="shrink-0 px-8 pb-5 pt-8"><h1 className="text-[22px] font-semibold text-[var(--ink)]">{t('members')}</h1></header>
-    <CanvasState className="min-h-0 flex-1" icon={<UserCircle size={32} weight="duotone" aria-hidden />} title={t('personalKnowledgeBase')} hint={t('personalOnly')} />
+    <CanvasState className="min-h-0 flex-1" icon={<UserCircle size={32} weight="regular" aria-hidden />} title={t('personalKnowledgeBase')} hint={t('personalOnly')} />
   </section>;
 }

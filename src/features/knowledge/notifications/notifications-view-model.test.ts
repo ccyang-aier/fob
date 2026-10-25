@@ -72,3 +72,14 @@ describe('notifications view-model · badge', () => {
     expect(notificationSubtitle(0)).toBe('暂无未读');
   });
 });
+
+test('subscription notices retain the correct article or folder target and action copy', () => {
+  const changed = item({ kind: 'page.changed', payload: { actorId: base.actor.id, teamspaceId: base.pageId, change: 'updated' } });
+  const folder = item({ kind: 'folder.changed', pageId: null, page: null, folder: { id: base.pageId, name: 'Current folder name' }, payload: { actorId: base.actor.id, teamspaceId: base.pageId, change: 'renamed' } });
+  const [articleRow, folderRow] = deriveNotificationRows([changed, folder]);
+  expect(articleRow.targetPageId).toBe(base.pageId); expect(articleRow.targetFolderId).toBeUndefined();
+  expect(notificationVerb(articleRow.kind, 'zh-CN', articleRow.change)).toBe('更新了你订阅的文档');
+  expect(folderRow.targetPageId).toBeNull(); expect(folderRow.targetFolderId).toBe(base.pageId);
+  expect(folderRow.pageLabel).toBe('Current folder name');
+  expect(notificationVerb(folderRow.kind)).toBe('重命名了你订阅的文件夹');
+});

@@ -63,5 +63,5 @@ export const AnimatedThemeToggler = forwardRef<HTMLButtonElement, AnimatedThemeT
   }
 
   const Icon = theme === 'dark' ? Sun : Moon;
-  return <button {...props} type="button" ref={buttonRef} data-slot="animated-theme-toggler" onClick={toggleTheme} className={cn('fob-action', className)}><Icon size={18} weight="duotone" aria-hidden /></button>;
+  return <button {...props} type="button" ref={buttonRef} data-slot="animated-theme-toggler" onClick={toggleTheme} className={cn('fob-action', className)}><Icon size={18} weight="regular" aria-hidden /></button>;
 });

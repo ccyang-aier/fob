@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
+import { AccountItem } from '@/features/identity/components/account-item';
+import { CoffeeBalanceButton } from '@/features/rewards';
 import { useTranslation } from '@/lib/i18n';
 import { GlobalSearch } from './global-search';
 import type { useWorkbenchView, WorkbenchView } from './workbench-view';
@@ -25,7 +27,9 @@ export function SystemBar({ onNavigate, navigation, children }: {
     <div className={`${styles.actions} ${styles.trailing}`}>
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
+      <span className={styles.separator} aria-hidden />
+      <CoffeeBalanceButton onOpen={() => onNavigate('rewards')} />
+      <AccountItem variant="topbar" />
     </div>
   </header>;
 }
-

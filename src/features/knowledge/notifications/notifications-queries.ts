@@ -71,7 +71,7 @@ export function useMarkAllNotificationsRead(knowledgeBaseId: string) {
  * active knowledgeBase and the page-selection callback; `active: false` or unmount
  * retracts the snapshot and the bell falls back to its inert state.
  */
-export function useKnowledgeNotificationsBridge(input: { active: boolean; knowledgeBaseId: string | null; openPage: (pageId: string | null) => void }) {
+export function useKnowledgeNotificationsBridge(input: { active: boolean; knowledgeBaseId: string | null; openPage: (pageId: string | null) => void; openFolder?: (folderId: string) => void }) {
   const navigationActive = useKnowledgeNavigationActive();
   const [publisher] = useState(createKnowledgeNotificationsPublisher);
   const effectiveKnowledgeBaseId = input.active && navigationActive ? input.knowledgeBaseId : null;
@@ -82,10 +82,13 @@ export function useKnowledgeNotificationsBridge(input: { active: boolean; knowle
   // Keep the jump target fresh without republishing on every parent render;
   // the stable closure reads the ref when the bell actually fires.
   const openPageRef = useRef(input.openPage);
+  const openFolderRef = useRef(input.openFolder);
   useEffect(() => {
     openPageRef.current = input.openPage;
+    openFolderRef.current = input.openFolder;
   });
   const openPage = useCallback((pageId: string | null) => openPageRef.current(pageId), []);
+  const openFolder = useCallback((folderId: string) => openFolderRef.current?.(folderId), []);
   const runMarkRead = useCallback((notificationId: string) => void mutateRead(notificationId), [mutateRead]);
   const runMarkAll = useCallback(() => void mutateAll(), [mutateAll]);
 
@@ -103,7 +106,8 @@ export function useKnowledgeNotificationsBridge(input: { active: boolean; knowle
       markRead: runMarkRead,
       markAllRead: runMarkAll,
       openPage,
+      openFolder,
     });
     return publisher.clear;
-  }, [effectiveKnowledgeBaseId, data, status, openPage, runMarkRead, runMarkAll, publisher]);
+  }, [effectiveKnowledgeBaseId, data, status, openPage, openFolder, runMarkRead, runMarkAll, publisher]);
 }

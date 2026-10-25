@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { knowledgeScopedSearch, addWorkbenchTab, closeWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget } from './workbench-tabs';
+import { splitWorkbenchTab, knowledgeScopedSearch, addWorkbenchTab, closeWorkbenchTab, createWorkbenchTabs, openWorkbenchTab, pinWorkbenchTab, reloadWorkbenchTab, reorderWorkbenchTabs, restoreWorkbenchTabs, tabTarget } from './workbench-tabs';
 
 test('members entry and closing a library tab always retain one live knowledge navigation owner', () => {
   let state = createWorkbenchTabs('scope', tabTarget('members'));
@@ -76,4 +76,17 @@ test('tab restoration and members navigation retain the top-selected knowledge w
   expect(params.get('knowledgeBase')).toBe('base-a');
   expect(params.get('source')).toBe('local');
   expect(params.get('tab')).toBe('tab:2');
+});
+
+test('split tabs share one workbench group, survive restore, and close to the surviving document', () => {
+  let state = createWorkbenchTabs('scope', tabTarget('knowledge', '?document=one&knowledgeBase=base&source=local'));
+  state = splitWorkbenchTab(state, state.active, { title: 'One', target: { knowledgeBaseId: 'base', pageId: 'one', source: 'local' } });
+  expect(state.tabs).toHaveLength(2);
+  expect(state.split).toEqual({ left: 'knowledge', right: 'tab:1', ratio: 50 });
+  expect(state.tabs[1].document?.title).toBe('One');
+  const restored = restoreWorkbenchTabs('scope', JSON.parse(JSON.stringify(state)))!;
+  expect(restored.split).toEqual(state.split);
+  state = closeWorkbenchTab(restored, state.active);
+  expect(state.split).toBeUndefined(); expect(state.active).toBe('knowledge');
+  expect(state.tabs[0].search).toContain('document=one');
 });
