@@ -44,6 +44,12 @@ Lucide 线宽固定 1.75，避免导航箭头和更多过粗。图标使用现�
 
 ## 实现与检查
 
+### 用户指定的 Outline 文件夹首页参考
+
+用户后续明确要求文件夹首页外观与 Outline 一致，因此仅此页面允许使用 `OutlineCollectionIcon` 中登记的原版资源。11 个官方 glyph 保存在 `public/icons/outline-collection`，来源与 SHA-256 记录在同目录 `sources.json`；[官方来源](https://github.com/outline/outline-icons) 的 BSD-3-Clause 许可保留在 `public/licenses/outline-icons.txt`。资源通过统一目录按原始 viewBox 渲染，不重绘路径、不引入图标包、不扩散到其他产品区域。验证脚本检查固定资源清单、来源和摘要。
+
+该例外用于标题、文档勾选和批量工具栏。普通系统导航、菜单和用户已有内容图标继续遵守上文规则。通用尺寸缩放不应用于这些明确按参考图测量的原版资源。
+
 使用官方 [React 接入方式](https://docs.fontawesome.com/web/use-with/react/)，逐个导入 FA7 定义以支持 tree shaking；不导入整套 `fas`，不运行时下载图标。FA CSS 仅在根样式的 components layer 加载一次，禁用自动注入。
 
 Font Awesome Free 图标由 Fonticons, Inc. 提供，官方许可文本保留在 `public/licenses/fontawesome.txt`，源定义与名称保持官方归属。

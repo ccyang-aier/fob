@@ -22,6 +22,7 @@ import './code-fonts.css';
 import { DocumentNavigationTools } from './document-tools';
 import type { DocumentLinkTarget } from './document-link';
 import { SelectionToolbar } from './components/selection-toolbar';
+import { SlashMenuLayer } from './commands';
 
 export function DocumentEditorFrame({
   children,
@@ -108,11 +109,10 @@ export function DocumentEditorBody({
   const spacing = documentParagraphSpacings.find(({ id }) => id === appearance.paragraphSpacing)!;
   return (
     <div className={styles.scrollArea} data-document-scroll data-page-scroll={scrollKey}>
-      <div
-        className={styles.document}
-        data-width={appearance.width}
-        data-font={appearance.font}
-        data-size={appearance.size}
+      <DocumentEditorContent
+        editor={editor}
+        before={before}
+        attributes={{ 'data-width': appearance.width, 'data-font': appearance.font, 'data-size': appearance.size }}
         style={
           {
             '--document-width': `${appearance.width}%`,
@@ -123,11 +123,12 @@ export function DocumentEditorBody({
             '--document-paragraph-gap': `${spacing.pixels}px`,
           } as CSSProperties
         }
-      >
-        {before}
-        <EditorContent editor={editor} />
-      </div>
-      <SelectionToolbar editor={editor} />
+      />
     </div>
   );
+}
+
+/** Same body, block styles and interaction layers for pages and inline folder overviews. */
+export function DocumentEditorContent({ editor, before, style, className, attributes }: { editor: Editor | null; before?: ReactNode; style?: CSSProperties; className?: string; attributes?: Record<string, string | number> }) {
+  return <><div className={`${styles.document} ${className ?? ''}`} style={style} {...attributes}>{before}<EditorContent editor={editor} /></div><SelectionToolbar editor={editor} /><SlashMenuLayer editor={editor} /></>;
 }

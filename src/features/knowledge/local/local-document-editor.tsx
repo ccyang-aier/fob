@@ -5,15 +5,8 @@ import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-document-editor.messages';
 import { useEffect, useMemo } from 'react';
-import { Extension } from '@tiptap/core';
-import { useEditor } from '@tiptap/react';
-import { history, redo, undo } from '@tiptap/pm/history';
-import { createBlockIdExtension, createKnowledgeExtensions } from '@fob/shared/knowledge/schema';
-import { applyEditorBlockModules } from '../editor/block-modules';
-import { createSlashPasteExtensions, SlashMenuLayer } from '../editor/commands';
 import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from '../editor/editor-layout';
 import { DocumentEditorHeader } from '../editor/components/document-editor-header';
-import { createBlockEditingExtensions } from '../editor/extensions';
 import { TaskProgress } from '../editor/block-modules/task-list/task-progress';
 import type { LocalDocument } from './local-library';
 import type { createLocalLibraryStore } from './local-library';
@@ -23,19 +16,7 @@ import {
   subscribeOpenPageTarget,
   takeStagedBlockHighlight,
 } from '../editor/open-target';
-import { useEditorLocale } from '../editor/use-editor-locale';
-
-const localHistory = Extension.create({
-  name: 'localHistory',
-  addProseMirrorPlugins: () => [history()],
-  addKeyboardShortcuts() {
-    return {
-      'Mod-z': () => undo(this.editor.state, this.editor.view.dispatch),
-      'Mod-Shift-z': () => redo(this.editor.state, this.editor.view.dispatch),
-      'Mod-y': () => redo(this.editor.state, this.editor.view.dispatch),
-    };
-  },
-});
+import { useStandaloneEditor } from '../editor/use-standalone-editor';
 
 export function LocalDocumentEditor({
   knowledgeBaseId,
@@ -56,12 +37,11 @@ export function LocalDocumentEditor({
   onOpenSidebar: () => void;
   onCreateDocument: () => void;
 }) {
-  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: knowledgeT } = useTranslation(knowledgeMessages);
   const navigationActive = useKnowledgeNavigationActive();
 
-  const extensions = useMemo(
-    () => [
-      ...applyEditorBlockModules(createKnowledgeExtensions(), {
+  const context = useMemo(
+    () => ({
         localKnowledgeBaseId: knowledgeBaseId,
         localPageId: document.id,
         getLocalPages: () => {
@@ -76,30 +56,9 @@ export function LocalDocumentEditor({
         },
         subscribeLocalPages: store.subscribe,
       }),
-      createBlockIdExtension({ pageId: document.id }),
-      ...createBlockEditingExtensions(),
-      ...createSlashPasteExtensions(),
-      localHistory,
-    ],
     [document.id, knowledgeBaseId, store],
   );
-  const editor = useEditor(
-    {
-      extensions,
-      immediatelyRender: false,
-      content: document.body,
-      editorProps: { attributes: { 'aria-label': knowledgeT('pageContent') } },
-      onUpdate: ({ editor: current }) => onChange({ body: current.getJSON() }),
-    },
-    [extensions],
-  );
-  useEditorLocale(editor, locale, knowledgeT('pageContent'));
-
-  // Two panes can display the same local document; external edits must reach both.
-  useEffect(() => {
-    if (editor && JSON.stringify(editor.getJSON()) !== JSON.stringify(document.body))
-      editor.commands.setContent(document.body, { emitUpdate: false });
-  }, [editor, document.body]);
+  const editor = useStandaloneEditor({ content: document.body, contentId: document.id, context, label: knowledgeT('pageContent'), onChange: body => onChange({ body }) });
   useEffect(() => {
     if (!editor || !navigationActive) return;
     const scope = { knowledgeBaseId, pageId: document.id };
@@ -168,7 +127,6 @@ export function LocalDocumentEditor({
           />
         }
       />
-      <SlashMenuLayer editor={editor} />
     </DocumentEditorFrame>
   );
 }

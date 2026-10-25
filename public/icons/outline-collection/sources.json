@@ -1,0 +1,46 @@
+{
+  "collection": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/CollectionIcon.tsx",
+    "sha256": "37df49e183f38829ba71b88b0ffb65766cd15a9126a326be50114a0dfce5f571"
+  },
+  "document": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/DocumentIcon.tsx",
+    "sha256": "7c41750264aa263afceb6aa0bd73841043ab8c23c9b70fe6e62da5d921f71d94"
+  },
+  "team": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/TeamIcon.tsx",
+    "sha256": "fc161de4534b885507be94f07da1111f541fdeac2ce7e6e6fe2abfe7400f18d7"
+  },
+  "checkmark": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/CheckmarkIcon.tsx",
+    "sha256": "62f84ca0790d2269f58220a6f57b8f5c944048d0d34211ba6a0ead92b67ba424"
+  },
+  "starred": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/StarredIcon.tsx",
+    "sha256": "ae035c78774c1f13d1608f6530541868f211cb2b42de3585a13b25b6c5f6bbc1"
+  },
+  "unstarred": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/UnstarredIcon.tsx",
+    "sha256": "eab63c06ec8c6c9dadd938fe8378e9718ce940811b7912e7fda4b05125672b63"
+  },
+  "pin": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/PinIcon.tsx",
+    "sha256": "9552c2aa66e642d1a7529d9c15c65f24caf1118775b0433e144fdf593c0bb6a1"
+  },
+  "archive": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/ArchiveIcon.tsx",
+    "sha256": "fcb5943c497ee5a4ef6c61c939996f9845c630bf6b17290ee65f508ca9d38098"
+  },
+  "unpublish": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/UnpublishIcon.tsx",
+    "sha256": "48f1ab77b73d7d9455162585e3733de8e71f3900acbee045e508e45192a8ace0"
+  },
+  "trash": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/TrashIcon.tsx",
+    "sha256": "bd3a14fdc4424acc86c3eabb6947d5fe8d0bfc692655af213528c066fb83c732"
+  },
+  "close": {
+    "source": "https://raw.githubusercontent.com/outline/outline-icons/main/src/components/CloseIcon.tsx",
+    "sha256": "65d55b95592c2a3e3983cfde0cd58226aa1cb99869369b6c30281ac040e89776"
+  }
+}

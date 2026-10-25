@@ -38,7 +38,7 @@ test('title and body search intersect folder and author filters before ranking a
   const filterOnly = discoverySearchResultSchema.parse(await (await request('search', fixture.owner, { folderId: target.teamspace.id, authorId: fixture.owner.identity.userId })).json());
   expect(filterOnly.documents.map(document => document.id)).toEqual([target.pages[1].pageId]);
 }, 30_000);
-test('all seven folder tabs expose real order, totals, readership and stable pagination', async () => {
+test('all six folder tabs expose real order, totals, readership and stable pagination', async () => {
   const tree = await fixture.tree({ defaultAccess: 'view', parents: [null, ...Array.from({ length: 44 }, () => 0)] }); await fixture.drain();
   for (const [index, scope] of tree.pages.entries()) await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, db => db.update(page).set({ title: `Document ${String(index).padStart(2, '0')}`, updatedAt: new Date(Date.UTC(2026, 0, index + 1)), createdAt: new Date(Date.UTC(2025, 0, index + 1)) }).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId))));
   await withKnowledgeBase(fixture.pool, tree.root.knowledgeBaseId, db => db.insert(documentVisit).values({ ...tree.pages[4], userId: fixture.owner.identity.userId, views: 7 }));
@@ -46,17 +46,20 @@ test('all seven folder tabs expose real order, totals, readership and stable pag
   const alphabetical = await get('alphabetical'); expect(alphabetical.total).toBe(45); expect(alphabetical.documents).toHaveLength(40); expect(alphabetical.nextOffset).toBe(40); expect(alphabetical.documents[0]!.title).toBe('Document 00');
   const last = await get('alphabetical', 40); expect(last.documents).toHaveLength(5); expect(last.nextOffset).toBeNull();
   expect(new Set([...alphabetical.documents, ...last.documents].map(document => document.id)).size).toBe(45);
-  expect((await get('popular')).documents[0]!.views).toBe(7);
+  const popular = await get('popular'); expect(popular.documents[0]!.views).toBe(7);
+  expect(popular.documents[0]!.lastViewedAt).toBeString();
+  const readerPopular = folderOverviewSchema.parse(await (await request(`folders/${tree.teamspace.id}?tab=popular`, fixture.reader)).json());
+  expect(readerPopular.documents.find(document => document.id === popular.documents[0]!.id)?.lastViewedAt).toBeNull();
   expect((await get('oldest')).documents[0]!.title).toBe('Document 00');
   expect((await get('updated')).documents[0]!.title).toBe('Document 44');
-  expect((await get('published')).documents[0]!.title).toBe('Document 44');
-  expect((await get('documents')).documents).toHaveLength(1); expect((await get('overview')).documents).toHaveLength(6);
+  expect((await request(`folders/${tree.teamspace.id}?tab=published`)).status).toBe(400);
+  expect((await get('documents')).documents).toHaveLength(1); expect((await get('overview')).documents).toHaveLength(0);
 }, 20_000);
 test('overview edits persist, protect revisions, and reject cross-folder pins and read-only writers', async () => {
   const tree = await fixture.tree({ defaultAccess: 'view' }), other = await fixture.tree({ defaultAccess: 'view' }); await fixture.drain();
   const path = `folders/${tree.teamspace.id}`, description = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'A real folder description' }] }] };
   expect((await request(path, fixture.owner, { expectedRevision: 0, description, pinnedPageIds: [tree.root.pageId], name: 'Research notes' }, 'PATCH')).status).toBe(200);
-  const persisted = folderOverviewSchema.parse(await (await request(path)).json()); expect(persisted.folder.name).toBe('Research notes'); expect(persisted.folder.metadata.description).toEqual(description); expect(persisted.pinned[0]!.id).toBe(tree.root.pageId);
+  const persisted = folderOverviewSchema.parse(await (await request(path)).json()); expect(persisted.folder.name).toBe('Research notes'); expect(persisted.folder.metadata.description).toEqual(description); expect(persisted.documents).toHaveLength(0); expect(persisted.pinned).toHaveLength(0);
   expect((await request(path, fixture.owner, { expectedRevision: 0, name: 'Stale change' }, 'PATCH')).status).toBe(409);
   expect((await request(path, fixture.owner, { expectedRevision: 1, pinnedPageIds: [other.root.pageId] }, 'PATCH')).status).toBe(403);
   expect((await request(path, fixture.reader, { expectedRevision: 1, description }, 'PATCH')).status).toBe(403);
@@ -118,6 +121,6 @@ test('revoked pinned documents do not leak their identifiers through folder meta
   const tree = await fixture.tree({ defaultAccess: 'view', parents: [null, 0], breaks: [1] }); await fixture.drain();
   await fixture.admin.query('UPDATE resources.teamspace SET metadata=$3 WHERE knowledge_base_id=$1 AND id=$2', [fixture.alpha.id, tree.teamspace.id, JSON.stringify({ pinnedPageIds: [tree.root.pageId, tree.pages[1]!.pageId] })]);
   const overview = folderOverviewSchema.parse(await (await request(`folders/${tree.teamspace.id}`, fixture.reader)).json());
-  expect(overview.total).toBe(1); expect(overview.pinned.map(document => document.id)).toEqual([tree.root.pageId]);
+  expect(overview.total).toBe(1); expect(overview.pinned).toHaveLength(0);
   expect(overview.folder.metadata.pinnedPageIds).toEqual([tree.root.pageId]);
 });

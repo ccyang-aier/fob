@@ -28,8 +28,8 @@
     "sha256": "b9d17b8aebd95991c464e761985f5aa3b4b8dd6f43b2238c1f024f636ab03642"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail.",
-    "sha256": "ad594cb514f9f2201be1ae1463aa6052188086fec72619678904bfc07e60f804"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "0a468037f259a08bf5a0b68c20ae877cb37588bf86e89321ae594edf00821d97"
   },
   "src/features/knowledge/knowledge-base-header.messages.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -60,12 +60,12 @@
     "sha256": "ddf0a2c198033c66702e1570e24879aeb9222c094744460c75853140625628ab"
   },
   "src/features/knowledge/local/local-document-editor.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership.",
-    "sha256": "15bb1cca6de4ec7616d4572a076d5444fe9d64d82343d6e85d20c1b155e503b7"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "ce69bebfbdb4c3d8c181cb5c7ed224b1451660b6991907203cc97fffc4ba04b0"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data.",
-    "sha256": "71b9eb01078d792892969193877e8a4cc30cf8bf282c0b3c5eed068ac2a4c0ae"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
+    "sha256": "65bf1422cfea59b3ad2d8eb6e09aad18df44e6b4372e7e49d091201390fc297d"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
@@ -288,8 +288,8 @@
     "sha256": "268ba9a9ac372b08c1a17a8f88cfe885fc162ba971c2e121dc9b908442b86de9"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows.",
-    "sha256": "44b06c9c7f58a1b081217d5b32df92da90ab2acc4fbfe5600389e5d8a9abfda9"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
+    "sha256": "aab7f7509a7d211e54843bd8c2f98a1970325e55dfb717377265d16c06eb087f"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
     "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
@@ -316,8 +316,8 @@
     "sha256": "be3c4976d00a832bdc5e156514c16acfc1726e081c1f866873ec05475da182e3"
   },
   "backend/server/src/modules/knowledge/api/page-routes.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "6e2cf6fd90658d1324cdffe6d5d7306e934ee0bbf390164dcd00e4608dcb38a1"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
+    "sha256": "5ac5defa00e027ae6dfbdf0d6b436a4f35b23fd4d906eff74ec1250e3bd8edb8"
   },
   "backend/server/src/modules/knowledge/assets/service.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Keep document-only guests from probing unrelated library assets, uploading without page edit access or revoking shared assets.",
@@ -340,8 +340,8 @@
     "sha256": "8dc683bfa97adca7bfdf2c2c340ba9e7dec682e4b14ca1dd45c596747f151d8f"
   },
   "backend/server/src/modules/knowledge/pages/tree.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "162c32f6e43f0d120f5b042ecfbd83243cc4a14b55be2c352686c28be32a417d"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
+    "sha256": "39e45ba7fe08c2b6fe3540e0706f1af5a04d6dd9a2a2c6722737c4ef1b5ccaee"
   },
   "backend/server/src/modules/knowledge/workers/outbox.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
@@ -464,8 +464,8 @@
     "sha256": "1ae2eeb2138ff2fece179be1fdd79d7dd10708d10b4d019d91f9421ec8d9f585"
   },
   "src/features/knowledge/editor/block-modules/audio/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "65f133519a06222826825dceeecaec1f7f0982d5de52b35a16192ef2f72d176d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "1dd29f3f31806095885b58e1290a3d12f018116fb6c146d1bb1cc0961fcf76fd"
   },
   "src/features/knowledge/editor/block-modules/block-reference/block-reference-picker.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -524,8 +524,8 @@
     "sha256": "b9412e7004e79653009344a43a8d9456aafcc27f88eef2b37706850e3d212873"
   },
   "src/features/knowledge/editor/block-modules/file/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "c36f0c7630911e88dc1905ad95fdfd6320d2391e634bd7185aac827be657dd82"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "7a1de8a25e618e215c48da7d2bfb762642d9f7d5ca80365fe7c87088f1fc31fa"
   },
   "src/features/knowledge/editor/block-modules/heading/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -536,8 +536,8 @@
     "sha256": "bf520999f30efe7eb990abbfa85bcc95f515d8b6386509741dc10a698d249122"
   },
   "src/features/knowledge/editor/block-modules/image/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "d5291072849184b817c82e5cc5bbb29a4c6ce9b7d67100718bf057c7bea90933"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "dadb6b0710b80d53e4ea794b4ccffc2518520bbfefebcd8708df8ddff4f07d78"
   },
   "src/features/knowledge/editor/block-modules/math/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -556,8 +556,8 @@
     "sha256": "30d309a395334305c977fb5c08229264096f2054c29b1c69694c6d0c51e092ce"
   },
   "src/features/knowledge/editor/block-modules/page-link/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "31b6a115ca0090a1b56bf2e12e3728512960eede52b3834127dfe8f8527dccaa"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "96033b0af44eec99e2127216fa1742190b6cb11256fdb0222b9576993e1219fb"
   },
   "src/features/knowledge/editor/block-modules/paragraph/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -596,8 +596,8 @@
     "sha256": "66a28f3b8c713b7d8a8176905f8b9c7a19449f6662dc548c69104861bbaedbc2"
   },
   "src/features/knowledge/editor/block-modules/video/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "fe4d73f0859a674f703ca01efd80f4de4bfdbd19b344de11d0c5aef013852720"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "c3c6d87d4d56cbe9e8b94da90175357ef8a3fb387222530e580b2ad465334088"
   },
   "src/features/knowledge/editor/commands/slash-items.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -640,8 +640,8 @@
     "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
   },
   "src/features/knowledge/navigation/page-icon-picker.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "a368b5a110a1842313d19bc3f1b40536e5d37d4177d2f20f778aeb411d207bf8"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
+    "sha256": "2973f79fa92fcc1a14ef8dbfc0a56e1b7d56442a5d6c779bcaaa08bba47e5cd6"
   },
   "src/features/knowledge/organization/groups-section.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -732,8 +732,8 @@
     "sha256": "aa7b4cffefd6975184f2b0d97e080e4e4493eab62a63547273bbf8b6fe3b157d"
   },
   "src/features/knowledge/editor/editor-layout.tsx": {
-    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "4ba169a4a0caee5eacdb129d373215ae77613d7f692c04d9e4809de99a67f44c"
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "df0b3607701a7952f4a8e8f70acb78c52d5677884fe920a5180bd8c1e8370ebb"
   },
   "src/features/knowledge/editor/block-modules/table/table.module.css": {
     "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development.",
@@ -758,5 +758,21 @@
   "backend/server/src/modules/knowledge/search/keyword.ts": {
     "reason": "Intersect folder and author conditions with the existing indexed ACL predicate before BM25 ranking and limiting.",
     "sha256": "a8a54b61c83a49e19c102be139a67886570c19583ed7d7fcc04c6daa581f6186"
+  },
+  "backend/server/src/modules/knowledge/api/page-route-guards.ts": {
+    "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
+    "sha256": "d46d0e10a78d2c0d2f9f08607e9bfe27b9cf50f6e91a56a5a2d375629d961763"
+  },
+  "shared/src/knowledge/contracts/pages.ts": {
+    "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
+    "sha256": "30aadb3fb37bb31c68d638267b3305c67a36c946c28c9cd30c21881f3ae3ee82"
+  },
+  "src/features/knowledge/data/pages-api.ts": {
+    "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
+    "sha256": "21c708fde4c4e63ba3e73ab44c166b55f4015a880a197389f45e5aacdff7312d"
+  },
+  "src/features/knowledge/editor/block-modules/types.ts": {
+    "reason": "Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
+    "sha256": "0cb7d5c5aed815030f068bd9b74580eea85bdbcef9af6e7ceee7419cc5c40b03"
   }
 }

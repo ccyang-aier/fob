@@ -11,6 +11,15 @@ const issues = [];
 const retainedToggle = { path: 'src/components/icons/sidebar-toggle-icon.tsx', sha256: '3b669a42891104441972cade67bb74f017141b55c81b68726ea47f6e3a7f04ed' };
 const libraries = /^(?:lucide-react|@fortawesome\/|@phosphor-icons\/|@iconify\/|@heroicons\/|@tabler\/icons|react-icons(?:\/|$)|@radix-ui\/react-icons)/;
 const approved = new Set(['src/components/icons/index.ts', 'src/components/icons/solid-icon.tsx']);
+// Exact collection-page reference requested by the user; original BSD artwork only.
+const outlineAssetRoot = path.join(root, 'public/icons/outline-collection');
+const outlineAssets = JSON.parse(fs.readFileSync(path.join(outlineAssetRoot, 'sources.json'), 'utf8'));
+const outlineNames = ['collection', 'document', 'team', 'checkmark', 'starred', 'unstarred', 'pin', 'archive', 'unpublish', 'trash', 'close'];
+if (Object.keys(outlineAssets).sort().join() !== [...outlineNames].sort().join()) issues.push('Outline collection artwork is limited to the selected reference glyphs.');
+for (const name of outlineNames) {
+  const record = outlineAssets[name], bytes = fs.readFileSync(path.join(outlineAssetRoot, `${name}.svg`));
+  if (!record?.source?.startsWith('https://raw.githubusercontent.com/outline/outline-icons/main/src/components/') || createHash('sha256').update(bytes).digest('hex') !== record.sha256) issues.push(`Original Outline collection artwork changed: ${name}`);
+}
 const sources = fs.readdirSync(path.join(root, 'src'), { recursive: true })
   .filter(file => /\.[cm]?tsx?$/.test(file) && !/\.test\./.test(file));
 

@@ -27,6 +27,7 @@ import {
   recyclePageInputSchema,
   restorePageInputSchema,
   updatePageInputSchema,
+  transferPageInputSchema,
 } from '@fob/shared/knowledge/contracts';
 import type {
   CreatePageInput,
@@ -89,6 +90,7 @@ export type UpdateKnowledgePageInput = {
   properties?: Page['properties'];
 };
 export type RecycleKnowledgePageInput = { pageId: string };
+export type TransferKnowledgePageInput = { pageId: string; targetTeamspaceId: string };
 export type RestoreKnowledgePageInput = { pageId: string };
 export type MoveKnowledgePageInput = {
   pageId: string;
@@ -99,6 +101,7 @@ export type MoveKnowledgePageInput = {
 };
 
 export type KnowledgePagesApi = {
+  transferPage(knowledgeBaseId: string, input: TransferKnowledgePageInput, signal?: AbortSignal): Promise<PagePlacement>;
   listPages(
     knowledgeBaseId: string,
     input?: ListKnowledgePagesInput,
@@ -151,6 +154,11 @@ export function createKnowledgePagesApi(deps: {
   };
 
   return {
+    async transferPage(knowledgeBaseId, input, signal) {
+      assertPageInput(transferPageInputSchema, { ...input, knowledgeBaseId }, 'page.transfer');
+      const payload = await run(knowledgeBaseId, signal, client => client.mutation('page.transfer', { knowledgeBaseId, ...input }, { signal }));
+      return parsePagePayload(pagePlacementSchema, payload, 'page.transfer');
+    },
     async listPages(knowledgeBaseId, input = {}, signal) {
       const payload = await run(knowledgeBaseId, signal, (client) =>
         client.query('page.list', { knowledgeBaseId, ...input }, { signal }),
@@ -206,5 +214,6 @@ export const fetchKnowledgePages = knowledgePagesApi.listPages;
 export const createKnowledgePage = knowledgePagesApi.createPage;
 export const updateKnowledgePage = knowledgePagesApi.updatePage;
 export const moveKnowledgePage = knowledgePagesApi.movePage;
+export const transferKnowledgePage = knowledgePagesApi.transferPage;
 export const recycleKnowledgePage = knowledgePagesApi.recyclePage;
 export const restoreKnowledgePage = knowledgePagesApi.restorePage;

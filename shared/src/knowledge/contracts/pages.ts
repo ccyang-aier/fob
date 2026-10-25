@@ -79,6 +79,8 @@ export const movePageInputSchema = pageScopeSchema.extend({
   afterPageId: entityIdSchema.nullable(),
   operationId: entityIdSchema,
 }).refine((value) => value.pageId !== value.parentId && value.pageId !== value.afterPageId, '不能相对自身移动页面');
+/** Cross-folder transfer keeps page identity; distinct from reordering within a folder. */
+export const transferPageInputSchema = pageScopeSchema.extend({ targetTeamspaceId: entityIdSchema });
 export const updatePropertiesInputSchema = pageScopeSchema.extend({ properties: propertiesSchema, operationId: entityIdSchema });
 export const listPagesInputSchema = knowledgeBaseScopeSchema.extend({ teamspaceId: entityIdSchema.optional(), parentId: entityIdSchema.nullable().optional() });
 

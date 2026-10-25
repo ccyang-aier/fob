@@ -22,7 +22,7 @@ const published = sql<boolean>`exists(select 1 from ${shareLink} where ${shareLi
 const projection = { id: page.id, title: page.title, icon: page.icon, folderId: page.teamspaceId, folderName: teamspace.name, parentId: page.parentId, createdBy: page.createdBy, creatorName: authUser.name, createdAt: page.createdAt, updatedAt: updated, views, public: published };
 function documents(db: ResourceTransaction) { return db.select(projection).from(page).innerJoin(teamspace, and(eq(teamspace.knowledgeBaseId, page.knowledgeBaseId), eq(teamspace.id, page.teamspaceId))).innerJoin(authUser, eq(authUser.id, page.createdBy)).leftJoin(docState, and(eq(docState.knowledgeBaseId, page.knowledgeBaseId), eq(docState.pageId, page.id))); }
 function serialize(record: { id: string; title: string; icon: string | null; folderId: string; folderName: string; parentId: string | null; createdBy: string; creatorName: string; createdAt: Date; updatedAt: Date | string; views: number; public: boolean }): DiscoveryDocument {
-  return { ...record, createdAt: record.createdAt.toISOString(), updatedAt: new Date(record.updatedAt).toISOString(), publishedAt: record.createdAt.toISOString(), views: Number(record.views) };
+  return { ...record, createdAt: record.createdAt.toISOString(), updatedAt: new Date(record.updatedAt).toISOString(), views: Number(record.views) };
 }
 async function access(db: ResourceTransaction, authority: KnowledgeRequestContext) {
   const principals = await expandRequestPrincipals(db, authority.knowledgeBaseId, authority.userId);
@@ -64,15 +64,19 @@ export async function folderOverview(db: ResourceTransaction, authority: Knowled
   if (!manager(authority) && !folder.defaultAccess && !count?.count) throw new DiscoveryError(403);
   const sort = metadata.sort ?? { field: 'position' as const, direction: 'asc' as const };
   const selectedOrder: Record<string, SQL | typeof page.position | typeof page.title | typeof page.createdAt> = { position: page.position, title: page.title, updatedAt: updated, createdAt: page.createdAt };
-  const order = tab.data === 'popular' ? desc(views) : tab.data === 'updated' || tab.data === 'overview' ? desc(updated) : tab.data === 'oldest' ? asc(updated) : tab.data === 'published' ? desc(page.createdAt) : tab.data === 'alphabetical' ? sql`lower(${page.title}) collate "C" asc` : sort.direction === 'asc' ? asc(selectedOrder[sort.field]!) : desc(selectedOrder[sort.field]!);
+  const order = tab.data === 'popular' ? desc(views) : tab.data === 'updated' || tab.data === 'overview' ? desc(updated) : tab.data === 'oldest' ? asc(updated) : tab.data === 'alphabetical' ? sql`lower(${page.title}) collate "C" asc` : sort.direction === 'asc' ? asc(selectedOrder[sort.field]!) : desc(selectedOrder[sort.field]!);
   const q = (input.q ?? '').trim().slice(0, 200), limit = tab.data === 'overview' ? 6 : 40;
-  const items = await documents(db).where(and(scope, tab.data === 'documents' ? isNull(page.parentId) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(order, asc(page.id)).limit(limit + 1).offset(offset);
+  const items = tab.data === 'overview' ? [] : await documents(db).where(and(scope, tab.data === 'documents' ? isNull(page.parentId) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(order, asc(page.id)).limit(limit + 1).offset(offset);
   const pinnedIds = metadata.pinnedPageIds ?? [];
   const pinned = pinnedIds.length ? await documents(db).where(and(scope, inArray(page.id, pinnedIds))) : [];
   const visiblePinned = pinnedIds.flatMap(id => pinned.filter(row => row.id === id).map(serialize));
+  const visibleIds = tab.data === 'overview' ? [] : [...new Set([...items.slice(0, limit), ...pinned].map(item => item.id))];
+  const visits = visibleIds.length ? await db.select({ pageId: documentVisit.pageId, lastViewedAt: documentVisit.lastViewedAt }).from(documentVisit).where(and(eq(documentVisit.knowledgeBaseId, authority.knowledgeBaseId), eq(documentVisit.userId, authority.userId), inArray(documentVisit.pageId, visibleIds))) : [];
+  const lastViewed = new Map(visits.map(visit => [visit.pageId, visit.lastViewedAt.toISOString()]));
+  const withVisit = (document: DiscoveryDocument): DiscoveryDocument => ({ ...document, lastViewedAt: lastViewed.get(document.id) ?? null });
   return { folder: { id: folder.id, name: folder.name, defaultAccess: folder.defaultAccess, metadata: { ...metadata, ...(metadata.pinnedPageIds ? { pinnedPageIds: visiblePinned.map(document => document.id) } : {}) } }, total: count?.count ?? 0,
     canManage: manager(authority), canCreate: manager(authority) || ['edit', 'full'].includes(folder.defaultAccess ?? ''),
-    documents: items.slice(0, limit).map(serialize), pinned: visiblePinned, nextOffset: items.length > limit ? offset + limit : null };
+    documents: items.slice(0, limit).map(serialize).map(withVisit), pinned: tab.data === 'overview' ? [] : visiblePinned.map(withVisit), nextOffset: items.length > limit ? offset + limit : null };
 }
 export async function updateFolder(db: ResourceTransaction, authority: KnowledgeRequestContext, folderId: string, input: unknown) {
   if (!manager(authority) || !authority.scopes.includes('write')) throw new DiscoveryError(403);

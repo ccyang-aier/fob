@@ -9,6 +9,7 @@ import {
   propertiesSchema,
   recyclePageInputSchema,
   restorePageInputSchema,
+  transferPageInputSchema,
 } from '@fob/shared/knowledge/contracts';
 import type { PageLifecycleState, PagePlacement } from '@fob/shared/knowledge/contracts';
 import { page } from '../../../platform/database/resources/schema';
@@ -163,6 +164,28 @@ export async function moveAuthorizedPage(db: ResourceTransaction, input: unknown
     await db.update(page).set({ path: sql`${path}::ltree || subpath(${page.path}, nlevel(${node.path}::ltree))`, updatedAt: sql`clock_timestamp()` })
       .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), sql`${page.path} <@ ${node.path}::ltree`, ne(page.id, node.id)));
     return { pageId: node.id, parentId: parsed.parentId, teamspaceId: node.teamspaceId, position, path };
+  });
+  return value;
+}
+
+/** Caller requires full access on the source and edit access on the destination. */
+export async function transferAuthorizedPage(db: ResourceTransaction, input: unknown): Promise<PagePlacement> {
+  const parsed = parse(transferPageInputSchema, input), scope = { knowledgeBaseId: parsed.knowledgeBaseId, pageId: parsed.pageId };
+  const { value } = await withAuthorizedPageTreeMutation(db, scope, async () => {
+    const node = await lockPermissionPage(db, scope);
+    if (!node || node.deletedAt !== null) throw new KnowledgePageError('PAGE_NOT_FOUND');
+    if (node.teamspaceId === parsed.targetTeamspaceId) return placement(node);
+    // Database rows belong to their database; transfer the enclosing database instead.
+    if (node.databaseId !== null) throw new KnowledgePageError('INVALID_PAGE_MOVE');
+    const position = await allocatePosition(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.targetTeamspaceId, parentId: null }, null, node.id);
+    const path = label(node.id);
+    // The composite parent/database FKs cascade teamspace changes to descendants.
+    // Keep root parent/path consistent in this one statement before rewriting child paths.
+    await db.update(page).set({ teamspaceId: parsed.targetTeamspaceId, parentId: null, position, path: sql`${path}::ltree`, updatedAt: sql`clock_timestamp()` })
+      .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId)));
+    await db.update(page).set({ teamspaceId: parsed.targetTeamspaceId, path: sql`${path}::ltree || subpath(${page.path}, nlevel(${node.path}::ltree))`, updatedAt: sql`clock_timestamp()` })
+      .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), sql`${page.path} <@ ${node.path}::ltree`, ne(page.id, node.id)));
+    return { pageId: node.id, parentId: null, teamspaceId: parsed.targetTeamspaceId, position, path };
   });
   return value;
 }

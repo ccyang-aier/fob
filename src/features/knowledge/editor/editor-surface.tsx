@@ -26,7 +26,7 @@ import type { PageUndo } from '../collaboration/page-undo';
 import type { PageDocumentSession } from '../collaboration/page-provider';
 import { AwarenessMembers, createAwarenessExtension } from './awareness';
 import { applyEditorBlockModules } from './block-modules';
-import { createSlashPasteExtensions, SlashMenuLayer } from './commands';
+import { createSlashPasteExtensions } from './commands';
 import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from './editor-layout';
 import { PageIconPicker } from '../navigation/page-icon-picker';
 import { DocumentEditorHeader } from './components/document-editor-header';
@@ -321,7 +321,6 @@ export function PageEditorSurface({
           />
         }
       />
-      <SlashMenuLayer editor={editor} />
     </DocumentEditorFrame>
   );
 }

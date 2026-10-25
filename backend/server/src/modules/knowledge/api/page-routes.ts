@@ -2,13 +2,13 @@ import { TRPCError } from '@trpc/server';
 import { and, asc, eq, isNull, isNotNull, or, sql } from 'drizzle-orm';
 import {
   createPageInputSchema, listPagesInputSchema, movePageInputSchema, pageSchema,
-  recyclePageInputSchema, restorePageInputSchema, updatePageInputSchema, principal,
+  recyclePageInputSchema, restorePageInputSchema, updatePageInputSchema, transferPageInputSchema, principal,
 } from '@fob/shared/knowledge/contracts';
 import { page, pageAcl } from '../../../platform/database/resources/schema';
 import { ResourceRequestError } from '../../../platform/resources/errors';
 import { effectivePageAccessCondition, expandRequestPrincipals, lockPermissionKnowledgeBase } from '../permissions';
-import { requirePageAccess, requirePageDestination, refreshPagePermissions } from './page-route-guards';
-import { createAuthorizedPage, moveAuthorizedPage, recycleAuthorizedPage, restoreAuthorizedPage, updateAuthorizedPage } from '../pages/tree';
+import { requirePageAccess, requirePageDestination, refreshPagePermissions, requireActivePageWriter } from './page-route-guards';
+import { createAuthorizedPage, moveAuthorizedPage, recycleAuthorizedPage, restoreAuthorizedPage, updateAuthorizedPage, transferAuthorizedPage } from '../pages/tree';
 import { KnowledgePageError } from '../pages/errors';
 import { apiError } from './errors';
 import { knowledgeMutation, knowledgeQuery } from './procedures';
@@ -78,6 +78,18 @@ export const knowledgePageRouterRecord = {
       await requirePageAccess(db, authority.userId, input, 'edit');
       await requirePageDestination(db, authority.userId, input);
       const result = await moveAuthorizedPage(db, input);
+      await refreshPagePermissions(db, input);
+      return result;
+    })),
+  }),
+  transfer: knowledgeMutation({
+    input: transferPageInputSchema, scopes: ['read', 'write'],
+    resolve: ({ ctx, input }) => guarded(() => ctx.withResource(async (db, authority) => {
+      await lockPermissionKnowledgeBase(db, input.knowledgeBaseId);
+      await requireActivePageWriter(db, authority);
+      await requirePageAccess(db, authority.userId, input, 'full');
+      await requirePageDestination(db, authority.userId, { knowledgeBaseId: input.knowledgeBaseId, teamspaceId: input.targetTeamspaceId, parentId: null });
+      const result = await transferAuthorizedPage(db, input);
       await refreshPagePermissions(db, input);
       return result;
     })),

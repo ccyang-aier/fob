@@ -6,7 +6,7 @@ import { formatDate, useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-knowledge-resource.messages';
 /** Local storage is a resource capability, independent of account identity. */
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { updateDocumentNavigation, updateFolderNavigation } from '../navigation/document-navigation-location';
 import { usePageSessionState } from '@/lib/page-session-state';
 import { FilePlus } from '@/components/icons';
@@ -75,6 +75,7 @@ export function LocalKnowledgeResource({
   const tabSearch = tab?.search;
   const [view, setView] = usePageSessionState<View>('view', 'all-documents', { preferInitial: Boolean(new URLSearchParams(tabSearch).get('folder')) });
   const [folderId, setFolderId] = useTabFolderSelection(knowledgeBaseId, 'local');
+  const folderEditorContext = useMemo(() => ({ localKnowledgeBaseId: knowledgeBaseId, localPageId: folderId ?? undefined, getLocalPages: () => { const current = store.getSnapshot(); return current.documents.filter(item => !item.deleted).map(item => ({ ...item, knowledgeBaseId: item.baseId, knowledgeBaseName: current.bases.find(base => base.id === item.baseId)?.name })); }, subscribeLocalPages: store.subscribe }), [knowledgeBaseId, folderId, store]);
   const [selectedId, setStoredSelectedId] = useTabDocumentSelection(knowledgeBaseId, 'local');
   const setSelectedId = useCallback((id: string | null) => {
     setStoredSelectedId(id);
@@ -342,8 +343,17 @@ export function LocalKnowledgeResource({
             onCreateDocument={() => setCreation('document')}
           />
         )
-      ) : view === 'all-documents' && folderId && !folders.some(folder => folder.id === folderId) ? <CanvasState title={knowledgeT('folderUnavailable')} actions={<Button variant="outline" onClick={() => openLibrary()}>{knowledgeT('returnToDocuments')}</Button>} /> : view === 'all-documents' && folderId && folders.some(folder => folder.id === folderId) ? <LocalFolderOverview key={folderId} folder={folders.find(folder => folder.id === folderId)!} documents={live} onOpen={openDocument} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
+      ) : view === 'all-documents' && folderId && !folders.some(folder => folder.id === folderId) ? <CanvasState title={knowledgeT('folderUnavailable')} actions={<Button variant="outline" onClick={() => openLibrary()}>{knowledgeT('returnToDocuments')}</Button>} /> : view === 'all-documents' && folderId && folders.some(folder => folder.id === folderId) ? <LocalFolderOverview key={folderId} folder={folders.find(folder => folder.id === folderId)!} documents={live} actions={{
+        starredIds: live.filter(item => item.starred).map(item => item.id), draftIds: live.filter(item => item.draft).map(item => item.id), folders, canWrite: true,
+        run: async (action, ids, destination) => {
+          if (action === 'move' && !folders.some(item => item.id === destination)) throw new Error(knowledgeT('folderUnavailable'));
+          const selected = live.filter(item => ids.includes(item.id));
+          const remove = action === 'star' ? selected.every(item => item.starred) : selected.every(item => item.draft);
+          if (!write(current => ({ ...current, documents: current.documents.map(item => item.baseId === base.id && ids.includes(item.id) ? { ...item, ...(action === 'star' ? { starred: !remove } : action === 'draft' ? { draft: !remove } : action === 'move' ? { folderId: destination } : { deleted: true }) } : item) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
+        },
+      }} editorContext={folderEditorContext} onOpen={openDocument} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
         if (!write(current => ({ ...current, folders: current.folders.map(folder => folder.id === folderId ? { ...folder, ...(name ? { name } : {}), metadata: { ...folder.metadata, ...patch, revision: (folder.metadata?.revision ?? 0) + 1 } } : folder) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
+        return store.getSnapshot().folders.find(folder => folder.id === folderId)?.metadata?.revision ?? 0;
       }} upload={<LocalDocumentImport knowledgeBaseId={knowledgeBaseId} onImport={items => write(current => ({ ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(base.id, item.name), folderId, file: item.file, body: { type: 'doc', content: item.text.split(/\r?\n/).map(text => ({ type: 'paragraph', ...(text ? { content: [{ type: 'text', text }] } : {}) })) } }))] }))} />} renderMenu={id => <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem><DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>} /> : view === 'all-documents' ? (
         <DocumentsPage
           key={`${base.id}:${folderId ?? activeTagId ?? 'all'}`}

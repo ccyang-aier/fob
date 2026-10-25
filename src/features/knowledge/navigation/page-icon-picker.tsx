@@ -3,7 +3,7 @@
 import { useUiMessage } from '../ui-message';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-icon-picker.messages';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Check, MagnifyingGlass, Smiley } from '@/components/icons';
 import {
   DropdownMenu,
@@ -25,10 +25,14 @@ export function PageIconPicker({
   value,
   editable = true,
   onChange,
+  iconSize = 24,
+  fallbackIcon,
 }: {
   value?: string | null;
   editable?: boolean;
   onChange: (icon: string | null) => Promise<void>;
+  iconSize?: number;
+  fallbackIcon?: ReactNode;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
   const language = locale === 'zh-CN' ? 'zh' : 'en';
@@ -62,7 +66,7 @@ export function PageIconPicker({
   if (!editable)
     return value ? (
       <span className={styles.trigger}>
-        <PageIcon value={value} size={24} />
+        <PageIcon value={value} size={iconSize} />
       </span>
     ) : null;
   const match = query.trim().toLowerCase();
@@ -98,9 +102,9 @@ export function PageIconPicker({
         title={value ? knowledgeT('changeIcon') : knowledgeT('addIcon')}
       >
         {value ? (
-          <PageIcon value={value} size={24} />
+          <PageIcon value={value} size={iconSize} />
         ) : (
-          <Smiley size={16} aria-hidden />
+          fallbackIcon ?? <Smiley size={16} aria-hidden />
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent
