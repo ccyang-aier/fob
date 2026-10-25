@@ -68,6 +68,16 @@ test('restoration rejects other account/knowledge scopes and removed product rou
   expect(restoreWorkbenchTabs(state.scope, state)?.active).toBe('knowledge');
 });
 
+test('folder tab titles and route restore within their knowledge base without inventing a document target', () => {
+  const state = createWorkbenchTabs('scope', tabTarget('knowledge', '?knowledgeBase=kb&source=server&folder=folder'));
+  state.tabs[0].title = 'Research';
+  const restored = restoreWorkbenchTabs('scope', state)!;
+  expect(restored.tabs[0].title).toBe('Research');
+  expect(restored.tabs[0].search).toContain('folder=folder');
+  expect(restored.tabs[0].document).toBeUndefined();
+  expect(restoreWorkbenchTabs('other', state)).toBeNull();
+});
+
 test('tab restoration and members navigation retain the top-selected knowledge workspace', () => {
   const selected = '?knowledgeBase=base-a&source=local&document=doc-a';
   expect(new URLSearchParams(knowledgeScopedSearch('', selected)).get('knowledgeBase')).toBe('base-a');

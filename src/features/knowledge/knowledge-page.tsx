@@ -35,10 +35,10 @@ import { NavigationDialogPortal } from './navigation/navigation-dialog-portal';
 import { usePageTreeOperations } from './navigation/page-operations';
 import { canEditTree } from './navigation/tree-actions';
 import { useCreateTeamspaceMutation } from './organization/hooks';
-import { useDocumentTab, useTabDocumentSelection } from './editor/document-tab-context';
+import { useDocumentTab, useTabDocumentSelection, useTabFolderSelection } from './editor/document-tab-context';
 import { KnowledgeEmptyState } from './knowledge-empty-state';
 import { useKnowledgeNavigation, useKnowledgeNavigationActive } from './navigation/system-navigation';
-import { updateDocumentNavigation } from './navigation/document-navigation-location';
+import { updateDocumentNavigation, updateFolderNavigation } from './navigation/document-navigation-location';
 import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
 import { useKnowledgeDocumentTarget } from './data/use-knowledge-document-target';
 import { useLocalLibrary } from './local/use-local-library';
@@ -157,9 +157,10 @@ function ServerKnowledgeResource({
     };
   }, [stageActive, activeId, queryClient]);
 
-  const [libraryView, setLibraryView] = usePageSessionState<LibraryView>('view', 'all-documents');
-  const [selectedTeamspaceId, setSelectedTeamspaceId] = usePageSessionState<string | null>('folder', null);
   const tabSearch = useDocumentTab()?.search;
+  const routedFolder = new URLSearchParams(tabSearch).get('folder');
+  const [libraryView, setLibraryView] = usePageSessionState<LibraryView>('view', routedFolder ? 'overview' : 'all-documents', { preferInitial: Boolean(routedFolder) });
+  const [selectedTeamspaceId, setSelectedTeamspaceId] = useTabFolderSelection(activeBaseId ?? '', 'server');
   const [selectedPageId, setStoredSelectedPageId] = useTabDocumentSelection(activeBaseId ?? '', 'server');
   const setSelectedPageId = useCallback((id: string | null) => {
     setStoredSelectedPageId(id);
@@ -174,9 +175,13 @@ function ServerKnowledgeResource({
     },
     [setSelectedPageId],
   );
+  const openFolder = useCallback((id: string) => {
+    setSelectedTeamspaceId(id); setSelectedPageId(null); setLibraryView('overview');
+    if (navigationActive && activeId) updateFolderNavigation({ knowledgeBaseId: activeId, folderId: id, source: 'server' }, tabSearch);
+  }, [setSelectedTeamspaceId, setSelectedPageId, setLibraryView, navigationActive, activeId, tabSearch]);
   useKnowledgeNotificationsBridge({ active: stageActive, knowledgeBaseId: activeId,
     openPage: id => { openPage(id); if (activeId) void queryClient.invalidateQueries({ queryKey: knowledgeQueryKeys.pages(activeId) }); void teamspacesQuery.refetch(); },
-    openFolder: id => { setSelectedTeamspaceId(id); setLibraryView('overview'); setSelectedPageId(null); void teamspacesQuery.refetch(); },
+    openFolder: id => { openFolder(id); void teamspacesQuery.refetch(); },
   });
   useEffect(
     () =>
@@ -231,17 +236,17 @@ function ServerKnowledgeResource({
         onNavigate={(view) => {
           setLibraryView(view);
           setSelectedPageId(null);
+          if (view !== 'overview') {
+            setSelectedTeamspaceId(null);
+            if (navigationActive && activeId) updateFolderNavigation({ knowledgeBaseId: activeId, folderId: null, source: 'server' }, tabSearch);
+          }
         }}
         teamspaces={teamspaces}
         teamspaceState={treeState}
         access={accessQuery.data}
         selectedSectionId={selectedTeamspaceId}
         selectedPageId={selectedPageId}
-        onSelectSection={(id) => {
-          setSelectedTeamspaceId(id);
-          setSelectedPageId(null);
-          setLibraryView('overview');
-        }}
+        onSelectSection={openFolder}
         onSelectPage={openPage}
         onRetryTeamspaces={() => void teamspacesQuery.refetch()}
         onCreateTeamspace={() => setCreateTeamspaceOpen(true)}
@@ -339,6 +344,8 @@ function ServerKnowledgeResource({
   } else if (activeId && authenticated) {
     content = selectedPageId ? (
       renderEditor(selectedPageId, closeDocument)
+    ) : libraryView === 'overview' && selectedTeamspaceId && !selectedTeamspace ? (
+      teamspacesQuery.isPending || (teamspacesQuery.hasNextPage && !teamspacesQuery.isFetchNextPageError) ? <CanvasSpinner label={knowledgeT('loadingKnowledgeResources')} /> : <CanvasError title={knowledgeT('folderUnavailable')} onRetry={() => void teamspacesQuery.refetch()} />
     ) : (
       <LibraryCanvas
         knowledgeBaseId={activeId}
@@ -349,10 +356,7 @@ function ServerKnowledgeResource({
         teamspaces={teamspaces}
         folder={selectedTeamspace}
         onOpenPage={openPage}
-        onSelectFolder={(id) => {
-          setSelectedTeamspaceId(id);
-          setLibraryView('overview');
-        }}
+        onSelectFolder={openFolder}
         onCreateFolder={() => setCreateTeamspaceOpen(true)}
         notify={notify}
       />
@@ -384,11 +388,7 @@ function ServerKnowledgeResource({
               knowledgeBaseId={activeId}
               open={createTeamspaceOpen}
               onClose={() => setCreateTeamspaceOpen(false)}
-              onCreated={(folder) => {
-                setSelectedTeamspaceId(folder.id);
-                setSelectedPageId(null);
-                setLibraryView('overview');
-              }}
+              onCreated={(folder) => openFolder(folder.id)}
             />
           ) : null}
         </>

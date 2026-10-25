@@ -3,6 +3,15 @@ import { documentLink, type DocumentLinkTarget } from '../editor/document-link';
 
 export const KNOWLEDGE_NAVIGATED = 'fob:knowledge-navigated';
 
+export function updateFolderNavigation(target: { knowledgeBaseId: string; folderId: string | null; source: 'local' | 'server' }, tabSearch?: string) {
+  if (typeof window === 'undefined') return;
+  const next = new URL('/', window.location.href), tab = new URLSearchParams(tabSearch ?? window.location.search).get('tab');
+  next.searchParams.set('knowledgeBase', target.knowledgeBaseId); next.searchParams.set('source', target.source);
+  if (target.folderId) next.searchParams.set('folder', target.folderId);
+  if (tab) next.searchParams.set('tab', tab);
+  replaceWorkbenchLocation(next); window.dispatchEvent(new Event(KNOWLEDGE_NAVIGATED));
+}
+
 /** Keep document targets truthful while preserving this tab and knowledge workspace. */
 export function updateDocumentNavigation(target: DocumentLinkTarget | null, tabSearch?: string) {
   if (typeof window === 'undefined') return;

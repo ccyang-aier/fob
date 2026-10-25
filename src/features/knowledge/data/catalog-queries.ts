@@ -28,13 +28,18 @@ export function useKnowledgeBasesQuery(enabled: boolean = true) {
 }
 
 export function useKnowledgeTeamspacesQuery(knowledgeBaseId: string | null) {
-  return useInfiniteQuery({
+  const query = useInfiniteQuery({
     queryKey: organizationQueryKeys.teamspaces(knowledgeBaseId ?? 'none'),
     queryFn: ({ signal, pageParam }) => knowledgeCatalogClient.listTeamspaces(knowledgeBaseId!, { cursor: pageParam, signal }),
     enabled: knowledgeBaseId !== null,
     initialPageParam: firstCursor,
     getNextPageParam: nextCursor,
   });
+  const { hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage } = query;
+  useEffect(() => {
+    if (knowledgeBaseId && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) void fetchNextPage();
+  }, [knowledgeBaseId, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage]);
+  return query;
 }
 
 export function flattenKnowledgeBaseList<T>(data: { pages: { items: T[] }[] } | undefined | null): T[] {

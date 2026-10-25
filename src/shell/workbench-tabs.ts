@@ -4,7 +4,7 @@ import type { TabDocument } from '@/features/knowledge/editor/document-tab-conte
 
 /** Target keys group routes; tab keys identify independent views of those routes. */
 export type TabTarget = { key: string; view: WorkbenchPage; search: string };
-export type WorkbenchTab = TabTarget & { instance: number; pinned?: boolean; revision?: number; document?: TabDocument };
+export type WorkbenchTab = TabTarget & { instance: number; pinned?: boolean; revision?: number; document?: TabDocument; title?: string };
 export type WorkbenchSplit = { left: string; right: string; ratio: number };
 export type WorkbenchTabsState = { scope: string | null; tabs: WorkbenchTab[]; active: string; nextInstance: number; split?: WorkbenchSplit };
 export type TabCloseAction = 'current' | 'others' | 'all';
@@ -80,7 +80,7 @@ export function restoreWorkbenchTabs(scope: string | null, value: unknown): Work
     if (!item || !Object.hasOwn(workbenchPages, item.view) || typeof item.key !== 'string' || !item.key || typeof item.search !== 'string' || !Number.isSafeInteger(item.instance) || item.instance < 0) continue;
     const target = tabTarget(item.view, item.search);
     const document = item.document && typeof item.document.title === 'string' && item.document.target?.pageId === new URLSearchParams(item.search).get('document') ? item.document : undefined;
-    if (!tabs.some(tab => tab.key === item.key || tab.instance === item.instance)) tabs.push({ ...identifyTab(target, item.key, item.instance), document, pinned: Boolean(item.pinned), revision: Number.isSafeInteger(item.revision) && item.revision! >= 0 ? item.revision : 0 });
+    if (!tabs.some(tab => tab.key === item.key || tab.instance === item.instance)) tabs.push({ ...identifyTab(target, item.key, item.instance), document, ...(typeof item.title === 'string' && item.title.length <= 500 ? { title: item.title } : {}), pinned: Boolean(item.pinned), revision: Number.isSafeInteger(item.revision) && item.revision! >= 0 ? item.revision : 0 });
   }
   if (!tabs.length) return null;
   const nextInstance = Math.max(...tabs.map(tab => tab.instance)) + 1;

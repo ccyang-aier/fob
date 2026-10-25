@@ -1,7 +1,7 @@
 'use client';
 
 import { ArrowLeft, ArrowRight } from '@/components/icons';
-import type { ReactNode } from 'react';
+import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
 import { AccountItem } from '@/features/identity/components/account-item';
@@ -13,25 +13,38 @@ import type { useWorkbenchView, WorkbenchView } from './workbench-view';
 import { messages } from './i18n/system-bar.messages';
 import styles from './system-bar.module.css';
 
-export function SystemBar({ onNavigate, navigation, children }: {
+export function SystemBar({ onNavigate, navigation, children, secondary, splitRatio }: {
   onNavigate: (view: WorkbenchView) => void;
   navigation: ReturnType<typeof useWorkbenchView>[3];
   children: ReactNode;
+  secondary?: ReactNode;
+  splitRatio?: number;
 }) {
   const { t } = useTranslation(messages);
-  return <header className={styles.bar}>
+  const header = useRef<HTMLElement>(null), split = Boolean(secondary), [twoRows, setTwoRows] = useState(false);
+  useLayoutEffect(() => {
+    const node = header.current; if (!node) return;
+    const measure = () => { const width = node.getBoundingClientRect().width, left = width * (splitRatio ?? 50) / 100; setTwoRows(split && (left < 260 || width - left < 392)); };
+    measure(); const observer = new ResizeObserver(measure); observer.observe(node); return () => observer.disconnect();
+  }, [split, splitRatio]);
+  return <header ref={header} className={styles.bar} data-split={split} data-rows={twoRows ? 2 : 1} style={secondary ? { '--header-split': `${splitRatio ?? 50}%` } as CSSProperties : undefined}>
+    <div className={styles.leading}>
     <nav aria-label={t('页面历史')} className={styles.actions}>
       <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('后退')} disabled={!navigation.canGoBack} onClick={navigation.goBack}><ArrowLeft size={16} aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('后退')}</TooltipContent></Tooltip>
       <Tooltip><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.button}`} aria-label={t('前进')} disabled={!navigation.canGoForward} onClick={navigation.goForward}><ArrowRight size={16} aria-hidden /></button></TooltipTrigger><TooltipContent side="bottom">{t('前进')}</TooltipContent></Tooltip>
     </nav>
     {children}
+    </div>
+    <div className={styles.secondary}>
+    {secondary}
     <div className={`${styles.actions} ${styles.trailing}`}>
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
       <ThemeSwitch className={styles.button} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
       <CoffeeBalanceButton onOpen={() => onNavigate('rewards')} />
       <span className={styles.separator} aria-hidden />
-      <AccountItem variant="topbar" />
+      <AccountItem variant="topbar" compact={Boolean(secondary)} />
+    </div>
     </div>
   </header>;
 }

@@ -2,7 +2,7 @@ import { and, or, asc, desc, sql } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
 import type { Principal } from '@fob/shared/knowledge/contracts';
 import type { KeywordSearchHit } from '@fob/shared/knowledge/search';
-import { blockIndex } from '../../../platform/database/resources/schema';
+import { blockIndex, page } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { indexedBlockAccessCondition } from '../permissions/queries';
 
@@ -75,6 +75,8 @@ export interface KeywordSearchInput {
   readonly query: string;
   readonly limit?: number;
   readonly offset?: number;
+  readonly folderId?: string;
+  readonly authorId?: string;
 }
 
 /**
@@ -111,7 +113,10 @@ export async function searchBlocksByKeyword(db: ResourceTransaction, input: Keyw
     contentMd: blockIndex.contentMd,
     score: sql<number>`paradedb.score(${blockIndex.id})`,
   }).from(blockIndex)
-    .where(and(indexedBlockAccessCondition({ knowledgeBaseId: input.knowledgeBaseId, principals: [...input.principals] }), matches))
+    .where(and(indexedBlockAccessCondition({ knowledgeBaseId: input.knowledgeBaseId, principals: [...input.principals] }), matches,
+      input.folderId || input.authorId ? sql`exists (select 1 from ${page} where ${page.knowledgeBaseId}=${blockIndex.knowledgeBaseId} and ${page.id}=${blockIndex.pageId}
+        ${input.folderId ? sql`and ${page.teamspaceId}=${input.folderId}::uuid` : sql``}
+        ${input.authorId ? sql`and ${page.createdBy}=${input.authorId}::uuid` : sql``})` : undefined))
     .orderBy(desc(sql`paradedb.score(${blockIndex.id})`), asc(blockIndex.id))
     .limit(limit).offset(offset);
 

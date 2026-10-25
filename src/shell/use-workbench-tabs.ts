@@ -29,7 +29,8 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
     const explicit = ['view', 'knowledgeBase', 'page', 'block'].some(key => params.has(key));
     if ((first && explicit) || params.has('document')) restored = openWorkbenchTab(restored, target);
     const selected = restored.tabs.find(tab => tab.key === restored.active)!;
-    current = { state: restored, location: search, hydrated: true, hasKnowledgeBase: current.hasKnowledgeBase || scope !== null, restoreSearch: selected.search !== requested.search ? selected.search : null };
+    const selectedSearch = knowledgeScopedSearch(selected.search, search);
+    current = { state: restored, location: search, hydrated: true, hasKnowledgeBase: current.hasKnowledgeBase || scope !== null, restoreSearch: selectedSearch !== requested.search ? selectedSearch : null };
   }
   if (boot) {
     if (current.restoreSearch !== null) {
@@ -134,6 +135,13 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
   const resizeSplit = useCallback((ratio: number) => {
     setMemory(previous => previous.state.split ? { ...previous, state: { ...previous.state, split: { ...previous.state.split, ratio: clampSplitRatio(ratio) } } } : previous);
   }, []);
+  const reportTitle = useCallback((key: string, title: string | null) => {
+    setMemory(previous => {
+      const tab = previous.state.tabs.find(item => item.key === key);
+      if (!tab || tab.title === (title ?? undefined)) return previous;
+      return { ...previous, state: { ...previous.state, tabs: previous.state.tabs.map(item => item.key === key ? { ...item, title: title ?? undefined } : item) } };
+    });
+  }, []);
   function split(key: string, document?: TabDocument) {
     const remembered = rememberLocation(state);
     const tab = remembered.tabs.find(tab => tab.key === key);
@@ -142,5 +150,5 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
     commit(splitWorkbenchTab(remembered, key, document));
   }
   function unsplit() { setStored(current => ({ ...current, split: undefined })); }
-  return { ...state, revealRequest, ready: boot, open, activate, close, reorder, newTab, pin, reload, duplicate, reportDocument, splitTab: split, unsplit, resizeSplit };
+  return { ...state, revealRequest, ready: boot, open, activate, close, reorder, newTab, pin, reload, duplicate, reportDocument, reportTitle, splitTab: split, unsplit, resizeSplit };
 }

@@ -44,6 +44,20 @@ test('server search queries only selected KB and merges allowed title/content re
   expect(result.incomplete).toBe(false);
 });
 
+test('local folder and author filters intersect before the result window, including filter-only searches', () => {
+  const scope = { id: 'local', name: 'Local' };
+  const library: LocalLibrary = { bases: [scope], folders: [{ id: 'target', knowledgeBaseId: scope.id, name: 'Research' }], tags: [], documents: Array.from({ length: 45 }, (_, index) => ({
+    id: String(index), baseId: scope.id, folderId: index < 42 ? 'elsewhere' : 'target', creator: index === 43 ? 'Another author' : 'Alex', title: index === 44 ? '' : 'Research',
+    body: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'A searchable finding' }] }] }, deleted: false, starred: false, draft: false, updatedAt: new Date(Date.UTC(2026, 0, index + 1)).toISOString(),
+  })) };
+  const outcome = searchLocalKnowledge(library, scope, 'finding', { folderId: 'target', authorId: 'Alex' });
+  expect(outcome.hits.map(hit => hit.pageId)).toEqual(['44', '42']);
+  expect(outcome.hits[0]).toMatchObject({ folderName: 'Research', creatorName: 'Alex' });
+  expect(searchLocalKnowledge(library, scope, '', { folderId: 'target', authorId: 'Alex' }).hits.map(hit => hit.pageId)).toEqual(['44', '42']);
+  expect(searchLocalKnowledge(library, scope, '').hasMore).toBe(true);
+  expect(outcome.hasMore).toBe(false);
+});
+
 test('revocation in either server leg invalidates earlier allowed title results', async () => {
   await expect(searchServerKnowledge({ knowledgeBaseId: 'selected', query: 'match', signal: new AbortController().signal }, {
     async listPages() { return [page('earlier', 'match')]; },

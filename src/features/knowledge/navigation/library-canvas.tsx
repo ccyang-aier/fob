@@ -21,6 +21,7 @@ import { canEditTree } from './tree-actions';
 import type { TreeNotifier } from './page-operations';
 import type { LibraryView } from './tree-stage';
 import styles from '../library-canvas.module.css';
+import { ServerFolderOverview } from '../discovery/server-folder-overview';
 
 function titles(locale?: Locale) {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
@@ -100,6 +101,7 @@ export function LibraryCanvas({
       />
     );
   const recycled = recycledRootPages(pages);
+  if (view === 'overview' && folder) return <><ServerFolderOverview knowledgeBaseId={knowledgeBaseId} folder={folder} onOpen={onOpenPage} onCreate={() => void actions.create(folder.id)} renderMenu={id => <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />} upload={<KnowledgeBaseDocumentImport knowledgeBaseId={knowledgeBaseId} teamspaceId={folder.id} />} />{actions.dialogs}</>;
   if (view === 'all-documents')
     return (
       <>

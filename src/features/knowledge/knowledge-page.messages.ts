@@ -42,6 +42,7 @@ export const knowledgeMessages = defineMessages({
     'You do not have access to this knowledge base',
   ],
   unableToAccessThisDocument: ['无法访问此文档', 'Unable to access this document'],
+  folderUnavailable: ['文件夹不存在或无权访问', 'This folder is unavailable or you do not have access'],
   checkYourKnowledgeBaseAndDocumentPermissions: [
     '请确认知识库与文档的访问权限。',
     'Check your knowledge base and document permissions.',

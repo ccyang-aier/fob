@@ -47,6 +47,8 @@ export function LocalLibraryNavigation({
   hasKnowledgeBase,
   onSelectMain,
   onSelectDocument,
+  onSelectFolder,
+  selectedFolderId,
   onCreateFolder,
   onCreateDocument,
   onCreateDocumentInFolder,
@@ -67,6 +69,8 @@ export function LocalLibraryNavigation({
   tags: LocalTag[];
   onSelectMain: (view: MainView) => void;
   onSelectDocument: (id: string) => void;
+  onSelectFolder?: (id: string) => void;
+  selectedFolderId?: string | null;
   onCreateFolder: () => void;
   onCreateDocument: () => void;
   onCreateDocumentInFolder: (id: string) => void;
@@ -134,7 +138,7 @@ export function LocalLibraryNavigation({
     );
   }
 
-  const activeItem = !selectedId && !activeTagId ? view : null;
+  const activeItem = !selectedId && !activeTagId && !selectedFolderId ? view : null;
   if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />;
 
   return (
@@ -174,6 +178,7 @@ export function LocalLibraryNavigation({
               return (
                 <div key={folder.id}>
                   <div
+                    data-selected={!selectedId && !activeTagId && selectedFolderId === folder.id ? 'true' : undefined}
                     className={cn(
                       styles.row,
                       styles.transientRow,
@@ -203,31 +208,15 @@ export function LocalLibraryNavigation({
                           className="h-6 w-full rounded border border-[var(--focus-ring)] bg-[var(--panel)] px-1 text-[12px] outline-none"
                         />
                       </form>
-                    ) : (
+                    ) : (<>
+                      <button type="button" className="fob-action ml-[14px] inline-flex size-[17px] shrink-0 items-center justify-center rounded-[4px]" aria-expanded={expanded} aria-label={knowledgeT('valueFolderValue', { v0: expanded ? knowledgeT('collapse') : knowledgeT('expand'), v1: folder.name })} onClick={() => setExpandedFolderIds(current => expanded ? current.filter(id => id !== folder.id) : [...current, folder.id])}><CaretRight size={12} className={expanded ? 'rotate-90' : ''} /></button>
                       <button
                         type="button"
-                        aria-label={knowledgeT('valueFolderValue', {
-                          v0: expanded ? knowledgeT('collapse') : knowledgeT('expand'),
-                          v1: folder.name,
-                        })}
-                        aria-expanded={expanded}
-                        onClick={() =>
-                          setExpandedFolderIds((current) =>
-                            expanded
-                              ? current.filter((id) => id !== folder.id)
-                              : [...current, folder.id],
-                          )
-                        }
-                        className="flex h-full min-w-0 flex-1 items-center pl-[14px] pr-1 text-left focus-visible:outline-2 focus-visible:outline-[var(--focus-ring)]"
+                        aria-label={folder.name}
+                        aria-current={!selectedId && selectedFolderId === folder.id ? 'page' : undefined}
+                        onClick={() => onSelectFolder?.(folder.id)}
+                        className="flex h-full min-w-0 flex-1 items-center pl-1 pr-1 text-left outline-none"
                       >
-                        <CaretRight
-                          aria-hidden
-                          size={12}
-                          className={cn(
-                            'mr-[9px] shrink-0 text-[var(--muted)] transition-transform',
-                            expanded && 'rotate-90',
-                          )}
-                        />
                         <Folder
                           aria-hidden
                           size={14}
@@ -243,7 +232,7 @@ export function LocalLibraryNavigation({
                         >
                           {folderDocuments.length}
                         </span>
-                      </button>
+                      </button></>
                     )}
                     <div className={cn(styles.actions, 'flex items-center gap-0.5')}>
                       <IconButton

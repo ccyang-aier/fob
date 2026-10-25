@@ -83,7 +83,7 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
     async updateTeamspace(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(updateTeamspaceInputSchema, input);
       return mutate(identity, parsed, async (db, existing, actorId) => {
-        const [updated] = await db.update(teamspace).set({ name: parsed.name, defaultAccess: parsed.defaultAccess, updatedAt: sql`clock_timestamp()` })
+        const [updated] = await db.update(teamspace).set({ name: parsed.name, defaultAccess: parsed.defaultAccess, metadata: { ...existing.metadata, revision: (existing.metadata.revision ?? 0) + 1 }, updatedAt: sql`clock_timestamp()` })
           .where(targetTeamspace(parsed)).returning();
         if (parsed.defaultAccess !== undefined && parsed.defaultAccess !== existing.defaultAccess) {
           await permissions.invalidate(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId });

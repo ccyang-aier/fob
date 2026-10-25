@@ -1,4 +1,7 @@
 .strip { display:flex; align-items:center; flex:1; min-width:0; height:34px; gap:2px; }
+.strip[data-single="true"] .scroller { flex:0 1 130px; }
+.strip[data-single="true"] .tabs { width:100%; }
+.strip[data-single="true"] .item { max-width:100%; }
 .scroller { --tab-fade-start:#000; --tab-fade-end:#000; flex:0 1 auto; min-width:0; height:100%; mask-image:linear-gradient(to right,var(--tab-fade-start),#000 8px,#000 calc(100% - 8px),var(--tab-fade-end)); }
 .scroller[data-hidden-left="true"] { --tab-fade-start:transparent; }
 .scroller[data-hidden-right="true"] { --tab-fade-end:transparent; }
@@ -19,6 +22,7 @@
 .close { position:relative; display:grid; place-items:center; width:22px; height:22px; flex-shrink:0; margin-right:5px; border-radius:5px; color:var(--muted-strong); cursor:pointer; outline:none; }
 .newTab { display:grid; place-items:center; width:28px; height:28px; flex-shrink:0; border-radius:7px; color:var(--sidebar-icon); cursor:pointer; outline:none; }
 .newTab:focus-visible { outline:1px solid var(--control-border); outline-offset:-1px; }
+.newTab[hidden] { display:none; }
 .contextAnchor { position:fixed; width:0; height:0; padding:0; border:0; pointer-events:none; }
 .menu { width:224px; padding:6px; border-radius:12px; }
 .menuItem { height:35px; gap:10px; border-radius:7px; font-size:13px; }

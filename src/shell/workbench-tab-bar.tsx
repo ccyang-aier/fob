@@ -11,9 +11,10 @@ import { useWorkbenchTabScroll } from './use-workbench-tab-scroll';
 import { messages } from './i18n/navigation-sidebar.messages';
 import styles from './workbench-tab-bar.module.css';
 
-export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate, onClose, onReorder, onPin, onReload, onDuplicate, onSplit, onUnsplit, onNew }: {
+export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate, onClose, onReorder, onPin, onReload, onDuplicate, onSplit, onUnsplit, onNew, showNewTab = true, totalTabs = tabs.length }: {
   tabs: WorkbenchTab[]; active: string; revealRequest: number;
   split?: WorkbenchSplit;
+  showNewTab?: boolean; totalTabs?: number;
   onSplit: (key: string) => void; onUnsplit: () => void;
   onActivate: (key: string) => void; onClose: (key: string, action?: TabCloseAction) => void; onReorder: (instances: number[]) => void;
   onPin: (key: string) => void; onReload: (key: string) => void; onDuplicate: (key: string) => void; onNew: (view: WorkbenchPage) => void;
@@ -62,7 +63,7 @@ export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate
     focusSelected();
   }
   const contextIndex = context ? tabs.findIndex(tab => tab.instance === context.instance) : -1;
-  return <div ref={strip} className={styles.strip}>
+  return <div ref={strip} className={styles.strip} data-single={tabs.length === 1}>
     {edges.overflow && <button type="button" className={`fob-action ${styles.browse}`} aria-label={t('向左浏览页签')} title={t('向左浏览页签')} disabled={!edges.left} onClick={() => browse(-1)}><CaretLeft size={14} aria-hidden /></button>}
     <div className={styles.scroller} data-hidden-left={edges.left} data-hidden-right={edges.right}>
     <motion.div ref={viewport} layoutScroll className={styles.viewport}>
@@ -71,7 +72,7 @@ export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate
         <AnimatePresence initial={false} mode="popLayout">
           {tabs.map((tab, index) => {
             const page = workbenchPages[tab.view];
-            const title = tab.document?.title || t(page.label);
+            const title = tab.document?.title || tab.title || t(page.label);
             const selected = tab.key === active;
             return <TabItem key={tab.instance} tab={tab} inSplit={split?.left === tab.key || split?.right === tab.key} title={title} closeLabel={t('关闭页面', { name: title })} selected={selected} animatePosition={layout.reorder}
               onActivate={() => activate(tab.key)} onClose={() => close(tab.key)} onKeyDown={event => keyDown(event, index)}
@@ -84,10 +85,10 @@ export function WorkbenchTabBar({ tabs, active, split, revealRequest, onActivate
     </motion.div>
     </div>
     {edges.overflow && <button type="button" className={`fob-action ${styles.browse}`} aria-label={t('向右浏览页签')} title={t('向右浏览页签')} disabled={!edges.right} onClick={() => browse(1)}><CaretRight size={14} aria-hidden /></button>}
-    <button ref={newButton} type="button" className={`fob-action ${styles.newTab}`} aria-label={t('新建标签页')} title={t('新建标签页')} aria-haspopup="menu" aria-expanded={Boolean(newContext)} onClick={() => newTab()}
+    <button ref={newButton} type="button" hidden={!showNewTab} className={`fob-action ${styles.newTab}`} aria-label={t('新建标签页')} title={t('新建标签页')} aria-haspopup="menu" aria-expanded={Boolean(newContext)} onClick={() => newTab()}
       onContextMenu={event => { event.preventDefault(); setContext(null); setNewContext({ x: event.clientX, y: event.clientY }); }}
       onKeyDown={event => { if (event.key === 'ContextMenu' || event.shiftKey && event.key === 'F10') { event.preventDefault(); const bounds = event.currentTarget.getBoundingClientRect(); setContext(null); setNewContext({ x: bounds.left, y: bounds.bottom }); } }}><Plus size={16} aria-hidden /></button>
-    {context && contextIndex >= 0 && <WorkbenchTabMenu key={context.instance} point={context} pinned={Boolean(tabs[contextIndex].pinned)} canSplit={Boolean(tabs[contextIndex].document)} inSplit={split?.left === tabs[contextIndex].key || split?.right === tabs[contextIndex].key} hasOthers={tabs.length > 1} onClose={() => setContext(null)} onAction={value => action(tabs[contextIndex].key, value)} onReturnFocus={focusSelected} />}
+    {context && contextIndex >= 0 && <WorkbenchTabMenu key={context.instance} point={context} pinned={Boolean(tabs[contextIndex].pinned)} canSplit={Boolean(tabs[contextIndex].document)} inSplit={split?.left === tabs[contextIndex].key || split?.right === tabs[contextIndex].key} hasOthers={totalTabs > 1} onClose={() => setContext(null)} onAction={value => action(tabs[contextIndex].key, value)} onReturnFocus={focusSelected} />}
     {newContext && <WorkbenchNewTabMenu point={newContext} onClose={() => setNewContext(null)} onNew={newTab} onReturnFocus={() => newButton.current?.focus()} />}
   </div>;
 }

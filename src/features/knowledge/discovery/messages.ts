@@ -1,0 +1,20 @@
+import { defineMessages } from '@/lib/i18n';
+export const messages = defineMessages({
+  search: ['搜索知识', 'Search knowledge'], placeholder: ['搜索文档标题与正文…', 'Search document titles and content…'],
+  anyFolder: ['所有文件夹', 'Any folder'], anyAuthor: ['任何作者', 'Any author'], filterPlaceholder: ['筛选…', 'Filter…'], noOptions: ['无匹配项', 'No matches'], clear: ['清除筛选', 'Clear filters'],
+  results: ['搜索结果', 'Search results'], recent: ['最近更新', 'Recently updated'], count: ['{count} 个结果', '{count} results'], limit: ['显示前 {count} 项，请缩小搜索范围', 'Showing the first {count}. Refine your search.'],
+  select: ['选择', 'Select'], open: ['打开', 'Open'], close: ['关闭', 'Close'], chooseBase: ['请先选择知识库', 'Choose a knowledge base first'], minimum: ['输入至少两个字符开始搜索', 'Enter at least two characters to search'],
+  noResults: ['没有找到相关文档', 'No matching documents'], refine: ['尝试其他关键词，或调整文件夹和作者筛选', 'Try another keyword, folder, or author.'], loading: ['正在加载…', 'Loading…'], failed: ['暂时无法加载，请重试', 'Unable to load. Please retry.'], retry: ['重试', 'Retry'],
+  localAuthor: ['当前设备', 'This device'], unknown: ['未命名文档', 'Untitled document'], folder: ['文件夹', 'Folder'], overview: ['概览', 'Overview'], documents: ['文档', 'Documents'], popular: ['热门', 'Popular'], updated: ['最近更新', 'Recently updated'], published: ['最近发布', 'Recently published'], oldest: ['最久未更新', 'Least recently updated'], alphabetical: ['A–Z', 'A–Z'],
+  documentCount: ['{count} 个文档', '{count} documents'], workspace: ['工作空间', 'Workspace'], private: ['受限文件夹', 'Restricted folder'], device: ['保存在当前设备', 'Stored on this device'],
+  newDocument: ['新建文档', 'New document'], options: ['文件夹选项', 'Folder options'], edit: ['编辑概览', 'Edit overview'], rename: ['重命名', 'Rename'], permissions: ['访问权限', 'Access permissions'],
+  importDocuments: ['导入文档', 'Import documents'],
+  deviceViews: ['本机阅读', 'Device views'],
+  pinned: ['置顶文档', 'Pinned documents'], pin: ['置顶到文件夹', 'Pin to folder'], unpin: ['取消置顶', 'Unpin from folder'], folderSearch: ['搜索此文件夹…', 'Search this folder…'],
+  descriptionEmpty: ['添加文件夹简介', 'Add a folder description'], descriptionHint: ['说明这里的内容、使用方式和协作约定', 'Describe the content, how to use it, and how to collaborate.'], description: ['文件夹简介', 'Folder description'],
+  save: ['保存', 'Save'], cancel: ['取消', 'Cancel'], saved: ['文件夹已更新', 'Folder updated'], conflict: ['文件夹已被其他人修改，请重新加载后再保存', 'This folder changed. Reload before saving.'],
+  noDocuments: ['这里还没有文档', 'No documents yet'], createFirst: ['创建第一篇文档，开始整理这个文件夹', 'Create the first document in this folder.'], noPermission: ['你没有访问此文件夹的权限', 'You do not have access to this folder'],
+  allDocuments: ['查看全部文档', 'View all documents'], latest: ['最新内容', 'Latest documents'], author: ['作者', 'Author'], updatedAt: ['更新时间', 'Updated'], createdAt: ['创建时间', 'Created'], title: ['标题', 'Title'], views: ['成员阅读', 'Member views'], sort: ['文档排序', 'Document order'], manual: ['目录顺序', 'Navigation order'], ascending: ['升序', 'Ascending'], descending: ['降序', 'Descending'],
+  more: ['加载更多', 'Load more'], defaultAccess: ['知识库成员的默认权限', 'Default permission for knowledge base members'], restricted: ['仅明确授权的成员', 'Explicit grants only'], view: ['可查看', 'Can view'], comment: ['可评论', 'Can comment'], editAccess: ['可编辑', 'Can edit'], full: ['可管理', 'Can manage'],
+  bold: ['加粗', 'Bold'], italic: ['斜体', 'Italic'], heading: ['标题', 'Heading'], bullet: ['无序列表', 'Bullet list'], link: ['链接', 'Link'], linkUrl: ['链接地址', 'Link URL'],
+});

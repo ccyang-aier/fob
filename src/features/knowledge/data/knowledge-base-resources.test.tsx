@@ -74,10 +74,16 @@ test('one KB is the workspace: local catalog needs no project or sign-in and exi
 });
 
 test('manual KB switching clears stale document targets and keeps only the selected real KB scope', async () => {
-  seed(); browser.history.replaceState({}, '', '/?knowledgeBase=local-a&source=local&document=old&comment=thread&tab=old-tab&project=obsolete');
+  seed(); browser.history.replaceState({}, '', '/?knowledgeBase=local-a&source=local&document=old&comment=thread&folder=old-folder&tab=old-tab&project=obsolete');
   await render(); await select('local-b', 'local');
   expect(Object.fromEntries(new URL(browser.location.href).searchParams)).toEqual({ knowledgeBase: 'local-b', source: 'local' });
   expect(resources.scopeKey).toBe('guest:local:local-b');
+});
+
+test('an inbound local folder link remains scoped to its selected knowledge base', async () => {
+  seed(); browser.history.replaceState({}, '', '/?knowledgeBase=local-a&source=local&folder=local-folder');
+  await render(); expect(resources.scopeKey).toBe('guest:local:local-a');
+  expect(new URL(browser.location.href).searchParams.get('folder')).toBe('local-folder');
 });
 
 test('an inbound server document is never rewritten to an unrelated local KB while membership loads', async () => {

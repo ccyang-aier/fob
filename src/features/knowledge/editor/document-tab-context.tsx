@@ -10,6 +10,7 @@ export type DocumentTab = {
   document?: TabDocument;
   pinned: boolean;
   reportDocument: (document: TabDocument | null) => void;
+  reportTitle?: (title: string | null) => void;
   togglePin: () => void;
   splitDocument: (document: TabDocument) => void;
 };
@@ -31,4 +32,13 @@ export function useTabDocumentSelection(knowledgeBaseId: string, source: Documen
   const [route, setRoute] = useState(page);
   if (route !== page) { setRoute(page); setSelected(page); }
   return [route !== page ? page : selected, setSelected] as const;
+}
+
+export function useTabFolderSelection(knowledgeBaseId: string, source: DocumentLinkTarget['source']) {
+  const tab = useDocumentTab(), params = new URLSearchParams(tab?.search ?? (typeof window === 'undefined' ? '' : window.location.search));
+  const folder = params.get('knowledgeBase') === knowledgeBaseId && params.get('source') === source ? params.get('folder') : null;
+  const [selected, setSelected] = usePageSessionState<string | null>('folder', folder, { preferInitial: Boolean(folder) });
+  const [route, setRoute] = useState(folder);
+  if (route !== folder) { setRoute(folder); if (folder || !params.has('document')) setSelected(folder); }
+  return [selected, setSelected] as const;
 }

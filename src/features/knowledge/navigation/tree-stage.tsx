@@ -212,7 +212,6 @@ export function KnowledgeTreeStage({
           onNavigateMain={(id) => onNavigate(id as LibraryView)}
           onSelectProject={(id) => {
             onSelectSection(id);
-            onNavigate('overview');
           }}
           onSelectDocument={(id) => openPage(id)}
           onToggleProject={(id) =>

@@ -62,6 +62,15 @@ function WorkbenchChrome() {
   const navigationOwner = activeKnowledge?.key ?? tabs.tabs.find(tab => tab.key === lastKnowledgeKey && tab.view === 'knowledge')?.key ?? tabs.tabs.find(tab => tab.view === 'knowledge')?.key;
   const expandSidebar = useCallback(() => setSidebarCollapsed(false), []);
   const frameRef = useRef<HTMLDivElement>(null);
+  const workspaceRef = useRef<HTMLDivElement>(null);
+  const [horizontalPanes, setHorizontalPanes] = useState(false);
+  useEffect(() => {
+    const observer = new ResizeObserver(([entry]) => setHorizontalPanes(entry.contentRect.width >= 640));
+    if (workspaceRef.current) observer.observe(workspaceRef.current);
+    return () => observer.disconnect();
+  }, []);
+  const splitHeaders = horizontalPanes ? tabs.split : undefined;
+  const renderTabBar = (items = tabs.tabs, selected = tabs.active, secondary = false) => <WorkbenchTabBar key={`${scopeKey ?? 'no-knowledge-base'}:${secondary ? 'right' : 'left'}`} tabs={items} active={selected} split={tabs.split} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={instances => tabs.reorder([...instances, ...tabs.tabs.filter(tab => !items.includes(tab)).map(tab => tab.instance)])} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onSplit={tabs.splitTab} onUnsplit={tabs.unsplit} onNew={tabs.newTab} showNewTab={!secondary} totalTabs={tabs.tabs.length} />;
   useEffect(() => { applyAppearancePrefs(readAppearancePrefs()); }, []);
   useEffect(() => {
     setOverlayRoot(frameRef.current);
@@ -78,10 +87,10 @@ function WorkbenchChrome() {
         <div className="flex min-h-0 flex-1">
           <div className={`${styles.navigation} flex shrink-0`}><NavigationSidebar open={!sidebarCollapsed} onCollapse={() => setSidebarCollapsed(true)} onExpand={() => setSidebarCollapsed(false)} view={view} onViewChange={changeView} onKnowledgeBaseChange={() => {}} /></div>
           {!sidebarCollapsed && <button type="button" className={styles.navigationScrim} aria-label={t('收起主导航')} onClick={() => setSidebarCollapsed(true)} />}
-          <div className={styles.workspace}>
-            <div className={styles.systemBar}><SystemBar onNavigate={changeView} navigation={navigation}>{tabs.ready ? <WorkbenchTabBar key={scopeKey ?? 'no-knowledge-base'} tabs={tabs.tabs} active={tabs.active} split={tabs.split} revealRequest={tabs.revealRequest} onActivate={tabs.activate} onClose={tabs.close} onReorder={tabs.reorder} onPin={tabs.pin} onReload={tabs.reload} onDuplicate={tabs.duplicate} onSplit={tabs.splitTab} onUnsplit={tabs.unsplit} onNew={tabs.newTab} /> : <div className="flex-1" />}</SystemBar></div>
+          <div ref={workspaceRef} className={styles.workspace}>
+            <div className={styles.systemBar}><SystemBar onNavigate={changeView} navigation={navigation} splitRatio={splitHeaders?.ratio} secondary={tabs.ready && splitHeaders ? renderTabBar(tabs.tabs.filter(tab => tab.key === splitHeaders.right), splitHeaders.right, true) : undefined}>{tabs.ready ? splitHeaders ? renderTabBar(tabs.tabs.filter(tab => tab.key !== splitHeaders.right), tabs.active === splitHeaders.right ? splitHeaders.left : tabs.active) : renderTabBar() : <div className="flex-1" />}</SystemBar></div>
             <main className={styles.content}>
-              {tabs.ready && <WorkbenchPanels tabs={tabs.tabs} active={tabs.active} split={tabs.split} navigationOwner={navigationOwner} onActivateNavigation={tabs.activate} onReportDocument={tabs.reportDocument} onSplitDocument={tabs.splitTab} onTogglePin={tabs.pin} onResizeSplit={tabs.resizeSplit} />}
+              {tabs.ready && <WorkbenchPanels tabs={tabs.tabs} active={tabs.active} split={tabs.split} navigationOwner={navigationOwner} onActivateNavigation={tabs.activate} onReportDocument={tabs.reportDocument} onReportTitle={tabs.reportTitle} onSplitDocument={tabs.splitTab} onTogglePin={tabs.pin} onResizeSplit={tabs.resizeSplit} />}
             </main>
           </div>
         </div>

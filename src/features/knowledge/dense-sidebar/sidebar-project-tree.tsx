@@ -113,10 +113,7 @@ export function SidebarProjectTreeNode({
           aria-current={selected ? 'page' : undefined}
           onClick={() => {
             if (isDocument) onSelectDocument(node.id);
-            else {
-              onSelectProject(node.id);
-              onToggle(node.id);
-            }
+            else onSelectProject(node.id);
           }}
           className="flex h-full min-w-0 flex-1 items-center text-left outline-none"
         >

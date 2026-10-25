@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
-import { check, primaryKey, uuid, varchar } from 'drizzle-orm/pg-core';
+import { check, jsonb, primaryKey, uuid, varchar } from 'drizzle-orm/pg-core';
+import type { FolderMetadata } from '@fob/shared/knowledge/contracts';
 import { permissionLevel } from './enums';
 import { knowledgeBase } from './organization';
 import { resourcesNamespace } from './namespaces';
@@ -10,6 +11,7 @@ export const teamspace = resourcesNamespace.table('teamspace', {
   id: uuid('id').notNull(),
   name: varchar('name', { length: 120 }).notNull(),
   defaultAccess: permissionLevel('default_access'),
+  metadata: jsonb('metadata').$type<FolderMetadata>().notNull().default({}),
   createdAt: instant('created_at').notNull().defaultNow(),
   updatedAt: instant('updated_at').notNull().defaultNow(),
 }, (table) => [

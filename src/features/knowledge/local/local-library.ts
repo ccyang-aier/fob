@@ -4,6 +4,7 @@ import { knowledgeMessages } from './local-library.messages';
 import type { DocumentFile } from '../documents/file-format';
 import type { DocumentIndexStatus, DocumentSource } from '../documents/document-metadata';
 import type { JSONContent } from '@tiptap/core';
+import type { FolderMetadata } from '@fob/shared/knowledge/contracts';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -19,6 +20,9 @@ export type LocalDocument = {
   draft: boolean;
   deleted: boolean;
   updatedAt: string;
+  createdAt?: string;
+  readCount?: number;
+  lastReadAt?: string;
   creator?: string;
   source?: DocumentSource;
   indexStatus?: DocumentIndexStatus;
@@ -27,7 +31,7 @@ export type LocalTag = { id: string; baseId: string; name: string; pageIds: stri
 export type LocalKnowledgeBase = { id: string; name: string };
 export type LocalLibrary = {
   bases: LocalKnowledgeBase[];
-  folders: { id: string; knowledgeBaseId: string; name: string }[];
+  folders: { id: string; knowledgeBaseId: string; name: string; metadata?: FolderMetadata }[];
   documents: LocalDocument[];
   tags: LocalTag[];
 };
@@ -71,5 +75,6 @@ export function newLocalDocument(baseId: string, title: string): LocalDocument {
     draft: false,
     deleted: false,
     updatedAt: new Date().toISOString(),
+    createdAt: new Date().toISOString(),
   };
 }

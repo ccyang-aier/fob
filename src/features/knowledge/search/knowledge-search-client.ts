@@ -1,14 +1,8 @@
-import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
-import { fetchKnowledgePages } from '../data/pages-api';
-import { createKnowledgeSearchApi } from './search-api';
-import { searchServerKnowledge } from './knowledge-search';
+import { discoverySearchResultSchema } from '@fob/shared/knowledge/contracts';
+import { knowledgeResourceRequest } from '../data/resource-http';
+import type { KnowledgeSearchOutcome } from './knowledge-search';
 
-export async function searchServerKnowledgeDocuments(knowledgeBaseId: string, query: string, signal: AbortSignal) {
-  const { origin } = await getFobApiOrigin();
-  signal.throwIfAborted();
-  const api = createKnowledgeSearchApi({ origin });
-  return searchServerKnowledge({ knowledgeBaseId, query, signal }, {
-    listPages: (id, requestSignal) => fetchKnowledgePages(id, {}, requestSignal),
-    search: (id, term, requestSignal) => api.search({ knowledgeBaseId: id, query: term, limit: 40 }, requestSignal),
-  });
+export async function searchServerKnowledgeDocuments(knowledgeBaseId: string, query: string, signal: AbortSignal, filters: { folderId?: string; authorId?: string } = {}): Promise<KnowledgeSearchOutcome> {
+  const result = await knowledgeResourceRequest(knowledgeBaseId, 'discovery/search', discoverySearchResultSchema, { method: 'POST', body: JSON.stringify({ query, ...filters }), signal });
+  return { hits: result.documents.map(document => ({ knowledgeBaseId, pageId: document.id, source: 'server', title: document.title, snippet: document.snippet ?? '', blockId: document.blockId, folderId: document.folderId, folderName: document.folderName, creatorName: document.creatorName, updatedAt: document.updatedAt })), incomplete: false, hasMore: result.hasMore };
 }

@@ -503,6 +503,7 @@ CREATE TABLE "resources"."teamspace" (
 	"id" uuid NOT NULL,
 	"name" varchar(120) NOT NULL,
 	"default_access" "resources"."permission_level",
+	"metadata" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "teamspace_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),

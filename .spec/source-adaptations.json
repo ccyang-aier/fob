@@ -4,8 +4,8 @@
     "sha256": "d9db8015940443cea58e5697db126db8accca88a450b7239a720e5cee71d83a7"
   },
   "src/features/knowledge/data/catalog-queries.ts": {
-    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
-    "sha256": "1a04ccb1dd7aa10f1f691a3748ccd95583a408a335f25dd3964da489a894085f"
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization. Continue folder directory pagination so every existing folder can be resolved from a direct link.",
+    "sha256": "b02ac409c980550f060917a45d2d64fa75f04facd7b8e122a33a700d36d2820d"
   },
   "src/features/knowledge/data/endpoint.test.ts": {
     "reason": "Web-only API endpoint contract: remove desktop IPC test cases, use isolated Fob port 8721, and retain configured-origin/production-failure/scope validation tests.",
@@ -40,12 +40,12 @@
     "deleted": true
   },
   "src/features/knowledge/knowledge-page.messages.ts": {
-    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact.",
-    "sha256": "5bd0b497b33b100e482be4584162518c1239af19b0af7a61aac477a0d70a1664"
+    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact. Describe unavailable folder targets with a localized recovery state.",
+    "sha256": "1d1ebdfb45f9923de7972198e436eee37debd3f8907def0576a4807a724f44c5"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "c8db8248fa276f0f2f3062648a32819893c21e80114c442dcc525f6084909243"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states.",
+    "sha256": "5f65799b328a8249c0d9ec88994e4c4b1bdf592a3b9c607c89db27ab1a772f3c"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -64,16 +64,16 @@
     "sha256": "15bb1cca6de4ec7616d4572a076d5444fe9d64d82343d6e85d20c1b155e503b7"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "836eee50680dc6bf4ab991adced53ab7496fd0c00226798a4a7a5d09c16c2de0"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data.",
+    "sha256": "71b9eb01078d792892969193877e8a4cc30cf8bf282c0b3c5eed068ac2a4c0ae"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
     "sha256": "49f5a092c2917e3679f7d2fd4196bda08a1b1b3def57f958f92c1325d874168b"
   },
   "src/features/knowledge/local/local-library.ts": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
-    "sha256": "a861f538eac4bf2acbf1085a1ca13221bd1a1b08f6c31935cae6ed37219f201f"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents.",
+    "sha256": "cac488105bebe179e8f4e2d7622e87fd72e972c36335d343ca7eab6593780b09"
   },
   "src/features/knowledge/navigation/knowledge-sidebar.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -224,8 +224,8 @@
     "sha256": "0ae1a11d8af4cf5bd220c45cadbc97b076dbe51cd492188f042109aaea676ba6"
   },
   "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "7d66b664f95f6ced82b8803729d3ac8c9ead10e43dfab6dc0aeb4fdbd8185b1e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Folder names open the real overview; disclosure controls only expand the resource tree.",
+    "sha256": "12526c83af3e5c50218e064a2387f3185a1b11f2b5dea4e98893b5931d989a3d"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -284,12 +284,12 @@
     "sha256": "ed0a400ac5d90ce919f8a2c08684082a82a93b8e1e56726e4a0d1af0a41e1abe"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "285414e8f536d5344eec5d4a922e4f35797608d5abeb7028d1f5f33098a2c7f4"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder.",
+    "sha256": "268ba9a9ac372b08c1a17a8f88cfe885fc162ba971c2e121dc9b908442b86de9"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "bbbf8338986ff73e0a6a79d167c334a663b3742300a76994ca5afa827d242927"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows.",
+    "sha256": "44b06c9c7f58a1b081217d5b32df92da90ab2acc4fbfe5600389e5d8a9abfda9"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
     "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
@@ -336,8 +336,8 @@
     "sha256": "dde4d314811b12f3891e9f3dd9bc11488a801ef5c15555cc36257ebee2f8d596"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "7d86b5dc8b277ea61fc55415438f73a0c893a8debd68eddc3d669171e4acf897"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them.",
+    "sha256": "8dc683bfa97adca7bfdf2c2c340ba9e7dec682e4b14ca1dd45c596747f151d8f"
   },
   "backend/server/src/modules/knowledge/pages/tree.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
@@ -724,8 +724,8 @@
     "sha256": "27c837924aed53e754b0755cd1288a9429217d17fe2c4613db0997255cf733ae"
   },
   "shared/src/knowledge/contracts/index.ts": {
-    "reason": "Export strict document collaboration, publication, invitation and statistics contracts.",
-    "sha256": "587b7af855ff5026a1cd16286370aeca41a0d3654fe40a25a63e0246853fc646"
+    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers.",
+    "sha256": "46dbb97c662e20820bf027b0bef1dfddd2c685b5e2f7b646aa42212b897c54f6"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
@@ -746,5 +746,17 @@
   "src/features/knowledge/navigation/page-icon.test.tsx": {
     "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation.",
     "sha256": "5dc63d14137290032777dd1c9110a28f44c38650c24b94fb00de58e508607e71"
+  },
+  "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
+    "reason": "Localize unavailable local folder links and document-list recovery.",
+    "sha256": "c55a25b60469441db96f73def6cdc7c04b48a17b9190c50a3efaae8255cdc675"
+  },
+  "src/features/knowledge/navigation/tree-stage.tsx": {
+    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target.",
+    "sha256": "4fdd172c1a6b6fba873115eef7bd3964bdd34d929b38f54cbb304854936136e8"
+  },
+  "backend/server/src/modules/knowledge/search/keyword.ts": {
+    "reason": "Intersect folder and author conditions with the existing indexed ACL predicate before BM25 ranking and limiting.",
+    "sha256": "a8a54b61c83a49e19c102be139a67886570c19583ed7d7fcc04c6daa581f6186"
   }
 }

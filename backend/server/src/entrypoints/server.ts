@@ -17,6 +17,7 @@ import { createKnowledgeAssetStorage } from '../modules/knowledge/assets/storage
 import { bindKnowledgeAssetStorage } from '../modules/knowledge/assets/runtime';
 import { createKnowledgeCheckpointRoutes } from '../modules/knowledge/api/checkpoint-routes';
 import { createDocumentCollaborationRoutes } from '../modules/knowledge/documents/http';
+import { createKnowledgeDiscoveryRoutes } from '../modules/knowledge/discovery/http';
 import { createKnowledgeNotificationRoutes } from '../modules/knowledge/notifications';
 import { createKnowledgeTemplateRoutes } from '../modules/knowledge/templates';
 import { createKnowledgeSubscriptionRoutes } from '../modules/knowledge/subscriptions';
@@ -88,6 +89,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   app.route('/', createKnowledgeMcpAuthorizationRoutes({ auth, pool, externalOrigin }));
   app.route('/', createKnowledgeCheckpointRoutes({ auth, pool, checkpoints }));
   app.route('/', createDocumentCollaborationRoutes({ auth, pool, publicationSecret: config.auth.secret, onPermissionsChanged: revalidateConnections }));
+  app.route('/', createKnowledgeDiscoveryRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createKnowledgeNotificationRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createKnowledgeTemplateRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));
   app.route('/', createKnowledgeSubscriptionRoutes({ authenticator, pool, trustedOrigins: auth.options.trustedOrigins as string[] }));

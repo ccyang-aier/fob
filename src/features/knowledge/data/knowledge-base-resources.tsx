@@ -48,7 +48,7 @@ function writeLocation(resource: Selection | null, preserveDocument = false) {
   url.searchParams.delete('project');
   if (resource) { url.searchParams.set('knowledgeBase', resource.id); url.searchParams.set('source', resource.source); }
   else { url.searchParams.delete('knowledgeBase'); url.searchParams.delete('source'); }
-  if (!preserveDocument) for (const key of ['document', 'comment', 'block', 'tab']) url.searchParams.delete(key);
+  if (!preserveDocument) for (const key of ['document', 'comment', 'block', 'folder', 'tab']) url.searchParams.delete(key);
   if (url.href !== window.location.href) replaceWorkbenchLocation(url);
 }
 

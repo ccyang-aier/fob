@@ -7,11 +7,12 @@ import { knowledgeMessages } from './local-knowledge-resource.messages';
 /** Local storage is a resource capability, independent of account identity. */
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { updateDocumentNavigation } from '../navigation/document-navigation-location';
+import { updateDocumentNavigation, updateFolderNavigation } from '../navigation/document-navigation-location';
 import { usePageSessionState } from '@/lib/page-session-state';
 import { FilePlus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
+import { CanvasState } from '../canvas-states';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useIdentity } from '@/features/identity/identity-provider';
 import { KnowledgeWorkbench } from '../knowledge-workbench';
@@ -32,6 +33,7 @@ import { subscribeOpenPageTarget } from '../editor/open-target';
 import { LocalLibraryNavigation } from './local-library-navigation';
 import { KnowledgeEmptyState } from '../knowledge-empty-state';
 import { DocumentsPage } from '../documents/documents-page';
+import { LocalFolderOverview } from '../discovery/local-folder-overview';
 import { LocalDocumentImport } from '../documents/local-document-import';
 import {
   DropdownMenu,
@@ -44,7 +46,7 @@ import {
   DropdownMenuCheckboxItem,
 } from '@/components/ui/dropdown-menu';
 import { DotsThree } from '@/components/icons';
-import { useDocumentTab, useTabDocumentSelection } from '../editor/document-tab-context';
+import { useDocumentTab, useTabDocumentSelection, useTabFolderSelection } from '../editor/document-tab-context';
 
 type View = 'all-documents' | 'starred' | 'drafts' | 'trash';
 type Store = ReturnType<typeof createLocalLibraryStore>;
@@ -69,10 +71,10 @@ export function LocalKnowledgeResource({
   const { t } = useI18n();
   const base = library.bases.find((item) => item.id === selectedKnowledgeBaseId);
   const knowledgeBaseId = base?.id ?? '';
-  const [view, setView] = usePageSessionState<View>('view', 'all-documents');
-  const [folderId, setFolderId] = usePageSessionState<string | null>('folder', null);
   const tab = useDocumentTab();
   const tabSearch = tab?.search;
+  const [view, setView] = usePageSessionState<View>('view', 'all-documents', { preferInitial: Boolean(new URLSearchParams(tabSearch).get('folder')) });
+  const [folderId, setFolderId] = useTabFolderSelection(knowledgeBaseId, 'local');
   const [selectedId, setStoredSelectedId] = useTabDocumentSelection(knowledgeBaseId, 'local');
   const setSelectedId = useCallback((id: string | null) => {
     setStoredSelectedId(id);
@@ -81,6 +83,13 @@ export function LocalKnowledgeResource({
   const [activeTagId, setActiveTagId] = usePageSessionState<string | null>('tag', null);
   const [creation, setCreation] = useState<'document' | 'folder' | null>(null);
   const { notify } = useAppAlert();
+  useEffect(() => {
+    if (!navigationActive || !selectedId) return;
+    const current = store.getSnapshot().documents.find(document => document.id === selectedId && document.baseId === knowledgeBaseId && !document.deleted), now = new Date();
+    if (!current || (current.lastReadAt && now.getTime() - new Date(current.lastReadAt).getTime() < 30 * 60_000)) return;
+    try { store.update(library => ({ ...library, documents: library.documents.map(document => document.id === selectedId && document.baseId === knowledgeBaseId ? { ...document, readCount: (document.readCount ?? 0) + 1, lastReadAt: now.toISOString() } : document) })); }
+    catch { notify('error', knowledgeT('readStatisticsSaveFailed')); }
+  }, [store, selectedId, knowledgeBaseId, navigationActive, notify, knowledgeT]);
   useEffect(
     () =>
       subscribeOpenPageTarget((target) => {
@@ -142,6 +151,14 @@ export function LocalKnowledgeResource({
   function openDocument(id: string) {
     setSelectedId(id);
   }
+  function openFolder(id: string) {
+    setFolderId(id); setActiveTagId(null); setSelectedId(null); setView('all-documents');
+    if (navigationActive) updateFolderNavigation({ knowledgeBaseId, folderId: id, source: 'local' }, tabSearch);
+  }
+  function openLibrary(next: View = 'all-documents') {
+    setView(next); setSelectedId(null); setFolderId(null); setActiveTagId(null);
+    if (navigationActive) updateFolderNavigation({ knowledgeBaseId, folderId: null, source: 'local' }, tabSearch);
+  }
   function toggleDocumentTag(tagId: string, documentId: string) {
     write((current) => ({
       ...current,
@@ -173,13 +190,10 @@ export function LocalKnowledgeResource({
               folders={folders}
               documents={live}
               tags={tags}
-              onSelectMain={(next) => {
-                setView(next);
-                setSelectedId(null);
-                setFolderId(null);
-                setActiveTagId(null);
-              }}
+              onSelectMain={openLibrary}
               onSelectDocument={openDocument}
+              selectedFolderId={folderId}
+              onSelectFolder={openFolder}
               onCreateFolder={() => {
                 if (base) setCreation('folder');
               }}
@@ -211,8 +225,7 @@ export function LocalKnowledgeResource({
                     ),
                   })) &&
                   folderId === id
-                )
-                  setFolderId(null);
+                ) openLibrary();
               }}
               onCreateDocumentInTag={(id) => {
                 setActiveTagId(id);
@@ -262,9 +275,7 @@ export function LocalKnowledgeResource({
                 }))
               )
                 return;
-              setFolderId(id);
-              setSelectedId(null);
-              setActiveTagId(null);
+              openFolder(id);
             } else {
               if (!base) return;
               const document = {
@@ -331,7 +342,9 @@ export function LocalKnowledgeResource({
             onCreateDocument={() => setCreation('document')}
           />
         )
-      ) : view === 'all-documents' ? (
+      ) : view === 'all-documents' && folderId && !folders.some(folder => folder.id === folderId) ? <CanvasState title={knowledgeT('folderUnavailable')} actions={<Button variant="outline" onClick={() => openLibrary()}>{knowledgeT('returnToDocuments')}</Button>} /> : view === 'all-documents' && folderId && folders.some(folder => folder.id === folderId) ? <LocalFolderOverview key={folderId} folder={folders.find(folder => folder.id === folderId)!} documents={live} onOpen={openDocument} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
+        if (!write(current => ({ ...current, folders: current.folders.map(folder => folder.id === folderId ? { ...folder, ...(name ? { name } : {}), metadata: { ...folder.metadata, ...patch, revision: (folder.metadata?.revision ?? 0) + 1 } } : folder) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
+      }} upload={<LocalDocumentImport knowledgeBaseId={knowledgeBaseId} onImport={items => write(current => ({ ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(base.id, item.name), folderId, file: item.file, body: { type: 'doc', content: item.text.split(/\r?\n/).map(text => ({ type: 'paragraph', ...(text ? { content: [{ type: 'text', text }] } : {}) })) } }))] }))} />} renderMenu={id => <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem><DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>} /> : view === 'all-documents' ? (
         <DocumentsPage
           key={`${base.id}:${folderId ?? activeTagId ?? 'all'}`}
           documents={listed.map((item) => ({
@@ -360,7 +373,7 @@ export function LocalKnowledgeResource({
                 }))
           }
           onOpen={openDocument}
-          onOpenFolder={setFolderId}
+          onOpenFolder={openFolder}
           onCreate={() => setCreation('document')}
           onCreateFolder={() => setCreation('folder')}
           upload={

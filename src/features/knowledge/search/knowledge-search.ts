@@ -11,8 +11,9 @@ export type KnowledgeSearchHit = {
   source: 'local' | 'server';
   title: string;
   snippet: string;
+  folderId?: string; folderName?: string; creatorName?: string; updatedAt?: string;
 };
-export type KnowledgeSearchOutcome = { hits: KnowledgeSearchHit[]; incomplete: boolean };
+export type KnowledgeSearchOutcome = { hits: KnowledgeSearchHit[]; incomplete: boolean; hasMore?: boolean };
 export type KnowledgeSearchServices = {
   listPages(knowledgeBaseId: string, signal: AbortSignal): Promise<Page[]>;
   search(knowledgeBaseId: string, query: string, signal: AbortSignal): Promise<HybridSearchOutcome>;
@@ -28,26 +29,27 @@ function snippet(text: string, query: string) {
 }
 
 /** Search the selected browser knowledge base, never another knowledge workspace. */
-export function searchLocalKnowledge(library: LocalLibrary, scope: KnowledgeSearchScope, rawQuery: string): KnowledgeSearchOutcome {
+export function searchLocalKnowledge(library: LocalLibrary, scope: KnowledgeSearchScope, rawQuery: string, filters: { folderId?: string; authorId?: string } = {}): KnowledgeSearchOutcome {
   const query = rawQuery.trim().toLocaleLowerCase();
-  if (query.length < 2 || !library.bases.some(base => base.id === scope.id)) return { hits: [], incomplete: false };
+  if (query.length === 1 || !library.bases.some(base => base.id === scope.id)) return { hits: [], incomplete: false };
+  const folders = new Map(library.folders.filter(folder => folder.knowledgeBaseId === scope.id).map(folder => [folder.id, folder.name]));
   const hits = library.documents.flatMap(document => {
-    if (document.baseId !== scope.id || document.deleted) return [];
+    if (document.baseId !== scope.id || document.deleted || (filters.folderId && document.folderId !== filters.folderId) || (filters.authorId && (document.creator ?? '__local__') !== filters.authorId)) return [];
     const title = document.title.toLocaleLowerCase(), body = bodyText(document.body);
     const titleMatch = title.includes(query), contentMatch = body.toLocaleLowerCase().includes(query);
     if (!titleMatch && !contentMatch) return [];
     return [{
       knowledgeBaseId: scope.id, pageId: document.id, source: 'local' as const,
-      title: document.title, snippet: snippet(body, query),
-      score: title === query ? 4 : title.startsWith(query) ? 3 : titleMatch ? 2 : 1,
+      title: document.title, snippet: query ? snippet(body, query) : '',
+      folderId: document.folderId, folderName: document.folderId ? folders.get(document.folderId) : undefined, creatorName: document.creator,
+      score: !query ? 0 : title === query ? 4 : title.startsWith(query) ? 3 : titleMatch ? 2 : 1,
       updatedAt: document.updatedAt,
     }];
   });
   return {
     hits: hits.sort((a, b) => b.score - a.score || b.updatedAt.localeCompare(a.updatedAt)).slice(0, 40)
-      .map(hit => ({ knowledgeBaseId: hit.knowledgeBaseId, pageId: hit.pageId,
-        source: hit.source, title: hit.title, snippet: hit.snippet })),
-    incomplete: false,
+      .map(hit => ({ knowledgeBaseId: hit.knowledgeBaseId, pageId: hit.pageId, source: hit.source, title: hit.title, snippet: hit.snippet, folderId: hit.folderId, folderName: hit.folderName, creatorName: hit.creatorName, updatedAt: hit.updatedAt })),
+    incomplete: false, hasMore: hits.length > 40,
   };
 }
 
