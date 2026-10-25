@@ -92,6 +92,7 @@
      菜单、侧栏与页面工具栏共用这两个角色，业务组件不另配灰度。 */
   --interaction-hover-bg: #fafafa;
   --interaction-active-bg: #efefef;
+  --interaction-active-strong-bg: #e5e5e5;
   --action-hover-bg: var(--interaction-hover-bg);
   --action-active-bg: var(--interaction-active-bg);
   --action-surface-bg: #f8f8f8;
@@ -193,6 +194,7 @@ html[data-theme="dark"] {
   /* 深色主题保留相同语义与侧栏原有层次：hover 更轻，active 更明显。 */
   --interaction-hover-bg: rgb(255 255 255 / 0.04);
   --interaction-active-bg: rgb(255 255 255 / 0.06);
+  --interaction-active-strong-bg: rgb(255 255 255 / 0.14);
   --action-hover-bg: var(--interaction-hover-bg);
   --action-active-bg: var(--interaction-active-bg);
   --action-surface-bg: #222222;

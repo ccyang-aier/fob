@@ -8,7 +8,7 @@ import { PageIcon } from '../navigation/page-icon';
 import {
   Archive,
   CalendarDots,
-  CaretRight,
+  CaretRightSolid,
   CheckSquareOffset,
   FileText,
   Folder,
@@ -98,8 +98,9 @@ export function SidebarSectionHeader({
       >
         <Icon aria-hidden size={14} className="mr-2 shrink-0 text-[var(--muted-strong)]" />
         <span className="truncate">{label}</span>
-        <CaretRight
+        <CaretRightSolid
           aria-hidden
+          size={12}
           className={cn(
             'ml-1 size-[10px] shrink-0 transition-transform duration-200',
             expanded && 'rotate-90',

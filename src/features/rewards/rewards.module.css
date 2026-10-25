@@ -3,15 +3,13 @@
 .balanceButton:disabled { opacity: .45; cursor: default; }
 .balanceNumber { position: absolute; top: -1px; right: -2px; display: grid; min-width: 15px; height: 15px; padding-inline: 3px; place-items: center; border: 2px solid var(--wt-sidebar-bg, var(--panel)); border-radius: 999px; background: var(--ink-soft); color: var(--panel); font-size: 9px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
 .coffeeBadge { display: inline-grid; width: 34px; height: 34px; flex-shrink: 0; place-items: center; border-radius: 11px; background: #f2e9df; color: #906143; }
-.sidebarCard { padding: 12px; border-radius: 12px; color: var(--ink); }
-.cardHeading { display: flex; min-height: 24px; align-items: center; gap: 8px; }
+.sidebarCard { padding: 12px; border-radius: 10px; color: var(--ink); }
+.cardHeading { display: flex; min-height: 34px; align-items: center; gap: 9px; }
+.cardCopy { flex: 1; min-width: 0; }
 .cardHeading strong { min-width: 0; font-size: 12px; font-weight: 600; line-height: 1.5; }
 .cardOpen { width: 24px; height: 24px; margin-left: auto; border-radius: 6px; color: var(--muted-strong); }
-.cardDescription { margin-top: 3px; color: var(--muted-strong); font-size: 11px; line-height: 1.5; }
-.monthCaption { display: flex; justify-content: space-between; gap: 8px; margin-top: 7px; color: var(--muted-strong); font-size: 10px; font-variant-numeric: tabular-nums; }
-.progress { height: 4px; margin-top: 14px; overflow: hidden; border-radius: 999px; background: var(--separator-color); }
-.progress > span { display: block; height: 100%; border-radius: inherit; background: var(--ink); }
-.cardCta { width: 100%; height: 30px; margin-top: 12px; border-radius: 7px; font-size: 11px; box-shadow: none; }
+.cardDescription { margin-top: 1px; color: var(--muted-strong); font-size: 11px; line-height: 1.5; }
+.cardCta { width: 100%; height: 30px; margin-top: 10px; border-radius: 6px; font-size: 11px; box-shadow: none; }
 .cardCta:disabled { opacity: 1; color: var(--muted-strong); background: var(--surface-subtle); }
 .cardStatus { margin-top: 11px; color: var(--muted); font-size: 10px; }
 .page { width: min(100%, 1000px); margin-inline: auto; padding: 44px 48px 36px; color: var(--ink); }

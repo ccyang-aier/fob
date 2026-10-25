@@ -7,7 +7,7 @@
 - 默认使用 [Font Awesome 7 Solid](https://www.shadcn.io/icons/fa7-solid)，官方 `@fortawesome/free-solid-svg-icons`，以官方 React 组件渲染，固定版本。多个候选时优先圆润、饱满、轮廓简单且小尺寸易识别的造型，避免复杂细节和无意义的外框。
 - 只有明确需要轻量轮廓的控制，使用 [Lucide](https://www.shadcn.io/icons/lucide)。不把导航实体、通知、设置等默认退回轮廓风格，也不把所有动作一刀切成厚实图标。
 - 业务组件只从 `@/components/icons` 引用。官方依赖、语义映射及轮廓例外集中在 `src/components/icons/index.ts`；渲染和尺寸在同目录的 `solid-icon.tsx`、`metrics.ts`。
-- 不新增第三套图标包、远程图标服务、混合 PNG 图标包、手写 SVG/path 或用 CSS 给轮廓图标强制填色。用户上传图片、用户文档内容、Emoji 和产品品牌图形是内容资源，不能作为引入另一套 UI 图标的借口。
+- 不新增第三套图标包、远程图标服务、混合 PNG 图标包、手写 SVG/path 或用 CSS 给轮廓图标强制填色。唯一保留例外是用户明确要求恢复的主导航双栏图标，集中在 `sidebar-toggle-icon.tsx`，脚本校验其固定文件摘要，禁止在例外中增加其它几何。用户上传图片、用户文档内容、Emoji 和产品品牌图形是内容资源，不能作为引入另一套 UI 图标的借口。
 - shadcn CLI 的 `components.json` 保持 `iconLibrary: lucide`，用于生成轻量基础控件；生成后仍须把导入收口到本地目录，按语义选择 FA7 或已批准的 Lucide。
 
 ## 语义与候选
@@ -18,10 +18,11 @@
 | 成员/模板/设置/帮助 | FA7 `user-group` / `table-cells-large` / `gear` / `circle-question` |
 | 咖啡/通知/分享 | FA7 `mug-saucer` / `bell` / `share-nodes`；咖啡不另加底色容器 |
 | 前进后退/对外打开/更多 | Lucide 细线箭头、`ExternalLink`、`Ellipsis`；更多是独立三点 |
-| 主导航收纳 | Lucide `PanelLeft`，不再维护自绘变体 |
-| 折叠/切换器 | Lucide `Chevron*` / `ChevronsUpDown`；滚动条方向箭头等确需三角的位置才用 FA7 caret |
+| 主导航收纳 | 原双栏造型，固定几何的唯一保留例外；不引入新的变体 |
+| 折叠/切换器 | 一级分组用 FA7 caret 实心三角，子级树节点用 Lucide `Chevron*`，切换器用 `ChevronsUpDown` |
 | 加减/关闭/勾选/缩放/刷新 | Lucide 对应简单控制符号 |
-| 搜索/分栏/加载/复选框边界 | 已登记的 Lucide 轮廓控制；不增加厚重外框 |
+| 搜索/拆分视图 | FA7 `magnifying-glass` / `table-columns`，系统入口与操作菜单一致 |
+| 加载/复选框边界/主题月牙 | 已登记的 Lucide 轮廓控制；月牙用圆润的 `Moon`，不增加厚重外框 |
 | 星标/点赞等切换状态 | 未选中 Lucide 轮廓，已选中 FA7 Solid，保留状态含义 |
 | H1/H2/H3 等编辑指令 | 保留区别明确的 Lucide 标题级别；其他格式、媒体和资源类型使用 FA7 对应语义 |
 

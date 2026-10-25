@@ -17,8 +17,8 @@
   padding: clamp(28px, 3.6vh, 40px) 0 160px;
 }
 .heading { position:relative; margin-bottom: 25px; }
-.titleIcon { position:absolute; inset-inline-end:calc(100% + 12px); top:4px; }
-.titleRow { display:flex; align-items:center; gap:12px; min-width:0; }
+.titleIcon { position:absolute; display:grid; place-items:center; inset-inline-end:calc(100% + 12px); top:50%; transform:translateY(-50%); }
+.titleRow { position:relative; display:flex; align-items:center; gap:12px; min-width:0; }
 .title,
 .titleInput {
   width: 100%;
@@ -33,8 +33,7 @@
   letter-spacing: -0.05em;
   line-height: 1.18;
 }
-.titleInput { outline: none; border-bottom: 1px solid transparent; }
-.titleInput:focus-visible { border-bottom-color: var(--accent); }
+.titleInput, .titleInput:focus-visible { outline: none; border: 0; box-shadow: none; }
 .titleInput::placeholder { color: var(--muted); }
 .metadata {
   display: flex;

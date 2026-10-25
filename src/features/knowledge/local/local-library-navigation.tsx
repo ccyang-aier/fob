@@ -138,7 +138,7 @@ export function LocalLibraryNavigation({
   if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />;
 
   return (
-    <div className="min-h-0 flex-1 overflow-auto px-3 py-3">
+    <div className="min-h-0 flex-1 overflow-auto px-3 pb-3 pt-2">
       <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />
 
       <section className="mt-5" aria-label={knowledgeT('folder')}>

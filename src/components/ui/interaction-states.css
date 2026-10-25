@@ -11,6 +11,10 @@
 }
 
 /* 浅灰白色工具按钮：常态用共享 hover 灰度，交互时用共享激活灰度。 */
+.fob-action[data-active-emphasis="strong"] {
+  --action-selected-bg: var(--interaction-active-strong-bg);
+}
+
 .fob-action[data-surface="muted"] {
   --action-state-bg: var(--interaction-active-bg);
 }
@@ -86,7 +90,7 @@ html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not(
 
 /* 按下、展开与有效筛选用全局“灰白色”；不覆盖其它功能色控件。 */
 html .fob-action:is([data-surface="plain"], [data-surface="muted"]):is(:active, [aria-expanded="true"]:not([data-variant="collapsible"]), [aria-pressed="true"], [data-active="true"], [data-filter-active]):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
-  background: var(--action-active-bg);
+  background: var(--action-selected-bg, var(--action-active-bg));
   color: var(--ink);
 }
 

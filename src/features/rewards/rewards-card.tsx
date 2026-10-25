@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowUpRight, Check, Coffee } from '@/components/icons';
+import { ArrowUpRight, Coffee } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import resourceCard from '@/components/ui/resource-card.module.css';
 import { useTranslation } from '@/lib/i18n/react';
@@ -14,26 +14,23 @@ export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void 
   const rewards = useCoffeeRewards();
   const authenticated = rewards.identityStatus === 'authenticated';
   const summary = rewards.summary;
+  if (rewards.identityStatus === 'checking' || (authenticated && rewards.loading && !summary) || summary?.checkedInToday) return null;
   return <section className={`${resourceCard.card} ${styles.sidebarCard}`} aria-label={t('daily')}>
     <div className={styles.cardHeading}>
       <Coffee size={16} className={styles.coffeeIcon} aria-hidden />
-      <strong>{t('daily')}</strong>
+      <div className={styles.cardCopy}>
+        <strong>{t('daily')}</strong>
+        <p className={styles.cardDescription}>{t('dailyReward')}</p>
+      </div>
       <Button type="button" variant="ghost" size="icon-sm" className={styles.cardOpen} aria-label={t('open')} onClick={onOpen}>
         <ArrowUpRight size={14} aria-hidden />
       </Button>
     </div>
-    <p className={styles.cardDescription}>{t('dailyReward')}</p>
-    {summary ? <>
-      <div className={styles.progress} role="progressbar" aria-label={t('calendar')} aria-valuenow={summary.month.checkIns} aria-valuemin={0} aria-valuemax={summary.month.days}>
-        <span style={{ width: `${summary.month.checkIns / summary.month.days * 100}%` }} />
-      </div>
-      <div className={styles.monthCaption}><span>{t('monthProgress', { count: summary.month.checkIns })}</span><span>{summary.month.checkIns}/{summary.month.days}</span></div>
-    </> : authenticated ? <p className={styles.cardStatus}>{t(rewards.error ? 'unavailable' : 'loading')}</p> : null}
-    <Button type="button" size="sm" variant={summary?.checkedInToday ? 'outline' : 'default'} className={styles.cardCta}
-      loading={rewards.checkingIn} disabled={rewards.identityStatus === 'checking' || rewards.loading || summary?.checkedInToday}
+    {authenticated && !summary ? <p className={styles.cardStatus}>{t(rewards.error ? 'unavailable' : 'loading')}</p> : null}
+    <Button type="button" size="sm" className={styles.cardCta}
+      loading={rewards.checkingIn} disabled={rewards.loading}
       onClick={() => { if (!authenticated) rewards.openSignIn(); else if (rewards.error && !summary) rewards.refresh(); else void rewards.checkIn(); }}>
-      {summary?.checkedInToday ? <Check size={14} aria-hidden /> : null}
-      {t(!authenticated ? 'signIn' : rewards.error && !summary ? 'retry' : summary?.checkedInToday ? 'checkedIn' : 'checkIn')}
+      {t(!authenticated ? 'signIn' : rewards.error && !summary ? 'retry' : 'checkIn')}
     </Button>
   </section>;
 }

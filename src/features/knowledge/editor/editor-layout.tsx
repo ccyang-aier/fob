@@ -68,8 +68,8 @@ export function DocumentHeading({
 
   return (
     <div className={styles.heading}>
-      {icon ? <div className={styles.titleIcon}>{icon}</div> : null}
       <div className={styles.titleRow}>
+        {icon ? <div className={styles.titleIcon}>{icon}</div> : null}
         {onTitleChange && editable ? (
           <input
             data-knowledge-title

@@ -33,13 +33,14 @@ beforeAll(async () => {
     checkIn: (accountId: string) => { const pending = deferred<CoffeeCheckInResult>(); claims.push({ accountId, pending }); return pending.promise; },
   } }));
   const { RewardsProvider, useCoffeeRewards } = await import('./rewards-provider');
+  const { RewardsCard } = await import('./rewards-card');
   function Capture() {
     const value = useCoffeeRewards();
     useEffect(() => { rewards = value; }, [value]);
     useEffect(() => { mounted++; }, []);
     return null;
   }
-  renderProvider = () => <RewardsProvider><Capture /></RewardsProvider>;
+  renderProvider = () => <RewardsProvider><Capture /><RewardsCard /></RewardsProvider>;
   const { createRoot } = await import('react-dom/client');
   const host = document.createElement('div'); document.body.append(host); root = createRoot(host);
 });
@@ -68,6 +69,35 @@ test('only confirmed server awards change the shared balance', async () => {
   await settle();
   expect(rewards.summary?.balance).toBe(1); expect(rewards.summary?.checkedInToday).toBe(true); expect(notices).toHaveLength(1);
   await act(async () => rewards.checkIn()); expect(claims).toHaveLength(1);
+});
+
+test('the daily card waits for confirmation, disappears after check-in and returns on the next server day', async () => {
+  session = signedIn(alpha); await render();
+  expect(document.querySelector('section[aria-label="每日签到"]')).toBeNull();
+  await publish(snapshot(alpha));
+  const button = document.querySelector('section[aria-label="每日签到"] > button') as HTMLButtonElement;
+  expect(button.textContent).toContain('签到领 1 杯');
+  await act(async () => button.click());
+  await settle();
+  expect(claims).toHaveLength(1);
+  expect(document.querySelector('section[aria-label="每日签到"]')).not.toBeNull();
+  expect(button.disabled).toBe(true);
+  await act(async () => claims[0]!.pending.resolve({ ...snapshot(alpha, ['2026-10-25']), awarded: true, reward: 1 }));
+  await settle();
+  expect(document.querySelector('section[aria-label="每日签到"]')).toBeNull();
+  await act(async () => rewards.refresh());
+  await publish({ accountId: alpha, ...coffeeSummaryFromDays(['2026-10-25'], new Date('2026-10-26T04:00:00Z')) });
+  expect(document.querySelector('section[aria-label="每日签到"]')).not.toBeNull();
+  expect(rewards.summary?.balance).toBe(1);
+});
+
+test('a completed card stays hidden after reload and does not hide another account’s daily opportunity', async () => {
+  session = signedIn(alpha); await render(); await publish(snapshot(alpha, ['2026-10-25']));
+  expect(document.querySelector('section[aria-label="每日签到"]')).toBeNull();
+  session = signedIn(beta); await render();
+  expect(document.querySelector('section[aria-label="每日签到"]')).toBeNull();
+  await publish(snapshot(beta));
+  expect(document.querySelector('section[aria-label="每日签到"] > button')?.textContent).toContain('签到领 1 杯');
 });
 
 test('switching accounts fences a late query and preserves the mounted workspace', async () => {

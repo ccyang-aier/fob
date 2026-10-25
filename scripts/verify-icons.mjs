@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -6,6 +7,8 @@ import ts from 'typescript';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const issues = [];
+// Sole user-requested legacy glyph; file pin prevents new custom geometry in this exception.
+const retainedToggle = { path: 'src/components/icons/sidebar-toggle-icon.tsx', sha256: '3b669a42891104441972cade67bb74f017141b55c81b68726ea47f6e3a7f04ed' };
 const libraries = /^(?:lucide-react|@fortawesome\/|@phosphor-icons\/|@iconify\/|@heroicons\/|@tabler\/icons|react-icons(?:\/|$)|@radix-ui\/react-icons)/;
 const approved = new Set(['src/components/icons/index.ts', 'src/components/icons/solid-icon.tsx']);
 const sources = fs.readdirSync(path.join(root, 'src'), { recursive: true })
@@ -24,13 +27,14 @@ for (const file of sources) {
     }
   }
   function visit(node) {
-    if ((ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) && node.tagName.getText(tree) === 'svg') {
+    if ((ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) && node.tagName.getText(tree) === 'svg' && relative !== retainedToggle.path) {
       issues.push(`${relative}:${tree.getLineAndCharacterOfPosition(node.getStart()).line + 1}: handwritten UI SVG; choose an official catalog icon`);
     }
     if (ts.isJsxAttribute(node) && node.name.getText(tree) === 'weight') issues.push(`${relative}: obsolete per-call icon weight; choose solid/outline in the catalog`);
     ts.forEachChild(node, visit);
   }
   visit(tree);
+  if (relative === retainedToggle.path && createHash('sha256').update(source.replace(/\r\n?/g, '\n')).digest('hex') !== retainedToggle.sha256) issues.push('Retained original sidebar toggle changed; the exception is limited to its pinned geometry.');
   if (source.includes('/assets/project-icons/')) issues.push(`${relative}: retired mixed-style icon artwork`);
 }
 
@@ -44,4 +48,4 @@ if (config.iconLibrary !== 'lucide') issues.push('components.json: shadcn-genera
 if (issues.length) {
   console.error(issues.join('\n'));
   process.exitCode = 1;
-} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; no handwritten UI SVGs or legacy icon imports.`);
+} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; no unapproved SVGs or legacy icon imports; original navigation toggle pinned.`);

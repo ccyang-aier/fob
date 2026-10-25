@@ -216,8 +216,8 @@
     "sha256": "4d2d76d4f3344555a70daa55c1545297ab572c7f87746e63d31aaf6103cad537"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation-primitives.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "66a102c67eb3a83d033ce382060ac88af1ea75731af27fb4aef8b8895905d6f2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "ebc192272b0e58cfbba8ec5b91e38dc30b1877c085235e9a3862d9c617ce1c8d"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -244,8 +244,8 @@
     "sha256": "4a9309d8b6ad225e5c4a59a9b2edeb0413c29876d06fd504f8c09baff98996bc"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls.",
-    "sha256": "023d365f73741c52cc2a62b3bc2d9aba9d08d4f1f55ad148488fdf9aa5c3e0fd"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "b50c07bdbba380d08009b80318c769f330947b093a45978b5b4d69a8137c1968"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
     "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder.",
@@ -280,12 +280,12 @@
     "sha256": "1b175a6a7b41c0cae885d8e246f03818762337e9b8a64cf63191b814663cc27e"
   },
   "src/features/knowledge/editor/editor-layout.module.css": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
-    "sha256": "2ca22a7db1319390fdd34158ededc65907c6158d3c34d9953a1c7c7db2552d63"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "ed0a400ac5d90ce919f8a2c08684082a82a93b8e1e56726e4a0d1af0a41e1abe"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "8e557ecff7731dea05ac83ec4858458af30996d066cc4ccf8237827cc2d1c581"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "285414e8f536d5344eec5d4a922e4f35797608d5abeb7028d1f5f33098a2c7f4"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -726,5 +726,13 @@
   "shared/src/knowledge/contracts/index.ts": {
     "reason": "Export strict document collaboration, publication, invitation and statistics contracts.",
     "sha256": "587b7af855ff5026a1cd16286370aeca41a0d3654fe40a25a63e0246853fc646"
+  },
+  "src/features/knowledge/editor/components/document-star-button.tsx": {
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "aa7b4cffefd6975184f2b0d97e080e4e4493eab62a63547273bbf8b6fe3b157d"
+  },
+  "src/features/knowledge/editor/editor-layout.tsx": {
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
+    "sha256": "4ba169a4a0caee5eacdb129d373215ae77613d7f692c04d9e4809de99a67f44c"
   }
 }

@@ -21,6 +21,8 @@ export function DocumentStarButton({
     <button
       type="button"
       className={`fob-action ${styles.button}`}
+      data-surface="plain"
+      data-active-emphasis="strong"
       aria-label={label}
       title={label}
       aria-pressed={starred}

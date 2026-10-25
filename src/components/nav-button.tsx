@@ -26,6 +26,8 @@ export function NavButton({
   active,
   compact = false,
   nested = false,
+  iconSize = 16,
+  className,
   onSelect,
   ...buttonProps
 }: {
@@ -33,6 +35,7 @@ export function NavButton({
   active: boolean
   compact?: boolean
   nested?: boolean
+  iconSize?: number
   onSelect: (id: string) => void
 } & Omit<ComponentProps<'button'>, 'onSelect'>) {
   const Icon = item.icon
@@ -49,11 +52,12 @@ export function NavButton({
         compact
           ? "mx-auto size-8 justify-center"
           : cn("h-[30px] w-full gap-2 pr-2", nested ? "pl-5" : "pl-2"),
+        className,
       )}
     >
       <Icon
         aria-hidden
-        size={16}
+        size={iconSize}
         className={cn(
           "sidebar-nav-icon shrink-0",
           item.iconClassName,

@@ -27,11 +27,11 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
   function row(id: WorkbenchPage) {
     const page = workbenchPages[id];
     const item: SidebarRowItem & { id: WorkbenchPage } = { id, label: t(page.label), icon: page.icon };
-    const button = <NavButton item={item} active={view === item.id} compact={!open} onSelect={() => onViewChange(item.id)} />;
+    const button = <NavButton item={item} active={view === item.id} compact={!open} iconSize={14} className={styles.utilityRow} data-compact={!open} onSelect={() => onViewChange(item.id)} />;
     return open ? <div key={item.id}>{button}</div> : <Tooltip key={item.id}><TooltipTrigger asChild>{button}</TooltipTrigger><TooltipContent side="right" sideOffset={10}>{item.label}</TooltipContent></Tooltip>;
   }
   const settingsButton = <Tooltip>
-    <TooltipTrigger asChild><button type="button" className={cn('fob-action', styles.settings, !open && styles.iconButton)} aria-label={t('设置')} aria-haspopup="dialog" onClick={() => onViewChange('settings')}><GearSix size={16} aria-hidden />{open && <span>{t('设置')}</span>}</button></TooltipTrigger>
+    <TooltipTrigger asChild><button type="button" className={cn('fob-action', styles.utilityRow)} data-compact={!open} aria-label={t('设置')} aria-haspopup="dialog" onClick={() => onViewChange('settings')}><GearSix size={14} aria-hidden />{open && <span>{t('设置')}</span>}</button></TooltipTrigger>
     <TooltipContent side={open ? 'top' : 'right'}>{t('设置')}</TooltipContent>
   </Tooltip>;
   const helpButton = <SidebarHelp compact={!open} onNavigate={onViewChange} />;
@@ -47,11 +47,10 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
     </header>
     <KnowledgeNavigationOutlet compact={!open} />
     <footer className={cn(styles.footer, open ? 'px-3' : 'px-1')}>
-      <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>{row('members')}{row('templates')}</nav>
-      <div className={styles.dock} data-compact={!open}>
-        {open ? <>{settingsButton}{helpButton}</> : <>{helpButton}{settingsButton}</>}
-      </div>
-      {open && <div className={styles.rewards}><RewardsCard onOpen={() => onViewChange('rewards')} /></div>}
+      {open && <RewardsCard onOpen={() => onViewChange('rewards')} />}
+      <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>
+        {row('members')}{row('templates')}{helpButton}{settingsButton}
+      </nav>
     </footer>
     {open && <SidebarResizeHandle className={layout.resizeHandle} dragging={dragging} onPointerDown={startResize} />}
   </aside>;
