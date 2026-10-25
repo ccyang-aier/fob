@@ -5,7 +5,9 @@
 ## 目录
 
 - `guizang/`：上游 guizang-ppt-skill 的完整源码快照。
-- `foa-pl-report/outline-v1.md`：按业务、团队、运作三条主线编排的 7 页精简大纲，含封面与目录，团队现状、能力和分工合为一页，不设附录。本阶段不制作汇报 HTML 或 PPTX。
+- `foa-pl-report/index.html`：7 页 HTML 演示稿，字体、动画与演讲备注内嵌，可独立离线打开。
+- `foa-pl-report/outline-v1.md`：已确认的内容大纲，含封面与目录，团队现状、能力和分工合为一页。
+- `foa-pl-report/README.md`：演示操作与验证说明。
 
 ## 参考技能来源
 
