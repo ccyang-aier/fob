@@ -4,7 +4,7 @@ import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { Check, CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react"
 
-import { getOverlayRoot } from "@/lib/overlay-root"
+import { getOverlayRoot, OverlayRootContext } from "@/lib/overlay-root"
 import { cn } from "@/lib/utils"
 
 const DropdownMenuContainer = React.createContext<HTMLElement | undefined>(undefined)
@@ -75,7 +75,9 @@ function DropdownMenuContent({
   density = "regular",
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Content> & { density?: "regular" | "compact" }) {
-  const container = React.useContext(DropdownMenuContainer) ?? getOverlayRoot()
+  const inheritedContainer = React.useContext(OverlayRootContext)
+  const capturedContainer = React.useContext(DropdownMenuContainer)
+  const container = inheritedContainer ?? capturedContainer ?? getOverlayRoot()
   return (
     <DropdownMenuPrimitive.Portal container={container}>
       <DropdownMenuPrimitive.Content
@@ -216,7 +218,9 @@ function DropdownMenuSubContent({
   onEscapeKeyDown,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent> & { density?: "regular" | "compact" }) {
-  const container = React.useContext(DropdownMenuContainer) ?? getOverlayRoot()
+  const inheritedContainer = React.useContext(OverlayRootContext)
+  const capturedContainer = React.useContext(DropdownMenuContainer)
+  const container = inheritedContainer ?? capturedContainer ?? getOverlayRoot()
   return (
     <DropdownMenuPrimitive.Portal container={container}>
       <DropdownMenuPrimitive.SubContent

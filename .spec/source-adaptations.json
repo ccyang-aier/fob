@@ -170,5 +170,21 @@
   "shared/src/knowledge/contracts/organization.ts": {
     "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts.",
     "sha256": "a678c99ceb68913177bba29d39e9d0dd5aeea4e41d50d3359567d5128238685a"
+  },
+  "src/features/companion/companion-layer.tsx": {
+    "reason": "Keep the global companion in one viewport-sized manual popover with scoped menus/tooltips, escaping dialog transform/overflow without remounting the character or disabling native modal interactivity.",
+    "sha256": "81ab5bb35b8ef5f836181bcc8ce232ffa03499e5857c97d18da6d3481a9c2920"
+  },
+  "src/features/companion/companion-widget.tsx": {
+    "reason": "Render companion speech as a passive status bubble rather than an Escape-consuming controlled tooltip; preserve trigger, runtime, toolbar and character instance under the viewport layer.",
+    "sha256": "3e3578aa09c64514047752e6ade7a452849c8af1c3bc63280b09cfbd3ea17fbc"
+  },
+  "src/features/companion/companion-toolbar.tsx": {
+    "reason": "Use the single standard toolbar animation path when sharing the viewport layer; remove the obsolete reduced-motion alternative.",
+    "sha256": "0effb1914dfd47802f3cb95c11db881f3ee8abd227a28b90d03463c8e615b9a1"
+  },
+  "src/features/companion/companion-widget.module.css": {
+    "reason": "Keep the passive speech bubble positioned and readable in the viewport, preserving shared tooltip material and pointer pass-through; remove the replaced tooltip animation and reduced-motion branches.",
+    "sha256": "36e786d1f5f86224929eaaab9aeafaa5060686b7dd2a31ed3a8a0b6f32fc42b3"
   }
 }

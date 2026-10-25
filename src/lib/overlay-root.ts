@@ -1,5 +1,10 @@
 "use client"
 
+import { createContext } from "react"
+
+/** An independent floating surface can keep its menus and tooltips in its own layer. */
+export const OverlayRootContext = createContext<HTMLElement | undefined>(undefined)
+
 /**
  * 弹层宿主：桌面端窗口带透明边距（自绘阴影）时，Radix Portal 默认挂到
  * body 会把弹层浮到应用面板之外的透明区域。壳层启动时把面板根节点挂入，

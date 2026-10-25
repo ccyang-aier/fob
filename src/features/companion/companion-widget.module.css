@@ -91,6 +91,12 @@
 .widget[data-dragging="true"], .widget[data-dragging="true"] * { cursor: grabbing !important; }
 
 .speech {
+  position: fixed;
+  z-index: 50;
+  width: max-content;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-ink);
+  box-shadow: 0 1px 2px rgb(16 20 24 / .18), 0 6px 14px -9px rgb(16 20 24 / .46);
   max-width: min(248px, calc(100vw - 32px));
   padding: 9px 14px;
   border: 0;
@@ -102,10 +108,6 @@
   overflow-wrap: anywhere;
   pointer-events: none;
 }
-.speech[data-state="instant-open"], .speech[data-state="delayed-open"] { animation: speech-in 180ms cubic-bezier(.22,1,.36,1) both; }
-.speech[data-state="closed"] { animation: speech-out 120ms ease-out both; }
-@keyframes speech-in { from { opacity: 0; transform: translateY(4px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes speech-out { to { opacity: 0; transform: translateY(3px) scale(.98); } }
 
 @media (pointer: coarse) {
   .widget { --companion-rail-width: 52px; }
@@ -113,9 +115,4 @@
   .rail { height: 264px; padding: 8px 4px; }
   .toolItem { width: 44px; height: 44px; flex-basis: 44px; }
   .close { left: -32px; width: 44px; height: 44px; opacity: .65; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .glyph, .close { transition: none; }
-  .tool:not(:disabled):is(:hover, :focus-visible, :active, [aria-expanded="true"]) .glyph { transform: none; }
-  .speech[data-state], .menu[data-state], .menu [role="menuitem"] { animation: none; }
 }

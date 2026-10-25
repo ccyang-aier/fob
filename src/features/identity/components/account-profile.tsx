@@ -13,7 +13,7 @@ import { authErrorCopyFor } from '../auth-errors';
 import { useIdentity } from '../identity-provider';
 import { presenceDisplay } from '../presence';
 import { authNameMaxLength, validateAuthName } from '../validation';
-import { AuthBackdrop } from './auth-backdrop';
+import { ProfileBackdrop } from './profile-backdrop';
 import styles from './account-profile.module.css';
 
 /** Account data stays in the identity provider; this form only edits the display name. */
@@ -57,7 +57,7 @@ export function AccountProfile({ onClose }: { onClose: () => void }) {
   return (
     <div className={styles.profile}>
       <div className={styles.cover} aria-hidden>
-        <AuthBackdrop desktopOnly={false} />
+        <ProfileBackdrop />
       </div>
       <form noValidate onSubmit={(event) => void saveProfile(event)}>
         <div className={styles.body}>

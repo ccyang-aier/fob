@@ -3,11 +3,12 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import { AnimatePresence, MotionConfig } from 'motion/react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n/react';
 import { CompanionCharacter } from './companion-character';
 import { CompanionToolbar } from './companion-toolbar';
 import { CompanionLayer } from './companion-layer';
+import { CompanionSpeech } from './companion-speech';
 import { createCompanionRuntime, initialCompanionState, type CompanionRuntime } from './companion-runtime';
 import { messages } from './companion.messages';
 import { OPEN_COMPANION_EVENT } from './companion-events';
@@ -16,7 +17,7 @@ import styles from './companion-widget.module.css';
 
 export function CompanionWidget() {
   return (
-    <MotionConfig reducedMotion="user">
+    <MotionConfig reducedMotion="never">
       <TooltipProvider delayDuration={280}>
         <CompanionLayer><Companion /></CompanionLayer>
       </TooltipProvider>
@@ -74,38 +75,24 @@ function Companion() {
       <AnimatePresence initial={false}>
         {open ? <CompanionToolbar key="toolbar" id={panelId} state={state} onFeed={() => { void runtime.current?.feed(); }} onAction={action => runtime.current?.act(action)} /> : null}
       </AnimatePresence>
-      <Tooltip open={Boolean(state.speech)} disableHoverableContent>
-        <TooltipTrigger asChild>
-          <div
-            ref={triggerRef}
-            className={styles.trigger}
-            role="button"
-            tabIndex={0}
-            data-companion-drag
-            aria-label={t('互动')}
-            aria-describedby={descriptionId}
-            aria-expanded={open}
-            aria-controls={open ? panelId : undefined}
-            onClick={event => interact(event.detail === 0)}
-            onKeyDown={event => {
-              if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(true); }
-            }}
-          >
-            <div className={styles.scene}><CompanionCharacter sceneRef={sceneRef} /></div>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent
-          className={styles.speech}
-          side="left"
-          sideOffset={14}
-          collisionPadding={12}
-          updatePositionStrategy="always"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          data-companion-speech
-        >{state.speech}</TooltipContent>
-      </Tooltip>
+      <div
+        ref={triggerRef}
+        className={styles.trigger}
+        role="button"
+        tabIndex={0}
+        data-companion-drag
+        aria-label={t('互动')}
+        aria-describedby={descriptionId}
+        aria-expanded={open}
+        aria-controls={open ? panelId : undefined}
+        onClick={event => interact(event.detail === 0)}
+        onKeyDown={event => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); interact(true); }
+        }}
+      >
+        <div className={styles.scene}><CompanionCharacter sceneRef={sceneRef} /></div>
+      </div>
+      <AnimatePresence initial={false}>{state.speech && <CompanionSpeech key="speech" anchor={triggerRef} text={state.speech} />}</AnimatePresence>
       <span id={descriptionId} className="sr-only">{t('拖动')} · {t('心情')} {Math.round(state.mood)} · {t('饱腹')} {Math.round(state.full)}</span>
       {open ? <button type="button" className={`fob-action ${styles.close}`} aria-label={t('收起')} onClick={collapse}><X size={12} aria-hidden /></button> : null}
     </section>

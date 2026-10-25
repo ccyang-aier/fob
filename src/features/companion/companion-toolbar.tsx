@@ -1,5 +1,5 @@
 import { Heart, Moon, Sparkle } from 'lucide-react';
-import { motion, useIsPresent, useReducedMotion, type Variants } from 'motion/react';
+import { motion, useIsPresent, type Variants } from 'motion/react';
 import { useTranslation } from '@/lib/i18n/react';
 import { CompanionActionMenu } from './companion-action-menu';
 import { CompanionToolButton } from './companion-tool-button';
@@ -23,7 +23,6 @@ export function CompanionToolbar({ id, state, onFeed, onAction }: {
 }) {
   const { t } = useTranslation(messages);
   const present = useIsPresent();
-  const reducedMotion = useReducedMotion();
   return (
     <motion.div
       id={id}
@@ -34,9 +33,9 @@ export function CompanionToolbar({ id, state, onFeed, onAction }: {
       aria-hidden={!present || undefined}
       inert={!present}
       variants={railMotion}
-      initial={reducedMotion ? false : 'closed'}
+      initial="closed"
       animate="open"
-      exit={reducedMotion ? undefined : 'closed'}
+      exit="closed"
     >
       <CompanionToolButton icon={Sparkle} label={t('喂糖')} disabled={state.busy} loading={state.busy && state.label === 'CANDY!'} onClick={onFeed} />
       <span className={styles.divider} role="separator" />

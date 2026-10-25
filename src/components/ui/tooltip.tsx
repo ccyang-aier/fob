@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
-import { getOverlayRoot } from "@/lib/overlay-root"
+import { getOverlayRoot, OverlayRootContext } from "@/lib/overlay-root"
 import { cn } from "@/lib/utils"
 
 const TooltipContainer = React.createContext<HTMLElement | undefined>(undefined)
@@ -43,7 +43,9 @@ function TooltipContent({
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
-  const container = React.useContext(TooltipContainer) ?? getOverlayRoot()
+  const inheritedContainer = React.useContext(OverlayRootContext)
+  const capturedContainer = React.useContext(TooltipContainer)
+  const container = inheritedContainer ?? capturedContainer ?? getOverlayRoot()
   return (
     <TooltipPrimitive.Portal container={container}>
       <TooltipPrimitive.Content

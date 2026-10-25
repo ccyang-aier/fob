@@ -48,6 +48,12 @@ KnowledgeNavigationProvider 由 shell 提供唯一侧栏出口。资源适配器
 
 服务端整库重命名和删除仅 owner 可执行，UI 依据真实角色显示，服务端独立强制校验。删除必须确认并突出不可撤销后果；本地删除只移除该库的目录、文档、标签和附件，保留其他库。全局设置只管理账号/界面偏好，不冒充知识库管理。
 
+### 2.3 登录背景与全局精灵
+
+登录模态框和独立 /auth 页面共用 GradientASCII 左栏及原登录表单。背景组件位于 src/components/backgrounds/gradient-ascii.tsx，直接复制用户提供的 WebGL2 实现，AuthBackdrop 配置同一组 horizon 蓝白参数、字符、鼠标扰动和点击波纹；左侧只保留品牌、简洁文案及轮播线索，移除模拟任务卡。独立 ProfileBackdrop 保留个人资料的原银色缎带封面。背景不可见时暂停，释放 GPU 对象时不主动丢失 StrictMode 会复用的 context，两产品各自拥有相同源码，不互相导入运行代码。
+
+精灵仍由根布局唯一挂载。CompanionLayer 使用覆盖视口的 manual popover 顶层宿主，保留原生模态框的焦点、Escape 和表单操作；宿主逻辑上位于活动模态框内以保持可交互，但位置、拖拽、菜单与气泡独立于弹窗的 transform 和 overflow。气泡以被动 status 展示，不注册 Escape 关闭层，保留拖拽跟随与视口避让。空白区域不接收指针，只有精灵及其控件接收事件；开关模态框与全屏切换保持同一实例和状态。OverlayRootContext 仅让精灵内部控件跟随该浮层，其他系统菜单仍按原有规则挂载。
+
 ## 3. 完整承接的知识能力
 
 | 能力 | 保留范围 |
