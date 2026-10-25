@@ -34,7 +34,7 @@ export function SidebarDocumentMenu({
           className={styles.actionButton}
           onClick={(event) => event.stopPropagation()}
         >
-          <DotsThree aria-hidden="true" size={15} weight="fill" />
+          <DotsThree aria-hidden="true" size={15} weight="bold" />
         </IconButton>
       </DropdownMenuTrigger>
       <DocumentActionMenuContent documentId={documentId} starred={starred} onAction={onAction} />

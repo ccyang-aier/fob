@@ -44,7 +44,7 @@ export function DocumentActionMenuContent({
         {knowledgeT('share')}
       </DropdownMenuItem>
       <DropdownMenuItem onSelect={() => onAction(documentId, 'open-tab')}>
-        <ArrowSquareOut weight="fill" />
+        <ArrowSquareOut weight="bold" />
         {knowledgeT('openInNewTab')}
       </DropdownMenuItem>
       <DropdownMenuSeparator />

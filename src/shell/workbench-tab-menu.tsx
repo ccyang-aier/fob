@@ -36,7 +36,7 @@ export function WorkbenchTabMenu({ pinned, hasOthers, canSplit, inSplit, onActio
     <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('duplicate')}><CopySimple weight="fill" aria-hidden />{t('复制标签页')}</DropdownMenuItem>
     {canSplit && <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction(inSplit ? 'unsplit' : 'split')}>{inSplit ? <Square aria-hidden /> : <SplitHorizontal aria-hidden />}{t(inSplit ? '结束拆分' : '在拆分视图打开')}</DropdownMenuItem>}
     <DropdownMenuSeparator className={styles.menuSeparator} />
-    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('current')}><X weight="bold" aria-hidden />{t('关闭')}</DropdownMenuItem>
+    <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('current')}><X aria-hidden />{t('关闭')}</DropdownMenuItem>
     <DropdownMenuItem className={styles.menuItem} disabled={!hasOthers} onSelect={() => onAction('others')}><Tabs weight="fill" aria-hidden />{t('关闭其它标签页')}</DropdownMenuItem>
     <DropdownMenuItem className={styles.menuItem} onSelect={() => onAction('all')}><XSquare weight="fill" aria-hidden />{t('关闭全部标签页')}</DropdownMenuItem>
   </TabContextMenu>;

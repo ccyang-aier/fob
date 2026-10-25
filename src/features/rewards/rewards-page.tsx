@@ -31,7 +31,7 @@ export function RewardsPage() {
           <div className={styles.total}><Coffee size={34} weight="fill" className={styles.coffeeIcon} aria-hidden /><strong>{summary.balance}</strong><span>{t('cups')}</span></div>
           <div className={styles.checkInRow}>
             <Button type="button" size="sm" variant={summary.checkedInToday ? 'outline' : 'default'} loading={rewards.checkingIn} disabled={summary.checkedInToday} onClick={() => void rewards.checkIn()}>
-              {summary.checkedInToday ? <Check weight="bold" size={14} aria-hidden /> : null}{t(summary.checkedInToday ? 'checkedIn' : 'checkIn')}
+              {summary.checkedInToday ? <Check size={14} aria-hidden /> : null}{t(summary.checkedInToday ? 'checkedIn' : 'checkIn')}
             </Button>
             <span>{t('streak', { count: summary.currentStreak })}</span>
           </div>
@@ -46,7 +46,7 @@ export function RewardsPage() {
               const day = `${summary.month.month}-${String(index + 1).padStart(2, '0')}`;
               return <span key={day} className={styles.calendarDay} data-checked={checked.has(day)} data-today={day === summary.today}
                 aria-label={t('calendarLabel', { day, state: t(checked.has(day) ? 'present' : 'absent') })} aria-current={day === summary.today ? 'date' : undefined}>
-                {checked.has(day) ? <Check size={13} weight="bold" aria-hidden /> : index + 1}
+                {checked.has(day) ? <Check size={13} aria-hidden /> : index + 1}
               </span>;
             })}
           </div>

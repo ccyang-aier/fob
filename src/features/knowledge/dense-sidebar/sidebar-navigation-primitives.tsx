@@ -56,7 +56,7 @@ export const sidebarIconToneClasses = {
 } satisfies Record<NonNullable<SidebarNavigationItem['tone']>, string>;
 
 export function SidebarCreateIcon() {
-  return <Plus aria-hidden="true" size={14} weight="bold" />;
+  return <Plus aria-hidden="true" size={14} weight="regular" />;
 }
 
 export const sidebarDocumentIconClass =
@@ -98,8 +98,7 @@ export function SidebarSectionHeader({
         <Icon aria-hidden size={15} weight="fill" className="mr-2 shrink-0 text-[var(--muted-strong)]" />
         <span className="truncate">{label}</span>
         <CaretRight
-          aria-hidden
-          weight="fill"
+          aria-hidden weight="regular"
           className={cn(
             'ml-1 size-[10px] shrink-0 transition-transform duration-200',
             expanded && 'rotate-90',
@@ -231,7 +230,7 @@ export function SidebarDocumentActions({
         <Star
           aria-hidden="true"
           size={14}
-          weight="fill"
+          weight={starred ? 'fill' : 'regular'}
           className={starred ? 'text-[#e5aa14]' : undefined}
         />
       </IconButton>

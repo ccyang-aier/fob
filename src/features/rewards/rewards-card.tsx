@@ -32,7 +32,7 @@ export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void 
     <Button type="button" size="sm" variant={summary?.checkedInToday ? 'outline' : 'default'} className={styles.cardCta}
       loading={rewards.checkingIn} disabled={rewards.identityStatus === 'checking' || rewards.loading || summary?.checkedInToday}
       onClick={() => { if (!authenticated) rewards.openSignIn(); else if (rewards.error && !summary) rewards.refresh(); else void rewards.checkIn(); }}>
-      {summary?.checkedInToday ? <Check weight="bold" size={13} aria-hidden /> : null}
+      {summary?.checkedInToday ? <Check size={13} aria-hidden /> : null}
       {t(!authenticated ? 'signIn' : rewards.error && !summary ? 'retry' : summary?.checkedInToday ? 'checkedIn' : 'checkIn')}
     </Button>
   </section>;

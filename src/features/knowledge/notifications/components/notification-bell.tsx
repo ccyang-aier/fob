@@ -260,7 +260,7 @@ export function KnowledgeNotificationBell({ onOpenWorkbench }: { onOpenWorkbench
           disabled={unreadCount === 0 || allPending}
           className="fob-action flex h-9 w-full items-center justify-center gap-1.5 border-t border-[var(--line)] text-[10.5px] font-medium text-[var(--accent-ink)] disabled:cursor-default disabled:text-[var(--muted)]"
         >
-          <Checks aria-hidden className="size-3" weight="fill" />
+          <Checks aria-hidden className="size-3" weight="bold" />
           {allPending ? knowledgeT('working') : knowledgeT('markAllAsRead')}
         </button>
       </DropdownMenuContent>

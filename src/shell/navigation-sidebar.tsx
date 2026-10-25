@@ -1,6 +1,6 @@
 'use client';
 
-import { GearSix, SidebarSimple } from '@phosphor-icons/react';
+import { GearSix } from '@phosphor-icons/react';
 import { RewardsCard } from '@/features/rewards';
 import { KnowledgeBaseSwitcher } from '@/features/knowledge/knowledge-base-switcher';
 import { KnowledgeNavigationOutlet } from '@/features/knowledge/navigation/system-navigation';
@@ -39,7 +39,10 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
       {open && <div className={layout.switcher}><KnowledgeBaseSwitcher onSwitch={onKnowledgeBaseChange} /></div>}
       <Tooltip>
         <TooltipTrigger asChild><button type="button" className={`fob-action ${layout.toggle}`} aria-label={t(open ? '收起主导航' : '展开主导航')} onClick={open ? onCollapse : onExpand}>
-          <SidebarSimple aria-hidden size={16} weight="fill" />
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="3" width="3.5" height="10" rx="1.25" fill="currentColor" opacity="0.55" />
+            <rect x="6.5" y="3" width="7.5" height="10" rx="1.5" fill="currentColor" />
+          </svg>
         </button></TooltipTrigger>
         <TooltipContent side="bottom">{t(open ? '收起主导航' : '展开主导航')}</TooltipContent>
       </Tooltip>

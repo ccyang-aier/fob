@@ -147,7 +147,7 @@ function FontFamilyMenu<T extends string>({
           >
             {active.label}
           </span>
-          <CaretDown className="size-3 shrink-0 text-[var(--muted)]" weight="fill" aria-hidden />
+          <CaretDown className="size-3 shrink-0 text-[var(--muted)]" weight="bold" aria-hidden />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">

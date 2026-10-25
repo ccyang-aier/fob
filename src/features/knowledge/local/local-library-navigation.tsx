@@ -161,7 +161,7 @@ export function LocalLibraryNavigation({
                 onClick={onCreateFolder}
                 className="rounded p-1 enabled:hover:bg-[var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <Plus weight="bold" size={15} />
+                <Plus size={15} />
               </IconButton>
             ) : undefined
           }
@@ -222,8 +222,7 @@ export function LocalLibraryNavigation({
                       >
                         <CaretRight
                           aria-hidden
-                          size={11}
-                          weight="fill"
+                          size={11} weight="bold"
                           className={cn(
                             'mr-[9px] shrink-0 text-[var(--muted)] transition-transform',
                             expanded && 'rotate-90',
@@ -254,7 +253,7 @@ export function LocalLibraryNavigation({
                         className={styles.actionButton}
                         onClick={() => onCreateDocumentInFolder(folder.id)}
                       >
-                        <Plus weight="bold" size={14} />
+                        <Plus size={14} />
                       </IconButton>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -263,7 +262,7 @@ export function LocalLibraryNavigation({
                             tooltip={knowledgeT('more')}
                             className={styles.actionButton}
                           >
-                            <DotsThree size={15} weight="fill" />
+                            <DotsThree size={15} weight="bold" />
                           </IconButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -349,7 +348,7 @@ export function LocalLibraryNavigation({
                     title={knowledgeT('createAKnowledgeBaseFirst')}
                     className="mt-1 flex h-[30px] items-center gap-2 px-1 text-[12px] text-[var(--muted)] opacity-45 cursor-not-allowed"
                   >
-                    <Plus weight="bold" size={15} aria-hidden />
+                    <Plus size={15} aria-hidden />
                     {knowledgeT('newFolder')}
                   </button>
                 </>
@@ -380,7 +379,7 @@ export function LocalLibraryNavigation({
                 }}
                 className="rounded p-1 enabled:hover:bg-[var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <Plus weight="bold" size={15} />
+                <Plus size={15} />
               </IconButton>
             ) : undefined
           }
@@ -459,8 +458,7 @@ export function LocalLibraryNavigation({
                       >
                         <CaretRight
                           aria-hidden
-                          size={11}
-                          weight="fill"
+                          size={11} weight="bold"
                           className={cn(
                             'mr-[9px] shrink-0 text-[var(--muted)] transition-transform',
                             expanded && 'rotate-90',
@@ -490,7 +488,7 @@ export function LocalLibraryNavigation({
                         className={styles.actionButton}
                         onClick={() => onCreateDocumentInTag(tag.id)}
                       >
-                        <Plus weight="bold" size={14} />
+                        <Plus size={14} />
                       </IconButton>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -499,7 +497,7 @@ export function LocalLibraryNavigation({
                             tooltip={knowledgeT('more')}
                             className={styles.actionButton}
                           >
-                            <DotsThree size={15} weight="fill" />
+                            <DotsThree size={15} weight="bold" />
                           </IconButton>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent
@@ -563,7 +561,7 @@ export function LocalLibraryNavigation({
                 title={knowledgeT('createAKnowledgeBaseFirst')}
                 className="mt-1 flex h-[30px] items-center gap-2 px-1 text-[12px] text-[var(--muted)] opacity-45 cursor-not-allowed"
               >
-                <Plus weight="bold" size={15} aria-hidden />
+                <Plus size={15} aria-hidden />
                 {knowledgeT('newTag')}
               </button>
             ) : null}

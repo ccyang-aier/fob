@@ -100,9 +100,9 @@ export function SidebarProjectTreeNode({
             className="mr-0.5 inline-flex size-[17px] shrink-0 items-center justify-center rounded-[4px] outline-none transition-colors hover:text-foreground focus-visible:text-foreground"
           >
             {isExpanded ? (
-              <CaretDown aria-hidden="true" size={10} weight="fill" />
+              <CaretDown aria-hidden="true" size={10} weight="bold" />
             ) : (
-              <CaretRight aria-hidden="true" size={10} weight="fill" />
+              <CaretRight aria-hidden="true" size={10} weight="bold" />
             )}
           </IconButton>
         ) : !isDocument ? (
@@ -155,7 +155,7 @@ export function SidebarProjectTreeNode({
                     className={styles.actionButton}
                     onClick={(event) => event.stopPropagation()}
                   >
-                    <DotsThree aria-hidden="true" size={16} weight="fill" />
+                    <DotsThree aria-hidden="true" size={16} weight="bold" />
                   </IconButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-[190px]">

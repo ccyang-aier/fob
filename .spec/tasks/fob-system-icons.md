@@ -2,6 +2,8 @@
 
 当前规范见 [AI 前端规则](../../AI_FRONTEND_RULES.md#图标)与[全局界面组件](../../docs/architecture/fob-product-boundaries.md#全局界面组件)。
 
+本页记录最初的实心图标调整；共享默认值与控制符号已按用户后续反馈修正，当前实现见[控制图标修正](fob-icon-controls.md)。
+
 ## 完成范围
 
 - `SystemIconScope` 提供 Phosphor `fill` 默认值，覆盖系统侧栏、顶栏及页签、设置和模板页面，并通过 React 上下文覆盖弹出菜单。
