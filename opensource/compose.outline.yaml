@@ -1,0 +1,90 @@
+name: fob-outline-local
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fob_outline
+      POSTGRES_PASSWORD: ${OUTLINE_POSTGRES_PASSWORD:?Run node opensource/outline-local.mjs init}
+      POSTGRES_DB: fob_outline
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fob_outline -d fob_outline"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  redis:
+    image: redis:7.4.8-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  mailpit:
+    image: axllent/mailpit:v1.32.0
+    restart: unless-stopped
+    environment:
+      MP_DATABASE: /data/mailpit.db
+      MP_MAX_MESSAGES: 100
+    ports:
+      - "127.0.0.1:3803:8025"
+    volumes:
+      - mail-data:/data
+  outline:
+    image: fob-outline-local:source
+    build:
+      context: ./outline
+      dockerfile: ../outline-local.Dockerfile
+      network: host
+      args:
+        SOURCE_COMMIT: ${OUTLINE_SOURCE_COMMIT:?Run node opensource/outline-local.mjs init}
+    restart: unless-stopped
+    env_file: ./.env.outline.local
+    environment:
+      NODE_ENV: production
+      URL: http://localhost:3802
+      PORT: 3000
+      WEB_CONCURRENCY: 1
+      DATABASE_URL: postgres://fob_outline:${OUTLINE_POSTGRES_PASSWORD}@postgres:5432/fob_outline
+      PGSSLMODE: disable
+      REDIS_URL: redis://redis:6379
+      REDIS_COLLABORATION_URL: redis://redis:6379
+      FILE_STORAGE: local
+      FILE_STORAGE_LOCAL_ROOT_DIR: /var/lib/outline/data
+      FORCE_HTTPS: "false"
+      PROXY_HEADERS_TRUSTED: "false"
+      DEFAULT_LANGUAGE: zh_CN
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025
+      SMTP_SECURE: "false"
+      SMTP_DISABLE_STARTTLS: "true"
+      SMTP_FROM_EMAIL: outline@fob.local
+      ENABLE_UPDATES: "false"
+      TELEMETRY: "false"
+    ports:
+      - "127.0.0.1:3802:3000"
+    volumes:
+      - outline-data:/var/lib/outline/data
+      - ./outline-bootstrap.mjs:/opt/fob/outline-bootstrap.mjs:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mailpit:
+        condition: service_started
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 192.168.242.0/24
+volumes:
+  postgres-data:
+  redis-data:
+  mail-data:
+  outline-data:
