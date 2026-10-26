@@ -23,6 +23,7 @@ import { DocumentNavigationTools } from './document-tools';
 import type { DocumentLinkTarget } from './document-link';
 import { SelectionToolbar } from './components/selection-toolbar';
 import { SlashMenuLayer } from './commands';
+import { BlockDragHandle } from './components/block-drag-handle';
 
 export function DocumentEditorFrame({
   children,
@@ -130,5 +131,5 @@ export function DocumentEditorBody({
 
 /** Same body, block styles and interaction layers for pages and inline folder overviews. */
 export function DocumentEditorContent({ editor, before, style, className, attributes }: { editor: Editor | null; before?: ReactNode; style?: CSSProperties; className?: string; attributes?: Record<string, string | number> }) {
-  return <><div className={`${styles.document} ${className ?? ''}`} style={style} {...attributes}>{before}<EditorContent editor={editor} /></div><SelectionToolbar editor={editor} /><SlashMenuLayer editor={editor} /></>;
+  return <><div className={`${styles.document} ${className ?? ''}`} style={style} {...attributes}>{before}<EditorContent editor={editor} /><BlockDragHandle editor={editor} /></div><SelectionToolbar editor={editor} /><SlashMenuLayer editor={editor} /></>;
 }

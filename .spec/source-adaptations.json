@@ -732,8 +732,8 @@
     "sha256": "aa7b4cffefd6975184f2b0d97e080e4e4493eab62a63547273bbf8b6fe3b157d"
   },
   "src/features/knowledge/editor/editor-layout.tsx": {
-    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
-    "sha256": "df0b3607701a7952f4a8e8f70acb78c52d5677884fe920a5180bd8c1e8370ebb"
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Mount the shared block hover/drag layer for local, collaborative and folder bodies, preserving saved content and block IDs.",
+    "sha256": "be3464073133467fd2e1d8db35f110670509b053d1e827e4b95a2aa7c38c1e60"
   },
   "src/features/knowledge/editor/block-modules/table/table.module.css": {
     "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development.",

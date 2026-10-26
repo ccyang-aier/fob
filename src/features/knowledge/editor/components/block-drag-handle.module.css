@@ -1,0 +1,41 @@
+.handle {
+  position: fixed;
+  z-index: 35;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--muted-strong);
+  background: transparent;
+  cursor: grab;
+  user-select: none;
+}
+.handle[hidden], .indicator[hidden] { display: none; }
+.handle:hover { background: var(--interaction-hover-bg); }
+.handle:focus-visible { outline: 1px solid var(--control-border); outline-offset: -1px; }
+.handle:active { cursor: grabbing; }
+.handle[data-dragging] { opacity: 0; }
+.indicator {
+  position: fixed;
+  z-index: 36;
+  height: 2px;
+  border-radius: 1px;
+  background: #0869cf;
+  pointer-events: none;
+}
+.source { opacity: .3; }
+.source:global(.ProseMirror-selectednode) { outline: none; }
+.hoverTarget:is(h1, h2, h3, h4)::before { opacity: 0 !important; }
+.preview {
+  position: fixed;
+  top: -10000px;
+  left: -10000px;
+  min-height: 0 !important;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+}
+:global(html[data-theme="dark"]) .indicator { background: #8cc7ff; }
