@@ -23,7 +23,7 @@ export function TableColorMenuItems({
   const place = (element: HTMLElement) => {
     const bounds = element.getBoundingClientRect();
     const viewport = element.ownerDocument.documentElement.clientWidth;
-    const width = Math.min(286, viewport - 24);
+    const width = Math.min(248, viewport - 24);
     setOffset(
       viewport - bounds.right - 12 >= width || bounds.left - 12 >= width
         ? -8

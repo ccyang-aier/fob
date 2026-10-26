@@ -12,4 +12,8 @@ export const knowledgeMessages = defineMessages({
   success: ['成功', 'Success'],
   warning: ['警告', 'Warning'],
   error: ['错误', 'Error'],
+  custom: ['自定义', 'Custom'],
+  customBackground: ['自定义背景色', 'Custom background'],
+  noticeValue: ['{v0}通知', '{v0} notice'],
+  backToStyles: ['返回提示框样式', 'Back to callout styles'],
 });

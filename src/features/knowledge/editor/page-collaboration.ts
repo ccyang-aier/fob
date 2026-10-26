@@ -12,7 +12,7 @@ import { Extension } from '@tiptap/core';
 import { Plugin, PluginKey } from '@tiptap/pm/state';
 import type { Transaction } from '@tiptap/pm/state';
 import { blockIdPluginKey } from '@fob/shared/knowledge/schema';
-import { redo, undo, ySyncPlugin, yUndoPlugin } from 'y-prosemirror';
+import { redo, undo, ySyncPlugin, ySyncPluginKey, yUndoPlugin, yUndoPluginKey } from 'y-prosemirror';
 import type * as Y from 'yjs';
 import type { PageUndo } from '../collaboration/page-undo';
 
@@ -72,13 +72,41 @@ function pageHistoryReconcilePlugin() {
   });
 }
 
+/** The page session owns this manager; editor view reconfiguration must not destroy it. */
+function sessionUndoPlugin(manager: Y.UndoManager) {
+  const base = yUndoPlugin({ undoManager: manager });
+  return new Plugin({
+    ...base.spec,
+    view(view) {
+      const binding = ySyncPluginKey.getState(view.state)?.binding;
+      type StackEvent = { stackItem: Y.UndoManager['undoStack'][number] };
+      const added = ({ stackItem }: StackEvent) => {
+        const state = yUndoPluginKey.getState(view.state);
+        if (binding && state) stackItem.meta.set(binding, state.prevSel);
+      };
+      const popped = ({ stackItem }: StackEvent) => {
+        if (binding) binding.beforeTransactionSelection = stackItem.meta.get(binding) || binding.beforeTransactionSelection;
+      };
+      manager.on('stack-item-added', added);
+      manager.on('stack-item-popped', popped);
+      // yUndoPlugin's default view destroys even an externally supplied manager.
+      // Registering a floating control rebuilds all PM plugin views, so only
+      // detach this view's listeners here. PageUndo.destroy owns final disposal.
+      return { destroy() {
+        manager.off('stack-item-added', added);
+        manager.off('stack-item-popped', popped);
+      } };
+    },
+  });
+}
+
 export function pageCollaborationExtension(document: Y.Doc, pageUndo: PageUndo) {
   return Extension.create({
     name: 'fobPageCollaboration',
     addProseMirrorPlugins() {
       return [
         ySyncPlugin(document.getXmlFragment(PAGE_BODY_FRAGMENT)),
-        yUndoPlugin({ undoManager: pageUndo.local }),
+        sessionUndoPlugin(pageUndo.local),
         pageHistoryReconcilePlugin(),
       ];
     },

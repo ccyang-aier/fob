@@ -129,14 +129,30 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       const positionHandle = () => {
         if (!target?.isConnected || !view.editable) { hide(); return; }
         const rect = target.getBoundingClientRect(), bounds = scrollArea()?.getBoundingClientRect();
+        const pos = value().hovered;
+        const table = pos !== null && view.state.doc.nodeAt(pos)?.type.name === 'table'
+          ? target.matches('[data-fob-node="table"]') ? target : target.querySelector<HTMLElement>('[data-fob-node="table"]')
+          : null;
+        const { $from } = view.state.selection;
+        let tableSelected = false;
+        if (table) for (let depth = $from.depth; depth > 0; depth--) {
+          if ($from.node(depth).type.name === 'table' && $from.before(depth) === pos) tableSelected = true;
+        }
+        if (table && (tableSelected || table.hasAttribute('data-active') || table.hasAttribute('data-reordering'))) { hide(); return; }
         const computed = win.getComputedStyle(target);
         const lineHeight = Number.parseFloat(computed.lineHeight) || 24;
-        const y = rect.top + Math.min(rect.height, lineHeight) / 2 - 12;
-        const x = computed.direction === 'rtl' ? rect.right + 4 : rect.left - 28;
+        const firstRow = table?.querySelector('tr')?.getBoundingClientRect();
+        const content = target.querySelector<HTMLElement>('[data-node-view-content] :is(p,h1,h2,h3,h4,h5,h6), pre')?.getBoundingClientRect();
+        const y = firstRow ? firstRow.top + firstRow.height / 2 - 12
+          : content ? content.top + Math.min(content.height, lineHeight) / 2 - 12
+          : rect.top + Math.min(rect.height, lineHeight) / 2 - 12;
+        const list = target.matches('li') ? target.parentElement?.getBoundingClientRect() : null;
+        const x = computed.direction === 'rtl'
+          ? Math.max(rect.right, list?.right ?? rect.right) + 4
+          : Math.min(rect.left, list?.left ?? rect.left) - 28;
         if (x < 0 || x + 24 > win.innerWidth || y < Math.max(0, bounds?.top ?? 0) || y + 24 > Math.min(win.innerHeight, bounds?.bottom ?? win.innerHeight)) { hide(); return; }
         handle.style.left = `${x}px`;
         handle.style.top = `${y}px`;
-        const pos = value().hovered;
         const blank = pos !== null && isBlankTextBlock(view.state.doc.nodeAt(pos));
         handle.hidden = blank;
         if (insertHandle) {
@@ -149,6 +165,11 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         if (value().source !== null || event.buttons) return;
         if (!view.editable || view.composing) { hide(); return; }
         if (!(event.target instanceof Element) || handle.contains(event.target) || insertHandle?.contains(event.target)) return;
+        if (target?.matches('li') && !handle.hidden) {
+          const row = target.getBoundingClientRect(), button = handle.getBoundingClientRect();
+          if (event.clientY >= row.top && event.clientY <= row.bottom &&
+            (event.clientX >= button.left && event.clientX <= row.left || event.clientX >= row.right && event.clientX <= button.right)) return;
+        }
         let over = event.target;
         const rect = view.dom.getBoundingClientRect();
         if (!view.dom.contains(over) && event.clientX >= rect.left - 36 && event.clientX < rect.left && event.clientY >= rect.top && event.clientY <= rect.bottom) {
@@ -301,15 +322,19 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       insertHandle?.addEventListener('click', insert);
       const observer = new ResizeObserver(scroll);
       observer.observe(view.dom);
+      const controlsObserver = new win.MutationObserver(() => { if (target && value().source === null) positionHandle(); });
+      controlsObserver.observe(view.dom, { attributes: true, attributeFilter: ['data-active', 'data-reordering'], subtree: true });
       return {
         update(_view, previous) {
           if (!view.editable || previous.doc !== view.state.doc && value().source === null) { finish(); return; }
           if (previous.doc !== view.state.doc) updateDrop();
+          if (target && value().source === null && !previous.selection.eq(view.state.selection)) positionHandle();
         },
         destroy() {
           disposed = true;
           finish();
           observer.disconnect();
+          controlsObserver.disconnect();
           owner.removeEventListener('mousemove', hover);
           owner.removeEventListener('dragover', dragOver, true);
           owner.removeEventListener('drop', drop, true);

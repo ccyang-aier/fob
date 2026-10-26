@@ -129,7 +129,7 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
           ? {
               left: geometry.viewportLeft - 17,
               top: geometry.top + geometry.rows[index],
-              width: 12,
+              width: 10,
               height: geometry.rows[index + 1] - geometry.rows[index],
             }
           : axis === 'column'
@@ -137,9 +137,9 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
                 left: geometry.left + geometry.columns[index],
                 top: geometry.top - 17,
                 width: geometry.columns[index + 1] - geometry.columns[index],
-                height: 12,
+                height: 10,
               }
-            : { left: geometry.viewportLeft - 18, top: geometry.top - 18, width: 14, height: 14 },
+            : { left: geometry.viewportLeft - 18, top: geometry.top - 18, width: 12, height: 12 },
     });
   };
   const reorder = useTableReorder({
@@ -164,8 +164,8 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
   };
 
   const viewportWidth = geometry?.pageWidth ?? 1024;
-  const toolbarWidth = Math.min(444, viewportWidth - 24);
-  const toolbarHeight = 8 + 36 * Math.ceil(12 / Math.max(1, Math.floor((toolbarWidth - 12) / 36)));
+  const toolbarWidth = Math.min(372, viewportWidth - 24);
+  const toolbarHeight = 8 + 30 * Math.ceil(12 / Math.max(1, Math.floor((toolbarWidth - 12) / 30)));
   const center =
     geometry && selection
       ? geometry.left + (geometry.columns[selection.left] + geometry.columns[selection.right]) / 2

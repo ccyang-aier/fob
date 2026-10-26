@@ -153,11 +153,12 @@ export function MediaBlockView({
   const source = String(node.attrs.src ?? '');
   const resolved = useResolvedMedia(source, localKnowledgeBaseId, knowledgeBaseId);
   const uploaded = useCallback(
-    (asset: { hash: string; name: string; mime: string }) => {
+    (asset: { hash: string; name: string; mime: string; size: number }) => {
       updateAttributes({
         src: 'asset:' + asset.hash,
         title: asset.name,
         mime: asset.mime,
+        size: asset.size,
         ...(kind === 'image' ? { alt: asset.name } : {}),
       });
     },
@@ -197,6 +198,7 @@ export function MediaBlockView({
           src: stored,
           title: file.name,
           mime: file.type || null,
+          size: file.size,
           ...(kind === 'image' ? { alt: file.name } : {}),
         });
       } catch (cause) {
@@ -251,12 +253,13 @@ export function MediaBlockView({
         type="file"
         accept={ACCEPT[kind]}
         className={styles.hiddenInput}
+        contentEditable={false}
         aria-label={knowledgeT('choose2') + LABELS(locale)[kind] + knowledgeT('file')}
         data-document-export-omit
         onChange={(event) => {
           const file = event.target.files?.[0];
           if (file) void importFile(file);
-          event.target.value = '';
+          event.currentTarget.value = '';
         }}
       />
       {source && resolved.value && (

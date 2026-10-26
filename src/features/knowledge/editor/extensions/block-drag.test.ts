@@ -177,6 +177,59 @@ test('the visible ghost follows the grab offset, preserves document content, and
   host.remove();
 });
 
+test('list handles stay outside markers and retain their target across the marker gutter', () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = new Editor({ element: host, extensions: createKnowledgeExtensions(), content: '<ul><li><p>First</p></li><li><p>Second</p></li></ul>' });
+  const elements = controls();
+  const box = (left: number, top: number, width: number, height: number) => ({ left, top, right: left + width, bottom: top + height, width, height, x: left, y: top, toJSON: () => ({}) });
+  host.getBoundingClientRect = () => box(50, 80, 800, 500);
+  editor.view.dom.getBoundingClientRect = () => box(130, 100, 600, 300);
+  const list = editor.view.dom.querySelector('ul')!, item = list.querySelector('li')!;
+  list.getBoundingClientRect = () => box(130, 110, 600, 80);
+  item.getBoundingClientRect = () => box(156, 110, 574, 40);
+  elements.handle.getBoundingClientRect = () => box(102, 110, 24, 24);
+  editor.registerPlugin(createBlockDragPlugin(elements));
+  item.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 180, clientY: 120 }) as unknown as Event);
+  expect(elements.handle.hidden).toBe(false);
+  expect(elements.handle.style.left).toBe('102px');
+  const hovered = blockDragKey.getState(editor.state)?.hovered;
+  list.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 142, clientY: 120 }) as unknown as Event);
+  expect(blockDragKey.getState(editor.state)?.hovered).toBe(hovered);
+  expect(editor.state.doc.nodeAt(hovered!)?.type.name).toBe('listItem');
+  editor.destroy();
+  host.remove();
+});
+
+test('a table handle aligns with its first row and hides immediately when table controls activate', async () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = new Editor({ element: host, extensions: createKnowledgeExtensions(), content: '<p>Before</p><table><tr><td><p>A</p></td></tr></table>' });
+  const elements = controls();
+  const box = (left: number, top: number, width: number, height: number) => ({ left, top, right: left + width, bottom: top + height, width, height, x: left, y: top, toJSON: () => ({}) });
+  host.getBoundingClientRect = () => box(50, 80, 800, 500);
+  editor.view.dom.getBoundingClientRect = () => box(130, 100, 600, 300);
+  const table = editor.view.dom.querySelector('table')!, row = table.querySelector('tr')!;
+  table.getBoundingClientRect = () => box(130, 150, 600, 80);
+  row.getBoundingClientRect = () => box(130, 170, 600, 44);
+  editor.registerPlugin(createBlockDragPlugin(elements));
+  const hover = () => row.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 170, clientY: 180 }) as unknown as Event);
+  hover();
+  expect(elements.handle.hidden).toBe(false);
+  expect(elements.handle.style.top).toBe('180px');
+  table.setAttribute('data-active', 'true');
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(elements.handle.hidden).toBe(true);
+  table.removeAttribute('data-active');
+  hover();
+  expect(elements.handle.hidden).toBe(false);
+  const pos = blockDragKey.getState(editor.state)!.hovered!;
+  editor.commands.setTextSelection(pos + 4);
+  expect(elements.handle.hidden).toBe(true);
+  editor.destroy();
+  host.remove();
+});
+
 test('drag source maps through concurrent changes, cancels on removal, and never enters exported content', () => {
   const editor = new Editor({ extensions: createKnowledgeExtensions(), content: '<p>A</p><p>B</p>' });
   const elements = controls();
@@ -239,16 +292,22 @@ test('collaborative moves propagate through Yjs and undo restores the original I
   const pageUndo = createPageUndo({ document, bindingOrigins: [ySyncPluginKey] });
   const editor = new Editor({ extensions: [...createKnowledgeExtensions(), createBlockIdExtension({ pageId: 'block-drag-page' }), pageCollaborationExtension(document, pageUndo)] });
   editor.commands.setContent('<p>A</p><p>B</p><p>C</p>');
+  editor.registerPlugin(createBlockDragPlugin(controls()));
   const initial = editor.getJSON();
   pageUndo.local.stopCapturing();
-  editor.view.dispatch(moveDocumentBlock(editor.state, 0, editor.state.doc.content.size)!);
+  editor.view.dispatch(editor.state.tr.setMeta(blockDragKey, { source: 0, hovered: 0 }).setMeta('addToHistory', false));
+  editor.view.dispatch(moveDocumentBlock(editor.state, 0, editor.state.doc.content.size)!.setMeta(blockDragKey, { source: null, hovered: null }));
   expect(texts(editor.state)).toEqual(['B', 'C', 'A']);
   const fragment = document.getXmlFragment('default');
   expect((fragment.get(2) as Y.XmlElement).getAttribute('blockId')).toBe(initial.content![0].attrs!.blockId);
-  pageUndo.undo();
+  expect(pageUndo.undo()).toBe(true);
   expect(editor.getJSON()).toEqual(initial);
   pageUndo.redo();
   expect(texts(editor.state)).toEqual(['B', 'C', 'A']);
+  editor.unregisterPlugin(blockDragKey);
+  expect(pageUndo.undo()).toBe(true);
+  expect(editor.getJSON()).toEqual(initial);
   editor.destroy();
+  pageUndo.destroy();
   document.destroy();
 });

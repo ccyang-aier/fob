@@ -54,7 +54,12 @@ function mediaBlock(name: 'image' | 'video' | 'audio' | 'file', title: string): 
     schema: {
       atom: true,
       draggable: true,
-      attrs: { src: stringAttribute, alt: stringAttribute, title: nullableString, caption: stringAttribute, mime: nullableString },
+      attrs: {
+        src: stringAttribute, alt: stringAttribute, title: nullableString, caption: stringAttribute, mime: nullableString,
+        size: { default: null, validate(value: unknown) {
+          if (value !== null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0)) throw new TypeError('Expected a non-negative file size or null');
+        } },
+      },
       parseDOM: name === 'file' ? [] : [{
         tag: `${name === 'image' ? 'img' : name}[src]`,
         getAttrs: (element) => ({ src: element.getAttribute('src'), alt: element.getAttribute('alt') ?? '', title: element.getAttribute('title') }),
@@ -130,7 +135,7 @@ export const KNOWLEDGE_BLOCKS: readonly BlockDefinition[] = Object.freeze([
   }),
   defineBlock({
     name: 'callout',
-    schema: { content: 'block+', defining: true, attrs: { emoji: { default: '💡', validate: 'string' }, tone: { default: 'neutral', validate: 'string' } }, toDOM: (node) => ['aside', { 'data-emoji': node.attrs.emoji, 'data-tone': node.attrs.tone }, 0] },
+    schema: { content: 'block+', defining: true, attrs: { emoji: { default: '💡', validate: 'string' }, tone: { default: 'neutral', validate: 'string' }, background: colorAttribute }, toDOM: (node) => ['aside', { 'data-emoji': node.attrs.emoji, 'data-tone': node.attrs.tone, 'data-background': node.attrs.background, style: node.attrs.background ? `background-color:${node.attrs.background}` : null }, 0] },
     markdown: { fromMd: { directive: 'callout', kind: 'container' } }, index: { mode: 'text' },
     ai: { describe: (node) => `提示框：${node.textContent}` },
     slash: { title: '提示框', keywords: ['callout', 'tip', '提示'], group: 'text' },

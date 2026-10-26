@@ -63,36 +63,12 @@ export function DocumentOutline({
               index === activeHeading ||
               (isCollapsed && rows[activeHeading]?.ancestors.includes(index));
             return (
-              <button
-                type="button"
+              <div
                 key={heading.id}
                 className={styles.chapter}
                 data-root={depth === 0}
                 data-active={Boolean(active)}
                 style={{ paddingInlineStart: `${8 + depth * 16}px` }}
-                aria-label={
-                  hasChildren
-                    ? knowledgeT('valueSectionValue', {
-                        v0: isCollapsed ? knowledgeT('expand') : knowledgeT('collapse'),
-                        v1: heading.title,
-                      })
-                    : undefined
-                }
-                aria-expanded={hasChildren ? !isCollapsed : undefined}
-                aria-current={index === activeHeading ? 'location' : undefined}
-                title={heading.title}
-                onClick={() => {
-                  if (!hasChildren) {
-                    onNavigate(index);
-                    return;
-                  }
-                  setCollapsed((current) => {
-                    const next = new Set(current);
-                    if (next.has(heading.id)) next.delete(heading.id);
-                    else next.add(heading.id);
-                    return next;
-                  });
-                }}
               >
                 {parents
                   .slice(1)
@@ -116,21 +92,23 @@ export function DocumentOutline({
                   />
                 )}
                 {hasChildren ? (
-                  <span className={styles.fold} aria-hidden>
+                  <button type="button" className={styles.fold}
+                    aria-label={knowledgeT('valueSectionValue', { v0: isCollapsed ? knowledgeT('expand') : knowledgeT('collapse'), v1: heading.title })}
+                    aria-expanded={!isCollapsed}
+                    onClick={() => setCollapsed(current => { const next = new Set(current); if (next.has(heading.id)) next.delete(heading.id); else next.add(heading.id); return next; })}>
                     {isCollapsed ? <Plus size={12} /> : <Minus size={12} />}
-                  </span>
+                  </button>
                 ) : (
                   <span className={styles.foldSpace} />
                 )}
-                <span className={styles.chapterTitle}>{heading.title}</span>
-              </button>
+                <button type="button" className={styles.chapterTitle} title={heading.title} aria-current={index === activeHeading ? 'location' : undefined} onClick={() => onNavigate(index)}>{heading.title}</button>
+              </div>
             );
           })}
         </nav>
       ) : (
         <div className={styles.empty} role="status">
           <strong>{knowledgeT('noSectionsYet')}</strong>
-          <p>{knowledgeT('addHeadingsToNavigateTheDocumentHere')}</p>
         </div>
       )}
     </div>

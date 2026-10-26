@@ -8,6 +8,7 @@ import { InlinePdfView } from '../rich-content/inline-pdf-view';
 import type { NodeViewProps } from '@tiptap/react';
 import { MediaBlockView } from '../media-core/media-block-view';
 import type { ResolvedMedia } from '../media-core/media-block-view';
+import styles from './file.module.css';
 
 function formatSize(size: number | null): string {
   return size === null
@@ -29,34 +30,26 @@ export function FileNodeView(
     <MediaBlockView
       {...props}
       kind="file"
-      renderPreview={(source) => isPdfSource(String(props.node.attrs.src || ''), props.node.attrs.mime || source.mime, title) ? <InlinePdfView url={source.url} title={source.name || title} /> : <FilePreview source={source} title={title} />}
+      renderPreview={(source) => isPdfSource(String(props.node.attrs.src || ''), props.node.attrs.mime || source.mime, title) ? <InlinePdfView url={source.url} title={source.name || title} /> : <FilePreview source={{ ...source, size: source.size ?? props.node.attrs.size }} title={title} />}
     />
   );
 }
 
 function FilePreview({ source, title }: { source: ResolvedMedia; title: string }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
-
+  const name = source.name || title;
+  const extension = name.match(/\.([a-z0-9]{1,8})$/i)?.[1].toUpperCase();
   return (
-    <div className="flex w-full items-center gap-3 p-5 text-left">
-      <span className="grid size-11 shrink-0 place-items-center rounded-[9px] bg-[#edf3fb] text-[#3a72b9]">
-        <FileText aria-hidden size={23} />
+    <a className={styles.card} href={source.url} download={name} target="_blank" rel="noopener noreferrer" aria-label={`${knowledgeT('download')} ${name}`}>
+      <span className={styles.badge} data-type={extension?.toLowerCase()} aria-hidden>
+        {extension ? extension.slice(0, 4) : <FileText size={23} />}
       </span>
-      <span className="min-w-0 flex-1">
-        <strong className="block truncate text-[13px] font-semibold text-[var(--ink)]">
-          {source.name || title}
-        </strong>
-        <small className="mt-0.5 block text-[11px] text-[var(--muted-strong)]">
-          {formatSize(source.size) || source.mime || knowledgeT('attachment')}
+      <span className={styles.details}>
+        <strong className={styles.name} title={name}>{name}</strong>
+        <small className={styles.size}>
+          {formatSize(source.size ?? null) || source.mime || knowledgeT('attachment')}
         </small>
       </span>
-      <a
-        href={source.url}
-        download={source.name || title}
-        className="rounded-[6px] border border-[var(--control-border)] bg-panel px-3 py-1.5 text-[11px] font-medium text-[var(--ink-soft)] hover:bg-[var(--surface-hover)]"
-      >
-        {knowledgeT('download')}
-      </a>
-    </div>
+    </a>
   );
 }

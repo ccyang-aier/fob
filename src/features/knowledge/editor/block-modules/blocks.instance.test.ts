@@ -239,7 +239,7 @@ describe('callout NodeView', () => {
         ).not.toBeNull();
         expect(card!.querySelector('h2')?.textContent).toBe('标题');
         const chipSelector = 'button[data-document-callout-icon]';
-        expect(card!.querySelector(chipSelector)?.textContent).toContain('✅');
+        expect(card!.querySelector(`${chipSelector} svg[data-icon="circle-check"]`)).not.toBeNull();
 
         // updateAttributes re-renders chip + data attrs.
         editor.commands.updateAttributes('callout', { emoji: '🔥' });
@@ -255,11 +255,11 @@ describe('callout NodeView', () => {
             new window.MouseEvent('click', { bubbles: true, cancelable: true }) as unknown as Event,
           );
         await settle();
-        const dialog = dom.querySelector('[role="dialog"]');
+        const dialog = document.querySelector('[role="dialog"]');
         expect(dialog).not.toBeNull();
         dialog!.querySelector<HTMLButtonElement>('button[aria-label="图标 🚀"]')!.click();
         await settle();
-        expect(dom.querySelector('[role="dialog"]')).toBeNull();
+        expect(document.querySelector('[role="dialog"]')).toBeNull();
         expect(
           dom.querySelector('aside[data-fob-node="callout"]')?.getAttribute('data-emoji'),
         ).toBe('🚀');
@@ -267,11 +267,22 @@ describe('callout NodeView', () => {
         // A tone swatch updates the tone the same way.
         dom.querySelector<HTMLButtonElement>(chipSelector)!.click();
         await settle();
-        dom.querySelector<HTMLButtonElement>('button[aria-label="语气 警告"]')!.click();
+        document.querySelector<HTMLButtonElement>('button[aria-label="语气 警告"]')!.click();
         await settle();
         expect(
           dom.querySelector('aside[data-fob-node="callout"]')?.getAttribute('data-tone'),
         ).toBe('warn');
+
+        dom.querySelector<HTMLButtonElement>(chipSelector)!.click();
+        await settle();
+        document.querySelector<HTMLButtonElement>('button[aria-label="自定义背景色"]')!.click();
+        await settle();
+        const hex = document.querySelector<HTMLInputElement>('input[aria-label="十六进制颜色"]')!;
+        expect(hex).not.toBeNull();
+        editor.commands.updateAttributes('callout', { tone: 'custom', background: '#153357' });
+        await settle();
+        expect(dom.querySelector('aside')?.getAttribute('data-background')).toBe('#153357');
+        expect(editor.getHTML()).toContain('background-color');
       } finally {
         dispose();
       }

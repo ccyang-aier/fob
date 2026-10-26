@@ -20,13 +20,13 @@
 .root .table :global(.column-resize-dragging) { user-select: none; }
 /* The editor-root cursor rule lives in the shared resize stylesheet. */
 .controls { pointer-events: none; }
-.corner { position: absolute; z-index: 4; width: 14px; height: 14px; padding: 0; border: 0; border-radius: 50%; background: var(--accent-soft-line); cursor: pointer; pointer-events: auto; }
+.corner { position: absolute; z-index: 4; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: var(--accent-soft-line); cursor: pointer; pointer-events: auto; }
 .columnRail, .rowRail { position: absolute; z-index: 3; overflow: hidden; border-radius: 4px; background: var(--accent-soft-line); pointer-events: auto; }
-.columnRail { height: 12px; }
-.rowRail { width: 12px; }
+.columnRail { height: 10px; }
+.rowRail { width: 10px; }
 .columnHandle, .rowHandle { position: absolute; border: 0; padding: 0; background: var(--accent-soft-line); cursor: grab; touch-action: none; }
-.columnHandle { top: 0; height: 12px; border-right: 1px solid var(--control-border); }
-.rowHandle { left: 0; width: 12px; border-bottom: 1px solid var(--control-border); }
+.columnHandle { top: 0; height: 10px; border-right: 1px solid var(--control-border); }
+.rowHandle { left: 0; width: 10px; border-bottom: 1px solid var(--control-border); }
 .columnHandle:active, .rowHandle:active { cursor: grabbing; }
 .columnHandle:last-child, .rowHandle:last-child { border: 0; }
 .columnHandle:hover, .rowHandle:hover, .corner:hover { background: var(--control-border); }
@@ -48,14 +48,14 @@
 .dropLabel { position: absolute; left: 6px; top: -28px; padding: 2px 8px; border-radius: 5px; background: var(--drag-indicator-color); color: white; font-size: 12px; line-height: 20px; white-space: nowrap; }
 .dropLabel[data-left] { left: -6px; transform: translateX(-100%); }
 .dropLine[data-invalid] .dropLabel { background: var(--err-ink); color: white; }
-.selectionToolbar { position: absolute; z-index: 90; display: flex; flex-wrap: wrap; justify-content: center; width: 444px; max-width: calc(100vw - 24px); padding: 4px 6px; border-radius: 6px; background: var(--panel); color: var(--ink-soft); box-shadow: 0 1px 3px rgb(0 0 0 / 0.071), 0 10px 20px rgb(0 0 0 / 0.071); transform: translate(-50%, -50%); cursor: default; }
+.selectionToolbar { position: absolute; z-index: 90; display: flex; flex-wrap: wrap; justify-content: center; width: 372px; max-width: calc(100vw - 24px); padding: 4px 6px; border-radius: 6px; background: var(--panel); color: var(--ink-soft); box-shadow: 0 1px 3px rgb(0 0 0 / 0.071), 0 10px 20px rgb(0 0 0 / 0.071); transform: translate(-50%, -50%); cursor: default; }
 .toolbarGroup { display: contents; }
-.toolbarButton { display: grid; width: 36px; height: 36px; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }
+.toolbarButton { display: grid; width: 30px; height: 30px; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }
 .toolbarButton:hover, .toolbarButton[data-on] { background: #edf3fc; color: #2863dc; }
 .toolbarButton:disabled { color: var(--muted-strong); cursor: default; }
 .toolbarButton:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .toolbarArrow { position: absolute; bottom: -10px; left: calc(50% - 8px); color: var(--panel); transform: rotate(180deg); pointer-events: none; }
-.menu.linkMenu { width: 300px; max-width: calc(100vw - 24px); padding: 12px; }
+.menu.linkMenu { width: 260px; max-width: calc(100vw - 24px); padding: 12px; }
 .linkLabel { display: block; margin-bottom: 8px; font-size: 13px; }
 .linkMenu input { width: 100%; }
 .linkActions { display: flex; justify-content: space-between; margin-top: 10px; }
@@ -66,27 +66,27 @@
   composes: menu-surface from global;
   border: 1px solid var(--menu-border);
   z-index: 100;
-  width: 202px;
-  padding: 6px;
-  border-radius: 11px;
+  width: 182px;
+  padding: 4px;
+  border-radius: 8px;
   color: var(--ink);
   font-family: Arial, "Microsoft YaHei", sans-serif;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: 24px;
+  line-height: 20px;
   outline: none;
 }
-.menuItem { display: flex; align-items: center; gap: 10px; height: 34px; padding: 0 12px; border-radius: 6px; outline: none; white-space: nowrap; user-select: none; cursor: pointer; }
+.menuItem { display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 9px; border-radius: 5px; outline: none; white-space: nowrap; user-select: none; cursor: pointer; }
 .menuItem svg { flex-shrink: 0; }
 .menuItem[data-disabled] { color: var(--muted-strong); pointer-events: none; }
 .caret { margin-left: auto; }
-.menuSeparator { height: 1px; margin: 6px 0; background: var(--separator-color); }
-.swatch { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; }
+.menuSeparator { height: 1px; margin: 4px 0; background: var(--separator-color); }
+.swatch { flex-shrink: 0; width: 14px; height: 14px; border-radius: 50%; }
 .swatch[data-empty] { border: 1.5px dashed currentColor; background: transparent; }
 .customSwatch { background: conic-gradient(#ff7e44, #ffe64f, #83d6ac, #ff7e44); }
-.pickerMenu { width: 286px; max-width: calc(100vw - 24px); padding: 12px; }
+.pickerMenu { width: 248px; max-width: calc(100vw - 24px); padding: 12px; }
 .colorPicker { display: flex; flex-direction: column; }
-.colorPlane { position: relative; height: 200px; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), var(--picker-hue); cursor: crosshair; touch-action: none; outline: none; }
+.colorPlane { position: relative; height: 152px; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent), var(--picker-hue); cursor: crosshair; touch-action: none; outline: none; }
 .colorPlane:focus-visible { box-shadow: inset 0 0 0 2px var(--control-border), 0 0 0 2px var(--control-border); }
 .colorMarker { position: absolute; width: 18px; height: 18px; border: 2px solid #fff; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 1px 3px #0004; pointer-events: none; }
 .colorRange { appearance: none; display: block; width: 100%; height: 10px; padding: 0; margin: 0; border: 0; border-radius: 5px; cursor: pointer; outline: none; }
@@ -96,10 +96,10 @@
 .colorRange::-moz-range-thumb { width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; background: var(--picker-hue); box-shadow: 0 1px 4px #0003; }
 .colorRange:focus-visible { box-shadow: 0 0 0 2px var(--control-border), 0 0 0 4px var(--control-border); }
 .hueRange { border-radius: 0 0 4px 4px; background: linear-gradient(to right, #f00 0%, #ff0 16.67%, #0f0 33.33%, #0ff 50%, #00f 66.67%, #f0f 83.33%, #f00 100%); }
-.alphaRange { margin-top: 20px; background: linear-gradient(to right, transparent, var(--picker-color)), repeating-conic-gradient(#ebe6e5 0% 25%, #fff 25% 50%) 0 / 10px 10px; box-shadow: inset 0 0 0 1px #00000008; }
+.alphaRange { margin-top: 14px; background: linear-gradient(to right, transparent, var(--picker-color)), repeating-conic-gradient(#ebe6e5 0% 25%, #fff 25% 50%) 0 / 10px 10px; box-shadow: inset 0 0 0 1px #00000008; }
 .alphaRange::-webkit-slider-thumb { background: var(--picker-color); }
 .alphaRange::-moz-range-thumb { background: var(--picker-color); }
-.hexRow { display: flex; gap: 6px; margin-top: 20px; }
+.hexRow { display: flex; gap: 6px; margin-top: 14px; }
 .hexInput { flex: 1; min-width: 0; height: 32px; padding: 0 8px; border: var(--separator-width) solid var(--separator-color); border-radius: 4px; font-size: 14px; line-height: 30px; color: var(--ink-soft); outline: none; }
 .hexInput:focus-visible { border-color: var(--accent); }
 .hexInput[aria-invalid="true"] { border-color: var(--err-ink); }
@@ -107,4 +107,4 @@
 .copyColor:hover { background: var(--surface-subtle); }
 .copyColor:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .copyError { margin-top: 8px; font-size: 12px; color: var(--err-ink); }
-@media (max-width: 600px) { .menu { width: 170px; font-size: 14px; } .pickerMenu { width: 286px; } }
+@media (max-width: 600px) { .menu { width: 170px; font-size: 14px; } .pickerMenu { width: 248px; } }

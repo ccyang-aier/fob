@@ -1,7 +1,7 @@
 'use client';
 import { useDeferredValue, useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Check, CaretLeft, Globe, LinkSimple, Question, Users, X } from '@/components/icons';
+import { Check, CaretLeft, Globe, LinkSimple, Question, ShareNetwork, Users, X } from '@/components/icons';
 import { documentInvitationInputSchema, documentInvitationReplySchema } from '@fob/shared/knowledge/contracts';
 import type { PageScope, PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { useTranslation } from '@/lib/i18n';
@@ -132,7 +132,7 @@ export function DocumentShareDialog({ target, onClose, settings }: { title: stri
 }
 export function DocumentShareButton({ target, className }: { target: DocumentLinkTarget; className?: string }) {
   const { t } = useTranslation(messages), [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  return <><button type="button" aria-label={t('share')} aria-expanded={Boolean(anchor)} className={`fob-action ${className ?? ''}`} onClick={event => setAnchor(anchor ? null : event.currentTarget)}>{t('share')}</button>
+  return <><button type="button" aria-label={t('share')} aria-expanded={Boolean(anchor)} className={`fob-action ${className ?? ''}`} onClick={event => setAnchor(anchor ? null : event.currentTarget)}><ShareNetwork size={16} aria-hidden /><span>{t('share')}</span></button>
     {anchor && <AnchoredPopover anchor={anchor} onClose={() => setAnchor(null)} label={t('shareDocument')} width={400} align="end" className={`${styles.surface} ${styles.popover}`}><ShareBody target={target} /></AnchoredPopover>}
   </>;
 }

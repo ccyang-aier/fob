@@ -146,7 +146,7 @@ test('folder pickers can deselect the current glyph and use the smaller selected
   expect(document.querySelector('[data-page-icon]')).toBeNull();
   expect(document.querySelector('[aria-label="添加文档图标"]')).not.toBeNull();
 });
-test('collapse hides the real descendants, survives changed positions, and leaf navigation stays independent', async () => {
+test('only the fold icon collapses descendants; parent and leaf titles always navigate', async () => {
   let navigation = -1;
   const headings = [
     { id: 'a', pos: 0, level: 1, title: 'A' },
@@ -171,13 +171,19 @@ test('collapse hides the real descendants, survives changed positions, and leaf 
   };
   await render(headings);
   await click('[title="A"]');
+  expect(navigation).toBe(0);
+  expect(document.querySelector('[title="B"]')).not.toBeNull();
+  await click('[aria-label="折叠章节 A"]');
   expect(document.querySelector('[title="B"]')).toBeNull();
   expect(document.querySelector('[title="C"]')).toBeNull();
   expect(document.querySelector('[title="D"]')).not.toBeNull();
-  expect(navigation).toBe(-1);
+  expect(navigation).toBe(0);
   await render(headings.map((heading) => ({ ...heading, pos: heading.pos + 10 })));
   expect(document.querySelector('[title="B"]')).toBeNull();
   await click('[title="A"]');
+  expect(navigation).toBe(0);
+  expect(document.querySelector('[title="B"]')).toBeNull();
+  await click('[aria-label="展开章节 A"]');
   await click('[title="C"]');
   expect(navigation).toBe(2);
   expect(document.querySelector('[aria-current="location"]')?.textContent).toBe('C');

@@ -8,7 +8,7 @@
 .iconButton { width: 28px; height: 32px; border-radius: 6px; }
 .avatar { display: grid; flex: none; width: 30px; height: 30px; place-items: center; border-radius: 50%; background: #3034ed; color: white; font-size: 15px; font-weight: 500; }
 .outlineButton { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 32px; padding: 0 10px; border: 1px solid var(--control-border); border-radius: 6px; background: var(--panel); color: var(--ink); font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; }
-.shareButton { height:30px; padding-inline:8px; border-radius:6px; border-color:#d6deea; box-shadow:0 1px 2px rgb(0 0 0 / 10%); font-weight:500; font-size:14px; }
+.shareButton { height:30px; padding-inline:8px; border-radius:6px; border-color:#d6deea; box-shadow:0 1px 2px rgb(0 0 0 / 10%); font-weight:600; font-size:14px; }
 .createButton { padding-inline: 7px; }
 .outlineButton:disabled { opacity: .48; cursor: not-allowed; }
 .moreButton { width: 28px; height: 32px; border-radius: 6px; }

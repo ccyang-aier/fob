@@ -5,14 +5,14 @@
 .chapter[data-root=true] { color:var(--ink); font-size:13px; font-weight:600; }
 .chapter[data-root=true]:not(:first-child) { margin-top:6px; }
 .chapter[data-active=true] { background:var(--accent-soft); color:var(--accent-ink); font-weight:600; }
-.chapterTitle { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.chapterTitle { display:block; align-self:stretch; flex:1; min-width:0; padding:0; border:0; background:transparent; color:inherit; font:inherit; text-align:start; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
 .guide,.branch { position:absolute; top:0; bottom:0; border-inline-start:1px solid color-mix(in srgb,var(--ink) 13%,transparent); pointer-events:none; }
 .branch::after { content:""; position:absolute; top:14px; inset-inline-start:0; width:7px; border-top:1px solid color-mix(in srgb,var(--ink) 13%,transparent); }
 .branch[data-last=true] { bottom:auto; height:14px; }
 .chapter[data-active=true] .branch,.chapter[data-active=true] .branch::after { border-color:color-mix(in srgb,var(--accent) 45%,transparent); }
 .fold,.foldSpace { display:grid; place-items:center; flex:none; width:14px; height:16px; margin-inline-end:4px; }
-.fold { position:relative; color:var(--muted-strong); }
-.chapter:focus-visible { outline:1px solid var(--accent); outline-offset:1px; }
+.fold { position:relative; padding:0; border:0; border-radius:3px; background:transparent; color:var(--muted-strong); cursor:pointer; }
+.fold:hover { background:var(--interaction-active-bg); }
+.chapterTitle:focus-visible,.fold:focus-visible { outline:1px solid var(--control-border); outline-offset:-1px; }
 .empty { padding:4px 8px; color:var(--muted-strong); }
 .empty strong { color:var(--ink-soft); font-size:12px; font-weight:500; }
-.empty p { margin:6px 0 0; font-size:12px; line-height:1.7; }

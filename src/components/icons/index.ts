@@ -151,7 +151,7 @@ import { faUtensils } from '@fortawesome/free-solid-svg-icons/faUtensils';
 import { faVideo } from '@fortawesome/free-solid-svg-icons/faVideo';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons/faVolumeHigh';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
-import { Heading1 as LucideHeading1, Heading2 as LucideHeading2, Heading3 as LucideHeading3, Square as LucideSquare, SquareX as LucideSquareX } from 'lucide-react';
+import { Heading1 as LucideHeading1, Heading2 as LucideHeading2, Heading3 as LucideHeading3, MessageCircle as LucideMessageCircle, Square as LucideSquare, SquareX as LucideSquareX } from 'lucide-react';
 import { solidIcon, outlineIcon } from './solid-icon';
 
 // Font Awesome 7 Solid is the default. Lucide is reserved for the explicit
@@ -357,6 +357,7 @@ export const Checks = /* @__PURE__ */ outlineIcon(LucideCheckCheck, 'Checks', 12
 export const CircleNotch = /* @__PURE__ */ outlineIcon(LucideLoaderCircle, 'CircleNotch', 14);
 export const DotsThree = /* @__PURE__ */ outlineIcon(LucideEllipsis, 'DotsThree', 14);
 export const DotsSixVertical = /* @__PURE__ */ solidIcon(faGripVertical, 'DotsSixVertical');
+export const CommentOutline = /* @__PURE__ */ outlineIcon(LucideMessageCircle, 'CommentOutline', 16);
 export const HeartOutline = /* @__PURE__ */ outlineIcon(LucideHeart, 'HeartOutline', 16);
 export const MagnifyingGlassMinus = /* @__PURE__ */ outlineIcon(LucideZoomOut, 'MagnifyingGlassMinus', 16);
 export const MagnifyingGlassPlus = /* @__PURE__ */ outlineIcon(LucideZoomIn, 'MagnifyingGlassPlus', 16);

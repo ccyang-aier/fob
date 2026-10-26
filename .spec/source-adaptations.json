@@ -236,8 +236,8 @@
     "sha256": "6c5610cb2336bd4890692312cd56c65563a64970aafc4a7f435b17158e019163"
   },
   "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "aab041d02307b5167e649257a1833c8741c2be534992ff71cba156d33d7b96ad"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "76905c0582d2f12b5ddb313f5d216472ffe097b98cbcba8fb1b5789a740bda31"
   },
   "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -256,8 +256,8 @@
     "sha256": "9cb5cba5af8bd0520f8b048a88c0ab7dd827695219034badcdd923e3661e218e"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view.",
-    "sha256": "b22ef9e2187cde4fc1446616c53039a3f9b35f20f3cd7d3cbd274d180ed9d199"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "6114d75cdf9d2fe6d2d3228f262ef92a87095a20dc54499352037cee406b7015"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
     "deleted": true,
@@ -352,8 +352,8 @@
     "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
   },
   "src/features/knowledge/editor/components/document-editor-header.module.css": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "a9e7841a9c10eb40e59508e635e7105238d0ea137f63fa65f443a5974d0d9616"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "3cc8294927fdf9f2ae4d2092d36658ce5a9aa953ceedc815e759865bd7b14ddc"
   },
   "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -548,8 +548,8 @@
     "sha256": "033b3fd546e4bfbd80ba58d82facfb33f803d3dccaf474f5c8cdbe9b802d4fc7"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "4fa197d10ce2742a34d10f333a5d38db3738d542b9dddd2c1c56e017a78a455f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "afc3598a70972cafb137964b0a9e9e89848780b0029c142d66cbc5d869eea35e"
   },
   "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -568,16 +568,16 @@
     "sha256": "fe55dc986f0fd993473d69f929db36f0254df2aae7b6c86733906cf439608c2a"
   },
   "src/features/knowledge/editor/block-modules/table/table-color-menu-items.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "b8aeb63372aac881f3519cc20a62aef21a31f58a0ec4c063e50c959c5b713889"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "253919bd6d05a56a88ef48fe0529d72011355f9dcd326fff9c5a1461052b3e3f"
   },
   "src/features/knowledge/editor/block-modules/table/table-color-picker.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "f7cf03dd87a4cbff4800d4abfcbc8a135ab6cfb92943e5025e9a9c9af336622e"
   },
   "src/features/knowledge/editor/block-modules/table/table-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "548f27eca207b3a93b81a0184de6d1d4200de487b7cdc15196d7d537c260f31a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "3e36bdd0baf6b4bf8d9ea617978498edc5f3934749080e6f89ece45f5c77b78f"
   },
   "src/features/knowledge/editor/block-modules/table/table-selection-toolbar.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -612,8 +612,8 @@
     "sha256": "599666ede53afc208f37bcf8b4f06275254a3d60f62906d94d62f5e3d85e89a4"
   },
   "src/features/knowledge/editor/components/document-outline.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics.",
-    "sha256": "baf0b1a3391f041d349715d617af7e57953002f13a1528e1f0998a9763b7989b"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "fb403febecc8e8a26fa655a6aabd746a2d8457a2c996970a6274096685776c60"
   },
   "src/features/knowledge/editor/components/document-star-icon.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -664,8 +664,8 @@
     "sha256": "57528a6ef3376621c525a4de1ee7cecef7c8cad6b9cc8b15da38e2f1a444b08a"
   },
   "src/features/knowledge/sharing/document-share-dialog.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the copy-only stub with Outline-style sharing, real user/group grants, bound-email invitations, inheritance and revocable publication.",
-    "sha256": "9a3a86f1a2f8da52b1f24d1e45909188c3c9a95ef39492c7e17562509e8b3bf5"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the copy-only stub with Outline-style sharing, real user/group grants, bound-email invitations, inheritance and revocable publication. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "50aecb7517b602b387a3528f2ea2159dfa26dafcfef268e6638582dc975a23e1"
   },
   "src/features/companion/companion-action-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -736,16 +736,16 @@
     "sha256": "be3464073133467fd2e1d8db35f110670509b053d1e827e4b95a2aa7c38c1e60"
   },
   "src/features/knowledge/editor/block-modules/table/table.module.css": {
-    "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development.",
-    "sha256": "e4525a08799c0fd72eec47c6a46388242ce67b01ca8cf81e2293308290003ebc"
+    "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "887eb4b8a7397fbeb10c558ce783b532747d1940be0fd7d45ed17da37287d5e0"
   },
   "src/features/knowledge/editor/components/document-outline.module.css": {
-    "reason": "Use shared hover feedback with a single full-width accessible button per outline row.",
-    "sha256": "63f79718adea6b17a4e6e3040624e63bd5c44dd4681d6ee0a3c5123b513121c0"
+    "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "7706d9f0cb72a7fe699f01e5f40fa7568b87baeceeb368a53a95086694502461"
   },
   "src/features/knowledge/navigation/page-icon.test.tsx": {
-    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "6f36405012b2b25f18ea8c6ed3219ea49c1a773ce89ca5fa7ae10990b5fc5f7c"
+    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Verify icon-only outline folding and independent parent/leaf anchor navigation while preserving collapse state through position changes. See .spec/tasks/editor-polish.md.",
+    "sha256": "39bb37e54c40b9a4e82aecbeea13f89d3766f9098c2b852a660a124f5ab3caf3"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
     "reason": "Localize unavailable local folder links and document-list recovery.",
@@ -800,8 +800,8 @@
     "sha256": "dad1c0869552126cfd5ec1310c7c8be4e7ddb882b9c10fbd1bf60c8e618093f1"
   },
   "shared/src/knowledge/schema/blocks.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "6923cede661a59d0f8adfbba14ec858f7988a212eae505b6b4745588795e9c67"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "b74b71cbb992acac5c2b26062eb99cfac2e1d36f3a50642d86cbd75026a4d6e2"
   },
   "shared/src/knowledge/schema/schema.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
@@ -850,5 +850,29 @@
   "src/features/knowledge/library-canvas.module.css": {
     "reason": "Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
     "sha256": "d55844e0e281f22923fba4fd8e6fc7231a4fde9cc5dff04d6868117cd4814721"
+  },
+  "shared/src/knowledge/markdown/pipeline.test.ts": {
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "900912a42db4e349ad67e8ec7eb2f3f830c8142666f6e3e81c3c758312e17102"
+  },
+  "src/features/knowledge/editor/block-modules/blocks.instance.test.ts": {
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "d3252658f1ed85ab114fa1bf102b34950bbef77d163ab1893cc6c08e282f580b"
+  },
+  "src/features/knowledge/editor/block-modules/callout/callout-node-view.messages.ts": {
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "a4043fd3886791a6f658a3f443fb1eaf44518b5bcbc33900c4a397e38972b8ee"
+  },
+  "src/features/knowledge/editor/block-modules/callout/callout-node-view.tsx": {
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "3a7339afb8eccc92d8369704fcbcc97f1eac1d43112ee54c1fe27a12a60d2677"
+  },
+  "src/features/knowledge/editor/block-modules/callout/callout.module.css": {
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
+    "sha256": "10e57fb0ad24a416e4aa8dbcdf86ae39993adef7cec696b06ec00ce30d2bedad"
+  },
+  "src/features/knowledge/editor/page-collaboration.ts": {
+    "reason": "Keep the session-owned Yjs undo manager alive while floating block controls reconfigure plugin views; detach only view-owned listeners and preserve selection restoration. See .spec/tasks/editor-polish.md.",
+    "sha256": "3cf76dd8dff0f8b32e08ee6299db38500e9396e803f0114b0f2c4a9b967b7bf8"
   }
 }
