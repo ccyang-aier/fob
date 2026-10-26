@@ -127,7 +127,7 @@
   --sidebar-row-hover-border: var(--sidebar-row-border);
   --sidebar-row-shadow: none;
   --sidebar-icon: #525252;
-  --shell-tab-active-bg: color-mix(in srgb, var(--sidebar-icon) 8%, var(--wt-sidebar-standard-panel));
+  --shell-tab-active-bg: var(--panel);
   --shell-tab-active-border: color-mix(in srgb, var(--control-border) 65%, var(--wt-sidebar-standard-panel));
   --wt-sidebar-hover: rgb(255 255 255 / 0.55);
 }
