@@ -29,13 +29,20 @@
 .source { opacity: .3; }
 .source:global(.ProseMirror-selectednode) { outline: none; }
 .hoverTarget:is(h1, h2, h3, h4)::before { opacity: 0 !important; }
-.preview {
+/* Override Tiptap's runtime .ProseMirror positioning regardless of load order. */
+.preview:global(.ProseMirror) {
   position: fixed;
-  top: -10000px;
-  left: -10000px;
+  z-index: 37;
+  top: 0;
+  left: 0;
   min-height: 0 !important;
   padding: 0;
   margin: 0;
+  opacity: .65;
+  mask-image: linear-gradient(to right, #000 0%, #000 45%, transparent 100%);
   pointer-events: none;
+  user-select: none;
+  will-change: transform;
 }
+.preview:dir(rtl) { mask-image: linear-gradient(to left, #000 0%, #000 45%, transparent 100%); }
 :global(html[data-theme="dark"]) .indicator { background: #8cc7ff; }

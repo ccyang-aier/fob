@@ -70,6 +70,57 @@ function controls() {
   return { handle: document.createElement('button'), indicator: document.createElement('div'), sourceClass: 'drag-source', hoverClass: 'drag-hover', previewClass: 'drag-preview' };
 }
 
+test('the visible ghost follows the grab offset, preserves document content, and clears on cancellation', () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = new Editor({ element: host, extensions: createKnowledgeExtensions(), content: '<p>Ghost content</p><p>Target</p>' });
+  const elements = controls();
+  const box = (x: number, y: number, width: number, height: number) => ({ x, y, left: x, top: y, right: x + width, bottom: y + height, width, height, toJSON: () => ({}) });
+  host.getBoundingClientRect = () => box(100, 100, 600, 500);
+  editor.view.dom.getBoundingClientRect = () => box(130, 120, 500, 200);
+  const paragraph = editor.view.dom.querySelector('p')!;
+  paragraph.getBoundingClientRect = () => box(130, 120, 500, 40);
+  editor.registerPlugin(createBlockDragPlugin(elements));
+  const initial = editor.getJSON();
+  let nativeImage: HTMLElement | null = null;
+  const data = new Map<string, string>();
+  const transfer = {
+    effectAllowed: '', dropEffect: '', types: ['application/x-fob-block-move'],
+    clearData: () => data.clear(), setData: (type: string, value: string) => data.set(type, value),
+    setDragImage: (element: HTMLElement) => { nativeImage = element; },
+  };
+  const dragEvent = (type: string, x: number, y: number) => {
+    const event = new browser.MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y });
+    Object.defineProperty(event, 'dataTransfer', { value: transfer });
+    return event as unknown as Event;
+  };
+  for (const end of ['dragend', 'Escape', 'readonly', 'unmount']) {
+    editor.setEditable(true);
+    paragraph.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 150, clientY: 130 }) as unknown as Event);
+    elements.handle.dispatchEvent(dragEvent('dragstart', 112, 130));
+    const preview = host.querySelector<HTMLElement>('[data-block-drag-preview]')!;
+    expect(preview.textContent).toBe('Ghost content');
+    expect(preview.style.transform).toBe('translate3d(130px, 120px, 0)');
+    expect(preview.style.width).toBe('500px');
+    expect(preview.inert).toBe(true);
+    expect(preview.getAttribute('aria-hidden')).toBe('true');
+    expect(preview.hasAttribute('contenteditable')).toBe(false);
+    expect((nativeImage as HTMLElement | null)?.tagName).toBe('CANVAS');
+    paragraph.dispatchEvent(dragEvent('dragover', 200, 250));
+    expect(preview.style.transform).toBe('translate3d(218px, 240px, 0)');
+    expect(editor.getJSON()).toEqual(initial);
+    expect(editor.getHTML()).not.toContain('data-block-drag-preview');
+    if (end === 'readonly') editor.setEditable(false);
+    else if (end === 'unmount') editor.unregisterPlugin(blockDragKey);
+    else if (end === 'Escape') document.dispatchEvent(new browser.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }) as unknown as Event);
+    else document.dispatchEvent(new browser.Event('dragend', { bubbles: true }) as unknown as Event);
+    expect(host.querySelector('[data-block-drag-preview]')).toBeNull();
+    expect(editor.view.dragging).toBeNull();
+  }
+  editor.destroy();
+  host.remove();
+});
+
 test('drag source maps through concurrent changes, cancels on removal, and never enters exported content', () => {
   const editor = new Editor({ extensions: createKnowledgeExtensions(), content: '<p>A</p><p>B</p>' });
   const elements = controls();

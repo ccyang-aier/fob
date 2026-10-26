@@ -5,7 +5,7 @@
 ## 实施
 
 - [x] 在共享文档正文装配浮动六点手柄，统一支持本地、协作与文件夹正文。
-- [x] 原生拖动预览、源块淡化、蓝色边界插入线及边缘自动滚动。
+- [x] 跟随鼠标的半透明渐隐虚影、源块淡化、蓝色边界插入线及边缘自动滚动。
 - [x] 单事务移动、保留块 ID、列表同级排序、只读与销毁清理。
 - [x] 集中登记官方 FA7 图标，无新增依赖。
 
@@ -18,6 +18,13 @@
 - 浅色与深色查看六点手柄；390×844 窄屏下手柄完整落在视口内、正文无横向溢出。开发 CSS 热更新曾短暂丢失局部样式，刷新后恢复；视觉验收使用刷新后的页面。
 - `pnpm typecheck`、`pnpm icons:verify`（包含在 lint）、`pnpm lint`、`pnpm architecture:verify`、`pnpm i18n:verify`、`pnpm build` 与 `git diff --check` 通过。构建产物在独立 `.next-build`，Web 与业务服务保持运行。
 - 悬停、拖动中、完成后、深色与窄屏截图保存在本聊天仓库外的 Codex visualizations 目录，没有提交运行数据或截图。
+
+## 虚影补充验证（2026-10-27）
+
+- 原预览依赖视口外 DOM 的原生拖动影像；截图复核还发现 Tiptap 运行时 `.ProseMirror { position: relative }` 会覆盖单类预览定位。现用 `.preview.ProseMirror` 明确固定定位优先级，在正文之外显示跟随层，保留字体、宽度和抓取偏移，65% 不透明度并沿阅读方向渐隐。原生影像使用透明 canvas，避免叠加两份虚影。
+- `block-drag.test.ts` 现为 9 项通过、83 个断言；新增实际 dragstart/dragover 路径覆盖预览完整文本、固定宽度、抓取偏移、60px 指针位移、inert/ARIA 隔离、导出与 JSON 不变，以及 dragend、Escape、只读和卸载后的清理。
+- 1467×889 的真实 Chrome / Playwright 拖动确认虚影文本与源块一致、计算不透明度 0.65、渐隐蒙版生效、固定定位、屏幕范围及水平锚点正确、鼠标下移 60px 时虚影同步下移 60px。跟随层不增加正文布局高度；松手后块 ID 保留、虚影移除，撤销成功。最终截图实际包含独立的淡化源块与跟随虚影，浏览器控制台 0 错误、0 警告。
+- `pnpm typecheck`、改动文件零警告 ESLint、`pnpm icons:verify`、`pnpm architecture:verify`、`pnpm build` 与差异格式检查通过。截图 `block-drag-ghost.png` 保存于本聊天仓库外 visualizations 目录。
 
 ## 验证范围
 

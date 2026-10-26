@@ -83,6 +83,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       const token = win.crypto.randomUUID();
       let target: HTMLElement | null = null;
       let preview: HTMLElement | null = null;
+      let previewOffset: { x: number; y: number } | null = null;
       let dropPosition: number | null = null;
       let pointer: { x: number; y: number } | null = null;
       let scrolling = 0;
@@ -109,6 +110,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         indicator.hidden = true;
         preview?.remove();
         preview = null;
+        previewOffset = null;
         delete handle.dataset.dragging;
         view.dragging = null;
         setState({ source: null, hovered: null });
@@ -144,6 +146,10 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         target = next;
         setState({ hovered: pos });
         positionHandle();
+      };
+      const positionPreview = () => {
+        if (!preview || !pointer || !previewOffset) return;
+        preview.style.transform = `translate3d(${pointer.x - previewOffset.x}px, ${pointer.y - previewOffset.y}px, 0)`;
       };
       const updateDrop = () => {
         indicator.hidden = true;
@@ -196,8 +202,11 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         preview.removeAttribute('id');
         preview.removeAttribute('contenteditable');
         preview.setAttribute('aria-hidden', 'true');
+        preview.setAttribute('data-block-drag-preview', '');
+        preview.inert = true;
         preview.classList.add(previewClass);
         preview.style.width = `${rect.width}px`;
+        preview.dir = win.getComputedStyle(target).direction;
         const clone = target.cloneNode(true) as HTMLElement;
         clone.classList.remove(sourceClass, hoverClass, 'ProseMirror-selectednode');
         clone.style.margin = '0';
@@ -209,17 +218,24 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         event.dataTransfer.setData('text/plain', text);
         event.dataTransfer.setData(blockMoveMime, token);
         event.dataTransfer.effectAllowed = 'move';
-        event.dataTransfer.setDragImage(preview, event.clientX - rect.left, event.clientY - rect.top);
+        // Render the ghost in the document so WebViews also show the full block.
+        // A transparent native bitmap prevents a second, browser-dependent ghost.
+        const transparentImage = owner.createElement('canvas');
+        transparentImage.width = transparentImage.height = 1;
+        event.dataTransfer.setDragImage(transparentImage, 0, 0);
         handle.dataset.dragging = 'true';
         // Keep PM aware of the drag, while our drop handler snaps to sibling boundaries.
         view.dragging = { slice, move: true };
         view.dispatch(view.state.tr.setSelection(selection).setMeta(blockDragKey, { source: pos }).setMeta('addToHistory', false));
+        previewOffset = { x: event.clientX - rect.left, y: event.clientY - rect.top };
         pointer = { x: event.clientX, y: event.clientY };
+        positionPreview();
         scrolling = win.requestAnimationFrame(autoScroll);
       };
       const dragOver = (event: DragEvent) => {
         if (value().source === null) return;
         pointer = { x: event.clientX, y: event.clientY };
+        positionPreview();
         updateDrop();
         if (!insideEditor(event)) { indicator.hidden = true; dropPosition = null; return; }
         event.preventDefault();
