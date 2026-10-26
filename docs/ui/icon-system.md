@@ -44,6 +44,10 @@ Lucide 线宽固定 1.75，避免导航箭头和更多过粗。图标使用现�
 
 ## 实现与检查
 
+### 用户恢复的模板空状态插图
+
+模板中心的空状态按用户要求恢复首次实现 `e24a006` 的官方 Lucide `FileText` 细线图形和叠放纸页造型。仅通过集中目录的 `TemplateEmptyDocument` 导出用于此插图，保留原始 1.3 线宽及 CSS 管理的 57×72px 纸页尺寸；它不经过通用控件的尺寸缩放，避免行内尺寸与纸页内边距冲突。模板卡片、菜单和其他系统图标继续使用既定映射。
+
 ### 用户指定的 Outline 文件夹首页参考
 
 用户后续明确要求文件夹首页外观与 Outline 一致，因此仅此页面允许使用 `OutlineCollectionIcon` 中登记的原版资源。11 个官方 glyph 保存在 `public/icons/outline-collection`，来源与 SHA-256 记录在同目录 `sources.json`；[官方来源](https://github.com/outline/outline-icons) 的 BSD-3-Clause 许可保留在 `public/licenses/outline-icons.txt`。资源通过统一目录按原始 viewBox 渲染，不重绘路径、不引入图标包、不扩散到其他产品区域。验证脚本检查固定资源清单、来源和摘要。

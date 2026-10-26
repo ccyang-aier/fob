@@ -1,6 +1,8 @@
 'use client';
 
 export { OutlineCollectionIcon } from './outline-collection-icon';
+// User-restored template artwork from e24a006 keeps its original CSS size and thin stroke.
+export { FileText as TemplateEmptyDocument } from 'lucide-react';
 
 import { ArrowDown as LucideArrowDown, ArrowDownToLine as LucideArrowDownToLine, ArrowDownUp as LucideArrowDownUp, ArrowLeft as LucideArrowLeft, ArrowLeftRight as LucideArrowLeftRight, ArrowLeftToLine as LucideArrowLeftToLine, ArrowRight as LucideArrowRight, ArrowRightToLine as LucideArrowRightToLine, ArrowUp as LucideArrowUp, ArrowUpRight as LucideArrowUpRight, ArrowUpToLine as LucideArrowUpToLine, Check as LucideCheck, CheckCheck as LucideCheckCheck, ChevronDown as LucideChevronDown, ChevronLeft as LucideChevronLeft, ChevronRight as LucideChevronRight, ChevronUp as LucideChevronUp, ChevronsUpDown as LucideChevronsUpDown, Ellipsis as LucideEllipsis, ExternalLink as LucideExternalLink, FoldHorizontal as LucideFoldHorizontal, Heart as LucideHeart, LoaderCircle as LucideLoaderCircle, Maximize as LucideMaximize, Minimize as LucideMinimize, Minus as LucideMinus, Plus as LucidePlus, RefreshCw as LucideRefreshCw, RotateCcw as LucideRotateCcw, RotateCw as LucideRotateCw, Star as LucideStar, ThumbsUp as LucideThumbsUp, UnfoldHorizontal as LucideUnfoldHorizontal, X as LucideX, ZoomIn as LucideZoomIn, ZoomOut as LucideZoomOut } from 'lucide-react';
 import { faAlignCenter } from '@fortawesome/free-solid-svg-icons/faAlignCenter';
