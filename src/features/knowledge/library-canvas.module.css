@@ -18,5 +18,4 @@
 .documentCard small { color: var(--muted-strong); font-size: 11px; }
 .documentCard > button:not(:first-child) { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; color: var(--muted-strong); }
 .documentCard > button:not(:first-child):hover { color: var(--ink-soft); }
-.empty { padding: 60px 16px; text-align: center; color: var(--muted-strong); font-size: 13px; }
 .error { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 9px 15px; background: #fff4f2; color: #a5483b; font-size: 12px; }

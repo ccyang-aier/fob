@@ -66,9 +66,6 @@
 .selection button{color:var(--accent-ink)}
 .folderEmpty{grid-column:1/-1;padding:30px;color:var(--muted-strong);border:1px dashed var(--line);border-radius:6px;text-align:center}
 .folderEmpty button{color:var(--accent-ink);margin-left:15px}
-.empty{display:flex;align-items:center;flex-direction:column;gap:12px;padding:55px 20px;color:var(--muted-strong)}
-.empty strong{color:var(--ink-soft);font-size:15px}
-.empty p{font-size:12px}
 .fileGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .fileGrid article{display:flex;align-items:center;border:1px solid var(--resource-card-border);border-radius:7px;padding:18px}
 .fileGrid article>button{flex:1;min-width:0;display:flex;align-items:flex-start;flex-direction:column;gap:12px;text-align:left}

@@ -3,7 +3,8 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './documents-page.messages';
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { usePageSessionState, usePageScrollKey } from '@/lib/page-session-state';
-import { CaretRight, FileText, X } from '@/components/icons';
+import { CaretRight, X } from '@/components/icons';
+import { EmptyState } from '@/components/empty-state';
 import { Button } from '@/components/ui/button';
 import styles from './documents-page.module.css';
 import { formatOf } from './document-visuals';
@@ -179,19 +180,14 @@ export function DocumentsPage({
           renderMenu={renderMenu}
         />
         {!shown.length ? (
-          <div className={styles.empty}>
-            <FileText size={32} />
-            <strong>
-              {search || filter !== 'all'
+          <EmptyState
+            label={search || filter !== 'all'
                 ? knowledgeT('noMatchingDocuments')
                 : knowledgeT('startOrganizingYourKnowledge')}
-            </strong>
-            <p>
-              {search || filter !== 'all'
+            description={search || filter !== 'all'
                 ? knowledgeT('tryDifferentKeywordsOrResetFilters')
                 : knowledgeT('createADocumentToCollectIdeasAndResources')}
-            </p>
-            <Button
+            actions={search || filter !== 'all' || canEdit ? <Button
               variant="outline"
               size="sm"
               className={styles.control}
@@ -207,8 +203,8 @@ export function DocumentsPage({
               {search || filter !== 'all'
                 ? knowledgeT('resetSearchAndFilters')
                 : knowledgeT('newDocument')}
-            </Button>
-          </div>
+            </Button> : undefined}
+          />
         ) : null}
       </div>
       <dialog

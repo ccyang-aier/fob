@@ -12,6 +12,7 @@ import { usePageSessionState } from '@/lib/page-session-state';
 import { FilePlus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
+import { EmptyState } from '@/components/empty-state';
 import { CanvasState } from '../canvas-states';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useIdentity } from '@/features/identity/identity-provider';
@@ -505,7 +506,7 @@ export function LocalKnowledgeResource({
                 }
               />
             ) : null}
-            <div className="overflow-hidden rounded-xl border border-[var(--line)]">
+            <div className={visible.length ? 'overflow-hidden rounded-xl border border-[var(--line)]' : undefined}>
               {visible.map((item) => (
                 <div
                   key={item.id}
@@ -549,9 +550,7 @@ export function LocalKnowledgeResource({
                 </div>
               ))}
               {!visible.length ? (
-                <div className="py-12 text-center text-xs text-[var(--muted)]">
-                  {view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noDocumentsYet')}
-                </div>
+                <EmptyState label={view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noDocumentsYet')} />
               ) : null}
             </div>
           </div>

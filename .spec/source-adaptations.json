@@ -64,8 +64,8 @@
     "sha256": "ce69bebfbdb4c3d8c181cb5c7ed224b1451660b6991907203cc97fffc4ba04b0"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations.",
-    "sha256": "65bf1422cfea59b3ad2d8eb6e09aad18df44e6b4372e7e49d091201390fc297d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
+    "sha256": "f2a3ef0f5c28ef7b15536a4be4d7312e73587e423bf149b5e4942ec92fffdf1b"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
@@ -288,8 +288,8 @@
     "sha256": "4416e141de10fb54a6f56a63189580b21c588da54c4ec1d0149260fbb859ff85"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "32ab881ecc653ff6ea11fa2ab85b0c32954b131bc1f547580132e853bb69fad8"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
+    "sha256": "f6c0c03d9c21295b73983d796616dbcde877d654494fdabccbfa4350fe0b1525"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
     "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
@@ -432,8 +432,8 @@
     "sha256": "5ab0ea222c4ebad35caacfacfb7f9bfb025e3239d19499bdb89fc6284aa19529"
   },
   "src/features/knowledge/documents/documents-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "1dab145344c1d6d7c05a81f8b24becf5a104a4e1e4b0ebe8a138e68cba48a295"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
+    "sha256": "f3d32f1ec40c42453a6630ec934b299ffc9a9ecad6abe6d0f7507acf3e0a2923"
   },
   "src/features/knowledge/documents/documents-toolbar.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -842,5 +842,13 @@
   "src/features/knowledge/editor/components/document-markdown-export.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
     "sha256": "412291aaddb02121bdbb5e5a0a1edf90133daecf285c508b4ae46d3661b9d39b"
+  },
+  "src/features/knowledge/documents/documents-page.module.css": {
+    "reason": "Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
+    "sha256": "6a7780fcec8f0232e839a938ee6d3e23674a48776c7bdb2de08fcedf5c07353e"
+  },
+  "src/features/knowledge/library-canvas.module.css": {
+    "reason": "Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
+    "sha256": "d55844e0e281f22923fba4fd8e6fc7231a4fde9cc5dff04d6868117cd4814721"
   }
 }

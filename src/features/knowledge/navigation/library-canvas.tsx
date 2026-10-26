@@ -7,6 +7,7 @@ import { usePageScrollKey } from '@/lib/page-session-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { KnowledgeBaseDocumentImport } from '../documents/server-document-import';
 import { FilePlus, Folder, Plus } from '@/components/icons';
+import { EmptyState } from '@/components/empty-state';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeAccess } from '../data/hooks';
 import { useKnowledgePagesQuery } from '../data/pages-queries';
@@ -155,6 +156,7 @@ export function LibraryCanvas({
         {actions.dialogs}
       </>
     );
+  const isEmpty = view === 'projects' ? !teamspaces.length : view === 'trash' ? !recycled.length : !listed.length;
   return (
     <section
       aria-label={knowledgeT('knowledgeBaseDocuments')}
@@ -180,7 +182,7 @@ export function LibraryCanvas({
             </button>
           ) : null}
         </header>
-        <div className={styles.documentList}>
+        <div className={isEmpty ? undefined : styles.documentList}>
           {view === 'projects'
             ? teamspaces.map((folder) => (
                 <button
@@ -225,16 +227,8 @@ export function LibraryCanvas({
                     />
                   </div>
                 ))}
-          {(
-            view === 'projects'
-              ? !teamspaces.length
-              : view === 'trash'
-                ? !recycled.length
-                : !listed.length
-          ) ? (
-            <p className={styles.empty}>
-              {view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noContentHereYet')}
-            </p>
+          {isEmpty ? (
+            <EmptyState label={view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noContentHereYet')} />
           ) : null}
         </div>
       </div>

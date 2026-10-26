@@ -1,8 +1,8 @@
 'use client';
 
 export { OutlineCollectionIcon } from './outline-collection-icon';
-// User-restored template artwork from e24a006 keeps its original CSS size and thin stroke.
-export { FileText as TemplateEmptyDocument } from 'lucide-react';
+// User-approved document empty-state artwork keeps its CSS size and thin stroke.
+export { FileText as EmptyDocument } from 'lucide-react';
 
 import { ArrowDown as LucideArrowDown, ArrowDownToLine as LucideArrowDownToLine, ArrowDownUp as LucideArrowDownUp, ArrowLeft as LucideArrowLeft, ArrowLeftRight as LucideArrowLeftRight, ArrowLeftToLine as LucideArrowLeftToLine, ArrowRight as LucideArrowRight, ArrowRightToLine as LucideArrowRightToLine, ArrowUp as LucideArrowUp, ArrowUpRight as LucideArrowUpRight, ArrowUpToLine as LucideArrowUpToLine, Check as LucideCheck, CheckCheck as LucideCheckCheck, ChevronDown as LucideChevronDown, ChevronLeft as LucideChevronLeft, ChevronRight as LucideChevronRight, ChevronUp as LucideChevronUp, ChevronsUpDown as LucideChevronsUpDown, Ellipsis as LucideEllipsis, ExternalLink as LucideExternalLink, FoldHorizontal as LucideFoldHorizontal, Heart as LucideHeart, LoaderCircle as LucideLoaderCircle, Maximize as LucideMaximize, Minimize as LucideMinimize, Minus as LucideMinus, Plus as LucidePlus, RefreshCw as LucideRefreshCw, RotateCcw as LucideRotateCcw, RotateCw as LucideRotateCw, Star as LucideStar, ThumbsUp as LucideThumbsUp, UnfoldHorizontal as LucideUnfoldHorizontal, X as LucideX, ZoomIn as LucideZoomIn, ZoomOut as LucideZoomOut } from 'lucide-react';
 import { faAlignCenter } from '@fortawesome/free-solid-svg-icons/faAlignCenter';
@@ -202,7 +202,6 @@ export const Database = /* @__PURE__ */ solidIcon(faDatabase, 'Database');
 export const Desktop = /* @__PURE__ */ solidIcon(faDesktop, 'Desktop');
 export const DoorOpen = /* @__PURE__ */ solidIcon(faDoorOpen, 'DoorOpen');
 export const DownloadSimple = /* @__PURE__ */ solidIcon(faDownload, 'DownloadSimple');
-export const EmptyDocuments = /* @__PURE__ */ solidIcon(faFileCirclePlus, 'EmptyDocuments');
 export const Envelope = /* @__PURE__ */ solidIcon(faEnvelope, 'Envelope');
 export const Eye = /* @__PURE__ */ solidIcon(faEye, 'Eye');
 export const EyeClosed = /* @__PURE__ */ solidIcon(faEyeSlash, 'EyeClosed');

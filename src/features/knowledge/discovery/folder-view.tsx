@@ -10,6 +10,7 @@ import type { JSONContent } from '@tiptap/core';
 import type { EditorBlockContext } from '../editor/block-modules/types';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
+import { EmptyState } from '@/components/empty-state';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DocumentModal } from '../sharing/document-modal';
@@ -116,7 +117,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
       {error && !modal && <AppAlert tone="error" title={error} />}
       {tab === 'overview' ? overview && <OverviewEditor key={overview.draftKey} content={folder.metadata.description} revision={folder.metadata.revision ?? 0} contentId={folder.id} draftKey={overview.draftKey} context={overview.context} editable={canManage} onSave={overview.save} /> : <><div className={styles.list} role="list" aria-label={t('documents')} aria-busy={updating} onKeyDown={event => { if ((event.ctrlKey || event.metaKey) && event.key === 'a') { event.preventDefault(); setSelection({ context, ids: [...visible] }); } }}>{listed.map(document => row(document))}</div>
         {updating && <span role="status" className="sr-only">{t('loading')}</span>}
-        {!documents.length && !updating && <div className={styles.empty}><Folder size={30} /><strong>{q ? t('noResults') : t('noDocuments')}</strong><p>{q ? t('refine') : t('createFirst')}</p>{canCreate && !q && <Button size="sm" variant="outline" onClick={onCreate}>{t('newDocument')}</Button>}</div>}
+        {!documents.length && !updating && <EmptyState label={q ? t('noResults') : t('noDocuments')} description={q ? t('refine') : t('createFirst')} actions={canCreate && !q ? <Button size="sm" variant="outline" onClick={onCreate}>{t('newDocument')}</Button> : undefined} />}
         {more && <div className={styles.loadMore}><Button size="sm" variant="ghost" loading={loadingMore} onClick={onMore}>{t('more')}</Button></div>}
       </>}
     </div></div>
