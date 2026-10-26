@@ -20,6 +20,8 @@ import {
   hasAuthFieldErrors,
   validateSignUpForm,
   authFieldFlags,
+  authPasswordMinLength,
+  authPasswordMaxLength,
   type AuthFieldFlags,
 } from '../validation';
 import { AuthTextField } from './auth-field';
@@ -124,7 +126,7 @@ export function SignUpForm({ api = fobAuthApi }: { api?: FobAuthApi }) {
           setFieldErrors((current) => ({ ...current, password: undefined }));
         }}
         error={fieldErrors.password ? (currentErrors.password ?? null) : null}
-        hint={uiText('12–128 位,建议混合字母、数字与符号')}
+        hint={uiText('{0}–{1} 位,建议混合字母、数字与符号', { '0': authPasswordMinLength, '1': authPasswordMaxLength })}
         disabled={submitting}
       />
       {banner ? (

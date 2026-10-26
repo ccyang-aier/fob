@@ -26,10 +26,11 @@ describe('validateAuthEmail', () => {
   });
 });
 
-describe('validateAuthPassword — 12–128 backend contract (A01)', () => {
+describe('validateAuthPassword — 6–128 backend contract (A01)', () => {
   test('boundaries', () => {
     expect(validateAuthPassword('')).toBe('请输入密码');
-    expect(validateAuthPassword('a'.repeat(11))).toBe('密码至少 12 位');
+    expect(validateAuthPassword('a'.repeat(5))).toBe('密码至少 6 位');
+    expect(validateAuthPassword('a'.repeat(6))).toBeNull();
     expect(validateAuthPassword('a'.repeat(12))).toBeNull();
     expect(validateAuthPassword('a'.repeat(128))).toBeNull();
     expect(validateAuthPassword('a'.repeat(129))).toBe('密码不能超过 128 位');
@@ -58,16 +59,16 @@ describe('form matrices', () => {
     });
     expect(validateSignInForm({ email: 'bad', password: 'short' })).toEqual({
       email: '邮箱地址格式不正确',
-      password: '密码至少 12 位',
+      password: '密码至少 6 位',
     });
-    expect(validateSignInForm({ email: 'user@example.com', password: 'a-strong-password' })).toEqual({});
+    expect(validateSignInForm({ email: 'user@example.com', password: 'six123' })).toEqual({});
   });
 
   test('sign-up adds the name field', () => {
     expect(validateSignUpForm({ name: '', email: 'user@example.com', password: 'a-strong-password' })).toEqual({
       name: '请输入名称',
     });
-    expect(validateSignUpForm({ name: '阿明', email: 'user@example.com', password: 'a-strong-password' })).toEqual({});
+    expect(validateSignUpForm({ name: '阿明', email: 'user@example.com', password: 'six123' })).toEqual({});
   });
 
   test('hasAuthFieldErrors', () => {

@@ -4,14 +4,14 @@ import { messages } from './i18n/validation.messages';
 
 /**
  * Auth form validation (A04) — pure functions, mirroring the backend limits
- * in Better Auth 1.7.6 as assembled by A01: password 12–128 characters,
+ * in Better Auth 1.7.6 as assembled by A01: password 6–128 characters,
  * user name 1–120 after trim, practical email shape. Field errors are
  * user-facing Chinese strings so panels stay free of branching logic.
  */
 
 export type AuthFieldErrors = Partial<Record<'name' | 'email' | 'password', string>>;
 
-export const authPasswordMinLength = 12;
+export const authPasswordMinLength = 6;
 export const authPasswordMaxLength = 128;
 export const authNameMaxLength = 120;
 

@@ -39,7 +39,7 @@ export function createFobAuth(options: {
     account: { storeAccountCookie: false, encryptOAuthTokens: true,
       accountLinking: { enabled: true, disableImplicitLinking: true, allowDifferentEmails: false, trustedProviders: [] },
     },
-    emailAndPassword: { enabled: true, requireEmailVerification: true, autoSignIn: false, minPasswordLength: 12, maxPasswordLength: 128 },
+    emailAndPassword: { enabled: true, requireEmailVerification: true, autoSignIn: false, minPasswordLength: 6, maxPasswordLength: 128 },
     emailVerification: {
       sendOnSignUp: true, sendOnSignIn: true, autoSignInAfterVerification: false, expiresIn: 3_600,
       async sendVerificationEmail({ user, url }) {

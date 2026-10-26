@@ -16,9 +16,9 @@ export const messages = defineMessages({
   邮箱: ['邮箱', 'Email'],
   密码: ['密码', 'Password'],
   设置登录密码: ['设置登录密码', 'Set a password'],
-  '12–128 位,建议混合字母、数字与符号': [
-    '12–128 位,建议混合字母、数字与符号',
-    '12–128 characters. A mix of letters, numbers, and symbols is recommended.',
+  '{0}–{1} 位,建议混合字母、数字与符号': [
+    '{0}–{1} 位,建议混合字母、数字与符号',
+    '{0}–{1} characters. A mix of letters, numbers, and symbols is recommended.',
   ],
   '正在提交…': ['正在提交…', 'Submitting…'],
   创建账号: ['创建账号', 'Create account'],

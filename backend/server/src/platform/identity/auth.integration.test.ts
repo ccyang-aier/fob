@@ -1,6 +1,6 @@
 import { beforeAll, afterAll, describe, expect, test } from 'bun:test';
 import { createEmailVerificationToken } from 'better-auth/api';
-import { createAuthTestServer, responseCookie, testPassword } from './auth-test-server';
+import { createAuthTestServer, responseCookie } from './auth-test-server';
 import type { AuthTestServer } from './auth-test-server';
 import type { FobAuth } from './service';
 
@@ -8,6 +8,7 @@ let server: AuthTestServer;
 let userId: string;
 let primaryCookie: string;
 const email = 'person@example.test';
+const testPassword = 'six123';
 type Session = FobAuth['$Infer']['Session'];
 
 beforeAll(async () => { server = await createAuthTestServer(); }, 30_000);
@@ -26,8 +27,9 @@ async function session(cookie: string): Promise<Session | null> {
 }
 
 describe('Better Auth with real PostgreSQL and HTTP', () => {
-  test('registration validates inputs, uses UUIDs and salted password hashes, and creates no resource', async () => {
+  test('registration enforces password limits, hashes credentials and creates no resource', async () => {
     expect((await server.request('/sign-up/email', { name: 'Person', email, password: 'short' })).status).toBe(400);
+    expect((await server.request('/sign-up/email', { name: 'Person', email, password: 'a'.repeat(129) })).status).toBe(400);
     expect((await server.request('/sign-up/email', { name: ' ', email, password: testPassword })).status).toBe(400);
     const response = await server.request('/sign-up/email', { name: '  Person  ', email: 'Person@Example.Test', password: testPassword, callbackURL: `${server.webOrigin}/verified` }, undefined,
       { 'x-forwarded-host': 'evil.example.test', 'x-forwarded-proto': 'https' });
