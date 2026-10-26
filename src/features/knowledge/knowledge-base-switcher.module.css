@@ -20,13 +20,18 @@
 .header button { display:grid; place-items:center; width:26px; height:26px; border-radius:5px; cursor:pointer; color:var(--muted-strong); }
 .body { display:grid; gap:15px; padding:4px 22px 18px; font-size:13px; }
 .body p { margin:0; line-height:1.8; color:var(--muted-strong); }
-.field { display:grid; gap:7px; font-size:12px; }
-.field input { width:100%; height:34px; padding:0 10px; border:1px solid var(--control-border); border-radius:6px; background:var(--panel); color:var(--ink); outline:none; }
-.field input:focus { border-color:var(--ink); }
-.field input::placeholder { color:var(--muted); }
-.sources { display:flex; gap:8px; }
-.source { flex:1; display:flex; align-items:center; gap:7px; padding:9px 10px; border:1px solid var(--control-border); border-radius:6px; cursor:pointer; }
-.source input { accent-color:var(--ink); }
+.field { display:grid; gap:7px; min-width:0; margin:0; padding:0; border:0; font-size:12px; }
+.field legend { padding:0; margin-bottom:7px; }
+.field > input[type="text"] { width:100%; min-width:0; height:34px; padding:0 10px; border:1px solid var(--control-border); border-radius:6px; background:var(--panel); color:var(--ink); outline:none; }
+.field > input[type="text"]:focus { border-color:var(--ink); }
+.field > input[type="text"]::placeholder { color:var(--muted); }
+.sources { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.source { display:flex; align-items:center; min-width:0; gap:8px; padding:9px 10px; border:1px solid var(--control-border); border-radius:6px; line-height:20px; white-space:nowrap; cursor:pointer; }
+.source input[type="radio"] { flex:0 0 14px; width:14px; height:14px; margin:0; padding:0; accent-color:var(--ink); }
 .error { font-size:12px; color:var(--err-ink); }
 .footer { display:flex; justify-content:flex-end; gap:8px; padding:0 22px 16px; }
 .footer button { height:30px; font-size:12px; border-radius:6px; }
+
+@media (max-width:420px) {
+  .sources { grid-template-columns:1fr; }
+}
