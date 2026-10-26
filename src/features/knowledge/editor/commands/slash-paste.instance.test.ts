@@ -23,7 +23,7 @@ import { Slice } from '@tiptap/pm/model';
 import { createBlockIdExtension, createKnowledgeExtensions, isKnowledgeBlock } from '@fob/shared/knowledge/schema';
 import { buildSlashItems } from './slash-items';
 import type { SlashPasteOptions } from './slash-paste';
-import { closeSlashMenu, createSlashPasteExtensions, runSlashItem, slashMenuPluginKey } from './slash-paste';
+import { closeSlashMenu, createSlashPasteExtensions, openBlockInsertMenu, runSlashItem, slashMenuPluginKey } from './slash-paste';
 
 const PAGE_ID = '00000000-0000-4000-8000-000000000002';
 
@@ -103,6 +103,42 @@ function assertMintedBlockIds(editor: Editor): void {
 }
 
 describe('slash menu', () => {
+  slowTest('the empty-line picker opens without writing a slash and inserts through the existing commands', () => {
+    const editor = mountEditor();
+    const initial = editor.getJSON();
+    expect(openBlockInsertMenu(editor.view, 0)).toBe(true);
+    expect(stateOf(editor)).toMatchObject({ open: true, query: '', range: { from: 1, to: 1 } });
+    expect(editor.getJSON()).toEqual(initial);
+    editor.view.dispatch(editor.state.tr.setMeta('hover', true));
+    expect(stateOf(editor)?.open).toBe(true);
+    const heading = buildSlashItems().find(item => item.name === 'heading')!;
+    expect(runSlashItem(editor.view, heading)).toBe(true);
+    expect(blockTypes(editor)).toEqual(['heading']);
+    expect(editor.state.doc.textContent).toBe('');
+    editor.destroy();
+  });
+
+  slowTest('cancelling the empty-line picker preserves content and rejects nonempty, code and readonly blocks', () => {
+    const editor = mountEditor();
+    const initial = editor.getJSON();
+    expect(openBlockInsertMenu(editor.view, 0)).toBe(true);
+    pressKey(editor, 'Escape');
+    expect(stateOf(editor)?.open).toBe(false);
+    expect(editor.getJSON()).toEqual(initial);
+    typeText(editor, '/');
+    expect(stateOf(editor)?.open).toBe(true);
+    closeSlashMenu(editor.view);
+    editor.commands.setContent('<p>Body</p>');
+    expect(openBlockInsertMenu(editor.view, 0)).toBe(false);
+    editor.commands.setContent('<pre><code></code></pre>');
+    expect(openBlockInsertMenu(editor.view, 0)).toBe(false);
+    editor.commands.setContent('<p></p>');
+    editor.setEditable(false);
+    expect(openBlockInsertMenu(editor.view, 0)).toBe(false);
+    expect(editor.state.doc.textContent).toBe('');
+    editor.destroy();
+  });
+
   slowTest("typing '/' at a block start opens the menu with an empty query", () => {
     const editor = mountEditor();
     typeText(editor, '/');

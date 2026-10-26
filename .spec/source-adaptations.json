@@ -280,8 +280,8 @@
     "sha256": "1b175a6a7b41c0cae885d8e246f03818762337e9b8a64cf63191b814663cc27e"
   },
   "src/features/knowledge/editor/editor-layout.module.css": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "ed0a400ac5d90ce919f8a2c08684082a82a93b8e1e56726e4a0d1af0a41e1abe"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Replace the duplicated blank-document placeholder with localized blank-line decorations and keep heading-level labels clear of insertion hints.",
+    "sha256": "44534c9a4799ecaa34838a737884a5addf2f9cd5309aa72ee237e97180cdcaf7"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
@@ -824,12 +824,12 @@
     "sha256": "cb08c8632ebaaab5d56bedc49487854569951b33a8ab52bfc4a13f4d489e9bb2"
   },
   "src/features/knowledge/editor/commands/slash-paste.instance.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "1a19794f69aa6e197f2779210b014555f1fd1d1064e632545aad1758cff1d691"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Cover zero-length empty-line insertion, clean cancellation and readonly/code/nonempty guards alongside the existing slash and paste tests.",
+    "sha256": "b2dd564d82a4c353f1ea04c90aea7529ff9ff68757aefc1141cc7b4a9b9f3c1f"
   },
   "src/features/knowledge/editor/commands/slash-paste.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "7ad17a45b0b88fe75bb14caab7f8520f1c26770fa1a12bf11cba8d6219c72699"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Open the existing block picker from a blank line with a zero-length trigger so plus-button open/cancel never writes a slash; retain slash typing and paste semantics.",
+    "sha256": "62320910cc25381db1e31d21870f135ed2e542789961861e8aba4fc7e311c2b9"
   },
   "src/features/knowledge/editor/components/document-markdown-export.messages.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",

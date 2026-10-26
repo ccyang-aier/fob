@@ -53,13 +53,6 @@
 .document :global(.ProseMirror > *:last-child) { margin-bottom: 0; }
 .document :global(.ProseMirror p) { margin-top: 0; margin-bottom: 0; }
 .document :global(.ProseMirror > p:not(:last-child)) { margin-bottom: var(--document-paragraph-gap); }
-.document :global(.ProseMirror > p:first-child:last-child:has(> br.ProseMirror-trailingBreak)::before) {
-  float: left;
-  height: 0;
-  color: var(--muted);
-  content: '输入内容，或输入 / 插入内容';
-  pointer-events: none;
-}
 .document :global(.ProseMirror h1),
 .document :global(.ProseMirror h2),
 .document :global(.ProseMirror h3),
@@ -91,11 +84,11 @@
 .document :global(.document-search-current) { background:#ffc764; outline:1px solid #d89635; }
 .document :global(.ProseMirror h1),.document :global(.ProseMirror h2),.document :global(.ProseMirror h3),.document :global(.ProseMirror h4) { scroll-margin-top:28px; }
 .document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4)) { position:relative; }
-.document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4)::before) { position:absolute; inset-inline-end:calc(100% + 12px); top:50%; width:24px; transform:translateY(-50%); opacity:0; color:var(--muted-strong); font-family:var(--font-code); font-size:11px; font-weight:400; line-height:20px; text-align:center; transition:opacity 160ms ease-out; pointer-events:none; }
-.document :global(.ProseMirror[contenteditable=true] h1::before) { content:'H1' / ''; }
-.document :global(.ProseMirror[contenteditable=true] h2::before) { content:'H2' / ''; }
-.document :global(.ProseMirror[contenteditable=true] h3::before) { content:'H3' / ''; }
-.document :global(.ProseMirror[contenteditable=true] h4::before) { content:'H4' / ''; }
+.document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4):not([data-block-insert-hint])::before) { position:absolute; inset-inline-end:calc(100% + 12px); top:50%; width:24px; transform:translateY(-50%); opacity:0; color:var(--muted-strong); font-family:var(--font-code); font-size:11px; font-weight:400; line-height:20px; text-align:center; transition:opacity 160ms ease-out; pointer-events:none; }
+.document :global(.ProseMirror[contenteditable=true] h1:not([data-block-insert-hint])::before) { content:'H1' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h2:not([data-block-insert-hint])::before) { content:'H2' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h3:not([data-block-insert-hint])::before) { content:'H3' / ''; }
+.document :global(.ProseMirror[contenteditable=true] h4:not([data-block-insert-hint])::before) { content:'H4' / ''; }
 .document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4):hover::before),.document :global(.ProseMirror[contenteditable=true]:focus-within [data-heading-current]::before) { opacity:1; }
 
 :global(html[data-theme="dark"]) .document :global(.ProseMirror a) { color:#8cc7ff; }

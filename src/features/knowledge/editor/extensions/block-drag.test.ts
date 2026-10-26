@@ -9,6 +9,8 @@ import { createBlockIdExtension, createKnowledgeExtensions, knowledgeSchema as s
 import { createPageUndo } from '../../collaboration/page-undo';
 import { pageCollaborationExtension } from '../page-collaboration';
 import { blockDragKey, createBlockDragPlugin, moveDocumentBlock } from './block-drag';
+import { isBlankTextBlock } from './empty-block';
+import { closeSlashMenu, createSlashPasteExtensions, openBlockInsertMenu, slashMenuPluginKey } from '../commands/slash-paste';
 
 const paragraph = (text: string) => schema.nodes.paragraph.create({ blockId: `block-${text}` }, schema.text(text));
 const texts = (state: EditorState) => Array.from({ length: state.doc.childCount }, (_, i) => state.doc.child(i).textContent);
@@ -69,6 +71,60 @@ afterAll(async () => { await browser.happyDOM.abort(); });
 function controls() {
   return { handle: document.createElement('button'), indicator: document.createElement('div'), sourceClass: 'drag-source', hoverClass: 'drag-hover', previewClass: 'drag-preview' };
 }
+
+test('blank writing lines exclude inline atoms, media and empty code blocks', () => {
+  expect(isBlankTextBlock(schema.nodes.paragraph.create())).toBe(true);
+  expect(isBlankTextBlock(schema.nodes.heading.create({ level: 2 }))).toBe(true);
+  expect(isBlankTextBlock(schema.nodes.paragraph.create(null, [schema.text(' \u00a0 '), schema.nodes.hardBreak.create()]))).toBe(true);
+  expect(isBlankTextBlock(paragraph('Body'))).toBe(false);
+  expect(isBlankTextBlock(schema.nodes.paragraph.create(null, schema.nodes.inlineMath.create({ latex: 'x' })))).toBe(false);
+  expect(isBlankTextBlock(schema.nodes.image.create({ src: 'https://example.com/image.png' }))).toBe(false);
+  expect(isBlankTextBlock(schema.nodes.codeBlock.create())).toBe(false);
+});
+
+test('blank rows offer insertion without a drag handle, and writing restores dragging', () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = new Editor({ element: host, extensions: [...createKnowledgeExtensions(), ...createSlashPasteExtensions()], content: '<p>Body</p><p></p><p>Last</p>' });
+  const elements = { ...controls(), insertHandle: document.createElement('button'), emptyClass: 'blank-line', emptyHint: "输入 '/' 来插入…", onInsert: openBlockInsertMenu };
+  const box = (x: number, y: number, width: number, height: number) => ({ x, y, left: x, top: y, right: x + width, bottom: y + height, width, height, toJSON: () => ({}) });
+  host.getBoundingClientRect = () => box(100, 100, 600, 500);
+  editor.view.dom.getBoundingClientRect = () => box(130, 120, 500, 200);
+  const blank = editor.view.dom.querySelectorAll('p')[1];
+  blank.getBoundingClientRect = () => box(130, 170, 500, 30);
+  editor.registerPlugin(createBlockDragPlugin(elements));
+  const initial = editor.getJSON();
+  const hover = () => blank.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 160, clientY: 180 }) as unknown as Event);
+  hover();
+  expect(elements.handle.hidden).toBe(true);
+  expect(elements.insertHandle.hidden).toBe(false);
+  expect(blank.getAttribute('data-block-insert-hint')).toBe(elements.emptyHint);
+  expect(editor.getJSON()).toEqual(initial);
+  expect(editor.getHTML()).not.toContain('data-block-insert-hint');
+  const drag = new browser.Event('dragstart', { bubbles: true, cancelable: true });
+  Object.defineProperty(drag, 'dataTransfer', { value: {} });
+  elements.handle.dispatchEvent(drag as unknown as Event);
+  expect(drag.defaultPrevented).toBe(true);
+  elements.insertHandle.dispatchEvent(new browser.MouseEvent('click', { bubbles: true }) as unknown as Event);
+  expect(slashMenuPluginKey.getState(editor.state)?.open).toBe(true);
+  expect(slashMenuPluginKey.getState(editor.state)?.range).toEqual({ from: 7, to: 7 });
+  expect(editor.getJSON()).toEqual(initial);
+  editor.view.dispatch(editor.state.tr.setMeta('hover-update', true));
+  expect(slashMenuPluginKey.getState(editor.state)?.open).toBe(true);
+  closeSlashMenu(editor.view);
+  expect(editor.getJSON()).toEqual(initial);
+  editor.commands.insertContent('Written');
+  hover();
+  expect(elements.handle.hidden).toBe(false);
+  expect(elements.insertHandle.hidden).toBe(true);
+  expect(blank.hasAttribute('data-block-insert-hint')).toBe(false);
+  editor.setEditable(false);
+  hover();
+  expect(elements.handle.hidden).toBe(true);
+  expect(elements.insertHandle.hidden).toBe(true);
+  editor.destroy();
+  host.remove();
+});
 
 test('the visible ghost follows the grab offset, preserves document content, and clears on cancellation', () => {
   const host = document.createElement('div');

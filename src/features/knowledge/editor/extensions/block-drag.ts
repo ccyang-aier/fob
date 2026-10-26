@@ -3,6 +3,7 @@ import { NodeSelection, Plugin, PluginKey, Selection } from '@tiptap/pm/state';
 import type { EditorState, Transaction } from '@tiptap/pm/state';
 import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import type { EditorView } from '@tiptap/pm/view';
+import { isBlankTextBlock } from './empty-block';
 
 const blockMoveMime = 'application/x-fob-block-move';
 type DragState = { hovered: number | null; source: number | null };
@@ -27,6 +28,10 @@ interface DragElements {
   sourceClass: string;
   hoverClass: string;
   previewClass: string;
+  insertHandle?: HTMLButtonElement;
+  emptyClass?: string;
+  emptyHint?: string;
+  onInsert?: (view: EditorView, pos: number) => void;
 }
 
 function elementPosition(view: EditorView, element: HTMLElement): number | null {
@@ -51,7 +56,7 @@ function blockElement(view: EditorView, target: Element): HTMLElement | null {
 
 /** Floating controls stay outside editable content and never enter saved document HTML. */
 export function createBlockDragPlugin(elements: DragElements): Plugin<DragState> {
-  const { handle, indicator, sourceClass, hoverClass, previewClass } = elements;
+  const { handle, indicator, sourceClass, hoverClass, previewClass, insertHandle, emptyClass, emptyHint, onInsert } = elements;
   return new Plugin<DragState>({
     key: blockDragKey,
     state: {
@@ -73,6 +78,11 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         for (const [pos, className] of [[value?.hovered, hoverClass], [value?.source, sourceClass]] as const) {
           const node = pos == null ? null : state.doc.nodeAt(pos);
           if (node && pos != null) decorations.push(Decoration.node(pos, pos + node.nodeSize, { class: className }));
+        }
+        const emptyPos = value?.hovered ?? (state.doc.childCount === 1 ? 0 : null);
+        const emptyNode = emptyPos === null ? null : state.doc.nodeAt(emptyPos);
+        if (emptyPos !== null && emptyNode && isBlankTextBlock(emptyNode) && emptyClass && emptyHint) {
+          decorations.push(Decoration.node(emptyPos, emptyPos + emptyNode.nodeSize, { class: emptyClass, 'data-block-insert-hint': emptyHint }));
         }
         return DecorationSet.create(state.doc, decorations);
       },
@@ -101,7 +111,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         const rect = view.dom.getBoundingClientRect();
         return !!scrollArea()?.contains(element) && event.clientX >= rect.left - 40 && event.clientX <= rect.right + 24 && event.clientY >= rect.top && event.clientY <= rect.bottom;
       };
-      const hide = () => { handle.hidden = true; target = null; setState({ hovered: null }); };
+      const hide = () => { handle.hidden = true; if (insertHandle) insertHandle.hidden = true; target = null; setState({ hovered: null }); };
       const finish = () => {
         win.cancelAnimationFrame(scrolling);
         scrolling = 0;
@@ -126,12 +136,19 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         if (x < 0 || x + 24 > win.innerWidth || y < Math.max(0, bounds?.top ?? 0) || y + 24 > Math.min(win.innerHeight, bounds?.bottom ?? win.innerHeight)) { hide(); return; }
         handle.style.left = `${x}px`;
         handle.style.top = `${y}px`;
-        handle.hidden = false;
+        const pos = value().hovered;
+        const blank = pos !== null && isBlankTextBlock(view.state.doc.nodeAt(pos));
+        handle.hidden = blank;
+        if (insertHandle) {
+          insertHandle.style.left = `${x}px`;
+          insertHandle.style.top = `${y}px`;
+          insertHandle.hidden = !blank;
+        }
       };
       const hover = (event: MouseEvent) => {
         if (value().source !== null || event.buttons) return;
         if (!view.editable || view.composing) { hide(); return; }
-        if (!(event.target instanceof Element) || handle.contains(event.target)) return;
+        if (!(event.target instanceof Element) || handle.contains(event.target) || insertHandle?.contains(event.target)) return;
         let over = event.target;
         const rect = view.dom.getBoundingClientRect();
         if (!view.dom.contains(over) && event.clientX >= rect.left - 36 && event.clientX < rect.left && event.clientY >= rect.top && event.clientY <= rect.bottom) {
@@ -195,7 +212,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       };
       const dragStart = (event: DragEvent) => {
         const pos = value().hovered;
-        if (pos === null || !target || !view.editable || !event.dataTransfer) { event.preventDefault(); return; }
+        if (pos === null || !target || !view.editable || !event.dataTransfer || isBlankTextBlock(view.state.doc.nodeAt(pos))) { event.preventDefault(); return; }
         const selection = NodeSelection.create(view.state.doc, pos), slice = selection.content();
         const rect = target.getBoundingClientRect();
         preview = view.dom.cloneNode(false) as HTMLElement;
@@ -265,6 +282,12 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, pos)));
         view.focus();
       };
+      const insert = () => {
+        const pos = value().hovered;
+        if (!view.editable || pos === null || !isBlankTextBlock(view.state.doc.nodeAt(pos))) return;
+        onInsert?.(view, pos);
+        hide();
+      };
       owner.addEventListener('mousemove', hover);
       owner.addEventListener('dragover', dragOver, true);
       owner.addEventListener('drop', drop, true);
@@ -275,6 +298,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       win.addEventListener('blur', finish);
       handle.addEventListener('dragstart', dragStart);
       handle.addEventListener('click', click);
+      insertHandle?.addEventListener('click', insert);
       const observer = new ResizeObserver(scroll);
       observer.observe(view.dom);
       return {
@@ -296,6 +320,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
           win.removeEventListener('blur', finish);
           handle.removeEventListener('dragstart', dragStart);
           handle.removeEventListener('click', click);
+          insertHandle?.removeEventListener('click', insert);
         },
       };
     },

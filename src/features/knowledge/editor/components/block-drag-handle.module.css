@@ -18,6 +18,14 @@
 .handle:focus-visible { outline: 1px solid var(--control-border); outline-offset: -1px; }
 .handle:active { cursor: grabbing; }
 .handle[data-dragging] { opacity: 0; }
+.insert, .insert:active { color: var(--ink-soft); cursor: pointer; }
+:global(.ProseMirror[contenteditable="true"]) .empty::before {
+  float: left;
+  height: 0;
+  color: var(--muted);
+  content: attr(data-block-insert-hint);
+  pointer-events: none;
+}
 .indicator {
   position: fixed;
   z-index: 36;
@@ -28,7 +36,7 @@
 }
 .source { opacity: .3; }
 .source:global(.ProseMirror-selectednode) { outline: none; }
-.hoverTarget:is(h1, h2, h3, h4)::before { opacity: 0 !important; }
+.hoverTarget:is(h1, h2, h3, h4):not(.empty)::before { opacity: 0 !important; }
 /* Override Tiptap's runtime .ProseMirror positioning regardless of load order. */
 .preview:global(.ProseMirror) {
   position: fixed;

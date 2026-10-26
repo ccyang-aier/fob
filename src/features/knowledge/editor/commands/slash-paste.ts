@@ -31,6 +31,7 @@ import { detectPasteKind } from './markdown-detect';
 import { richContentUrl } from '@fob/shared/knowledge/rich-content';
 import { buildSlashItems, filterSlashItems } from './slash-items';
 import type { SlashMenuItem } from './slash-items';
+import { isBlankTextBlock } from '../extensions/empty-block';
 
 /* ------------------------------------------------------------- menu state */
 
@@ -81,6 +82,9 @@ function deriveSlashState(
   state: EditorState,
   previous: SlashMenuPluginState,
 ): SlashMenuPluginState {
+  // The empty-line '+' uses a zero-length trigger, so opening/cancelling writes no slash.
+  const cursor = (state.selection as TextSelection).$cursor;
+  if (previous.open && previous.range && cursor && previous.range.from === previous.range.to && cursor.pos === previous.range.from && isBlankTextBlock(cursor.parent)) return previous;
   const trigger = triggerMatch(state);
   if (!trigger) return previous.dismissedAt === null ? CLOSED : { ...CLOSED, dismissedAt: previous.dismissedAt };
   if (previous.dismissedAt === trigger.from) return { ...CLOSED, dismissedAt: trigger.from };
@@ -106,7 +110,18 @@ function dispatchState(view: EditorView, next: SlashMenuPluginState): void {
 export function closeSlashMenu(view: EditorView): void {
   const state = slashMenuPluginKey.getState(view.state);
   if (!state?.open) return;
-  dispatchState(view, { ...CLOSED, dismissedAt: state.range?.from ?? null });
+  dispatchState(view, { ...CLOSED, dismissedAt: state.range && state.range.to > state.range.from ? state.range.from : null });
+}
+
+/** Open the existing block picker from a blank line without editing document content. */
+export function openBlockInsertMenu(view: EditorView, pos: number): boolean {
+  if (!view.editable || !slashMenuPluginKey.getState(view.state) || pos < 0 || pos >= view.state.doc.content.size || !isBlankTextBlock(view.state.doc.nodeAt(pos))) return false;
+  const at = pos + 1;
+  view.focus();
+  view.dispatch(view.state.tr.setSelection(TextSelection.create(view.state.doc, at)).setMeta(slashMenuPluginKey, {
+    ...CLOSED, open: true, range: { from: at, to: at },
+  }).setMeta('addToHistory', false));
+  return true;
 }
 
 /** Move the keyboard highlight of the open menu (also used by menu hover). */
