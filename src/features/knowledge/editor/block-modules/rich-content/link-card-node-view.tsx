@@ -59,6 +59,11 @@ export function LinkCardNodeView(props: NodeViewProps & { context: EditorBlockCo
   return <RichBlockFrame props={props} icon={LinkSimple} title={t('linkCard')} resizable={false} actions={<>
     {url && <a href={url} target="_blank" rel="noopener noreferrer" title={t('open')} aria-label={t('open')} className={`fob-action ${styles.iconButton}`} data-surface="plain"><ArrowSquareOut size={16} aria-hidden /></a>}
     {editor.isEditable && url && <button type="button" title={t('edit')} aria-label={t('edit')} className={`fob-action ${styles.iconButton}`} data-surface="plain" onClick={() => { setDraft(url); setDescription(String(props.node.attrs.description || '')); setEditing(value => !value); }}><PencilSimple size={16} aria-hidden /></button>}
+    {editor.isEditable && url && !editing && <>
+      {failed && <button type="button" className="fob-action" data-surface="plain" onClick={() => { setRequest(null); setAttempt(value => value + 1); }}>{t('retry')}</button>}
+      <button type="button" className="fob-action" data-surface="plain" onClick={() => convert('link')}>{t('link')}</button>
+      <button type="button" className="fob-action" data-surface="plain" onClick={() => convert('embed')}>{t('embed')}</button>
+    </>}
   </>}>
     {editing && editor.isEditable ? <form className={styles.form} data-document-export-omit onSubmit={event => {
       event.preventDefault(); const safe = richContentUrl(draft);
@@ -79,12 +84,8 @@ export function LinkCardNodeView(props: NodeViewProps & { context: EditorBlockCo
         </span>
         {richContentUrl(props.node.attrs.image) && <Image key={String(props.node.attrs.image)} className={styles.cover} src={String(props.node.attrs.image)} width={160} height={112} unoptimized alt="" loading="lazy" referrerPolicy="no-referrer" onError={event => { event.currentTarget.hidden = true; }} />}
       </a>
-      {editor.isEditable && <div className={styles.footer} data-document-export-omit>
-        <span role="status">{!fetched ? failed ? t('metadataError') : t('metadataLoading') : t('displayAs')}</span>
-        <div className={styles.actions}>{failed && <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => { setRequest(null); setAttempt(value => value + 1); }}>{t('retry')}</button>}
-          <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => convert('link')}>{t('link')}</button>
-          <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => convert('embed')}>{t('embed')}</button>
-        </div>
+      {editor.isEditable && !fetched && <div className={styles.footer} data-document-export-omit>
+        <span role="status">{failed ? t('metadataError') : t('metadataLoading')}</span>
       </div>}
     </> : <div className={styles.state}>{t('invalidUrl')}</div>}
   </RichBlockFrame>;

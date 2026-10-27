@@ -232,16 +232,16 @@
     "sha256": "53b3e4127d561802e4091ef0655f622dbaa110d7180a9a7a4b6e6530bda14324"
   },
   "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "6c5610cb2336bd4890692312cd56c65563a64970aafc4a7f435b17158e019163"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "2751f81fef5b84d620cded1985d7488e77c4bf2c0edc1f48fcb5447362862c4a"
   },
   "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
     "sha256": "76905c0582d2f12b5ddb313f5d216472ffe097b98cbcba8fb1b5789a740bda31"
   },
   "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "4a9309d8b6ad225e5c4a59a9b2edeb0413c29876d06fd504f8c09baff98996bc"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "e18ec69cbb689ad313d6b7902ac5c718251fd46cf3be4319ccc1506912d6f944"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
@@ -472,16 +472,16 @@
     "sha256": "c388fd3971fff3432d1e79d9fd1295a3d0e33a0d2712c6da6d559cab918f7ba4"
   },
   "src/features/knowledge/editor/block-modules/block-reference/block-reference.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "d3a70254213bf35c3f9f178e34721f8216d5ebd8aedf408386ff5cac5d2365c9"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "89e4efaa97fe02c7de0c946b89e0fd1dd9010a4d0dd3c673cbb387110ac4f4ec"
   },
   "src/features/knowledge/editor/block-modules/block-reference/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "fbc786e9df6121c3b8afef7e281b69b0ab8f16619e83cdb5a3ccab5133b50041"
   },
   "src/features/knowledge/editor/block-modules/block-reference/local-block-reference.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "389cb69c3abe61b648e6f37972a956a70c1c6398b7df9f28bdc31e959c57c42a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "4509fcbb537ce3c808d9bb263bc703517d2532fb55790207a5307269f2057614"
   },
   "src/features/knowledge/editor/block-modules/blockquote/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -496,16 +496,16 @@
     "sha256": "ece88fca5bf7857d1f7d5ba33ff55cd11971d4c865d5ff1e96ae684b431580ee"
   },
   "src/features/knowledge/editor/block-modules/code-block/code-block-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "62c2e7f1c568b22c436ef436bc034008414bc3867a02f7c81e9574c8186796b2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "d9d9589722b991769bdb23d216050965f9600ed384d671f11edec24638eec995"
   },
   "src/features/knowledge/editor/block-modules/code-block/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "191bcc6362275da8ce8ae3952e89d5f5dcd22841dcba502981aa47fbc2538270"
   },
   "src/features/knowledge/editor/block-modules/columns/columns-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "79c52e8c36f23c540b4e6f1aa0b64e5b9dc51e81300ff8af5c3816fd4d744fca"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "5aa32641ef0cbf542551ac64c968b941618c028d31b87f3f7b59aedbf8bb8039"
   },
   "src/features/knowledge/editor/block-modules/columns/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -544,12 +544,12 @@
     "sha256": "472b3997cf2daf7aa227af395341829a22437414a40ea869b5646dce410a3011"
   },
   "src/features/knowledge/editor/block-modules/math/math-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "033b3fd546e4bfbd80ba58d82facfb33f803d3dccaf474f5c8cdbe9b802d4fc7"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "ba6bc8a02c33725ac4d3fe3957e9faee023cacdc2dd60a709697d375dcceb9d8"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "afc3598a70972cafb137964b0a9e9e89848780b0029c142d66cbc5d869eea35e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "234854ef7d2257b1003a51228220a2759af80d016714564fa25912ad80a2053d"
   },
   "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -864,15 +864,43 @@
     "sha256": "a4043fd3886791a6f658a3f443fb1eaf44518b5bcbc33900c4a397e38972b8ee"
   },
   "src/features/knowledge/editor/block-modules/callout/callout-node-view.tsx": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "3a7339afb8eccc92d8369704fcbcc97f1eac1d43112ee54c1fe27a12a60d2677"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "aea688663d4e5e5207c7b9e8d4b1da3ed2b7d168fc7915ab8eca07bce05f91d2"
   },
   "src/features/knowledge/editor/block-modules/callout/callout.module.css": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "10e57fb0ad24a416e4aa8dbcdf86ae39993adef7cec696b06ec00ce30d2bedad"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "74589eb1710f3e91fe3fd693901d5c948b0040afeaf1ea26b72e56f4b1a4ee45"
   },
   "src/features/knowledge/editor/page-collaboration.ts": {
     "reason": "Keep the session-owned Yjs undo manager alive while floating block controls reconfigure plugin views; detach only view-owned listeners and preserve selection restoration. See .spec/tasks/editor-polish.md.",
     "sha256": "3cf76dd8dff0f8b32e08ee6299db38500e9396e803f0114b0f2c4a9b967b7bf8"
+  },
+  "src/features/knowledge/editor/block-modules/block-reference/block-reference.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "1a203b539275037f44cc1db4c6e21ee46a979d173a7f14b612ac47f51c6d8c33"
+  },
+  "src/features/knowledge/editor/block-modules/code-block/code-block.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "9f3a4fd37bfd1c2dee0123f59649cf8ea5c3ded2544ebaa101481e387934d2ad"
+  },
+  "src/features/knowledge/editor/block-modules/columns/columns.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "03f199a73df64d90d110cb1a4fdec2b751fa26fb9cdd0d024b759eb6757e2567"
+  },
+  "src/features/knowledge/editor/block-modules/database-view/database-view.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "a54bb49ac0f651f5cc27a993fccd8eec34901359148ac9a1acd34dca1824381a"
+  },
+  "src/features/knowledge/editor/block-modules/math/math.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "3efa8ceaa243c33d841bd4247cc19d1972a409bad23c6b63583e98610a4258c8"
+  },
+  "src/features/knowledge/editor/block-modules/media-core/media-block.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "1a67a4877824907cf570bc818a01486b02af1ae6dd37e808cfb8e931de651a9b"
+  },
+  "src/features/knowledge/editor/block-modules/page-link/page-link.module.css": {
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
+    "sha256": "87a84bc02918913979ff7fdb4994eaf60344d3dd2d6c8dd1487aa809d68fe7ea"
   }
 }

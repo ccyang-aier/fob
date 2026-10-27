@@ -3,10 +3,6 @@
 .editArea:focus-within { border-color: var(--accent-soft-line); background: var(--panel); }
 .input { display: block; flex: 1; width: 100%; min-width: 0; min-height: 38px; resize: none; padding: 9px 12px; border: 0; border-radius: inherit; outline: none; background: transparent; color: var(--ink); font: 13px/1.55 var(--document-code-font, var(--font-code)); }
 .input::placeholder { color: var(--muted-strong); }
-.actions { display: flex; flex: none; gap: 2px; padding: 6px; }
-.actions button { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 5px; color: var(--muted-strong); cursor: pointer; }
-.actions button:hover { background: var(--surface-hover); color: var(--ink); }
-.actions button:focus-visible { outline: 2px solid var(--focus-ring); }
 .preview { overflow-x: auto; padding: 20px 12px 10px; color: var(--ink); font-size: 18px; text-align: center; }
 .preview :global(.katex-display) { margin: 0; }
 .symbols { width: 190px; }

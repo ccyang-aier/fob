@@ -5,6 +5,7 @@ import { NodeViewWrapper, type NodeViewProps } from '@tiptap/react';
 import { ArrowsOut } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
 import { richMessages } from './messages';
+import { BlockActions } from '../block-actions';
 import styles from './rich-content.module.css';
 
 export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200 }: {
@@ -15,18 +16,18 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
   const start = useRef<{ y: number; height: number; next: number } | null>(null);
   const [error, setError] = useState(false);
   const height = Number(props.node.attrs.height || 360);
-  return <NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-id={props.node.attrs.blockId} className={styles.root} contentEditable={false}>
+  return <NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={styles.root} contentEditable={false}>
     <div className={styles.header}>
       <Icon size={16} aria-hidden />
       <span className={styles.title}>{props.editor.isEditable ? <input className={styles.titleInput} aria-label={t('blockTitle')} placeholder={title} value={String(props.node.attrs.title || '')} maxLength={500} onChange={event => props.updateAttributes({ title: event.target.value })} /> : String(props.node.attrs.title || title)}</span>
-      <div className={styles.actions} data-document-export-omit>
+    </div>
+      <BlockActions>
         {actions}
         {resizable && <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t('fullscreen')} aria-label={t('fullscreen')} onClick={async () => {
           try { if (document.fullscreenElement === root.current) await document.exitFullscreen(); else await root.current?.requestFullscreen(); setError(false); }
           catch { setError(true); }
         }}><ArrowsOut size={16} aria-hidden /></button>}
-      </div>
-    </div>
+      </BlockActions>
     {error && <div className={styles.error} role="alert" data-document-export-omit>{t('fullscreenError')}</div>}
     <div className={styles.body} style={resizable ? { height } : undefined}>{children}</div>
     {resizable && props.editor.isEditable && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit

@@ -3,11 +3,12 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-link-node-view.messages';
 import { useEffect, useState } from 'react';
-import { ArrowRight, FileText, MagnifyingGlass, PencilSimple } from '@/components/icons';
+import { ArrowRight, ArrowsLeftRight, FileText, MagnifyingGlass } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
 import { fetchReferencePages, type ReferencePageChoice } from '../../../data/reference-pages';
 import { requestOpenPageBlock } from '../../open-target';
+import { BlockActions } from '../block-actions';
 import styles from './page-link.module.css';
 
 export function PageLinkNodeView({
@@ -62,10 +63,12 @@ export function PageLinkNodeView({
       as="div"
       {...HTMLAttributes}
       data-fob-node="page-link"
+      data-block-actions-root
       data-block-id={node.attrs.blockId}
       className={styles.root}
     >
       {pageId && targetKnowledgeBaseId && !open ? (
+        <>
         <div className={styles.card} contentEditable={false}>
           <span className={styles.icon}>
             <FileText aria-hidden size={16} />
@@ -74,27 +77,32 @@ export function PageLinkNodeView({
             <strong>{title}</strong>
             <small>{knowledgeT('knowledgeBasePage')}</small>
           </span>
+        </div>
+        <BlockActions>
           {editor.isEditable ? (
             <button
               type="button"
-              className={styles.edit}
+              className="fob-action"
+              data-surface="plain"
               title={knowledgeT('changePage')}
               aria-label={knowledgeT('changePage')}
               onClick={() => setOpen(true)}
             >
-              <PencilSimple aria-hidden size={16} />
+              <ArrowsLeftRight aria-hidden size={16} />
             </button>
           ) : null}
           <button
             type="button"
-            className={styles.open}
+            className="fob-action"
+            data-surface="plain"
             title={knowledgeT('openPage')}
             aria-label={knowledgeT('openValue', { v0: title })}
             onClick={() => requestOpenPageBlock({ knowledgeBaseId: targetKnowledgeBaseId, pageId })}
           >
             <ArrowRight aria-hidden size={16} />
           </button>
-        </div>
+        </BlockActions>
+        </>
       ) : editor.isEditable ? (
         <div className={styles.picker} contentEditable={false}>
           <div className={styles.pickerTitle}>

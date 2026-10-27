@@ -15,6 +15,7 @@ import {
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
 import styles from './math.module.css';
+import { BlockActions } from '../block-actions';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -94,12 +95,14 @@ export function MathNodeView({ node, editor, updateAttributes, HTMLAttributes }:
       as="div"
       {...HTMLAttributes}
       data-fob-node="math"
+      data-block-actions-root
       data-math=""
       data-latex={latex}
       data-block-id={node.attrs.blockId}
       className={styles.root}
     >
       {editor.isEditable && (
+        <>
         <div className={styles.editArea} contentEditable={false} data-document-export-omit>
           <textarea
             ref={inputRef}
@@ -111,18 +114,21 @@ export function MathNodeView({ node, editor, updateAttributes, HTMLAttributes }:
             placeholder={knowledgeT('enterALatexEquation')}
             className={styles.input}
           />
-          <div className={styles.actions}>
+        </div>
+          <BlockActions>
             {latex && (
               <button
                 type="button"
+                className="fob-action"
+                data-surface="plain"
                 aria-label={copied ? knowledgeT('latexCopied') : knowledgeT('copyLatex')}
                 onClick={copy}
               >
-                {copied ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+                {copied ? <Check size={16} aria-hidden /> : <Copy size={16} aria-hidden />}
               </button>
             )}
             <DropdownMenu modal={false}>
-              <DropdownMenuTrigger aria-label={knowledgeT('equationShortcuts')}>
+              <DropdownMenuTrigger className="fob-action" data-surface="plain" aria-label={knowledgeT('equationShortcuts')}>
                 <FunctionIcon size={16} aria-hidden />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className={styles.symbols}>
@@ -140,8 +146,8 @@ export function MathNodeView({ node, editor, updateAttributes, HTMLAttributes }:
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </div>
+          </BlockActions>
+        </>
       )}
       {rendered.html && (
         <div

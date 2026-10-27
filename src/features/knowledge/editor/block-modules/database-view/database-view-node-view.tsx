@@ -25,6 +25,7 @@ import type {
 import { DatabaseTableView } from '../../../databases';
 import { knowledgeDatabasesApi } from '../../../databases/database-api';
 import { useDatabaseColumnsQuery, useDatabaseRowsQuery } from '../../../databases/database-queries';
+import { BlockActions } from '../block-actions';
 import { fetchKnowledgePages } from '../../../data/pages-api';
 import { requestOpenPageBlock } from '../../open-target';
 import styles from './database-view.module.css';
@@ -124,6 +125,7 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
       as="div"
       {...HTMLAttributes}
       data-fob-node="database-view"
+      data-block-actions-root
       data-block-id={node.attrs.blockId}
       className={styles.root}
       contentEditable={false}
@@ -133,16 +135,20 @@ export function DatabaseViewNodeView({ scope, ...props }: NodeViewProps & { scop
           <Database aria-hidden size={16} />
           {title}
         </span>
+      </div>
         {databaseId && editor.isEditable ? (
+          <BlockActions active={open}>
           <button
             type="button"
-            className={styles.change}
+            className="fob-action"
+            data-surface="plain"
+            aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
             {knowledgeT('changeDatabase')}
           </button>
+          </BlockActions>
         ) : null}
-      </div>
       {open || !databaseId ? (
         <div className={styles.picker}>
           <p>{knowledgeT('chooseADatabaseInThisKnowledgeBase')}</p>

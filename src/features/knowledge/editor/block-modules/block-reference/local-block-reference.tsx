@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-block-reference.messages';
 import { useEffect, useRef, useState } from 'react';
-import { ArrowSquareOut, Link, PencilSimple } from '@/components/icons';
+import { ArrowSquareOut, ArrowsLeftRight, Link } from '@/components/icons';
 import { DOMSerializer } from '@tiptap/pm/model';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import type { Extensions } from '@tiptap/core';
@@ -12,6 +12,7 @@ import type { NodeViewProps } from '@tiptap/react';
 import type { PageScope } from '@fob/shared/knowledge/contracts';
 import { withNodeView } from '../../extensions/with-node-view';
 import { requestOpenPageBlock } from '../../open-target';
+import { BlockActions } from '../block-actions';
 import type { EditorBlockContext } from '../types';
 import { BlockReferencePicker, listReferenceBlocks } from './block-reference-picker';
 import styles from './block-reference.module.css';
@@ -122,6 +123,7 @@ function LocalBlockReferenceCard({
       {...HTMLAttributes}
       data-fob-node="block-reference"
       data-block-reference={notice ? 'unavailable' : 'live'}
+      data-block-actions-root
       className={styles.localCard}
       contentEditable={false}
     >
@@ -137,30 +139,34 @@ function LocalBlockReferenceCard({
           <div ref={contentHost} className={styles.localContent} />
         )}
       </div>
-      <div className={styles.localActions}>
+      <BlockActions>
         {editor.isEditable ? (
           <button
             type="button"
+            className="fob-action"
+            data-surface="plain"
             aria-label={knowledgeT('changeReference')}
             title={knowledgeT('changeReference')}
             onClick={() => setEditing(true)}
           >
-            <PencilSimple aria-hidden size={14} />
+            <ArrowsLeftRight aria-hidden size={16} />
           </button>
         ) : null}
         {!notice ? (
           <button
             type="button"
+            className="fob-action"
+            data-surface="plain"
             aria-label={knowledgeT('openSourceBlock')}
             title={knowledgeT('openSourceBlock')}
             onClick={() =>
               requestOpenPageBlock({ knowledgeBaseId, pageId, blockId: targetBlockId })
             }
           >
-            <ArrowSquareOut aria-hidden size={14} />
+            <ArrowSquareOut aria-hidden size={16} />
           </button>
         ) : null}
-      </div>
+      </BlockActions>
     </NodeViewWrapper>
   );
 }

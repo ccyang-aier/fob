@@ -1,0 +1,77 @@
+.root {
+  position: absolute;
+  inset-block-end: 100%;
+  inset-inline-end: 0;
+  z-index: 24;
+  max-width: 100%;
+  padding-block-end: 6px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+:global([data-block-actions-root]):hover > .root,
+:global([data-block-actions-root]):focus-within > .root,
+.root[data-active="true"],
+.root:has([aria-expanded="true"]) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding: 1px;
+  border: 1px solid var(--control-border);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink-soft);
+}
+
+.bar:empty { display: none; }
+
+.bridge { position: absolute; inset-inline: 0; inset-block-end: 0; height: 6px; }
+
+.root .bar > :is(button, a) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 6px;
+  width: auto;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 3px 5px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: 500 12px/16px var(--font-sans);
+  text-decoration: none !important;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.root .bar > :is(button, a):focus-visible {
+  border-color: var(--control-border);
+  outline: none;
+  box-shadow: none;
+}
+
+/* Editor links keep their content color; tool links share the neutral button ink. */
+:global(.ProseMirror) .root .bar > :is(button, a) { color: inherit; }
+
+:global([data-block-actions-root]):fullscreen > .root {
+  inset-block-end: auto;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  padding-block-end: 0;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .root { opacity: 1; pointer-events: auto; }
+}

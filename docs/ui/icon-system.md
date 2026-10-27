@@ -28,6 +28,7 @@
 | H1/H2/H3 等编辑指令 | 保留区别明确的 Lucide 标题级别；其他格式、媒体和资源类型使用 FA7 对应语义 |
 | 文档块拖拽手柄 | FA7 `grip-vertical`，集中导出 `DotsSixVertical`；六点造型，14px 图形、24px 拖拽区域 |
 | 选中文字评论 | 用户指定轻量轮廓，Lucide `MessageCircle`，集中导出 `CommentOutline` |
+| 内容块打开/更换资源 | 配套使用 Lucide `ExternalLink` / `ArrowLeftRight`，集中导出 `ArrowSquareOut` / `ArrowsLeftRight`；统一 14px、1.75 线宽，更换不用铅笔 |
 
 轮廓例外必须在集中目录中明确导出并在此记录用途；不能在业务组件随手导入。旧语义名称可作为兼容别名，实际几何必须来自上述官方包。文件夹与页面图标的持久化 ID、颜色、Emoji 继续兼容已有数据。
 

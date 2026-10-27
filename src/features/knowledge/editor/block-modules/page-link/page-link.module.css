@@ -1,12 +1,9 @@
-.root { margin: 18px 0; border: 1px solid var(--control-border); border-radius: 9px; background: var(--panel); box-shadow: 0 2px 9px rgba(0,0,0,.035); }
+.root { position: relative; margin: 18px 0; border: 1px solid var(--control-border); border-radius: 9px; background: var(--panel); box-shadow: 0 2px 9px rgba(0,0,0,.035); }
 .card { display: flex; align-items: center; gap: 12px; min-height: 67px; padding: 11px 13px; }
 .icon { display: grid; width: 39px; height: 39px; flex: none; place-items: center; border-radius: 9px; background: #eef4fc; color: #3d76bd; }
 .cardText { min-width: 0; flex: 1; }
 .cardText strong { display: block; overflow: hidden; color: var(--ink-soft); font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
 .cardText small { display: block; margin-top: 2px; color: var(--muted-strong); font-size: 10px; }
-.edit,.open { display: grid; width: 27px; height: 27px; flex: none; place-items: center; border: 0; border-radius: 6px; background: transparent; color: var(--muted-strong); cursor: pointer; }
-.edit:hover,.open:hover { background: var(--surface-subtle); color: var(--muted-strong); }
-.open { color: #447cbd; }
 .picker { padding: 14px; }
 .pickerTitle { display: flex; align-items: center; gap: 7px; margin-bottom: 11px; color: var(--muted-strong); font-size: 12px; font-weight: 650; }
 .search { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border: 1px solid var(--control-border); border-radius: 6px; color: var(--muted-strong); }

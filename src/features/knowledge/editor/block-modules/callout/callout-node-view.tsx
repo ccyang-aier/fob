@@ -20,6 +20,7 @@ import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { CaretDown, CheckCircle, Info, Lightbulb, Warning, XCircle, ArrowLeft } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { TableColorPicker } from '../table/table-color-picker';
+import { BlockActions } from '../block-actions';
 import styles from './callout.module.css';
 
 const CALLOUT_EMOJI = [
@@ -103,6 +104,7 @@ export function CalloutNodeView({ node, editor, updateAttributes, HTMLAttributes
       as="aside"
       {...HTMLAttributes}
       data-fob-node="callout"
+      data-block-actions-root
       data-emoji={node.attrs.emoji}
       data-tone={node.attrs.tone}
       data-background={background}
@@ -124,14 +126,15 @@ export function CalloutNodeView({ node, editor, updateAttributes, HTMLAttributes
           className={styles.iconButton}
           contentEditable={false}
         >
-          {Icon ? <Icon size={23} aria-hidden /> : <span aria-hidden>{emoji}</span>}
+          {Icon ? <Icon size={16} aria-hidden /> : <span aria-hidden>{emoji}</span>}
         </button>
         <div className={styles.content}>
           <NodeViewContent className={styles.editable} />
         </div>
-        {editor.isEditable && <button type="button" className={`${styles.typeTrigger} fob-action`} data-surface="plain" data-document-export-omit contentEditable={false} aria-label={knowledgeT('calloutStyle')} aria-haspopup="dialog" aria-expanded={open} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { setAnchor(event.currentTarget); setPanel((value) => value ? null : 'tone'); }}>
+      </div>
+        {editor.isEditable && <BlockActions active={open}><button type="button" className="fob-action" data-surface="plain" aria-label={knowledgeT('calloutStyle')} aria-haspopup="dialog" aria-expanded={open} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { setAnchor(event.currentTarget); setPanel((value) => value ? null : 'tone'); }}>
           {background ? knowledgeT('custom') : knowledgeT('noticeValue', { v0: tone.label })}<CaretDown size={12} aria-hidden />
-        </button>}
+        </button></BlockActions>}
         {open && anchor ? (
           <AnchoredPopover anchor={anchor} onClose={() => setPanel(null)} label={knowledgeT('calloutStyle')} width={248} align="end" autoFocus={false} className={styles.menu}>
             {panel === 'custom' ? <>
@@ -184,7 +187,6 @@ export function CalloutNodeView({ node, editor, updateAttributes, HTMLAttributes
             </>}
           </AnchoredPopover>
         ) : null}
-      </div>
     </NodeViewWrapper>
   );
 }

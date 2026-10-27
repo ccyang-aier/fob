@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { CODE_LANGUAGES, detectedCodeLanguage } from './highlight';
+import { BlockActions } from '../block-actions';
 import './code-themes.css';
 import styles from './code-block.module.css';
 
@@ -70,6 +71,7 @@ export function CodeBlockNodeView({
       as="div"
       {...HTMLAttributes}
       data-fob-node="code-block"
+      data-block-actions-root
       data-block-id={node.attrs.blockId}
       data-code-theme={node.attrs.theme}
       data-code-wrap={String(node.attrs.wrap)}
@@ -109,19 +111,22 @@ export function CodeBlockNodeView({
             </span>
           )}
         </div>
-        <div className={styles.actions} data-document-export-omit>
+      </div>
+        <BlockActions>
           <button
             type="button"
-            className={styles.iconButton}
+            className="fob-action"
+            data-surface="plain"
             onClick={copy}
             aria-label={copied ? knowledgeT('codeCopied') : knowledgeT('copyCode')}
           >
-            {copied ? <Check size={14} aria-hidden /> : <Copy size={14} aria-hidden />}
+            {copied ? <Check size={16} aria-hidden /> : <Copy size={16} aria-hidden />}
           </button>
           {editor.isEditable && (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger
-                className={styles.iconButton}
+                className="fob-action"
+                data-surface="plain"
                 aria-label={knowledgeT('codeBlockDisplaySettings')}
               >
                 <DotsThree size={16} aria-hidden />
@@ -170,8 +175,7 @@ export function CodeBlockNodeView({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-        </div>
-      </div>
+        </BlockActions>
       <div className={styles.body}>
         {node.attrs.lineNumbers && (
           <div className={styles.gutter} contentEditable={false} aria-hidden>

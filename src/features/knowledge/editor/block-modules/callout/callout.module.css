@@ -1,14 +1,12 @@
 .root { position: relative; margin: 24px 0; padding: 0 !important; border: 1px solid color-mix(in srgb, var(--callout-accent) 28%, transparent) !important; border-radius: 7px; background: var(--callout-wash) !important; }
-.inner { position: relative; display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; }
-.iconButton { display: grid; width: 24px; height: 28px; flex: none; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--callout-ink); font-size: 20px; line-height: 1; cursor: pointer; }
+.inner { display: flex; align-items: flex-start; gap: 8px; padding: 8px 12px; }
+.iconButton { display: grid; width: 20px; height: 1lh; min-height: 24px; flex: none; place-items: center; padding: 0; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--callout-ink); font-size: inherit; cursor: pointer; }
 .iconButton:hover:not(:disabled) { background: color-mix(in srgb, var(--callout-accent) 10%, transparent); }
 .iconButton:disabled { cursor: default; }
 .content { min-width: 0; flex: 1; }
-.editable { min-height: 28px; color: var(--callout-ink); font-size: var(--document-size, 16px); line-height: var(--document-line-height, 1.8); }
+.editable { min-height: 1lh; color: var(--callout-ink); font: inherit; }
 .editable :global(p) { color: inherit; }
 .editable :global(p + p) { margin-top: 8px; }
-.typeTrigger { position: absolute; top: -34px; right: -1px; display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 9px; border: 1px solid var(--control-border); border-radius: 6px; background: var(--panel); color: var(--ink-soft); font: 600 12px/1 var(--font-sans); opacity: 0; pointer-events: none; }
-.root:hover .typeTrigger,.root:focus-within .typeTrigger,.typeTrigger[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
 .menu { composes: menu-surface from global; max-width: calc(100vw - 32px); padding: 10px; border: 1px solid var(--menu-border); border-radius: 8px; color: var(--ink); }
 .menuTitle { margin: 0 2px 8px; color: var(--muted-strong); font-size: 11px; font-weight: 500; }
 .menuTitle:not(:first-child) { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
@@ -21,5 +19,5 @@
 .swatch { width: 10px; height: 10px; border-radius: 50%; }
 .customSwatch { width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(#ed7777, #e7c96a, #79ba91, #7d9cde, #bc82c9, #ed7777); }
 .back { display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 8px; padding: 4px; border-radius: 4px; color: var(--ink); font: 12px/20px var(--font-sans); }
-.iconButton:focus-visible,.menu button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.iconButton:focus-visible,.menu button:focus-visible { border-color: var(--control-border); outline: none; box-shadow: none; }
 :global(html[data-theme="dark"]) .root:not([data-tone="custom"]) { background: color-mix(in srgb, var(--callout-accent) 12%, var(--panel)) !important; --callout-ink: color-mix(in srgb, var(--callout-accent) 65%, white) !important; }

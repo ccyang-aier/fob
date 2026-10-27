@@ -1,9 +1,5 @@
 .root { position: relative; margin: 22px 0; }
-.controls { position: absolute; z-index: 22; top: -28px; right: 0; }
-.trigger { display: flex; align-items: center; gap: 6px; min-height: 25px; padding: 3px 7px; border-radius: 5px; background: var(--panel); color: var(--muted-strong); font-size: 11px; cursor: pointer; opacity: 0; transition: opacity 180ms ease, background 180ms ease; }
-.root:hover .trigger,.root:focus-within .trigger,.root[data-active="true"] .trigger { opacity: 1; }
-.trigger:hover,.trigger[data-state="open"] { background: var(--surface-hover); color: var(--ink); }
-.trigger:focus-visible,.menu button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+.menu button:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 .menu { width: 244px; padding: 12px; }
 .countRow,.countRow > div { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .countRow { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); font-size: 12px; }

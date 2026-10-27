@@ -10,7 +10,7 @@ import {
   Image as ImageIcon,
   MusicNotes,
   Paperclip,
-  PencilSimple,
+  ArrowsLeftRight,
   Video,
   FilePdf,
 } from '@/components/icons';
@@ -21,6 +21,7 @@ import { readLocalAsset, saveLocalAsset } from '../../../assets/local-assets';
 import { knowledgeAssetsApi } from '../../../assets/assets-api';
 import { useAssetUploads } from '../../../assets/use-asset-uploads';
 import { takeInsertedMedia } from './insert-media';
+import { BlockActions } from '../block-actions';
 import styles from './media-block.module.css';
 
 export type MediaKind = 'image' | 'video' | 'audio' | 'file' | 'pdf';
@@ -227,6 +228,7 @@ export function MediaBlockView({
       as="figure"
       {...HTMLAttributes}
       data-fob-node={node.type.name}
+      data-block-actions-root
       data-kind={kind}
       data-block-id={node.attrs.blockId}
       data-empty={String(!source)}
@@ -280,27 +282,29 @@ export function MediaBlockView({
         </div>
       )}
       {source && resolved.value && (
-        <div className={styles.actions} contentEditable={false} data-document-export-omit>
+        <BlockActions>
           <a
             href={resolved.value.url}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={knowledgeT('open') + LABELS(locale)[kind]}
-            className={styles.action}
+            className="fob-action"
+            data-surface="plain"
           >
-            <ArrowSquareOut size={14} aria-hidden />
+            <ArrowSquareOut size={16} aria-hidden />
           </a>
           {editor.isEditable && (
             <button
               type="button"
-              className={styles.action}
+              className="fob-action"
+              data-surface="plain"
               aria-label={knowledgeT('replace') + LABELS(locale)[kind]}
               onClick={() => inputRef.current?.click()}
             >
-              <PencilSimple size={14} aria-hidden />
+              <ArrowsLeftRight size={16} aria-hidden />
             </button>
           )}
-        </div>
+        </BlockActions>
       )}
       {!source && editor.isEditable && !busy && (
         <button

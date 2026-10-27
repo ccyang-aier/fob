@@ -35,6 +35,7 @@ import {
 import { withNodeView } from '../../extensions/with-node-view';
 import { PAGE_BODY_FRAGMENT } from '../../page-collaboration';
 import { requestOpenPageBlock } from '../../open-target';
+import { BlockActions } from '../block-actions';
 import { createBlockReferenceSources, watchSourceBlock } from './block-reference-source';
 import type {
   BlockReferenceSnapshot,
@@ -360,7 +361,8 @@ function BlockReferenceCard({ node, editor, updateAttributes }: NodeViewProps) {
     <NodeViewWrapper
       draggable={false}
       contentEditable={false}
-      className="my-3 select-none"
+      className="relative my-3 select-none"
+      data-block-actions-root
       data-block-reference={state}
     >
       <div
@@ -414,11 +416,13 @@ function BlockReferenceCard({ node, editor, updateAttributes }: NodeViewProps) {
             <BlockReferenceNotice state={state} />
           )}
         </div>
+      </div>
+      <BlockActions>
         {state === 'live' ? (
-          <span className="pointer-events-none absolute right-2.5 top-2.5 flex items-center gap-1 rounded-[6px] border border-[var(--line)] bg-[var(--raise)] px-1.5 py-[3px] text-[11px] font-medium text-[var(--muted-strong)] opacity-0 shadow-[0_1px_4px_rgba(18,23,31,0.12)] transition-opacity duration-150 group-hover:opacity-100">
-            <ArrowSquareOut aria-hidden className="size-3" />
+          <button type="button" className="fob-action" data-surface="plain" onClick={open}>
+            <ArrowSquareOut aria-hidden size={16} />
             {knowledgeT('goToOriginal')}
-          </span>
+          </button>
         ) : null}
         {editor.isEditable ? (
           <button
@@ -429,12 +433,13 @@ function BlockReferenceCard({ node, editor, updateAttributes }: NodeViewProps) {
               event.stopPropagation();
               setEditing(true);
             }}
-            className="absolute bottom-2.5 right-2.5 rounded px-1.5 py-1 text-[11px] text-[var(--muted-strong)] opacity-0 hover:bg-[var(--raise)] group-hover:opacity-100 focus-visible:opacity-100"
+            className="fob-action"
+            data-surface="plain"
           >
             {knowledgeT('changeReference')}
           </button>
         ) : null}
-      </div>
+      </BlockActions>
     </NodeViewWrapper>
   );
 }

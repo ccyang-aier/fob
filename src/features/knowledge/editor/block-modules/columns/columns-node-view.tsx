@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { AppearanceSelect } from '@/components/editor-appearance-controls';
 import { addColumn, removeLastColumn, setColumnWidths } from './columns-commands';
+import { BlockActions } from '../block-actions';
 import styles from './columns.module.css';
 
 function VARIANTS(locale?: Locale) {
@@ -145,6 +146,7 @@ export function ColumnsNodeView({
       as="div"
       {...HTMLAttributes}
       data-fob-node="columns"
+      data-block-actions-root
       data-columns=""
       data-block-id={node.attrs.blockId}
       data-variant={node.attrs.variant}
@@ -152,10 +154,10 @@ export function ColumnsNodeView({
       data-active={String(selected || open || dragging)}
     >
       {editor.isEditable && (
-        <div className={styles.controls} contentEditable={false} data-document-export-omit>
+        <BlockActions active={open || dragging}>
           <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
-            <DropdownMenuTrigger className={styles.trigger} aria-label={knowledgeT('columnLayout')}>
-              <Columns size={14} aria-hidden />
+            <DropdownMenuTrigger className="fob-action" data-surface="plain" aria-label={knowledgeT('columnLayout')}>
+              <Columns size={16} aria-hidden />
               {node.childCount} {knowledgeT('columns')}
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -206,7 +208,7 @@ export function ColumnsNodeView({
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
+        </BlockActions>
       )}
       <div className={styles.layout} ref={layoutRef}>
         <NodeViewContent as="div" />
