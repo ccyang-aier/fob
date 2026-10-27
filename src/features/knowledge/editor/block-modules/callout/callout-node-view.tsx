@@ -1,192 +1,82 @@
 'use client';
 
+import { useState, type CSSProperties } from 'react';
 import { useTranslation, createTranslator, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './callout-node-view.messages';
-/**
- * The callout NodeView (E05): a light tinted card over the shared schema's
- * `callout` node — a quiet tone-derived surface,
- * and semantic notice icons. The type picker and emoji chip share a compact
- * popover, with the existing color picker for custom backgrounds. Unknown
- * tones fall back to neutral; all controls respect the editor's editability.
- *
- * The editable `block+` content lives in NodeViewContent so a contentDOM
- * exists — required for ProseMirror/y-prosemirror content binding.
- */
-
-import { useState } from 'react';
-import type { CSSProperties } from 'react';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { CaretDown, CheckCircle, Info, Lightbulb, Warning, XCircle, ArrowLeft } from '@/components/icons';
+import { CaretDown, CheckCircle, Emoji, Info, Lightbulb, Palette, Warning, XCircle, ArrowLeft, type Icon } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
+import { EmojiPalette } from '@/components/ui/emoji-palette';
 import { TableColorPicker } from '../table/table-color-picker';
 import { BlockActions } from '../block-actions';
 import styles from './callout.module.css';
 
-const CALLOUT_EMOJI = [
-  '💡',
-  '✅',
-  '⚠️',
-  'ℹ️',
-  '🔥',
-  '⭐',
-  '📌',
-  '📝',
-  '❗',
-  '❓',
-  '🎯',
-  '🚀',
-  '✨',
-  '💬',
-  '🔍',
-  '🧠',
-  '📎',
-  '🗓️',
-  '⚙️',
-  '🛠️',
-  '💼',
-  '🎉',
-  '👀',
-  '🧪',
-] as const;
-
 interface CalloutTone {
   label: string;
-  /** Icon and swatch color. */
   accent: string;
-  /** Card wash; color-mix keeps both themes coherent. */
   wash: string;
-  emoji: string;
+  icon: Icon;
 }
 
-function CALLOUT_TONES(locale?: Locale): Record<string, CalloutTone> {
-  const knowledgeT = createTranslator(knowledgeMessages, locale);
+function calloutTones(locale?: Locale): Record<string, CalloutTone> {
+  const t = createTranslator(knowledgeMessages, locale);
   return {
-    neutral: { label: knowledgeT('neutral'), accent: '#626d7c', wash: '#f6f8fa', emoji: '💡' },
-    info: { label: knowledgeT('info'), accent: '#2870ba', wash: '#f0f7ff', emoji: 'ℹ️' },
-    success: { label: knowledgeT('success'), accent: '#198553', wash: '#effbf4', emoji: '✅' },
-    warn: { label: knowledgeT('warning'), accent: '#9b721c', wash: '#fffaeb', emoji: '⚠️' },
-    danger: { label: knowledgeT('error'), accent: '#bd4343', wash: '#fff3f2', emoji: '❗' },
+    neutral: { label: t('neutral'), accent: '#626d7c', wash: '#f6f8fa', icon: Lightbulb },
+    info: { label: t('info'), accent: '#2870ba', wash: '#f0f7ff', icon: Info },
+    success: { label: t('success'), accent: '#198553', wash: '#effbf4', icon: CheckCircle },
+    warn: { label: t('warning'), accent: '#9b721c', wash: '#fffaeb', icon: Warning },
+    danger: { label: t('error'), accent: '#bd4343', wash: '#fff3f2', icon: XCircle },
   };
 }
 
-const NOTICE_ICONS = { '💡': Lightbulb, 'ℹ️': Info, '✅': CheckCircle, '⚠️': Warning, '❗': XCircle };
-
 function customInk(background: string): string {
-  const channels = [1, 3, 5].map((offset) => Number.parseInt(background.slice(offset, offset + 2), 16) / 255);
-  const [r, g, b] = channels.map((channel) => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4);
+  const channels = [1, 3, 5].map(offset => Number.parseInt(background.slice(offset, offset + 2), 16) / 255);
+  const [r, g, b] = channels.map(channel => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4);
   if (background.length === 9 && Number.parseInt(background.slice(7), 16) < 192) return 'var(--ink)';
   return .2126 * r + .7152 * g + .0722 * b > .179 ? '#202020' : '#ffffff';
 }
 
 export function CalloutNodeView({ node, editor, updateAttributes, HTMLAttributes }: NodeViewProps) {
-  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
-
+  const { locale, t } = useTranslation(knowledgeMessages);
   const emoji = String(node.attrs.emoji || '💡');
-  const tones = CALLOUT_TONES(locale);
+  const tones = calloutTones(locale);
   const tone = tones[String(node.attrs.tone)] ?? tones.neutral;
   const background = node.attrs.tone === 'custom' && typeof node.attrs.background === 'string' ? node.attrs.background : null;
-  const Icon = NOTICE_ICONS[emoji as keyof typeof NOTICE_ICONS];
   const [panel, setPanel] = useState<'icon' | 'tone' | 'custom' | null>(null);
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
-  const open = panel !== null;
+  const styleOpen = panel === 'tone' || panel === 'custom';
+  const close = () => { setPanel(null); anchor?.focus({ preventScroll: true }); };
 
-  const closeAndFocusTrigger = () => {
-    setPanel(null);
-    anchor?.focus();
-  };
-
-  return (
-    // Registry attrs are serialized-only (`rendered: false`), so the visible
-    // NodeView DOM re-emits the semantic markers itself; the clipboard/HTML
-    // serializers stay schema-driven and unaffected by the NodeView.
-    <NodeViewWrapper
-      as="aside"
-      {...HTMLAttributes}
-      data-fob-node="callout"
-      data-block-actions-root
-      data-emoji={node.attrs.emoji}
-      data-tone={node.attrs.tone}
-      data-background={background}
-      data-block-id={node.attrs.blockId}
-      className={styles.root}
-      style={{ '--callout-accent': background ? customInk(background) : tone.accent, '--callout-ink': background ? customInk(background) : tone.accent, '--callout-wash': background ?? tone.wash } as CSSProperties}
-    >
-      <div className={styles.inner}>
-        <button
-          type="button"
-          aria-label={knowledgeT('setCalloutIconAndTone')}
-          aria-expanded={open}
-          data-document-callout-icon
-          aria-haspopup="dialog"
-          title={knowledgeT('setCalloutIconAndTone')}
-          disabled={!editor.isEditable}
-          onMouseDown={(event) => event.preventDefault()}
-          onClick={(event) => { if (editor.isEditable) { setAnchor(event.currentTarget); setPanel((value) => value ? null : 'icon'); } }}
-          className={styles.iconButton}
-          contentEditable={false}
-        >
-          {Icon ? <Icon size={16} aria-hidden /> : <span aria-hidden>{emoji}</span>}
-        </button>
-        <div className={styles.content}>
-          <NodeViewContent className={styles.editable} />
-        </div>
-      </div>
-        {editor.isEditable && <BlockActions active={open}><button type="button" className="fob-action" data-surface="plain" aria-label={knowledgeT('calloutStyle')} aria-haspopup="dialog" aria-expanded={open} onMouseDown={(event) => event.preventDefault()} onClick={(event) => { setAnchor(event.currentTarget); setPanel((value) => value ? null : 'tone'); }}>
-          {background ? knowledgeT('custom') : knowledgeT('noticeValue', { v0: tone.label })}<CaretDown size={12} aria-hidden />
-        </button></BlockActions>}
-        {open && anchor ? (
-          <AnchoredPopover anchor={anchor} onClose={() => setPanel(null)} label={knowledgeT('calloutStyle')} width={248} align="end" autoFocus={false} className={styles.menu}>
-            {panel === 'custom' ? <>
-              <button type="button" className={`${styles.back} fob-action`} data-surface="plain" aria-label={knowledgeT('backToStyles')} onClick={() => setPanel('tone')}><ArrowLeft size={14} aria-hidden />{knowledgeT('customBackground')}</button>
-              <TableColorPicker value={background ?? tone.wash} onChange={(hex) => updateAttributes({ tone: 'custom', background: hex })} />
-            </> : <>
-            {panel === 'icon' && <>
-            <div className={styles.menuTitle}>{knowledgeT('icon')}</div>
-            <div className={styles.emojiGrid}>
-              {CALLOUT_EMOJI.map((candidate) => (
-                <button
-                  key={candidate}
-                  type="button"
-                  aria-label={knowledgeT('iconValue', { v0: candidate })}
-                  aria-pressed={candidate === emoji}
-                  onClick={() => {
-                    updateAttributes({ emoji: candidate });
-                    closeAndFocusTrigger();
-                  }}
-                  className={styles.emojiOption}
-                >
-                  <span aria-hidden>{candidate}</span>
-                </button>
-              ))}
-            </div>
-            </>}
-            <div className={styles.toneGrid}>
-              {Object.entries(tones).map(([name, candidate]) => (
-                <button
-                  key={name}
-                  type="button"
-                  aria-label={knowledgeT('toneValue', { v0: candidate.label })}
-                  aria-pressed={name === String(node.attrs.tone)}
-                  onClick={() => {
-                    updateAttributes({ tone: name, background: null, emoji: candidate.emoji });
-                    closeAndFocusTrigger();
-                  }}
-                  className={styles.toneOption}
-                >
-                  <span
-                    aria-hidden
-                    className={styles.swatch}
-                    style={{ background: candidate.accent }}
-                  />
-                  {candidate.label}
-                </button>
-              ))}
-              <button type="button" className={styles.toneOption} aria-label={knowledgeT('customBackground')} aria-pressed={node.attrs.tone === 'custom'} onClick={() => setPanel('custom')}><span className={styles.customSwatch} aria-hidden />{knowledgeT('custom')}</button>
-            </div>
-            </>}
-          </AnchoredPopover>
-        ) : null}
-    </NodeViewWrapper>
-  );
+  return <NodeViewWrapper as="aside" {...HTMLAttributes} data-fob-node="callout" data-block-actions-root data-emoji={node.attrs.emoji} data-tone={node.attrs.tone} data-background={background} data-block-id={node.attrs.blockId} className={styles.root}
+    style={{ '--callout-accent': background ? customInk(background) : tone.accent, '--callout-ink': background ? customInk(background) : tone.accent, '--callout-wash': background ?? tone.wash } as CSSProperties}>
+    <div className={styles.inner}>
+      <button type="button" aria-label={t('setCalloutIconAndTone')} aria-expanded={panel === 'icon'} aria-haspopup="dialog" data-document-callout-icon title={t('setCalloutIconAndTone')} disabled={!editor.isEditable} className={styles.iconButton} contentEditable={false}
+        onMouseDown={event => event.preventDefault()} onClick={event => { if (editor.isEditable) { setAnchor(event.currentTarget); setPanel(value => value === 'icon' ? null : 'icon'); } }}>
+        <Emoji value={emoji} size={22} />
+      </button>
+      <div className={styles.content}><NodeViewContent className={styles.editable} /></div>
+    </div>
+    {editor.isEditable && <BlockActions active={styleOpen}>
+      <button type="button" className="fob-action" data-surface="plain" aria-label={t('calloutStyle')} aria-haspopup="dialog" aria-expanded={styleOpen}
+        onClick={event => { setAnchor(event.currentTarget); setPanel(value => value === 'tone' || value === 'custom' ? null : 'tone'); }}>
+        {background ? t('custom') : t('noticeValue', { v0: tone.label })}<CaretDown size={12} aria-hidden />
+      </button>
+    </BlockActions>}
+    {panel && anchor && <AnchoredPopover anchor={anchor} onClose={() => setPanel(null)} label={panel === 'icon' ? t('setCalloutIconAndTone') : t('calloutStyle')} width={panel === 'icon' ? 296 : panel === 'custom' ? 248 : 168} align="end" autoFocus={panel === 'icon'} className={panel === 'icon' ? styles.emojiMenu : styles.menu}>
+      {panel === 'icon' ? <EmojiPalette value={emoji} onSelect={next => { updateAttributes({ emoji: next }); close(); }} /> : panel === 'custom' ? <>
+        <button type="button" className={'fob-action ' + styles.back} data-surface="plain" aria-label={t('backToStyles')} onClick={() => setPanel('tone')}><ArrowLeft size={14} aria-hidden />{t('customBackground')}</button>
+        <TableColorPicker value={background ?? tone.wash} onChange={hex => updateAttributes({ tone: 'custom', background: hex })} />
+      </> : <div className={styles.toneGrid}>
+        {Object.entries(tones).map(([name, candidate]) => {
+          const ToneIcon = candidate.icon;
+          return <button key={name} type="button" aria-label={t('toneValue', { v0: candidate.label })} aria-pressed={name === String(node.attrs.tone)} className={styles.toneOption}
+            onClick={() => { updateAttributes({ tone: name, background: null }); close(); }}>
+            <ToneIcon size={16} aria-hidden style={{ color: candidate.accent }} />{candidate.label}
+          </button>;
+        })}
+        <button type="button" className={styles.toneOption} aria-label={t('customBackground')} aria-pressed={node.attrs.tone === 'custom'} onClick={() => setPanel('custom')}><Palette size={16} aria-hidden />{t('custom')}</button>
+      </div>}
+    </AnchoredPopover>}
+  </NodeViewWrapper>;
 }

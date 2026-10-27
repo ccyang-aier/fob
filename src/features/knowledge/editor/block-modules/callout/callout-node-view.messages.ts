@@ -2,7 +2,7 @@ import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
   icon: ['图标', 'Icon'],
-  setCalloutIconAndTone: ['设置提示框图标与语气', 'Set callout icon and tone'],
+  setCalloutIconAndTone: ['设置提示框表情', 'Set callout emoji'],
   calloutStyle: ['提示框样式', 'Callout style'],
   iconValue: ['图标 {v0}', 'Icon {v0}'],
   calloutLevel: ['提示等级', 'Callout level'],

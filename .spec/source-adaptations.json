@@ -292,8 +292,8 @@
     "sha256": "f6c0c03d9c21295b73983d796616dbcde877d654494fdabccbfa4350fe0b1525"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
-    "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout.",
-    "sha256": "683a714990400a864b9532b70a6aa3996249fcc9834789e2b4368b90b5c33747"
+    "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render selected Unicode content icons through the shared local OpenMoji component without changing existing encoded glyph IDs or stored values.",
+    "sha256": "8d859b3a1864208d5315b4bbb478be425124c827e2bcbfce660bc9855e6bbe1b"
   },
   "src/features/knowledge/notifications/notifications-api.test.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -496,8 +496,8 @@
     "sha256": "ece88fca5bf7857d1f7d5ba33ff55cd11971d4c865d5ff1e96ae684b431580ee"
   },
   "src/features/knowledge/editor/block-modules/code-block/code-block-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
-    "sha256": "d9d9589722b991769bdb23d216050965f9600ed384d671f11edec24638eec995"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Keep code-specific copy and display controls inside the code header through BlockActions placement=inside, as requested by the user.",
+    "sha256": "f6940758e0e20487fee42553ff6146424b03f2a242478643db4adaf47d085225"
   },
   "src/features/knowledge/editor/block-modules/code-block/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -640,8 +640,8 @@
     "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
   },
   "src/features/knowledge/navigation/page-icon-picker.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "346c749e456d447b497d485d71746005a04419a7effafa9b63b91af293a2962f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render emoji choices with the shared OpenMoji component while preserving existing glyph selection, save, read-only and failure behavior.",
+    "sha256": "efd9c62c938c894ace3af202b8d5e7c89ee237b2138e856e061e176e47a78b64"
   },
   "src/features/knowledge/organization/groups-section.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -744,8 +744,8 @@
     "sha256": "7706d9f0cb72a7fe699f01e5f40fa7568b87baeceeb368a53a95086694502461"
   },
   "src/features/knowledge/navigation/page-icon.test.tsx": {
-    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Verify icon-only outline folding and independent parent/leaf anchor navigation while preserving collapse state through position changes. See .spec/tasks/editor-polish.md.",
-    "sha256": "39bb37e54c40b9a4e82aecbeea13f89d3766f9098c2b852a660a124f5ab3caf3"
+    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Verify icon-only outline folding and independent parent/leaf anchor navigation while preserving collapse state through position changes. See .spec/tasks/editor-polish.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify preserved Unicode values resolve to local OpenMoji artwork alongside existing glyph and page-icon persistence behavior.",
+    "sha256": "3ba119cac7ddee3aab42037b28c81c390644ab994e4a1d0bc94b4bbaa5dade86"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
     "reason": "Localize unavailable local folder links and document-list recovery.",
@@ -856,20 +856,20 @@
     "sha256": "900912a42db4e349ad67e8ec7eb2f3f830c8142666f6e3e81c3c758312e17102"
   },
   "src/features/knowledge/editor/block-modules/blocks.instance.test.ts": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "d3252658f1ed85ab114fa1bf102b34950bbef77d163ab1893cc6c08e282f580b"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify the reviewed local OpenMoji artwork, independent callout emoji/theme panels, 200-option palette and preserved selected emoji when switching tones; retain real Tiptap schema/export and authorization coverage.",
+    "sha256": "f3adb5f8f682286a1b5fccc4e89f2880bbe7f078cdb0ce76c6ed50d877c1a649"
   },
   "src/features/knowledge/editor/block-modules/callout/callout-node-view.messages.ts": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "a4043fd3886791a6f658a3f443fb1eaf44518b5bcbc33900c4a397e38972b8ee"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Name the left callout control as emoji selection only; the right control owns theme and background choices.",
+    "sha256": "497a4f4062c9716c9b9ce70f9ea05e909477403552de14b067b9f94691445d69"
   },
   "src/features/knowledge/editor/block-modules/callout/callout-node-view.tsx": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
-    "sha256": "aea688663d4e5e5207c7b9e8d4b1da3ed2b7d168fc7915ab8eca07bce05f91d2"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the user-approved 200-item OpenMoji palette for callout content icons; separate left emoji from the 168px right semantic-theme menu, preserve chosen emoji across tone changes and retain custom background behavior.",
+    "sha256": "5cc7b5273b61bda5ed4939efe8e9ff268a380fba1ba91068cdc321b402612d77"
   },
   "src/features/knowledge/editor/block-modules/callout/callout.module.css": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
-    "sha256": "74589eb1710f3e91fe3fd693901d5c948b0040afeaf1ea26b72e56f4b1a4ee45"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Keep inherited document typography and compact padding while refining independent emoji/theme panels and semantic theme icons.",
+    "sha256": "e1b840aee989a3cc00499c111c4c82b86235408703b4c036054a9ae3aec0234f"
   },
   "src/features/knowledge/editor/page-collaboration.ts": {
     "reason": "Keep the session-owned Yjs undo manager alive while floating block controls reconfigure plugin views; detach only view-owned listeners and preserve selection restoration. See .spec/tasks/editor-polish.md.",
@@ -880,8 +880,8 @@
     "sha256": "1a203b539275037f44cc1db4c6e21ee46a979d173a7f14b612ac47f51c6d8c33"
   },
   "src/features/knowledge/editor/block-modules/code-block/code-block.module.css": {
-    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
-    "sha256": "9f3a4fd37bfd1c2dee0123f59649cf8ea5c3ded2544ebaa101481e387934d2ad"
+    "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Reserve code-header space for its internal action group without changing syntax, editing or export behavior.",
+    "sha256": "db3dd04949b8a785b967cd9c98f6bc1123891cf410e9e1a90bfcda15a4ee5817"
   },
   "src/features/knowledge/editor/block-modules/columns/columns.module.css": {
     "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
@@ -902,5 +902,9 @@
   "src/features/knowledge/editor/block-modules/page-link/page-link.module.css": {
     "reason": "Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
     "sha256": "87a84bc02918913979ff7fdb4994eaf60344d3dd2d6c8dd1487aa809d68fe7ea"
+  },
+  "src/features/knowledge/navigation/page-emojis.ts": {
+    "reason": "OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the same reviewed 8-category, 200-item local OpenMoji catalog for document and folder content icons while retaining the page emoji tuple API.",
+    "sha256": "f4fb6f1569fa3e20cc2d8b5952977625d2d90bc763d548925c54ec20344ea940"
   }
 }

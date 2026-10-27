@@ -239,14 +239,14 @@ describe('callout NodeView', () => {
         ).not.toBeNull();
         expect(card!.querySelector('h2')?.textContent).toBe('标题');
         const chipSelector = 'button[data-document-callout-icon]';
-        expect(card!.querySelector(`${chipSelector} svg[data-icon="circle-check"]`)).not.toBeNull();
+        expect(card!.querySelector(`${chipSelector} img[src="/icons/openmoji/2705.svg"]`)).not.toBeNull();
 
         // updateAttributes re-renders chip + data attrs.
         editor.commands.updateAttributes('callout', { emoji: '🔥' });
         await settle();
         const updated = dom.querySelector('aside[data-fob-node="callout"]')!;
         expect(updated.getAttribute('data-emoji')).toBe('🔥');
-        expect(updated.querySelector(chipSelector)?.textContent).toContain('🔥');
+        expect(updated.querySelector(`${chipSelector} [data-emoji="🔥"] img`)).not.toBeNull();
 
         // The chip click opens the popover; picking an emoji writes attrs and closes it.
         updated
@@ -257,15 +257,17 @@ describe('callout NodeView', () => {
         await settle();
         const dialog = document.querySelector('[role="dialog"]');
         expect(dialog).not.toBeNull();
-        dialog!.querySelector<HTMLButtonElement>('button[aria-label="图标 🚀"]')!.click();
+        expect(dialog!.querySelectorAll('button[data-emoji]')).toHaveLength(200);
+        expect(dialog!.querySelector('button[aria-label^="语气 "]')).toBeNull();
+        dialog!.querySelector<HTMLButtonElement>('button[data-emoji="🚀"]')!.click();
         await settle();
         expect(document.querySelector('[role="dialog"]')).toBeNull();
         expect(
           dom.querySelector('aside[data-fob-node="callout"]')?.getAttribute('data-emoji'),
         ).toBe('🚀');
 
-        // A tone swatch updates the tone the same way.
-        dom.querySelector<HTMLButtonElement>(chipSelector)!.click();
+        // Theme selection is separate from the emoji palette and preserves the chosen emoji.
+        dom.querySelector<HTMLButtonElement>('button[aria-label="提示框样式"]')!.click();
         await settle();
         document.querySelector<HTMLButtonElement>('button[aria-label="语气 警告"]')!.click();
         await settle();
@@ -273,7 +275,8 @@ describe('callout NodeView', () => {
           dom.querySelector('aside[data-fob-node="callout"]')?.getAttribute('data-tone'),
         ).toBe('warn');
 
-        dom.querySelector<HTMLButtonElement>(chipSelector)!.click();
+        expect(dom.querySelector('aside')?.getAttribute('data-emoji')).toBe('🚀');
+        dom.querySelector<HTMLButtonElement>('button[aria-label="提示框样式"]')!.click();
         await settle();
         document.querySelector<HTMLButtonElement>('button[aria-label="自定义背景色"]')!.click();
         await settle();

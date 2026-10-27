@@ -1,6 +1,6 @@
 .root { --code-bg: #fff; --code-ink: #24292e; --code-line: color-mix(in srgb, var(--code-ink) 10%, var(--code-bg)); --code-muted: color-mix(in srgb, var(--code-ink) 62%, var(--code-bg)); position: relative; margin: 22px 0; border: 1px solid var(--code-line); border-radius: 8px; background: var(--code-bg); color: var(--code-ink); }
-.header { display: flex; align-items: center; justify-content: space-between; min-height: 38px; padding: 4px 8px 4px 14px; border-bottom: 1px solid var(--code-line); }
-.languageRow { display: flex; align-items: center; gap: 7px; }
+.header { display: flex; align-items: center; justify-content: space-between; min-height: 38px; padding: 4px 76px 4px 14px; border-bottom: 1px solid var(--code-line); }
+.languageRow { display: flex; align-items: center; min-width: 0; gap: 7px; }
 .languageSelect { display: flex; align-items: center; gap: 8px; max-width: 160px; padding: 5px 7px; margin-left: -7px; border-radius: 5px; color: var(--code-muted); font: 500 12px/1.4 var(--font-sans); cursor: pointer; }
 .languageSelect:hover { background: color-mix(in srgb, var(--code-ink) 4%, var(--code-bg)); color: var(--code-ink); }
 .languageSelect:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }

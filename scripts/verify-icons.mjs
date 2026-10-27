@@ -20,6 +20,21 @@ for (const name of outlineNames) {
   const record = outlineAssets[name], bytes = fs.readFileSync(path.join(outlineAssetRoot, `${name}.svg`));
   if (!record?.source?.startsWith('https://raw.githubusercontent.com/outline/outline-icons/main/src/components/') || createHash('sha256').update(bytes).digest('hex') !== record.sha256) issues.push(`Original Outline collection artwork changed: ${name}`);
 }
+// User-approved emoji artwork is a separately pinned, bounded content catalog.
+const emojiRoot = path.join(root, 'public/icons/openmoji');
+const emojiManifest = JSON.parse(fs.readFileSync(path.join(emojiRoot, 'sources.json'), 'utf8'));
+const emojiCatalog = JSON.parse(fs.readFileSync(path.join(root, 'src/components/icons/openmoji-catalog.json'), 'utf8'));
+const emojiItems = emojiCatalog.flatMap(group => group.items);
+const emojiCodes = new Set(emojiItems.map(item => item.hexcode));
+if (emojiCatalog.length !== 8 || emojiCatalog.some(group => group.items.length !== 25) || emojiItems.length !== 200 || emojiCodes.size !== 200 || Object.keys(emojiManifest.icons).length !== 200 || emojiManifest.version !== '17.0.0' || emojiManifest.license !== 'CC-BY-SA-4.0') issues.push('OpenMoji is limited to the reviewed 200-emoji, eight-category subset.');
+for (const item of emojiItems) {
+  if (!/^[0-9A-F]+(?:-[0-9A-F]+)*$/.test(item.hexcode)) { issues.push('Invalid OpenMoji asset path'); continue; }
+  const bytes = fs.readFileSync(path.join(emojiRoot, `${item.hexcode}.svg`));
+  const record = emojiManifest.icons[item.hexcode];
+  if (record?.source !== `https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/${item.hexcode}.svg` || record.emoji !== item.emoji || createHash('sha256').update(bytes).digest('hex') !== record.sha256) issues.push(`Original OpenMoji artwork changed: ${item.hexcode}`);
+}
+if (fs.readdirSync(emojiRoot).filter(file => file.endsWith('.svg')).some(file => !emojiCodes.has(file.slice(0, -4)))) issues.push('Unreviewed emoji SVG in the bounded OpenMoji directory.');
+if (!fs.existsSync(path.join(root, 'public/licenses/openmoji.txt'))) issues.push('Retain the OpenMoji CC-BY-SA attribution and license.');
 const sources = fs.readdirSync(path.join(root, 'src'), { recursive: true })
   .filter(file => /\.[cm]?tsx?$/.test(file) && !/\.test\./.test(file));
 
@@ -57,4 +72,4 @@ if (config.iconLibrary !== 'lucide') issues.push('components.json: shadcn-genera
 if (issues.length) {
   console.error(issues.join('\n'));
   process.exitCode = 1;
-} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; no unapproved SVGs or legacy icon imports; original navigation toggle pinned.`);
+} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; 200 pinned OpenMoji emoji; no unapproved SVGs or legacy icon imports.`);

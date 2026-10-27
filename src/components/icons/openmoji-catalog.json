@@ -1,0 +1,1874 @@
+[
+  {
+    "id": "faces",
+    "label": {
+      "zh": "表情心情",
+      "en": "Faces and moods"
+    },
+    "items": [
+      {
+        "emoji": "😀",
+        "hexcode": "1F600",
+        "name": {
+          "zh": "开心",
+          "en": "grinning face"
+        },
+        "keywords": "cheerful, cheery, face, grin, grinning, happy, laugh, nice, smile, smiling, teeth, smile, happy"
+      },
+      {
+        "emoji": "😃",
+        "hexcode": "1F603",
+        "name": {
+          "zh": "笑脸",
+          "en": "grinning face with big eyes"
+        },
+        "keywords": "awesome, big, eyes, face, grin, grinning, happy, mouth, open, smile, smiling, teeth, yay, eyes, teeth"
+      },
+      {
+        "emoji": "😄",
+        "hexcode": "1F604",
+        "name": {
+          "zh": "大笑",
+          "en": "grinning face with smiling eyes"
+        },
+        "keywords": "eye, eyes, face, grin, grinning, happy, laugh, lol, mouth, open, smile, smiling, happy, teeth"
+      },
+      {
+        "emoji": "😁",
+        "hexcode": "1F601",
+        "name": {
+          "zh": "咧嘴笑",
+          "en": "beaming face with smiling eyes"
+        },
+        "keywords": "beaming, eye, eyes, face, grin, grinning, happy, nice, smile, smiling, teeth, happy, teeth, mouth"
+      },
+      {
+        "emoji": "😆",
+        "hexcode": "1F606",
+        "name": {
+          "zh": "笑眯眯",
+          "en": "grinning squinting face"
+        },
+        "keywords": "closed, eyes, face, grinning, haha, hahaha, happy, laugh, lol, mouth, open, rofl, smile, smiling, squinting"
+      },
+      {
+        "emoji": "😅",
+        "hexcode": "1F605",
+        "name": {
+          "zh": "汗颜",
+          "en": "grinning face with sweat"
+        },
+        "keywords": "cold, dejected, excited, face, grinning, mouth, nervous, open, smile, smiling, stress, stressed, sweat, laugh"
+      },
+      {
+        "emoji": "😂",
+        "hexcode": "1F602",
+        "name": {
+          "zh": "笑哭",
+          "en": "face with tears of joy"
+        },
+        "keywords": "crying, face, feels, funny, haha, happy, hehe, hilarious, joy, laugh, lmao, lol, rofl, roflmao, tear"
+      },
+      {
+        "emoji": "🤣",
+        "hexcode": "1F923",
+        "name": {
+          "zh": "捧腹大笑",
+          "en": "rolling on the floor laughing"
+        },
+        "keywords": "crying, face, floor, funny, haha, happy, hehe, hilarious, joy, laugh, lmao, lol, rofl, roflmao, rolling, tear, tears"
+      },
+      {
+        "emoji": "😊",
+        "hexcode": "1F60A",
+        "name": {
+          "zh": "微笑",
+          "en": "smiling face with smiling eyes"
+        },
+        "keywords": "blush, eye, eyes, face, glad, satisfied, smile, smiling, satisfied"
+      },
+      {
+        "emoji": "🙂",
+        "hexcode": "1F642",
+        "name": {
+          "zh": "轻松",
+          "en": "slightly smiling face"
+        },
+        "keywords": "face, happy, slightly, smile, smiling, satisfied"
+      },
+      {
+        "emoji": "😉",
+        "hexcode": "1F609",
+        "name": {
+          "zh": "眨眼",
+          "en": "winking face"
+        },
+        "keywords": "face, flirt, heartbreaker, sexy, slide, tease, wink, winking, winks, eye"
+      },
+      {
+        "emoji": "😍",
+        "hexcode": "1F60D",
+        "name": {
+          "zh": "喜欢",
+          "en": "smiling face with heart-eyes"
+        },
+        "keywords": "143, bae, eye, face, feels, heart-eyes, hearts, ily, kisses, love, romance, romantic, smile, xoxo, hearts, happy"
+      },
+      {
+        "emoji": "🥰",
+        "hexcode": "1F970",
+        "name": {
+          "zh": "幸福",
+          "en": "smiling face with hearts"
+        },
+        "keywords": "3, adore, crush, face, heart, hearts, ily, love, romance, smile, smiling, you"
+      },
+      {
+        "emoji": "😘",
+        "hexcode": "1F618",
+        "name": {
+          "zh": "亲亲",
+          "en": "face blowing a kiss"
+        },
+        "keywords": "adorbs, bae, blowing, face, flirt, heart, ily, kiss, love, lover, miss, muah, romantic, smooch, xoxo, you, love, happy"
+      },
+      {
+        "emoji": "😎",
+        "hexcode": "1F60E",
+        "name": {
+          "zh": "酷",
+          "en": "smiling face with sunglasses"
+        },
+        "keywords": "awesome, beach, bright, bro, chilling, cool, face, rad, relaxed, shades, slay, smile, style, sunglasses, swag, win"
+      },
+      {
+        "emoji": "🤩",
+        "hexcode": "1F929",
+        "name": {
+          "zh": "惊喜",
+          "en": "star-struck"
+        },
+        "keywords": "excited, eyes, face, grinning, smile, star, starry-eyed, wow, surprised"
+      },
+      {
+        "emoji": "🤔",
+        "hexcode": "1F914",
+        "name": {
+          "zh": "思考",
+          "en": "thinking face"
+        },
+        "keywords": "chin, consider, face, hmm, ponder, pondering, thinking, wondering, hand, chin, overthinking, frown, curious"
+      },
+      {
+        "emoji": "😮",
+        "hexcode": "1F62E",
+        "name": {
+          "zh": "惊讶",
+          "en": "face with open mouth"
+        },
+        "keywords": "believe, face, forgot, mouth, omg, open, shocked, surprised, sympathy, unbelievable, unreal, whoa, wow, you"
+      },
+      {
+        "emoji": "😌",
+        "hexcode": "1F60C",
+        "name": {
+          "zh": "松口气",
+          "en": "relieved face"
+        },
+        "keywords": "calm, face, peace, relief, relieved, zen"
+      },
+      {
+        "emoji": "😔",
+        "hexcode": "1F614",
+        "name": {
+          "zh": "难过",
+          "en": "pensive face"
+        },
+        "keywords": "awful, bored, dejected, died, disappointed, face, losing, lost, pensive, sad, sucks"
+      },
+      {
+        "emoji": "😭",
+        "hexcode": "1F62D",
+        "name": {
+          "zh": "哭泣",
+          "en": "loudly crying face"
+        },
+        "keywords": "bawling, cry, crying, face, loudly, sad, sob, tear, tears, unhappy"
+      },
+      {
+        "emoji": "😟",
+        "hexcode": "1F61F",
+        "name": {
+          "zh": "担心",
+          "en": "worried face"
+        },
+        "keywords": "anxious, butterflies, face, nerves, nervous, sad, stress, stressed, surprised, worried, worry, sad"
+      },
+      {
+        "emoji": "😴",
+        "hexcode": "1F634",
+        "name": {
+          "zh": "困了",
+          "en": "sleeping face"
+        },
+        "keywords": "bed, bedtime, face, good, goodnight, nap, night, sleep, sleeping, tired, whatever, yawn, zzz, tired"
+      },
+      {
+        "emoji": "🥳",
+        "hexcode": "1F973",
+        "name": {
+          "zh": "庆祝",
+          "en": "partying face"
+        },
+        "keywords": "bday, birthday, celebrate, celebration, excited, face, happy, hat, hooray, horn, party, partying"
+      },
+      {
+        "emoji": "🤯",
+        "hexcode": "1F92F",
+        "name": {
+          "zh": "震撼",
+          "en": "exploding head"
+        },
+        "keywords": "blown, explode, exploding, head, mind, mindblown, no, shocked, way, explosion"
+      }
+    ]
+  },
+  {
+    "id": "gestures",
+    "label": {
+      "zh": "手势心意",
+      "en": "Hands and gestures"
+    },
+    "items": [
+      {
+        "emoji": "👍",
+        "hexcode": "1F44D",
+        "name": {
+          "zh": "赞",
+          "en": "thumbs up"
+        },
+        "keywords": "+1, good, hand, like, thumb, up, yes, like, yes, +1, hand, thumb, up, thumbs up, thumbs up"
+      },
+      {
+        "emoji": "👎",
+        "hexcode": "1F44E",
+        "name": {
+          "zh": "踩",
+          "en": "thumbs down"
+        },
+        "keywords": "-1, bad, dislike, down, good, hand, no, nope, thumb, thumbs, dislike, no, thumbs down, thumbs down sign, -1, down, hand, thumb, thumbs"
+      },
+      {
+        "emoji": "👏",
+        "hexcode": "1F44F",
+        "name": {
+          "zh": "鼓掌",
+          "en": "clapping hands"
+        },
+        "keywords": "applause, approval, awesome, clap, congrats, congratulations, excited, good, great, hand, homie, job, nice, prayed, well, yay, clap, hand, clapping hands, applause, clap, clapping, golf clap, round of applause"
+      },
+      {
+        "emoji": "👋",
+        "hexcode": "1F44B",
+        "name": {
+          "zh": "挥手",
+          "en": "waving hand"
+        },
+        "keywords": "bye, cya, g2g, greetings, gtg, hand, hello, hey, hi, later, outtie, ttfn, ttyl, wave, yo, you, hello, goodbye, waving hand sign, wave"
+      },
+      {
+        "emoji": "🙏",
+        "hexcode": "1F64F",
+        "name": {
+          "zh": "感谢",
+          "en": "folded hands"
+        },
+        "keywords": "appreciate, ask, beg, blessed, bow, cmon, five, folded, gesture, hand, high, please, pray, thanks, thx, ask, bow, folded, gesture, hand, please, pray, thanks"
+      },
+      {
+        "emoji": "💪",
+        "hexcode": "1F4AA",
+        "name": {
+          "zh": "加油",
+          "en": "flexed biceps"
+        },
+        "keywords": "arm, beast, bench, biceps, bodybuilder, bro, curls, flex, gains, gym, jacked, muscle, press, ripped, strong, weightlift, flexed biceps, biceps, flexed, flex, muscle, feats of strength, strength, feats, strong"
+      },
+      {
+        "emoji": "👌",
+        "hexcode": "1F44C",
+        "name": {
+          "zh": "好的",
+          "en": "OK hand"
+        },
+        "keywords": "awesome, bet, dope, fleek, fosho, got, gotcha, hand, legit, ok, okay, pinch, rad, sure, sweet, three, hand, ok, okay, perfect"
+      },
+      {
+        "emoji": "🤝",
+        "hexcode": "1F91D",
+        "name": {
+          "zh": "握手",
+          "en": "handshake"
+        },
+        "keywords": "agreement, deal, hand, meeting, shake, shaking hands, agreement, hand, meeting, shake, hello, bye, goodbye"
+      },
+      {
+        "emoji": "✌️",
+        "hexcode": "270C",
+        "name": {
+          "zh": "胜利",
+          "en": "victory hand"
+        },
+        "keywords": "hand, peace, v, victory, hand, v, victory, air quotes, quotes, peace, peace sign, V sign"
+      },
+      {
+        "emoji": "🤞",
+        "hexcode": "1F91E",
+        "name": {
+          "zh": "祝好运",
+          "en": "crossed fingers"
+        },
+        "keywords": "cross, crossed, finger, fingers, hand, luck, fingers crossed, crossed, fingers, good luck, luck"
+      },
+      {
+        "emoji": "🫶",
+        "hexcode": "1FAF6",
+        "name": {
+          "zh": "比心",
+          "en": "heart hands"
+        },
+        "keywords": "<3, hands, heart, love, you"
+      },
+      {
+        "emoji": "🙌",
+        "hexcode": "1F64C",
+        "name": {
+          "zh": "欢呼",
+          "en": "raising hands"
+        },
+        "keywords": "celebration, gesture, hand, hands, hooray, praise, raised, raising, raising hands, raising, hands, celebration, gesture, hand, hooray, raised, arms in the air, banzai, Festivus miracle, hallelujah, praise hands, two hands"
+      },
+      {
+        "emoji": "🤲",
+        "hexcode": "1F932",
+        "name": {
+          "zh": "捧手",
+          "en": "palms up together"
+        },
+        "keywords": "cupped, dua, hands, palms, pray, prayer, together, up, wish, prayer, pray, god"
+      },
+      {
+        "emoji": "👊",
+        "hexcode": "1F44A",
+        "name": {
+          "zh": "碰拳",
+          "en": "oncoming fist"
+        },
+        "keywords": "absolutely, agree, boom, bro, bruh, bump, clenched, correct, fist, hand, knuckle, oncoming, pound, punch, rock, ttyl, clenched, fist, hand, punch, fist, oncoming fist, brofist, bro, bump"
+      },
+      {
+        "emoji": "✊",
+        "hexcode": "270A",
+        "name": {
+          "zh": "坚持",
+          "en": "raised fist"
+        },
+        "keywords": "clenched, fist, hand, punch, raised, solidarity, clenched, fist, hand, punch"
+      },
+      {
+        "emoji": "👐",
+        "hexcode": "1F450",
+        "name": {
+          "zh": "张开双手",
+          "en": "open hands"
+        },
+        "keywords": "hand, hands, hug, jazz, open, swerve, hug, open hands, open, hands, jazz hands, jazz"
+      },
+      {
+        "emoji": "🤟",
+        "hexcode": "1F91F",
+        "name": {
+          "zh": "爱你",
+          "en": "love-you gesture"
+        },
+        "keywords": "fingers, gesture, hand, ily, love, love-you, three, you, hand, love, heavy metal"
+      },
+      {
+        "emoji": "👆",
+        "hexcode": "1F446",
+        "name": {
+          "zh": "向上",
+          "en": "backhand index pointing up"
+        },
+        "keywords": "backhand, finger, hand, index, point, pointing, up, backhand, finger, hand, index, point, up, point up"
+      },
+      {
+        "emoji": "👇",
+        "hexcode": "1F447",
+        "name": {
+          "zh": "向下",
+          "en": "backhand index pointing down"
+        },
+        "keywords": "backhand, down, finger, hand, index, point, pointing, backhand, finger, hand, index, point, down, point down"
+      },
+      {
+        "emoji": "👉",
+        "hexcode": "1F449",
+        "name": {
+          "zh": "向右",
+          "en": "backhand index pointing right"
+        },
+        "keywords": "backhand, finger, hand, index, point, pointing, right, backhand, finger, hand, index, point, right, point right"
+      },
+      {
+        "emoji": "👈",
+        "hexcode": "1F448",
+        "name": {
+          "zh": "向左",
+          "en": "backhand index pointing left"
+        },
+        "keywords": "backhand, finger, hand, index, left, point, pointing, backhand, finger, hand, index, point, left, point left"
+      },
+      {
+        "emoji": "✋",
+        "hexcode": "270B",
+        "name": {
+          "zh": "举手",
+          "en": "raised hand"
+        },
+        "keywords": "5, five, hand, high, raised, stop, raise, raised, hand, stop"
+      },
+      {
+        "emoji": "🤚",
+        "hexcode": "1F91A",
+        "name": {
+          "zh": "手背",
+          "en": "raised back of hand"
+        },
+        "keywords": "back, backhand, hand, raised, backhand, raised, hand"
+      },
+      {
+        "emoji": "🖐️",
+        "hexcode": "1F590",
+        "name": {
+          "zh": "五指",
+          "en": "hand with fingers splayed"
+        },
+        "keywords": "finger, fingers, hand, raised, splayed, stop, five hand, hand, five, splayed"
+      },
+      {
+        "emoji": "🤘",
+        "hexcode": "1F918",
+        "name": {
+          "zh": "摇滚",
+          "en": "sign of the horns"
+        },
+        "keywords": "finger, hand, horns, rock-on, sign, rock on, finger, hand, horns, rock-on, rock, devil, devil fingers, heavy, metal, heavy metal, rock"
+      }
+    ]
+  },
+  {
+    "id": "nature",
+    "label": {
+      "zh": "自然动物",
+      "en": "Nature and animals"
+    },
+    "items": [
+      {
+        "emoji": "🌱",
+        "hexcode": "1F331",
+        "name": {
+          "zh": "成长",
+          "en": "seedling"
+        },
+        "keywords": "plant, sapling, sprout, young, farming, growing, green, leaf, leaves, plant"
+      },
+      {
+        "emoji": "🌿",
+        "hexcode": "1F33F",
+        "name": {
+          "zh": "草叶",
+          "en": "herb"
+        },
+        "keywords": "leaf, plant, green, leaves, plant"
+      },
+      {
+        "emoji": "🍀",
+        "hexcode": "1F340",
+        "name": {
+          "zh": "幸运",
+          "en": "four leaf clover"
+        },
+        "keywords": "4, clover, four, four-leaf, irish, leaf, lucky, plant, luck, leaves, green, plant"
+      },
+      {
+        "emoji": "🌳",
+        "hexcode": "1F333",
+        "name": {
+          "zh": "树木",
+          "en": "deciduous tree"
+        },
+        "keywords": "deciduous, forest, green, habitat, shedding, tree, green, plant"
+      },
+      {
+        "emoji": "🌲",
+        "hexcode": "1F332",
+        "name": {
+          "zh": "常青树",
+          "en": "evergreen tree"
+        },
+        "keywords": "christmas, evergreen, forest, pine, tree, green, fir, plant"
+      },
+      {
+        "emoji": "🌵",
+        "hexcode": "1F335",
+        "name": {
+          "zh": "仙人掌",
+          "en": "cactus"
+        },
+        "keywords": "desert, drought, nature, plant, desert, sun, warm, hot, texas, plant"
+      },
+      {
+        "emoji": "🌸",
+        "hexcode": "1F338",
+        "name": {
+          "zh": "樱花",
+          "en": "cherry blossom"
+        },
+        "keywords": "blossom, cherry, flower, plant, spring, springtime, pink"
+      },
+      {
+        "emoji": "🌻",
+        "hexcode": "1F33B",
+        "name": {
+          "zh": "向日葵",
+          "en": "sunflower"
+        },
+        "keywords": "flower, outdoors, plant, sun, sun, flower, yellow, summer"
+      },
+      {
+        "emoji": "🌹",
+        "hexcode": "1F339",
+        "name": {
+          "zh": "玫瑰",
+          "en": "rose"
+        },
+        "keywords": "beauty, elegant, flower, love, plant, red, valentine, rose, red, nature, present, valentines day"
+      },
+      {
+        "emoji": "🌷",
+        "hexcode": "1F337",
+        "name": {
+          "zh": "郁金香",
+          "en": "tulip"
+        },
+        "keywords": "blossom, flower, growth, plant, pink, eastern"
+      },
+      {
+        "emoji": "🍁",
+        "hexcode": "1F341",
+        "name": {
+          "zh": "枫叶",
+          "en": "maple leaf"
+        },
+        "keywords": "falling, leaf, maple, autumn, fall, orange"
+      },
+      {
+        "emoji": "🍂",
+        "hexcode": "1F342",
+        "name": {
+          "zh": "秋叶",
+          "en": "fallen leaf"
+        },
+        "keywords": "autumn, fall, fallen, falling, leaf"
+      },
+      {
+        "emoji": "🍃",
+        "hexcode": "1F343",
+        "name": {
+          "zh": "微风",
+          "en": "leaf fluttering in wind"
+        },
+        "keywords": "blow, flutter, fluttering, leaf, wind"
+      },
+      {
+        "emoji": "🌍",
+        "hexcode": "1F30D",
+        "name": {
+          "zh": "地球",
+          "en": "globe showing Europe-Africa"
+        },
+        "keywords": "africa, earth, europe, europe-africa, globe, showing, world, geographic, continent, global, planet"
+      },
+      {
+        "emoji": "🌈",
+        "hexcode": "1F308",
+        "name": {
+          "zh": "彩虹",
+          "en": "rainbow"
+        },
+        "keywords": "gay, genderqueer, glbt, glbtq, lesbian, lgbt, lgbtq, lgbtqia, nature, pride, queer, rain, trans, transgender, weather, rainbow, color, colorful, colors formed in the sky, sunbeams, sunlight, facet, sparkle, unicorn"
+      },
+      {
+        "emoji": "☀️",
+        "hexcode": "2600",
+        "name": {
+          "zh": "太阳",
+          "en": "sun"
+        },
+        "keywords": "bright, rays, space, sunny, weather, sun, sunrise, warm, sunbeams, feel good, beach, tanning, fire, fireball, hot, heavenly body"
+      },
+      {
+        "emoji": "🌤️",
+        "hexcode": "1F324",
+        "name": {
+          "zh": "晴朗",
+          "en": "sun behind small cloud"
+        },
+        "keywords": "behind, cloud, sun, weather, sun, behind, small, cloud, sunny, cloudy, rain, cool, sky, weather"
+      },
+      {
+        "emoji": "☁️",
+        "hexcode": "2601",
+        "name": {
+          "zh": "云朵",
+          "en": "cloud"
+        },
+        "keywords": "weather, cloud, cloudy, rain, gray, misty, diffuse, sky, dream, fleecy clouds"
+      },
+      {
+        "emoji": "🌧️",
+        "hexcode": "1F327",
+        "name": {
+          "zh": "下雨",
+          "en": "cloud with rain"
+        },
+        "keywords": "cloud, rain, weather, cloud, rain, raindrops, falling, down, wet, cool, cloudy, weather, stormy"
+      },
+      {
+        "emoji": "❄️",
+        "hexcode": "2744",
+        "name": {
+          "zh": "雪花",
+          "en": "snowflake"
+        },
+        "keywords": "cold, snow, weather, snowflake, snow, ice, icy, wintry, snow storm, white, cold, frosty, season, weather, melting"
+      },
+      {
+        "emoji": "⚡",
+        "hexcode": "26A1",
+        "name": {
+          "zh": "闪电",
+          "en": "high voltage"
+        },
+        "keywords": "danger, electric, electricity, high, lightning, nature, thunder, thunderbolt, voltage, zap, lightning, high voltage, storm, current, voltage, volts, lights, light"
+      },
+      {
+        "emoji": "🔥",
+        "hexcode": "1F525",
+        "name": {
+          "zh": "火热",
+          "en": "fire"
+        },
+        "keywords": "af, burn, flame, hot, lit, litaf, tool, fire, burn, hot, high temperature, flame, glow, flame, tool"
+      },
+      {
+        "emoji": "🐶",
+        "hexcode": "1F436",
+        "name": {
+          "zh": "小狗",
+          "en": "dog face"
+        },
+        "keywords": "adorbs, animal, dog, face, pet, puppies, puppy, friend, puppy, doggy"
+      },
+      {
+        "emoji": "🐱",
+        "hexcode": "1F431",
+        "name": {
+          "zh": "小猫",
+          "en": "cat face"
+        },
+        "keywords": "animal, cat, face, kitten, kitty, pet, pet, kitty, kitten, miau"
+      },
+      {
+        "emoji": "🦋",
+        "hexcode": "1F98B",
+        "name": {
+          "zh": "蝴蝶",
+          "en": "butterfly"
+        },
+        "keywords": "insect, pretty"
+      }
+    ]
+  },
+  {
+    "id": "food",
+    "label": {
+      "zh": "食物日常",
+      "en": "Food and daily life"
+    },
+    "items": [
+      {
+        "emoji": "☕",
+        "hexcode": "2615",
+        "name": {
+          "zh": "咖啡",
+          "en": "hot beverage"
+        },
+        "keywords": "beverage, cafe, caffeine, chai, coffee, drink, hot, morning, steaming, tea"
+      },
+      {
+        "emoji": "🍵",
+        "hexcode": "1F375",
+        "name": {
+          "zh": "清茶",
+          "en": "teacup without handle"
+        },
+        "keywords": "beverage, cup, drink, handle, oolong, tea, teacup, glass, hot"
+      },
+      {
+        "emoji": "🧋",
+        "hexcode": "1F9CB",
+        "name": {
+          "zh": "奶茶",
+          "en": "bubble tea"
+        },
+        "keywords": "boba, bubble, food, milk, pearl, tea"
+      },
+      {
+        "emoji": "🥛",
+        "hexcode": "1F95B",
+        "name": {
+          "zh": "牛奶",
+          "en": "glass of milk"
+        },
+        "keywords": "drink, glass, milk"
+      },
+      {
+        "emoji": "🥤",
+        "hexcode": "1F964",
+        "name": {
+          "zh": "饮料",
+          "en": "cup with straw"
+        },
+        "keywords": "cup, drink, juice, malt, soda, soft, straw, water, beverage, fastfood"
+      },
+      {
+        "emoji": "🍎",
+        "hexcode": "1F34E",
+        "name": {
+          "zh": "苹果",
+          "en": "red apple"
+        },
+        "keywords": "apple, diet, food, fruit, health, red, ripe"
+      },
+      {
+        "emoji": "🍊",
+        "hexcode": "1F34A",
+        "name": {
+          "zh": "橘子",
+          "en": "tangerine"
+        },
+        "keywords": "c, citrus, fruit, nectarine, orange, vitamin"
+      },
+      {
+        "emoji": "🍋",
+        "hexcode": "1F34B",
+        "name": {
+          "zh": "柠檬",
+          "en": "lemon"
+        },
+        "keywords": "citrus, fruit, sour, yellow"
+      },
+      {
+        "emoji": "🍓",
+        "hexcode": "1F353",
+        "name": {
+          "zh": "草莓",
+          "en": "strawberry"
+        },
+        "keywords": "berry, fruit"
+      },
+      {
+        "emoji": "🍇",
+        "hexcode": "1F347",
+        "name": {
+          "zh": "葡萄",
+          "en": "grapes"
+        },
+        "keywords": "dionysus, fruit, grape"
+      },
+      {
+        "emoji": "🍉",
+        "hexcode": "1F349",
+        "name": {
+          "zh": "西瓜",
+          "en": "watermelon"
+        },
+        "keywords": "fruit, melon, red"
+      },
+      {
+        "emoji": "🍑",
+        "hexcode": "1F351",
+        "name": {
+          "zh": "桃子",
+          "en": "peach"
+        },
+        "keywords": "fruit, pink, red"
+      },
+      {
+        "emoji": "🥑",
+        "hexcode": "1F951",
+        "name": {
+          "zh": "牛油果",
+          "en": "avocado"
+        },
+        "keywords": "food, fruit, avocado"
+      },
+      {
+        "emoji": "🥕",
+        "hexcode": "1F955",
+        "name": {
+          "zh": "胡萝卜",
+          "en": "carrot"
+        },
+        "keywords": "food, vegetable"
+      },
+      {
+        "emoji": "🌽",
+        "hexcode": "1F33D",
+        "name": {
+          "zh": "玉米",
+          "en": "ear of corn"
+        },
+        "keywords": "corn, crops, ear, farm, maize, maze, yellow"
+      },
+      {
+        "emoji": "🍞",
+        "hexcode": "1F35E",
+        "name": {
+          "zh": "面包",
+          "en": "bread"
+        },
+        "keywords": "carbs, food, grain, loaf, restaurant, toast, wheat"
+      },
+      {
+        "emoji": "🥐",
+        "hexcode": "1F950",
+        "name": {
+          "zh": "羊角面包",
+          "en": "croissant"
+        },
+        "keywords": "bread, breakfast, crescent, food, french, roll"
+      },
+      {
+        "emoji": "🧀",
+        "hexcode": "1F9C0",
+        "name": {
+          "zh": "奶酪",
+          "en": "cheese wedge"
+        },
+        "keywords": "cheese, wedge"
+      },
+      {
+        "emoji": "🍳",
+        "hexcode": "1F373",
+        "name": {
+          "zh": "煎蛋",
+          "en": "cooking"
+        },
+        "keywords": "breakfast, easy, egg, fry, frying, over, pan, restaurant, side, sunny, up"
+      },
+      {
+        "emoji": "🍜",
+        "hexcode": "1F35C",
+        "name": {
+          "zh": "面条",
+          "en": "steaming bowl"
+        },
+        "keywords": "bowl, chopsticks, food, noodle, pho, ramen, soup, steaming"
+      },
+      {
+        "emoji": "🍕",
+        "hexcode": "1F355",
+        "name": {
+          "zh": "披萨",
+          "en": "pizza"
+        },
+        "keywords": "cheese, food, hungry, pepperoni, slice"
+      },
+      {
+        "emoji": "🍔",
+        "hexcode": "1F354",
+        "name": {
+          "zh": "汉堡",
+          "en": "hamburger"
+        },
+        "keywords": "burger, eat, fast, food, hungry"
+      },
+      {
+        "emoji": "🍰",
+        "hexcode": "1F370",
+        "name": {
+          "zh": "蛋糕切片",
+          "en": "shortcake"
+        },
+        "keywords": "cake, dessert, pastry, slice, sweet"
+      },
+      {
+        "emoji": "🎂",
+        "hexcode": "1F382",
+        "name": {
+          "zh": "生日蛋糕",
+          "en": "birthday cake"
+        },
+        "keywords": "bday, birthday, cake, celebration, dessert, happy, pastry, sweet"
+      },
+      {
+        "emoji": "🍪",
+        "hexcode": "1F36A",
+        "name": {
+          "zh": "饼干",
+          "en": "cookie"
+        },
+        "keywords": "chip, chocolate, dessert, sweet"
+      }
+    ]
+  },
+  {
+    "id": "work",
+    "label": {
+      "zh": "工作学习",
+      "en": "Work and learning"
+    },
+    "items": [
+      {
+        "emoji": "📄",
+        "hexcode": "1F4C4",
+        "name": {
+          "zh": "文档",
+          "en": "page facing up"
+        },
+        "keywords": "document, facing, page, paper, up, write, text, paper, notes"
+      },
+      {
+        "emoji": "📝",
+        "hexcode": "1F4DD",
+        "name": {
+          "zh": "笔记",
+          "en": "memo"
+        },
+        "keywords": "communication, media, notes, pencil, pencil, paper, notice, notes"
+      },
+      {
+        "emoji": "📘",
+        "hexcode": "1F4D8",
+        "name": {
+          "zh": "蓝色书本",
+          "en": "blue book"
+        },
+        "keywords": "blue, book, education, fantasy, library, reading"
+      },
+      {
+        "emoji": "📚",
+        "hexcode": "1F4DA",
+        "name": {
+          "zh": "书籍",
+          "en": "books"
+        },
+        "keywords": "book, education, fantasy, knowledge, library, novels, reading, school, study, book, read, write, isometric"
+      },
+      {
+        "emoji": "📋",
+        "hexcode": "1F4CB",
+        "name": {
+          "zh": "清单",
+          "en": "clipboard"
+        },
+        "keywords": "do, list, notes, board, clip, metal, wood, handwriting"
+      },
+      {
+        "emoji": "📌",
+        "hexcode": "1F4CC",
+        "name": {
+          "zh": "图钉",
+          "en": "pushpin"
+        },
+        "keywords": "collage, pin, pin, wall, push, paper"
+      },
+      {
+        "emoji": "🗂️",
+        "hexcode": "1F5C2",
+        "name": {
+          "zh": "文件夹",
+          "en": "card index dividers"
+        },
+        "keywords": "card, dividers, index"
+      },
+      {
+        "emoji": "📊",
+        "hexcode": "1F4CA",
+        "name": {
+          "zh": "图表",
+          "en": "bar chart"
+        },
+        "keywords": "bar, chart, data, graph, data, chart, sheet, graph"
+      },
+      {
+        "emoji": "📈",
+        "hexcode": "1F4C8",
+        "name": {
+          "zh": "增长",
+          "en": "chart increasing"
+        },
+        "keywords": "chart, data, graph, growth, increasing, right, trend, up, upward, graph going up, upward trend"
+      },
+      {
+        "emoji": "📉",
+        "hexcode": "1F4C9",
+        "name": {
+          "zh": "下降",
+          "en": "chart decreasing"
+        },
+        "keywords": "chart, data, decreasing, down, downward, graph, negative, trend, graph going down, downtrend"
+      },
+      {
+        "emoji": "🗓️",
+        "hexcode": "1F5D3",
+        "name": {
+          "zh": "日程",
+          "en": "spiral calendar"
+        },
+        "keywords": "calendar, pad, spiral, calendar, year, month view"
+      },
+      {
+        "emoji": "📅",
+        "hexcode": "1F4C5",
+        "name": {
+          "zh": "日历",
+          "en": "calendar"
+        },
+        "keywords": "date, calendar, day view, pages, analog"
+      },
+      {
+        "emoji": "🕒",
+        "hexcode": "1F552",
+        "name": {
+          "zh": "时钟",
+          "en": "three o’clock"
+        },
+        "keywords": "3, 3:00, clock, o’clock, three, time, time"
+      },
+      {
+        "emoji": "💼",
+        "hexcode": "1F4BC",
+        "name": {
+          "zh": "工作",
+          "en": "briefcase"
+        },
+        "keywords": "office, bag, briefcase, office bag, leather bag"
+      },
+      {
+        "emoji": "🎓",
+        "hexcode": "1F393",
+        "name": {
+          "zh": "学习",
+          "en": "graduation cap"
+        },
+        "keywords": "cap, celebration, clothing, education, graduation, hat, scholar"
+      },
+      {
+        "emoji": "💡",
+        "hexcode": "1F4A1",
+        "name": {
+          "zh": "灵感",
+          "en": "light bulb"
+        },
+        "keywords": "bulb, comic, electric, idea, light, shine, light, bulb, power, on, electric, idea"
+      },
+      {
+        "emoji": "🧠",
+        "hexcode": "1F9E0",
+        "name": {
+          "zh": "大脑",
+          "en": "brain"
+        },
+        "keywords": "intelligent, smart, brain, intelligent, clever"
+      },
+      {
+        "emoji": "🧪",
+        "hexcode": "1F9EA",
+        "name": {
+          "zh": "实验",
+          "en": "test tube"
+        },
+        "keywords": "chemist, chemistry, experiment, lab, science, test, tube"
+      },
+      {
+        "emoji": "🔬",
+        "hexcode": "1F52C",
+        "name": {
+          "zh": "研究",
+          "en": "microscope"
+        },
+        "keywords": "experiment, lab, science, tool"
+      },
+      {
+        "emoji": "🛠️",
+        "hexcode": "1F6E0",
+        "name": {
+          "zh": "工具",
+          "en": "hammer and wrench"
+        },
+        "keywords": "hammer, spanner, tool, wrench, craft mans, logo"
+      },
+      {
+        "emoji": "🔧",
+        "hexcode": "1F527",
+        "name": {
+          "zh": "维修",
+          "en": "wrench"
+        },
+        "keywords": "home, improvement, spanner, tool, toolbox, silver"
+      },
+      {
+        "emoji": "🧩",
+        "hexcode": "1F9E9",
+        "name": {
+          "zh": "拼图",
+          "en": "puzzle piece"
+        },
+        "keywords": "clue, interlocking, jigsaw, piece, puzzle"
+      },
+      {
+        "emoji": "🔍",
+        "hexcode": "1F50D",
+        "name": {
+          "zh": "搜索",
+          "en": "magnifying glass tilted left"
+        },
+        "keywords": "glass, lab, left, left-pointing, magnifying, science, search, tilted, tool, detail, big, zoom, detective"
+      },
+      {
+        "emoji": "📎",
+        "hexcode": "1F4CE",
+        "name": {
+          "zh": "回形针",
+          "en": "paperclip"
+        },
+        "keywords": "paperclip, office, paperclip, organisation"
+      },
+      {
+        "emoji": "✏️",
+        "hexcode": "270F",
+        "name": {
+          "zh": "铅笔",
+          "en": "pencil"
+        },
+        "keywords": "pencil, notes"
+      }
+    ]
+  },
+  {
+    "id": "activities",
+    "label": {
+      "zh": "活动出行",
+      "en": "Activities and travel"
+    },
+    "items": [
+      {
+        "emoji": "🚀",
+        "hexcode": "1F680",
+        "name": {
+          "zh": "火箭",
+          "en": "rocket"
+        },
+        "keywords": "launch, rockets, space, travel, rocket, space, galaxy, adventure, alien, transportation"
+      },
+      {
+        "emoji": "🎯",
+        "hexcode": "1F3AF",
+        "name": {
+          "zh": "目标",
+          "en": "bullseye"
+        },
+        "keywords": "bull, dart, direct, entertainment, game, hit, target, direct, hit, dart board, archery, bullseye, target, darts, game"
+      },
+      {
+        "emoji": "🏆",
+        "hexcode": "1F3C6",
+        "name": {
+          "zh": "奖杯",
+          "en": "trophy"
+        },
+        "keywords": "champion, champs, prize, slay, sport, victory, win, winning, trophy, championship, winner, gold cup, award"
+      },
+      {
+        "emoji": "🥇",
+        "hexcode": "1F947",
+        "name": {
+          "zh": "第一名",
+          "en": "1st place medal"
+        },
+        "keywords": "1st, first, gold, medal, place, gold medal, gold, medal, 1st place medal, first place medal"
+      },
+      {
+        "emoji": "🏅",
+        "hexcode": "1F3C5",
+        "name": {
+          "zh": "奖牌",
+          "en": "sports medal"
+        },
+        "keywords": "award, gold, medal, sports, winner, sports, medal, sporting"
+      },
+      {
+        "emoji": "🎉",
+        "hexcode": "1F389",
+        "name": {
+          "zh": "礼花",
+          "en": "party popper"
+        },
+        "keywords": "awesome, birthday, celebrate, celebration, excited, hooray, party, popper, tada, woohoo, decoration, happy"
+      },
+      {
+        "emoji": "🎊",
+        "hexcode": "1F38A",
+        "name": {
+          "zh": "彩带",
+          "en": "confetti ball"
+        },
+        "keywords": "ball, celebrate, celebration, confetti, party, woohoo, decoration, happy"
+      },
+      {
+        "emoji": "🎁",
+        "hexcode": "1F381",
+        "name": {
+          "zh": "礼物",
+          "en": "wrapped gift"
+        },
+        "keywords": "birthday, bow, box, celebration, christmas, gift, present, surprise, wrapped, present, birthday, christmas"
+      },
+      {
+        "emoji": "🎈",
+        "hexcode": "1F388",
+        "name": {
+          "zh": "气球",
+          "en": "balloon"
+        },
+        "keywords": "birthday, celebrate, celebration, balloon, birthday, party, decoration"
+      },
+      {
+        "emoji": "🎨",
+        "hexcode": "1F3A8",
+        "name": {
+          "zh": "设计绘画",
+          "en": "artist palette"
+        },
+        "keywords": "art, artist, artsy, arty, colorful, creative, entertainment, museum, painter, painting, palette, culture, artist, leisure, entertainment"
+      },
+      {
+        "emoji": "🎵",
+        "hexcode": "1F3B5",
+        "name": {
+          "zh": "音乐",
+          "en": "musical note"
+        },
+        "keywords": "music, musical, note, sound, song, melody, sounds, tone"
+      },
+      {
+        "emoji": "🎸",
+        "hexcode": "1F3B8",
+        "name": {
+          "zh": "吉他",
+          "en": "guitar"
+        },
+        "keywords": "instrument, music, strat, guitar, e-guitar, instrumental, acoustic, chords"
+      },
+      {
+        "emoji": "🎬",
+        "hexcode": "1F3AC",
+        "name": {
+          "zh": "电影",
+          "en": "clapper board"
+        },
+        "keywords": "action, board, clapper, movie, cut, new recording"
+      },
+      {
+        "emoji": "🎮",
+        "hexcode": "1F3AE",
+        "name": {
+          "zh": "游戏",
+          "en": "video game"
+        },
+        "keywords": "controller, entertainment, game, video, gamble"
+      },
+      {
+        "emoji": "⚽",
+        "hexcode": "26BD",
+        "name": {
+          "zh": "足球",
+          "en": "soccer ball"
+        },
+        "keywords": "ball, football, futbol, soccer, sport, soccer, ball, football, game, ball game, team sports"
+      },
+      {
+        "emoji": "🏀",
+        "hexcode": "1F3C0",
+        "name": {
+          "zh": "篮球",
+          "en": "basketball"
+        },
+        "keywords": "ball, hoop, sport, basketball, orange ball, team sport, sport, canadian sport, game"
+      },
+      {
+        "emoji": "🏃",
+        "hexcode": "1F3C3",
+        "name": {
+          "zh": "跑步",
+          "en": "person running"
+        },
+        "keywords": "fast, hurry, marathon, move, person, quick, race, racing, run, rush, speed, human, person"
+      },
+      {
+        "emoji": "🚴",
+        "hexcode": "1F6B4",
+        "name": {
+          "zh": "骑行",
+          "en": "person biking"
+        },
+        "keywords": "bicycle, bicyclist, bike, biking, cycle, cyclist, person, riding, sport, sports"
+      },
+      {
+        "emoji": "🏊",
+        "hexcode": "1F3CA",
+        "name": {
+          "zh": "游泳",
+          "en": "person swimming"
+        },
+        "keywords": "freestyle, person, sport, swim, swimmer, swimming, triathlon, sports, water"
+      },
+      {
+        "emoji": "✈️",
+        "hexcode": "2708",
+        "name": {
+          "zh": "飞机",
+          "en": "airplane"
+        },
+        "keywords": "aeroplane, fly, flying, jet, plane, travel, fly, airplane, aeroplane, air, sky, travel, departure, arrive"
+      },
+      {
+        "emoji": "🚗",
+        "hexcode": "1F697",
+        "name": {
+          "zh": "汽车",
+          "en": "automobile"
+        },
+        "keywords": "car, driving, vehicle, car, travel, automobile, vehicle, transportation"
+      },
+      {
+        "emoji": "🚆",
+        "hexcode": "1F686",
+        "name": {
+          "zh": "火车",
+          "en": "train"
+        },
+        "keywords": "arrived, choo, railway"
+      },
+      {
+        "emoji": "🚲",
+        "hexcode": "1F6B2",
+        "name": {
+          "zh": "自行车",
+          "en": "bicycle"
+        },
+        "keywords": "bike, class, cycle, cycling, cyclist, gang, ride, spin, spinning, bike, vehicle, bicycle"
+      },
+      {
+        "emoji": "🧭",
+        "hexcode": "1F9ED",
+        "name": {
+          "zh": "指南针",
+          "en": "compass"
+        },
+        "keywords": "direction, magnetic, navigation, orienteering, wayfinding, direction"
+      },
+      {
+        "emoji": "🏁",
+        "hexcode": "1F3C1",
+        "name": {
+          "zh": "终点",
+          "en": "chequered flag"
+        },
+        "keywords": "checkered, chequered, finish, flag, flags, game, race, racing, sport, win, black, white, grid, racing"
+      }
+    ]
+  },
+  {
+    "id": "objects",
+    "label": {
+      "zh": "物品科技",
+      "en": "Objects and technology"
+    },
+    "items": [
+      {
+        "emoji": "💻",
+        "hexcode": "1F4BB",
+        "name": {
+          "zh": "电脑",
+          "en": "laptop"
+        },
+        "keywords": "computer, office, pc, personal, old, retro"
+      },
+      {
+        "emoji": "⌨️",
+        "hexcode": "2328",
+        "name": {
+          "zh": "键盘",
+          "en": "keyboard"
+        },
+        "keywords": "computer, key, write, electric"
+      },
+      {
+        "emoji": "🖥️",
+        "hexcode": "1F5A5",
+        "name": {
+          "zh": "显示器",
+          "en": "desktop computer"
+        },
+        "keywords": "computer, desktop, monitor, electric, screen"
+      },
+      {
+        "emoji": "🖱️",
+        "hexcode": "1F5B1",
+        "name": {
+          "zh": "鼠标",
+          "en": "computer mouse"
+        },
+        "keywords": "computer, mouse, electric, computer, mouse"
+      },
+      {
+        "emoji": "📱",
+        "hexcode": "1F4F1",
+        "name": {
+          "zh": "手机",
+          "en": "mobile phone"
+        },
+        "keywords": "cell, communication, mobile, phone, telephone, smartphone, message, voice, communication"
+      },
+      {
+        "emoji": "📷",
+        "hexcode": "1F4F7",
+        "name": {
+          "zh": "相机",
+          "en": "camera"
+        },
+        "keywords": "photo, selfie, snap, tbt, trip, video, camera, digital"
+      },
+      {
+        "emoji": "📹",
+        "hexcode": "1F4F9",
+        "name": {
+          "zh": "摄像机",
+          "en": "video camera"
+        },
+        "keywords": "camcorder, camera, tbt, video, record, recording, film, movie"
+      },
+      {
+        "emoji": "🎤",
+        "hexcode": "1F3A4",
+        "name": {
+          "zh": "麦克风",
+          "en": "microphone"
+        },
+        "keywords": "karaoke, mic, music, sing, sound, sound, loud, stage, speech, singing, karaoke, mic, microphone, tone"
+      },
+      {
+        "emoji": "🎧",
+        "hexcode": "1F3A7",
+        "name": {
+          "zh": "耳机",
+          "en": "headphone"
+        },
+        "keywords": "earbud, sound, music, headphones"
+      },
+      {
+        "emoji": "💾",
+        "hexcode": "1F4BE",
+        "name": {
+          "zh": "软盘",
+          "en": "floppy disk"
+        },
+        "keywords": "computer, disk, floppy, old, retro"
+      },
+      {
+        "emoji": "💿",
+        "hexcode": "1F4BF",
+        "name": {
+          "zh": "光盘",
+          "en": "optical disk"
+        },
+        "keywords": "blu-ray, cd, computer, disk, dvd, optical, analog"
+      },
+      {
+        "emoji": "🔋",
+        "hexcode": "1F50B",
+        "name": {
+          "zh": "电池",
+          "en": "battery"
+        },
+        "keywords": "battery, electricity, energy, electric"
+      },
+      {
+        "emoji": "🔌",
+        "hexcode": "1F50C",
+        "name": {
+          "zh": "电源",
+          "en": "electric plug"
+        },
+        "keywords": "electric, electricity, plug"
+      },
+      {
+        "emoji": "🔦",
+        "hexcode": "1F526",
+        "name": {
+          "zh": "手电筒",
+          "en": "flashlight"
+        },
+        "keywords": "electric, light, tool, torch, bright, shine, light, flashlight, gadget"
+      },
+      {
+        "emoji": "🕯️",
+        "hexcode": "1F56F",
+        "name": {
+          "zh": "蜡烛",
+          "en": "candle"
+        },
+        "keywords": "light, fire, bright, shine"
+      },
+      {
+        "emoji": "📦",
+        "hexcode": "1F4E6",
+        "name": {
+          "zh": "包裹",
+          "en": "package"
+        },
+        "keywords": "box, communication, delivery, parcel, shipping, shipping, post, mail, parcel"
+      },
+      {
+        "emoji": "🔑",
+        "hexcode": "1F511",
+        "name": {
+          "zh": "钥匙",
+          "en": "key"
+        },
+        "keywords": "keys, lock, major, password, unlock, closing"
+      },
+      {
+        "emoji": "🔒",
+        "hexcode": "1F512",
+        "name": {
+          "zh": "安全锁",
+          "en": "locked"
+        },
+        "keywords": "closed, lock, private, locker, padlock"
+      },
+      {
+        "emoji": "🔓",
+        "hexcode": "1F513",
+        "name": {
+          "zh": "解锁",
+          "en": "unlocked"
+        },
+        "keywords": "cracked, lock, open, unlock, locker, padlock"
+      },
+      {
+        "emoji": "🛡️",
+        "hexcode": "1F6E1",
+        "name": {
+          "zh": "盾牌",
+          "en": "shield"
+        },
+        "keywords": "weapon, protection, fight, middle ages"
+      },
+      {
+        "emoji": "⚙️",
+        "hexcode": "2699",
+        "name": {
+          "zh": "设置齿轮",
+          "en": "gear"
+        },
+        "keywords": "cog, cogwheel, tool, tool, metal, silver"
+      },
+      {
+        "emoji": "📡",
+        "hexcode": "1F4E1",
+        "name": {
+          "zh": "天线",
+          "en": "satellite antenna"
+        },
+        "keywords": "aliens, antenna, contact, dish, satellite, science, signal, receive, radiation"
+      },
+      {
+        "emoji": "💎",
+        "hexcode": "1F48E",
+        "name": {
+          "zh": "钻石",
+          "en": "gem stone"
+        },
+        "keywords": "diamond, engagement, gem, jewel, money, romance, stone, wedding, expensive"
+      },
+      {
+        "emoji": "💰",
+        "hexcode": "1F4B0",
+        "name": {
+          "zh": "钱袋",
+          "en": "money bag"
+        },
+        "keywords": "bag, bank, bet, billion, cash, cost, dollar, gold, million, money, moneybag, paid, paying, pot, rich, win"
+      },
+      {
+        "emoji": "🧰",
+        "hexcode": "1F9F0",
+        "name": {
+          "zh": "工具箱",
+          "en": "toolbox"
+        },
+        "keywords": "box, chest, mechanic, red, tool"
+      }
+    ]
+  },
+  {
+    "id": "symbols",
+    "label": {
+      "zh": "符号标记",
+      "en": "Symbols and markers"
+    },
+    "items": [
+      {
+        "emoji": "❤️",
+        "hexcode": "2764",
+        "name": {
+          "zh": "红心",
+          "en": "red heart"
+        },
+        "keywords": "emotion, heart, love, red, love, red"
+      },
+      {
+        "emoji": "💙",
+        "hexcode": "1F499",
+        "name": {
+          "zh": "蓝心",
+          "en": "blue heart"
+        },
+        "keywords": "143, blue, emotion, heart, ily, love, romance"
+      },
+      {
+        "emoji": "💚",
+        "hexcode": "1F49A",
+        "name": {
+          "zh": "绿心",
+          "en": "green heart"
+        },
+        "keywords": "143, emotion, green, heart, ily, love, romantic"
+      },
+      {
+        "emoji": "💛",
+        "hexcode": "1F49B",
+        "name": {
+          "zh": "黄心",
+          "en": "yellow heart"
+        },
+        "keywords": "143, cardiac, emotion, heart, ily, love, yellow"
+      },
+      {
+        "emoji": "💜",
+        "hexcode": "1F49C",
+        "name": {
+          "zh": "紫心",
+          "en": "purple heart"
+        },
+        "keywords": "143, bestest, emotion, heart, ily, love, purple"
+      },
+      {
+        "emoji": "🧡",
+        "hexcode": "1F9E1",
+        "name": {
+          "zh": "橙心",
+          "en": "orange heart"
+        },
+        "keywords": "143, heart, orange"
+      },
+      {
+        "emoji": "🖤",
+        "hexcode": "1F5A4",
+        "name": {
+          "zh": "黑心",
+          "en": "black heart"
+        },
+        "keywords": "black, evil, heart, wicked"
+      },
+      {
+        "emoji": "🤍",
+        "hexcode": "1F90D",
+        "name": {
+          "zh": "白心",
+          "en": "white heart"
+        },
+        "keywords": "143, heart, white"
+      },
+      {
+        "emoji": "💔",
+        "hexcode": "1F494",
+        "name": {
+          "zh": "心碎",
+          "en": "broken heart"
+        },
+        "keywords": "break, broken, crushed, emotion, heart, heartbroken, lonely, sad, heartbreak"
+      },
+      {
+        "emoji": "💯",
+        "hexcode": "1F4AF",
+        "name": {
+          "zh": "满分",
+          "en": "hundred points"
+        },
+        "keywords": "100, a+, agree, clearly, definitely, faithful, fleek, full, hundred, keep, perfect, point, score, true, truth, yup, perfect, excellent"
+      },
+      {
+        "emoji": "✅",
+        "hexcode": "2705",
+        "name": {
+          "zh": "完成",
+          "en": "check mark button"
+        },
+        "keywords": "button, check, checked, checkmark, complete, completed, done, fixed, mark, tick, ✓, check, mark, white, right, done, todo"
+      },
+      {
+        "emoji": "☑️",
+        "hexcode": "2611",
+        "name": {
+          "zh": "勾选",
+          "en": "check box with check"
+        },
+        "keywords": "ballot, box, check, checked, done, off, tick, ✓, check, right, box"
+      },
+      {
+        "emoji": "❌",
+        "hexcode": "274C",
+        "name": {
+          "zh": "关闭错误",
+          "en": "cross mark"
+        },
+        "keywords": "cancel, cross, mark, multiplication, multiply, x, ×, cancel, wrong, multiply, x"
+      },
+      {
+        "emoji": "⚠️",
+        "hexcode": "26A0",
+        "name": {
+          "zh": "警告",
+          "en": "warning"
+        },
+        "keywords": "caution"
+      },
+      {
+        "emoji": "❗",
+        "hexcode": "2757",
+        "name": {
+          "zh": "重要",
+          "en": "red exclamation mark"
+        },
+        "keywords": "!, exclamation, mark, punctuation, red, exclamation, mark, punctuation"
+      },
+      {
+        "emoji": "❓",
+        "hexcode": "2753",
+        "name": {
+          "zh": "问题",
+          "en": "red question mark"
+        },
+        "keywords": "?, mark, punctuation, question, red, question, punctuation"
+      },
+      {
+        "emoji": "ℹ️",
+        "hexcode": "2139",
+        "name": {
+          "zh": "信息提示",
+          "en": "information"
+        },
+        "keywords": "i, advice, info"
+      },
+      {
+        "emoji": "⭐",
+        "hexcode": "2B50",
+        "name": {
+          "zh": "星星",
+          "en": "star"
+        },
+        "keywords": "astronomy, medium, stars, white, star, shine, small planet, sky, yellow, sparkle, far away"
+      },
+      {
+        "emoji": "✨",
+        "hexcode": "2728",
+        "name": {
+          "zh": "闪光",
+          "en": "sparkles"
+        },
+        "keywords": "*, magic, sparkle, star, magic, beautiful"
+      },
+      {
+        "emoji": "💬",
+        "hexcode": "1F4AC",
+        "name": {
+          "zh": "讨论",
+          "en": "speech balloon"
+        },
+        "keywords": "balloon, bubble, comic, dialog, message, sms, speech, talk, text, typing, talk"
+      },
+      {
+        "emoji": "👀",
+        "hexcode": "1F440",
+        "name": {
+          "zh": "关注",
+          "en": "eyes"
+        },
+        "keywords": "body, eye, face, googly, look, looking, omg, peep, see, seeing, eye, face, eyes"
+      },
+      {
+        "emoji": "📣",
+        "hexcode": "1F4E3",
+        "name": {
+          "zh": "扩音器",
+          "en": "megaphone"
+        },
+        "keywords": "cheering, sound"
+      },
+      {
+        "emoji": "🔔",
+        "hexcode": "1F514",
+        "name": {
+          "zh": "通知",
+          "en": "bell"
+        },
+        "keywords": "break, church, sound, sound"
+      },
+      {
+        "emoji": "📍",
+        "hexcode": "1F4CD",
+        "name": {
+          "zh": "位置",
+          "en": "round pushpin"
+        },
+        "keywords": "location, map, pin, pushpin, round, pin, wall, push, paper, notes"
+      },
+      {
+        "emoji": "♻️",
+        "hexcode": "267B",
+        "name": {
+          "zh": "循环回收",
+          "en": "recycling symbol"
+        },
+        "keywords": "recycle, recycling, symbol, recycle, nature"
+      }
+    ]
+  }
+]

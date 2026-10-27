@@ -1,4 +1,3 @@
-import { resolveIconSize } from '@/components/icons/metrics';
 import {
   Article,
   Bicycle,
@@ -14,6 +13,7 @@ import {
   Compass,
   Database,
   Envelope,
+  Emoji,
   FileText,
   Flag,
   Flask,
@@ -172,7 +172,6 @@ export function PageIcon({
   className?: string;
 }) {
   const icon = decodePageIcon(value);
-  const dimension = resolveIconSize(size);
   if (icon) {
     const Glyph = icon.glyph;
     return (
@@ -186,24 +185,6 @@ export function PageIcon({
     );
   }
   if (value && !value.startsWith('glyph:'))
-    return (
-      <span
-        aria-hidden
-        className={className}
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: dimension,
-          height: dimension,
-          flexShrink: 0,
-          fontSize: dimension,
-          lineHeight: 1,
-        }}
-        data-page-icon={value}
-      >
-        {value}
-      </span>
-    );
+    return <Emoji value={value} size={size} className={className} data-page-icon={value} />;
   return <FileText aria-hidden size={size} className={className} />;
 }

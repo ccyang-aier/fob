@@ -387,3 +387,4 @@ export const Robot = /* @__PURE__ */ solidIcon(faRobot, 'Robot');
 export const Reasoning = /* @__PURE__ */ solidIcon(faBrain, 'Reasoning');
 
 export const Hardware = /* @__PURE__ */ solidIcon(faMicrochip, 'Hardware');
+export { Emoji } from './emoji';

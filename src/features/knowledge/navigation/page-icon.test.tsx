@@ -95,7 +95,8 @@ test('icon selection, recoloring, emoji and removal update the same rendered met
   ).toBe('glyph:graduation-cap:#0863d1');
   await click('[role="tab"][aria-selected="false"]');
   await click('[aria-label="火箭"]');
-  expect(document.querySelector('[data-navigation] [data-page-icon]')?.textContent).toBe('🚀');
+  expect(document.querySelector('[data-navigation] [data-page-icon]')?.getAttribute('data-page-icon')).toBe('🚀');
+  expect(document.querySelector('[data-navigation] [data-page-icon] img')?.getAttribute('src')).toBe('/icons/openmoji/1F680.svg');
   await openPicker();
   await act(async () => {
     Array.from(document.querySelectorAll('button'))
@@ -132,7 +133,8 @@ test('failed persistence keeps the picker available, read-only metadata has no e
     ),
   );
   expect(document.querySelector('[aria-label="更改文档图标"]')).toBeNull();
-  expect(document.querySelector('[data-page-icon]')?.textContent).toBe('🎓');
+  expect(document.querySelector('[data-page-icon]')?.getAttribute('data-page-icon')).toBe('🎓');
+  expect(document.querySelector('[data-page-icon] img')?.getAttribute('src')).toBe('/icons/openmoji/1F393.svg');
 });
 
 test('folder pickers can deselect the current glyph and use the smaller selected artwork size', async () => {

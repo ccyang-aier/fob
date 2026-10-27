@@ -7,17 +7,12 @@
 .editable { min-height: 1lh; color: var(--callout-ink); font: inherit; }
 .editable :global(p) { color: inherit; }
 .editable :global(p + p) { margin-top: 8px; }
-.menu { composes: menu-surface from global; max-width: calc(100vw - 32px); padding: 10px; border: 1px solid var(--menu-border); border-radius: 8px; color: var(--ink); }
-.menuTitle { margin: 0 2px 8px; color: var(--muted-strong); font-size: 11px; font-weight: 500; }
-.menuTitle:not(:first-child) { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
-.emojiGrid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line); }
-.emojiOption { display: grid; height: 27px; place-items: center; border: 0; border-radius: 5px; background: transparent; font-size: 17px; cursor: pointer; }
-.emojiOption:hover,.emojiOption[aria-pressed="true"] { background: var(--surface-hover); }
+.menu { max-width: calc(100vw - 32px); padding: 4px; color: var(--ink); }
+.emojiMenu { max-width: calc(100vw - 24px); padding: 6px; }
 .toneGrid { display: grid; gap: 2px; }
 .toneOption { composes: fob-menu-item from global; display: flex; align-items: center; gap: 9px; min-height: 28px; padding: 4px 7px; border: 0; border-radius: 5px; background: transparent; color: var(--ink); font: 13px/20px var(--font-sans); text-align: left; cursor: pointer; }
+.toneOption > svg { flex: none; }
 .toneOption:hover,.toneOption:focus-visible { background: var(--menu-item-hover-bg); color: var(--menu-item-hover-ink); }
-.swatch { width: 10px; height: 10px; border-radius: 50%; }
-.customSwatch { width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(#ed7777, #e7c96a, #79ba91, #7d9cde, #bc82c9, #ed7777); }
 .back { display: flex; align-items: center; gap: 8px; width: 100%; margin-bottom: 8px; padding: 4px; border-radius: 4px; color: var(--ink); font: 12px/20px var(--font-sans); }
 .iconButton:focus-visible,.menu button:focus-visible { border-color: var(--control-border); outline: none; box-shadow: none; }
 :global(html[data-theme="dark"]) .root:not([data-tone="custom"]) { background: color-mix(in srgb, var(--callout-accent) 12%, var(--panel)) !important; --callout-ink: color-mix(in srgb, var(--callout-accent) 65%, white) !important; }

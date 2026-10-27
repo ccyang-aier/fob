@@ -13,7 +13,6 @@ beforeAll(async () => {
   for (const key of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'FocusEvent', 'MouseEvent', 'PointerEvent', 'KeyboardEvent', 'ResizeObserver', 'MutationObserver', 'getComputedStyle']) globals[key] = (browser as unknown as Record<string, unknown>)[key];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
   browser.localStorage.setItem('fob.language', 'en-US');
-  mock.module('@/components/icons', () => ({ Smiley: () => <svg aria-hidden /> }));
   mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => document.body }));
   ({ EmojiPicker: Picker } = await import('./emoji-picker'));
   const { createRoot } = await import('react-dom/client');
@@ -36,20 +35,21 @@ async function type(value: string) {
 async function key(value: string) {
   await act(async () => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
 }
-function options() { return [...document.querySelectorAll<HTMLButtonElement>('[role="group"] button')]; }
+function options() { return [...document.querySelectorAll<HTMLButtonElement>('[role="group"] button[data-emoji]')]; }
 
 test('emoji search matches Chinese and English names, then selection closes the popover', async () => {
   await open();
-  expect(options()).toHaveLength(48);
+  expect(options()).toHaveLength(200);
   expect(document.activeElement?.getAttribute('type')).toBe('search');
   await type('感谢');
-  expect(options().map(button => button.getAttribute('aria-label'))).toEqual(['Thank you']);
+  expect(options().map(button => button.getAttribute('aria-label'))).toEqual(['folded hands']);
   await act(async () => options()[0].click());
   expect(onSelect.mock.calls).toEqual([['🙏']]);
   expect(document.querySelector('[role="dialog"]')).toBeNull();
   await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
   await type('rocket');
-  expect(options().map(button => button.textContent)).toEqual(['🚀']);
+  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🚀']);
+  expect(options()[0].querySelector('img')?.getAttribute('src')).toBe('/icons/openmoji/1F680.svg');
   await type('no such emoji');
   expect(document.querySelector('[role="status"]')?.textContent).toBe('No emoji found');
 });
@@ -63,7 +63,7 @@ test('arrow navigation follows the eight-column layout and Escape returns focus 
   await key('ArrowRight');
   expect(document.activeElement).toBe(options()[9]);
   await key('End');
-  expect(document.activeElement).toBe(options()[47]);
+  expect(document.activeElement).toBe(options()[199]);
   await key('Home');
   expect(document.activeElement).toBe(options()[0]);
   await key('Escape');
@@ -76,4 +76,12 @@ test('a disabled picker cannot open or emit a selection', async () => {
   expect(host.querySelector('button')?.disabled).toBe(true);
   expect(document.querySelector('[role="dialog"]')).toBeNull();
   expect(onSelect.mock.calls).toHaveLength(0);
+});
+
+test('categories browse 25 emoji each while search can still find a result from another category', async () => {
+  await open();
+  await act(async () => document.querySelector<HTMLButtonElement>('[aria-label="Faces and moods"]')!.click());
+  expect(options()).toHaveLength(25);
+  await type('rocket');
+  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🚀']);
 });

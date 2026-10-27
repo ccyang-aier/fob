@@ -4,7 +4,7 @@ import { useUiMessage } from '../ui-message';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './page-icon-picker.messages';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Check, MagnifyingGlass, Smiley } from '@/components/icons';
+import { Check, Emoji, MagnifyingGlass, Smiley } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -258,7 +258,7 @@ export function PageIconPicker({
                           data-selected={value === emoji}
                           aria-pressed={value === emoji}
                         >
-                          {emoji}
+                          <Emoji value={emoji} size={28} />
                         </button>
                       </DropdownMenuItem>
                     ))}
