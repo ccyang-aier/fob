@@ -15,7 +15,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 - 前端工作前及提交前阅读 `AI_FRONTEND_RULES.md`。
 - 图标默认使用 shadcn.io 目录中的 Font Awesome 7 Solid；明确需要轮廓的控制仅从 Lucide 选择。统一经 `src/components/icons` 接入，遵循 `docs/ui/icon-system.md` 的语义与尺寸表；禁止引入其他图标库、手绘 UI SVG 或恢复旧素材包。改动后执行 `pnpm icons:verify`。
-- 用户指定的默认 Emoji 使用 OpenMoji 精选集：8 类、每类 25 个，总计 200 个本地原版资源；经统一 Emoji 渲染器与选择器使用，保留来源、许可和摘要，范围见 `docs/ui/emoji-system.md`。
+- 用户指定的默认 Emoji 使用 OpenMoji 精选集：8 类、每类 50 个，总计 400 个本地原版资源；经统一 Emoji 渲染器与选择器使用，保留来源、许可和摘要，范围见 `docs/ui/emoji-system.md`。
 - 修改 Next.js 行为前，查阅 `node_modules/next/dist/docs/` 中的当前版本指南与弃用说明。
 - 架构以 `docs/architecture/fob-product-boundaries.md` 为准，执行状态见 `.spec/tasks/fob-extraction.md`；每个主题在 `docs/` 保留一份当前设计，执行门槛与验证证据放在 `.spec/tasks/`。
 - 开发期间保持 Web 与业务服务运行，验证变更行为、资源权限边界及真实界面流程。
