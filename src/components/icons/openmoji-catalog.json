@@ -455,6 +455,60 @@
           "en": "enraged face"
         },
         "keywords": "anger, angry, enraged, face, feels, mad, maddening, pouting, rage, red, shade, unhappy, upset"
+      },
+      {
+        "emoji": "😱",
+        "hexcode": "1F631",
+        "name": {
+          "zh": "惊吓",
+          "en": "face screaming in fear"
+        },
+        "keywords": "epic, face, fear, fearful, munch, scared, scream, screamer, screaming, shocked, surprised, woah, open mouth"
+      },
+      {
+        "emoji": "🤧",
+        "hexcode": "1F927",
+        "name": {
+          "zh": "感冒",
+          "en": "sneezing face"
+        },
+        "keywords": "face, fever, flu, gesundheit, sick, sneeze, sneezing, tissue"
+      },
+      {
+        "emoji": "🤮",
+        "hexcode": "1F92E",
+        "name": {
+          "zh": "恶心",
+          "en": "face vomiting"
+        },
+        "keywords": "barf, ew, face, gross, puke, sick, spew, throw, up, vomit, vomiting"
+      },
+      {
+        "emoji": "😷",
+        "hexcode": "1F637",
+        "name": {
+          "zh": "口罩",
+          "en": "face with medical mask"
+        },
+        "keywords": "cold, dentist, dermatologist, doctor, dr, face, germs, mask, medical, medicine, sick, ill"
+      },
+      {
+        "emoji": "🤤",
+        "hexcode": "1F924",
+        "name": {
+          "zh": "流口水",
+          "en": "drooling face"
+        },
+        "keywords": "drooling, face, hungry, yummy"
+      },
+      {
+        "emoji": "🤓",
+        "hexcode": "1F913",
+        "name": {
+          "zh": "书呆子",
+          "en": "nerd face"
+        },
+        "keywords": "brainy, clever, expert, face, geek, gifted, glasses, intelligent, nerd, smart, glasses, learning"
       }
     ]
   },
@@ -914,6 +968,60 @@
           "en": "person in lotus position"
         },
         "keywords": "cross, legged, legs, lotus, meditation, peace, person, position, relax, serenity, yoga, yogi, zen, human, person, exercise"
+      },
+      {
+        "emoji": "🫡",
+        "hexcode": "1FAE1",
+        "name": {
+          "zh": "敬礼",
+          "en": "saluting face"
+        },
+        "keywords": "face, good, luck, ma’am, ok, respect, salute, saluting, sir, troops, yes"
+      },
+      {
+        "emoji": "✍️",
+        "hexcode": "270D",
+        "name": {
+          "zh": "书写",
+          "en": "writing hand"
+        },
+        "keywords": "hand, write, writing, writing hand, writing, write"
+      },
+      {
+        "emoji": "🫂",
+        "hexcode": "1FAC2",
+        "name": {
+          "zh": "拥抱",
+          "en": "people hugging"
+        },
+        "keywords": "comfort, embrace, farewell, friendship, goodbye, hello, hug, hugging, love, people, thanks, love, harmony, humans, like, making out, arms"
+      },
+      {
+        "emoji": "🙈",
+        "hexcode": "1F648",
+        "name": {
+          "zh": "捂眼",
+          "en": "see-no-evil monkey"
+        },
+        "keywords": "embarrassed, evil, face, forbidden, forgot, gesture, hide, monkey, no, omg, prohibited, scared, secret, smh, watch"
+      },
+      {
+        "emoji": "🙉",
+        "hexcode": "1F649",
+        "name": {
+          "zh": "捂耳",
+          "en": "hear-no-evil monkey"
+        },
+        "keywords": "animal, ears, evil, face, forbidden, gesture, hear, listen, monkey, no, not, prohibited, secret, shh, tmi"
+      },
+      {
+        "emoji": "🙊",
+        "hexcode": "1F64A",
+        "name": {
+          "zh": "捂嘴",
+          "en": "speak-no-evil monkey"
+        },
+        "keywords": "animal, evil, face, forbidden, gesture, monkey, no, not, oops, prohibited, quiet, secret, speak, stealth"
       }
     ]
   },
@@ -1373,6 +1481,60 @@
           "en": "hibiscus"
         },
         "keywords": "flower, plant, pink"
+      },
+      {
+        "emoji": "🦔",
+        "hexcode": "1F994",
+        "name": {
+          "zh": "刺猬",
+          "en": "hedgehog"
+        },
+        "keywords": "animal, spiny, prickly"
+      },
+      {
+        "emoji": "🦒",
+        "hexcode": "1F992",
+        "name": {
+          "zh": "长颈鹿",
+          "en": "giraffe"
+        },
+        "keywords": "animal, spots, long, neck, trees, big"
+      },
+      {
+        "emoji": "🐘",
+        "hexcode": "1F418",
+        "name": {
+          "zh": "大象",
+          "en": "elephant"
+        },
+        "keywords": "animal, big, wrinkles, trunk, töröö"
+      },
+      {
+        "emoji": "🐎",
+        "hexcode": "1F40E",
+        "name": {
+          "zh": "马",
+          "en": "horse"
+        },
+        "keywords": "animal, equestrian, farm, racehorse, racing, riding, sport"
+      },
+      {
+        "emoji": "🦜",
+        "hexcode": "1F99C",
+        "name": {
+          "zh": "鹦鹉",
+          "en": "parrot"
+        },
+        "keywords": "animal, bird, ornithology, pirate, talk"
+      },
+      {
+        "emoji": "🪷",
+        "hexcode": "1FAB7",
+        "name": {
+          "zh": "莲花",
+          "en": "lotus"
+        },
+        "keywords": "beauty, buddhism, calm, flower, hinduism, peace, purity, serenity"
       }
     ]
   },
@@ -1832,6 +1994,60 @@
           "en": "beverage box"
         },
         "keywords": "beverage, box, juice, straw, sweet"
+      },
+      {
+        "emoji": "🍤",
+        "hexcode": "1F364",
+        "name": {
+          "zh": "炸虾",
+          "en": "fried shrimp"
+        },
+        "keywords": "fried, prawn, shrimp, tempura"
+      },
+      {
+        "emoji": "🍱",
+        "hexcode": "1F371",
+        "name": {
+          "zh": "便当",
+          "en": "bento box"
+        },
+        "keywords": "bento, box, food"
+      },
+      {
+        "emoji": "🥗",
+        "hexcode": "1F957",
+        "name": {
+          "zh": "沙拉",
+          "en": "green salad"
+        },
+        "keywords": "food, green, salad"
+      },
+      {
+        "emoji": "🍲",
+        "hexcode": "1F372",
+        "name": {
+          "zh": "炖菜",
+          "en": "pot of food"
+        },
+        "keywords": "food, pot, soup, stew"
+      },
+      {
+        "emoji": "🥞",
+        "hexcode": "1F95E",
+        "name": {
+          "zh": "松饼",
+          "en": "pancakes"
+        },
+        "keywords": "breakfast, crêpe, food, hotcake, pancake"
+      },
+      {
+        "emoji": "🍯",
+        "hexcode": "1F36F",
+        "name": {
+          "zh": "蜂蜜",
+          "en": "honey pot"
+        },
+        "keywords": "barrel, bear, food, honey, honeypot, jar, pot, sweet"
       }
     ]
   },
@@ -2291,6 +2507,60 @@
           "en": "artist"
         },
         "keywords": "palette"
+      },
+      {
+        "emoji": "🧑‍🚀",
+        "hexcode": "1F9D1-200D-1F680",
+        "name": {
+          "zh": "宇航员",
+          "en": "astronaut"
+        },
+        "keywords": "rocket, space"
+      },
+      {
+        "emoji": "🧑‍⚕️",
+        "hexcode": "1F9D1-200D-2695-FE0F",
+        "name": {
+          "zh": "医护人员",
+          "en": "health worker"
+        },
+        "keywords": "doctor, health, healthcare, nurse, therapist, worker"
+      },
+      {
+        "emoji": "🧑‍🏭",
+        "hexcode": "1F9D1-200D-1F3ED",
+        "name": {
+          "zh": "工人",
+          "en": "factory worker"
+        },
+        "keywords": "assembly, factory, industrial, worker"
+      },
+      {
+        "emoji": "🧑‍💼",
+        "hexcode": "1F9D1-200D-1F4BC",
+        "name": {
+          "zh": "办公人员",
+          "en": "office worker"
+        },
+        "keywords": "architect, business, manager, office, white-collar, worker"
+      },
+      {
+        "emoji": "📇",
+        "hexcode": "1F4C7",
+        "name": {
+          "zh": "索引卡",
+          "en": "card index"
+        },
+        "keywords": "card, index, old, rolodex, school"
+      },
+      {
+        "emoji": "🧾",
+        "hexcode": "1F9FE",
+        "name": {
+          "zh": "收据",
+          "en": "receipt"
+        },
+        "keywords": "accounting, bookkeeping, evidence, invoice, proof"
       }
     ]
   },
@@ -2750,6 +3020,60 @@
           "en": "game die"
         },
         "keywords": "dice, die, entertainment, game, board game, isometric"
+      },
+      {
+        "emoji": "🏋️",
+        "hexcode": "1F3CB",
+        "name": {
+          "zh": "举重",
+          "en": "person lifting weights"
+        },
+        "keywords": "barbell, bodybuilder, deadlift, lifter, lifting, person, powerlifting, weight, weightlifter, weights, workout, sports, power"
+      },
+      {
+        "emoji": "🧗",
+        "hexcode": "1F9D7",
+        "name": {
+          "zh": "攀岩",
+          "en": "person climbing"
+        },
+        "keywords": "climb, climber, climbing, mountain, person, rock, scale, up, human, person"
+      },
+      {
+        "emoji": "🏂",
+        "hexcode": "1F3C2",
+        "name": {
+          "zh": "滑雪板",
+          "en": "snowboarder"
+        },
+        "keywords": "ski, snow, snowboard, sport, winter, sports"
+      },
+      {
+        "emoji": "🎿",
+        "hexcode": "1F3BF",
+        "name": {
+          "zh": "滑雪",
+          "en": "skis"
+        },
+        "keywords": "ski, snow, sport, skis, skiing, ski boot, to ski, winter, snow, hobby, sport"
+      },
+      {
+        "emoji": "🛶",
+        "hexcode": "1F6F6",
+        "name": {
+          "zh": "独木舟",
+          "en": "canoe"
+        },
+        "keywords": "boat"
+      },
+      {
+        "emoji": "🎻",
+        "hexcode": "1F3BB",
+        "name": {
+          "zh": "小提琴",
+          "en": "violin"
+        },
+        "keywords": "instrument, music, string, violin, fiddle, bow"
       }
     ]
   },
@@ -3209,6 +3533,60 @@
           "en": "teddy bear"
         },
         "keywords": "bear, plaything, plush, stuffed, teddy, toy"
+      },
+      {
+        "emoji": "🕹️",
+        "hexcode": "1F579",
+        "name": {
+          "zh": "游戏摇杆",
+          "en": "joystick"
+        },
+        "keywords": "game, video, videogame"
+      },
+      {
+        "emoji": "🛰️",
+        "hexcode": "1F6F0",
+        "name": {
+          "zh": "卫星",
+          "en": "satellite"
+        },
+        "keywords": "space, space, galaxy, satellite"
+      },
+      {
+        "emoji": "📠",
+        "hexcode": "1F4E0",
+        "name": {
+          "zh": "传真机",
+          "en": "fax machine"
+        },
+        "keywords": "communication, fax, machine, office, paper, communication"
+      },
+      {
+        "emoji": "🧳",
+        "hexcode": "1F9F3",
+        "name": {
+          "zh": "行李箱",
+          "en": "luggage"
+        },
+        "keywords": "bag, packing, roller, suitcase, travel"
+      },
+      {
+        "emoji": "🧵",
+        "hexcode": "1F9F5",
+        "name": {
+          "zh": "线团",
+          "en": "thread"
+        },
+        "keywords": "needle, sewing, spool, string"
+      },
+      {
+        "emoji": "🪡",
+        "hexcode": "1FAA1",
+        "name": {
+          "zh": "缝衣针",
+          "en": "sewing needle"
+        },
+        "keywords": "embroidery, needle, sew, sewing, stitches, sutures, tailoring, thread"
       }
     ]
   },
@@ -3668,6 +4046,60 @@
           "en": "infinity"
         },
         "keywords": "forever, unbounded, universal"
+      },
+      {
+        "emoji": "➡️",
+        "hexcode": "27A1",
+        "name": {
+          "zh": "向右箭头",
+          "en": "right arrow"
+        },
+        "keywords": "arrow, cardinal, direction, east, right, right, soon, future"
+      },
+      {
+        "emoji": "⬅️",
+        "hexcode": "2B05",
+        "name": {
+          "zh": "向左箭头",
+          "en": "left arrow"
+        },
+        "keywords": "arrow, cardinal, direction, left, west, left, past"
+      },
+      {
+        "emoji": "⬆️",
+        "hexcode": "2B06",
+        "name": {
+          "zh": "向上箭头",
+          "en": "up arrow"
+        },
+        "keywords": "arrow, cardinal, direction, north, up, up, above"
+      },
+      {
+        "emoji": "⬇️",
+        "hexcode": "2B07",
+        "name": {
+          "zh": "向下箭头",
+          "en": "down arrow"
+        },
+        "keywords": "arrow, cardinal, direction, down, south, down, underneath"
+      },
+      {
+        "emoji": "🔄",
+        "hexcode": "1F504",
+        "name": {
+          "zh": "循环箭头",
+          "en": "counterclockwise arrows button"
+        },
+        "keywords": "again, anticlockwise, arrow, arrows, button, counterclockwise, deja, refresh, rewindershins, vu, cycle"
+      },
+      {
+        "emoji": "🔀",
+        "hexcode": "1F500",
+        "name": {
+          "zh": "随机排序",
+          "en": "shuffle tracks button"
+        },
+        "keywords": "arrow, button, crossed, shuffle, tracks, random"
       }
     ]
   }

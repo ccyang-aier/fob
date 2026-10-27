@@ -8,7 +8,7 @@
 - 只有明确需要轻量轮廓的控制，使用 [Lucide](https://www.shadcn.io/icons/lucide)。不把导航实体、通知、设置等默认退回轮廓风格，也不把所有动作一刀切成厚实图标。
 - 业务组件只从 `@/components/icons` 引用。官方依赖、语义映射及轮廓例外集中在 `src/components/icons/index.ts`；渲染和尺寸在同目录的 `solid-icon.tsx`、`metrics.ts`。
 - 不新增第三套图标包、远程图标服务、混合 PNG 图标包、手写 SVG/path 或用 CSS 给轮廓图标强制填色。唯一保留例外是用户明确要求恢复的主导航双栏图标，集中在 `sidebar-toggle-icon.tsx`，脚本校验其固定文件摘要，禁止在例外中增加其它几何。用户上传图片、用户文档内容、Emoji 和产品品牌图形是内容资源，不能作为引入另一套 UI 图标的借口。
-- 用户明确指定 OpenMoji 作为 Fob 默认 Emoji，精选 8 类共 400 个本地原版资源，经统一目录的 `Emoji` 渲染。该内容资源例外不改变系统操作图标的选型；资源来源和摘要同样由图标检查脚本验证，完整规范见 [Emoji 系统](emoji-system.md)。
+- 用户明确指定 OpenMoji 作为 Fob 默认 Emoji，精选 8 类共 448 个本地原版资源，经统一目录的 `Emoji` 渲染。该内容资源例外不改变系统操作图标的选型；资源来源和摘要同样由图标检查脚本验证，完整规范见 [Emoji 系统](emoji-system.md)。
 - shadcn CLI 的 `components.json` 保持 `iconLibrary: lucide`，用于生成轻量基础控件；生成后仍须把导入收口到本地目录，按语义选择 FA7 或已批准的 Lucide。
 
 ## 语义与候选

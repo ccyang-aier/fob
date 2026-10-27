@@ -3,11 +3,11 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { Emoji } from './emoji';
 import { emojiGroups, emojiEntries, findEmoji } from './emoji-catalog';
 
-test('the default picker exposes exactly 400 reviewed emoji in eight usable categories', () => {
+test('the default picker exposes exactly 448 reviewed emoji in eight complete seven-row categories', () => {
   expect(emojiGroups).toHaveLength(8);
-  expect(emojiGroups.every(group => group.items.length === 50)).toBe(true);
-  expect(new Set(emojiEntries.map(entry => entry.hexcode)).size).toBe(400);
-  expect(new Set(emojiEntries.map(entry => entry.emoji)).size).toBe(400);
+  expect(emojiGroups.every(group => group.items.length === 56)).toBe(true);
+  expect(new Set(emojiEntries.map(entry => entry.hexcode)).size).toBe(448);
+  expect(new Set(emojiEntries.map(entry => entry.emoji)).size).toBe(448);
 });
 
 test('existing Unicode presentation variants resolve to the same local artwork without rewriting the value', () => {

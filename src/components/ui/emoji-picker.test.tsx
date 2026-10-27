@@ -39,7 +39,7 @@ function options() { return [...document.querySelectorAll<HTMLButtonElement>('[r
 
 test('emoji search matches Chinese and English names, then selection closes the popover', async () => {
   await open();
-  expect(options()).toHaveLength(400);
+  expect(options()).toHaveLength(448);
   expect(document.activeElement?.getAttribute('type')).toBe('search');
   await type('感谢');
   expect(options().map(button => button.getAttribute('aria-label'))).toEqual(['folded hands']);
@@ -48,8 +48,8 @@ test('emoji search matches Chinese and English names, then selection closes the 
   expect(document.querySelector('[role="dialog"]')).toBeNull();
   await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
   await type('rocket');
-  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🚀']);
-  expect(options()[0].querySelector('img')?.getAttribute('src')).toBe('/icons/openmoji/1F680.svg');
+  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🧑‍🚀', '🚀']);
+  expect(options().find(button => button.getAttribute('data-emoji') === '🚀')?.querySelector('img')?.getAttribute('src')).toBe('/icons/openmoji/1F680.svg');
   await type('no such emoji');
   expect(document.querySelector('[role="status"]')?.textContent).toBe('No emoji found');
 });
@@ -63,7 +63,7 @@ test('arrow navigation follows the eight-column layout and Escape returns focus 
   await key('ArrowRight');
   expect(document.activeElement).toBe(options()[9]);
   await key('End');
-  expect(document.activeElement).toBe(options()[399]);
+  expect(document.activeElement).toBe(options()[447]);
   await key('Home');
   expect(document.activeElement).toBe(options()[0]);
   await key('Escape');
@@ -78,12 +78,12 @@ test('a disabled picker cannot open or emit a selection', async () => {
   expect(onSelect.mock.calls).toHaveLength(0);
 });
 
-test('categories browse 50 emoji each while search can still find a result from another category', async () => {
+test('categories browse 56 emoji each while search can still find a result from another category', async () => {
   await open();
   await act(async () => document.querySelector<HTMLButtonElement>('[aria-label="Faces and moods"]')!.click());
-  expect(options()).toHaveLength(50);
+  expect(options()).toHaveLength(56);
   await type('rocket');
-  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🚀']);
+  expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🧑‍🚀', '🚀']);
   await type('熊猫');
   expect(options().map(button => button.getAttribute('data-emoji'))).toEqual(['🐼']);
   expect(options()[0].querySelector('img')?.getAttribute('src')).toBe('/icons/openmoji/1F43C.svg');

@@ -63,7 +63,7 @@
 
 ## 图标
 
-- 默认 Emoji 使用用户指定的 OpenMoji 精选集，经 `src/components/icons` 的 `Emoji` 与共享选择器显示；8 类共 400 个原版 SVG，仅用于表情和内容图标，已有 Unicode 值保持兼容。来源与许可见 [Emoji 系统](docs/ui/emoji-system.md)。
+- 默认 Emoji 使用用户指定的 OpenMoji 精选集，经 `src/components/icons` 的 `Emoji` 与共享选择器显示；8 类共 448 个原版 SVG，仅用于表情和内容图标，已有 Unicode 值保持兼容。来源与许可见 [Emoji 系统](docs/ui/emoji-system.md)。
 - 图标统一从 `@/components/icons` 引用，默认使用官方 Font Awesome 7 Solid；只有明确需要轻量轮廓的控制符号使用目录中列明的 Lucide。用户确认的文档空态统一复用目录中的 Lucide `EmptyDocument` 叠页插图。除用户明确恢复、由检查脚本固定的原主导航双栏图标，以及用户指定 Outline 文件夹首页的原版资源外，不得新增手写 UI SVG、混入第三套图标或用 CSS 强制填色。完整选型、尺寸及例外见 [图标系统](docs/ui/icon-system.md)。
 - 主页、星标、草稿、回收站保留 Dense 浅彩色实心配色，其他系统图标使用现有中性色；激活仅改变行反馈。
 - 常规图标实际显示 14px，菜单/资源树 12px，折叠及辅助指示 10px；共享渲染器将原尺寸档位统一缩小 2px，数字尺寸的插图/预览与 Emoji 图标同样缩小。调用方保留原布局尺寸请求，不逐处重复减小，不缩小按钮点击区。

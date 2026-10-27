@@ -303,6 +303,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F363.svg",
       "sha256": "1763e489280683778a1318bc00d3c15f71805574fdcba55541c2b1b624b57b9e"
     },
+    "1F364": {
+      "emoji": "🍤",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F364.svg",
+      "sha256": "79f4b238a11cfcc1be88fd45b60650c03f925e32bea48e480fc17c8b0ac8838d"
+    },
     "1F366": {
       "emoji": "🍦",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F366.svg",
@@ -323,10 +328,25 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F36B.svg",
       "sha256": "76cbd1db319fada20874940ede5d72ada327e7016226722edf47030d4604a352"
     },
+    "1F36F": {
+      "emoji": "🍯",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F36F.svg",
+      "sha256": "9fc4805d8bb1ba2ce44c1e347ba463c8a0d8cd9f772d25a2a73150db3cc4dce6"
+    },
     "1F370": {
       "emoji": "🍰",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F370.svg",
       "sha256": "0a7d0e0515cc1cef27d6f0f7eea0bcd10f42ef22c764224995aa8e7dc3e52b50"
+    },
+    "1F371": {
+      "emoji": "🍱",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F371.svg",
+      "sha256": "187da832e960b414ae4112eb3944b10731c9e249e2e4676c5174cc1fa672e4f8"
+    },
+    "1F372": {
+      "emoji": "🍲",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F372.svg",
+      "sha256": "79ff37add1dbb09a4237dd2ae258b05f600cabe54363d0de058fbb5ff0ba6337"
     },
     "1F373": {
       "emoji": "🍳",
@@ -428,10 +448,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3B8.svg",
       "sha256": "baadcec8570cf99c130a359416396ded1b6ea9bcae4e5d881f5496616e1d7958"
     },
+    "1F3BB": {
+      "emoji": "🎻",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3BB.svg",
+      "sha256": "c102ead9f8f8788087257d50b4d3fc73ec228ec45f37c8b243cd7a911bea0e38"
+    },
     "1F3BE": {
       "emoji": "🎾",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3BE.svg",
       "sha256": "329e11a1519e99a8e4e8d052ef0e10f5cb6331408e816ca95ae7b6c2ce28092e"
+    },
+    "1F3BF": {
+      "emoji": "🎿",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3BF.svg",
+      "sha256": "4b92acbf9908d41340f049cbd54569adf88faa3da3712bf69bdaec3266513a25"
     },
     "1F3C0": {
       "emoji": "🏀",
@@ -442,6 +472,11 @@
       "emoji": "🏁",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3C1.svg",
       "sha256": "2f9cf0412b91d7ae334515f8ea74866bd274936910c007c88cebd6257e4384ca"
+    },
+    "1F3C2": {
+      "emoji": "🏂",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3C2.svg",
+      "sha256": "2dc8d0ac52249fda2e3bdec3d6e073e88cce891fabf42693df3aa01073c89902"
     },
     "1F3C3": {
       "emoji": "🏃",
@@ -467,6 +502,11 @@
       "emoji": "🏊",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3CA.svg",
       "sha256": "4bbce76d2a11cca406a3c791927ed698495a80c6c649c2b7f90e95890a239428"
+    },
+    "1F3CB": {
+      "emoji": "🏋️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3CB.svg",
+      "sha256": "3b7b14b1aa4619b8b450ab5f22c457d523d4cf6a58633a65385bc93b7b9fa976"
     },
     "1F3D0": {
       "emoji": "🏐",
@@ -518,10 +558,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F3F9.svg",
       "sha256": "62f6f74ad85d2249a40eccf1be1a0d1181aec8a72b8edd69eacd95e9ee3ee1a1"
     },
+    "1F40E": {
+      "emoji": "🐎",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F40E.svg",
+      "sha256": "97b0d31440be69c8dd55064159e18aa48fcb71738fbb36829b0f856d30d6b377"
+    },
     "1F414": {
       "emoji": "🐔",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F414.svg",
       "sha256": "b82358e421aeea61cc1887cde78591fe1472d1b9b5c7474cf658f645af764aaf"
+    },
+    "1F418": {
+      "emoji": "🐘",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F418.svg",
+      "sha256": "7901471e55dfc825d76dab37cb21f9792e5d9ba9c9c7219ec6af7a1c21682fa7"
     },
     "1F419": {
       "emoji": "🐙",
@@ -818,6 +868,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4C5.svg",
       "sha256": "ea09b06a917f3d813cf3a9aee3f5d3e922899a74930e52e64bddb51360b23160"
     },
+    "1F4C7": {
+      "emoji": "📇",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4C7.svg",
+      "sha256": "4f104998626a0100576da544766699ab8640d6ec3475dba595bf6f2fa1672d27"
+    },
     "1F4C8": {
       "emoji": "📈",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4C8.svg",
@@ -908,6 +963,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4DD.svg",
       "sha256": "a5abbf3510114c62e2544c689a35efe8bf1c3e1fa9914df0db3a598385eb7006"
     },
+    "1F4E0": {
+      "emoji": "📠",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4E0.svg",
+      "sha256": "0c91f0efc378d4802b1123e2ab11885bd2ca216e8ec92d42d15460dc1663fff5"
+    },
     "1F4E1": {
       "emoji": "📡",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4E1.svg",
@@ -947,6 +1007,16 @@
       "emoji": "📻",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F4FB.svg",
       "sha256": "908165d259cc911c13d48b6a2a7e1c9ba4fdcf925fda5278044cd6bc8f48bc79"
+    },
+    "1F500": {
+      "emoji": "🔀",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F500.svg",
+      "sha256": "029756e337f97264395d50ce44460343801b508d8856dc85eab3577c2dc29ef4"
+    },
+    "1F504": {
+      "emoji": "🔄",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F504.svg",
+      "sha256": "cbfed47f4825d54e3f6615bec724d9fa6eef90bdd73d96c1a1c0b53188b8c071"
     },
     "1F50B": {
       "emoji": "🔋",
@@ -1037,6 +1107,11 @@
       "emoji": "🕯️",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F56F.svg",
       "sha256": "27154d837aebce640922f9a27a82f6fde351cb9fad13aef8ec86698dba5ccfcd"
+    },
+    "1F579": {
+      "emoji": "🕹️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F579.svg",
+      "sha256": "bf00004a416c849ca3c017f5546626e8e2abed9097d270144c5156aed570bd93"
     },
     "1F58A": {
       "emoji": "🖊️",
@@ -1248,10 +1323,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F62E.svg",
       "sha256": "d684284f06266673e894e2f1fb1aee2d22910f2247150270face06fe12bd53c9"
     },
+    "1F631": {
+      "emoji": "😱",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F631.svg",
+      "sha256": "28018215e9cc0dd084d49b143d2dfb6bbede179eeb44f2393a6f8f95cc903703"
+    },
     "1F634": {
       "emoji": "😴",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F634.svg",
       "sha256": "3b5daab4b59ce4573dfd7fa2909fc4a29a3a4420b6aa2e3145e92de187fcda46"
+    },
+    "1F637": {
+      "emoji": "😷",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F637.svg",
+      "sha256": "3febe2a79620db191da0f738f2e7e01eaa713b575ee1e0d91c872827cb2eaf21"
     },
     "1F641": {
       "emoji": "🙁",
@@ -1282,6 +1367,21 @@
       "emoji": "🙇",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F647.svg",
       "sha256": "8b768655c2f925b1a5031ee7172230df85b935c864364aadd2eb0d81514a154d"
+    },
+    "1F648": {
+      "emoji": "🙈",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F648.svg",
+      "sha256": "843e8ad7d51f12cbe9cd2003152558771372c401129aaff92a0f9c74d66cebff"
+    },
+    "1F649": {
+      "emoji": "🙉",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F649.svg",
+      "sha256": "49cc1762fdabea7a1334ded91ccfdd7599019a24587eedd60fa1e712ee190b70"
+    },
+    "1F64A": {
+      "emoji": "🙊",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F64A.svg",
+      "sha256": "d48e17ddd57f2891728b281b8f3430b0cedc311e97ef5f97ba5927acafc908ae"
     },
     "1F64B": {
       "emoji": "🙋",
@@ -1388,10 +1488,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F6E1.svg",
       "sha256": "d55fb5586b3c9d4fe01972242b58a13b209f0c93abd23fe9d4301b0ec5ead49a"
     },
+    "1F6F0": {
+      "emoji": "🛰️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F6F0.svg",
+      "sha256": "bd9b78fd1993976d91b2b198931fbe41718c805223646dff5aa7b7c2514eaca7"
+    },
     "1F6F5": {
       "emoji": "🛵",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F6F5.svg",
       "sha256": "d10741412fc974c81434c0729ab72d237c740c6af35c7b072a5993a4ecbcbddf"
+    },
+    "1F6F6": {
+      "emoji": "🛶",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F6F6.svg",
+      "sha256": "cafafc80de6532e9081995876f7b01b7ffd6568b0ced425f42a0ca07acc78778"
     },
     "1F6F9": {
       "emoji": "🛹",
@@ -1448,6 +1558,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F912.svg",
       "sha256": "48b422afcbc6464ef42162b565775e0013564a6d4764a345295020692c74ae98"
     },
+    "1F913": {
+      "emoji": "🤓",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F913.svg",
+      "sha256": "4821f31ba008a009a947bb8e43243b93d92ea7f2569dbbd5c8d965f4f7f6a758"
+    },
     "1F914": {
       "emoji": "🤔",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F914.svg",
@@ -1503,10 +1618,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F923.svg",
       "sha256": "c43248a757954f172fec996cd603235300ef2ec4c295aff5972b8f826b03b8db"
     },
+    "1F924": {
+      "emoji": "🤤",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F924.svg",
+      "sha256": "71ece5598a2a2b87f9ba59a2fd3720eb285c3e5c9b94959edf3e124991403800"
+    },
     "1F926": {
       "emoji": "🤦",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F926.svg",
       "sha256": "a875a9afc054ac4bc5c2f3e78ed14da60ec8eadf528a66d210807d814aabae14"
+    },
+    "1F927": {
+      "emoji": "🤧",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F927.svg",
+      "sha256": "94025c5b279a1307ad47a2c5040a777db9c1b9835b29d7eca405a0de4f6b35f4"
     },
     "1F928": {
       "emoji": "🤨",
@@ -1532,6 +1657,11 @@
       "emoji": "🤭",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F92D.svg",
       "sha256": "f361bca6a40521e30249dd1c1d9d15a13d3c4d99c770105a9e726a2ed0ba6b65"
+    },
+    "1F92E": {
+      "emoji": "🤮",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F92E.svg",
+      "sha256": "0fca8bfd9fcbf25a44a9df0bc76d21cf568845700aeee6874c9c0e978cd0165a"
     },
     "1F92F": {
       "emoji": "🤯",
@@ -1588,6 +1718,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F955.svg",
       "sha256": "703332895b3b583e966fd4405f4bdab91a5b005b55d2103a255f4a7394dd074d"
     },
+    "1F957": {
+      "emoji": "🥗",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F957.svg",
+      "sha256": "2fd8a233e06e7dfd09012ae7b21bffdaa42dc62c34167f5dd512f74158ea1a39"
+    },
     "1F95A": {
       "emoji": "🥚",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F95A.svg",
@@ -1602,6 +1737,11 @@
       "emoji": "🥝",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F95D.svg",
       "sha256": "984c41db680af553aa8a88534a36338d19b3065d8271c5b74cf4572ed4381bf5"
+    },
+    "1F95E": {
+      "emoji": "🥞",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F95E.svg",
+      "sha256": "0021ee40b824b575656599233a97b1309336a42f5bc2873f6e3edd021b1567c1"
     },
     "1F95F": {
       "emoji": "🥟",
@@ -1673,6 +1813,21 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F98B.svg",
       "sha256": "47b4971766ec7d4d913142eac844bb33c526b72839209c8acb531483a2f4072d"
     },
+    "1F992": {
+      "emoji": "🦒",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F992.svg",
+      "sha256": "06bc70765de41b89a8ba2386fdac5e65129ac29df6347fe183b0d25f8bb3c306"
+    },
+    "1F994": {
+      "emoji": "🦔",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F994.svg",
+      "sha256": "b6cc55f561dfa8cda35d8085a1e2fe86bd1d6083bb59f6d94d14df5eb03e4b24"
+    },
+    "1F99C": {
+      "emoji": "🦜",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F99C.svg",
+      "sha256": "09f73898075506b6dde9141e9bd034879c7388b37e76a657c7ec5b98ae02f4cb"
+    },
     "1F9C0": {
       "emoji": "🧀",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9C0.svg",
@@ -1703,15 +1858,40 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F3EB.svg",
       "sha256": "357a4e91148088f45e22234f5c981314baa74528dee3c1238b1cf6ba3a43f0fc"
     },
+    "1F9D1-200D-1F3ED": {
+      "emoji": "🧑‍🏭",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F3ED.svg",
+      "sha256": "aaa9530511ed6032a3737f7386c62afdd26c78ebc9546b7e1a072cc5c6a55f53"
+    },
     "1F9D1-200D-1F4BB": {
       "emoji": "🧑‍💻",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F4BB.svg",
       "sha256": "0fd4ee1b8a609057307cf5c905d466ad380ba40b0129ab9a4ef9712ef1f62bf9"
     },
+    "1F9D1-200D-1F4BC": {
+      "emoji": "🧑‍💼",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F4BC.svg",
+      "sha256": "5af4b180c5003531791e2141f9e302625d396850123d88914a9701f0f0125534"
+    },
     "1F9D1-200D-1F52C": {
       "emoji": "🧑‍🔬",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F52C.svg",
       "sha256": "343809e373a129b423b2ce312ecc32eb1c96358b450de3303e80ec74e71a0bb4"
+    },
+    "1F9D1-200D-1F680": {
+      "emoji": "🧑‍🚀",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-1F680.svg",
+      "sha256": "e22f2216a981d185e8e9cc4789908475b32648a6c97abd49a52cdf855b2dfda8"
+    },
+    "1F9D1-200D-2695-FE0F": {
+      "emoji": "🧑‍⚕️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D1-200D-2695-FE0F.svg",
+      "sha256": "7e2f405169e3b401ccee72bc92cb4eb7ad8f6e18569bcb5be2d231b96e9bf565"
+    },
+    "1F9D7": {
+      "emoji": "🧗",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9D7.svg",
+      "sha256": "4d841054166c6e7fd77577828484a0d8ec97ca71b945d28bb306a670154cc05f"
     },
     "1F9D8": {
       "emoji": "🧘",
@@ -1773,10 +1953,20 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9F2.svg",
       "sha256": "db15106e07d31563c18363b28bd624810f117191c80aae5e85c3e4bf26d4d770"
     },
+    "1F9F3": {
+      "emoji": "🧳",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9F3.svg",
+      "sha256": "0044374b005d1098ac86cf7efca94ff86dd05762d58cccdfc54bccd990c0ab1c"
+    },
     "1F9F4": {
       "emoji": "🧴",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9F4.svg",
       "sha256": "e0770ab7792d89d29870a51cef4da6ac8e2871d7807a13dfb31f952201199aa5"
+    },
+    "1F9F5": {
+      "emoji": "🧵",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9F5.svg",
+      "sha256": "c2e24b3f1c01eb34bcac9a3521f080927ba9d3f6788eb848d25ecd06db2f5bbf"
     },
     "1F9F8": {
       "emoji": "🧸",
@@ -1802,6 +1992,11 @@
       "emoji": "🧼",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9FC.svg",
       "sha256": "33677f88a00b3def81e85a878fa697d3b78b251f0a2cee5fa30a8e6ae02b77b5"
+    },
+    "1F9FE": {
+      "emoji": "🧾",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1F9FE.svg",
+      "sha256": "596677d44058d7329b171cc14dbc8e4253500191cbcbcddb620a4d6ec7313c2a"
     },
     "1FA75": {
       "emoji": "🩵",
@@ -1833,6 +2028,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FA9C.svg",
       "sha256": "92578e3141115813b3b5cf882970825dcb1b545be49e85d98a5af42f509511b3"
     },
+    "1FAA1": {
+      "emoji": "🪡",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAA1.svg",
+      "sha256": "206e0c41b626c85803d91e99ea076bfc4d23e01810e50e97d09439116e294e1f"
+    },
     "1FAA5": {
       "emoji": "🪥",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAA5.svg",
@@ -1843,10 +2043,25 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAB4.svg",
       "sha256": "2d660eed78a83e62401a09f2964c11d14e4bd5cea3592de12d2016d8c5692812"
     },
+    "1FAB7": {
+      "emoji": "🪷",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAB7.svg",
+      "sha256": "56e362447b4f162b0534c1d658db5fe0616d955bb108263c5c2bb08aa8bc224d"
+    },
+    "1FAC2": {
+      "emoji": "🫂",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAC2.svg",
+      "sha256": "37ff4f187be0c75cf36133e8437147e5160ac9105280cd4ac1efa15d01f9708e"
+    },
     "1FAD0": {
       "emoji": "🫐",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAD0.svg",
       "sha256": "82b278f1a550cb44a20898eecbf8a320c22c4a2d3058f2afd3c71100a186277b"
+    },
+    "1FAE1": {
+      "emoji": "🫡",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/1FAE1.svg",
+      "sha256": "724bcc6f7880406ce373d99ce0f593f10b0627862c0d5adc25672df1a6a25bb0"
     },
     "1FAE2": {
       "emoji": "🫢",
@@ -1988,6 +2203,11 @@
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/270C.svg",
       "sha256": "2649c15ea46df6fc3b8327caeb8c032d7ab735d7f9c8f77dba5838cd2a81d22a"
     },
+    "270D": {
+      "emoji": "✍️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/270D.svg",
+      "sha256": "9fe7fa5b1fcecc52a39fc6d443c13f7b50df0d2d575deeff9cc3acedb5732f1b"
+    },
     "270F": {
       "emoji": "✏️",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/270F.svg",
@@ -1997,6 +2217,26 @@
       "emoji": "❌",
       "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/274C.svg",
       "sha256": "cd6865688e39dfd6472d412ed9ad58903d655eaf385a55ed47897d49f24969f1"
+    },
+    "27A1": {
+      "emoji": "➡️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/27A1.svg",
+      "sha256": "7f3bb7ebf25e1a81a4ca54d11ba550c2dea37d3507eb6c00526255ddad892e9f"
+    },
+    "2B05": {
+      "emoji": "⬅️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/2B05.svg",
+      "sha256": "64b8422ea3ef4ff8c588e121da37105030493e250d0b519542707a893fa19f67"
+    },
+    "2B06": {
+      "emoji": "⬆️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/2B06.svg",
+      "sha256": "ddf909ac8df4f2d426deeb12f19a493eb9cd94980e99b09fe4bfff293e774025"
+    },
+    "2B07": {
+      "emoji": "⬇️",
+      "source": "https://raw.githubusercontent.com/hfg-gmuend/openmoji/17.0.0/color/svg/2B07.svg",
+      "sha256": "11279c7f6a73989dff9fe8d5022b7c401ec709061afb176dc6f88dcb0d4f07ed"
     },
     "2B50": {
       "emoji": "⭐",

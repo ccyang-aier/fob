@@ -257,7 +257,7 @@ describe('callout NodeView', () => {
         await settle();
         const dialog = document.querySelector('[role="dialog"]');
         expect(dialog).not.toBeNull();
-        expect(dialog!.querySelectorAll('button[data-emoji]')).toHaveLength(400);
+        expect(dialog!.querySelectorAll('button[data-emoji]')).toHaveLength(448);
         expect(dialog!.querySelector('button[aria-label^="语气 "]')).toBeNull();
         dialog!.querySelector<HTMLButtonElement>('button[data-emoji="🚀"]')!.click();
         await settle();

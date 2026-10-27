@@ -26,7 +26,7 @@ const emojiManifest = JSON.parse(fs.readFileSync(path.join(emojiRoot, 'sources.j
 const emojiCatalog = JSON.parse(fs.readFileSync(path.join(root, 'src/components/icons/openmoji-catalog.json'), 'utf8'));
 const emojiItems = emojiCatalog.flatMap(group => group.items);
 const emojiCodes = new Set(emojiItems.map(item => item.hexcode));
-if (emojiCatalog.length !== 8 || emojiCatalog.some(group => group.items.length !== 50) || emojiItems.length !== 400 || emojiCodes.size !== 400 || Object.keys(emojiManifest.icons).length !== 400 || emojiManifest.version !== '17.0.0' || emojiManifest.license !== 'CC-BY-SA-4.0') issues.push('OpenMoji is limited to the reviewed 400-emoji, eight-category subset.');
+if (emojiCatalog.length !== 8 || emojiCatalog.some(group => group.items.length !== 56) || emojiItems.length !== 448 || emojiCodes.size !== 448 || Object.keys(emojiManifest.icons).length !== 448 || emojiManifest.version !== '17.0.0' || emojiManifest.license !== 'CC-BY-SA-4.0') issues.push('OpenMoji is limited to the reviewed 448-emoji, eight-category subset.');
 for (const item of emojiItems) {
   if (!/^[0-9A-F]+(?:-[0-9A-F]+)*$/.test(item.hexcode)) { issues.push('Invalid OpenMoji asset path'); continue; }
   const bytes = fs.readFileSync(path.join(emojiRoot, `${item.hexcode}.svg`));
@@ -72,4 +72,4 @@ if (config.iconLibrary !== 'lucide') issues.push('components.json: shadcn-genera
 if (issues.length) {
   console.error(issues.join('\n'));
   process.exitCode = 1;
-} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; 400 pinned OpenMoji emoji; no unapproved SVGs or legacy icon imports.`);
+} else console.log(`Icon policy verified: ${sources.length} source files; FA7 Solid + cataloged Lucide controls; 448 pinned OpenMoji emoji; no unapproved SVGs or legacy icon imports.`);

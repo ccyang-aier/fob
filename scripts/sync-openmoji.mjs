@@ -1,4 +1,4 @@
-/** Sync only Fob's reviewed 400-emoji subset; never install the complete OpenMoji library. */
+/** Sync only Fob's reviewed 448-emoji subset; never install the complete OpenMoji library. */
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,7 +22,7 @@ async function download(url) {
 }
 const groups = JSON.parse(await fs.readFile(path.join(root, 'src/components/icons/openmoji-catalog.json'), 'utf8'));
 const items = groups.flatMap(group => group.items);
-if (groups.length !== 8 || groups.some(group => group.items.length !== 50) || new Set(items.map(item => item.hexcode)).size !== 400) throw new Error('Review exactly 8 categories and 400 distinct emoji before syncing.');
+if (groups.length !== 8 || groups.some(group => group.items.length !== 56) || new Set(items.map(item => item.hexcode)).size !== 448) throw new Error('Review exactly 8 categories and 448 distinct emoji before syncing.');
 const destination = path.join(root, 'public/icons/openmoji');
 await fs.mkdir(destination, { recursive: true });
 const previous = await fs.readFile(path.join(destination, 'sources.json'), 'utf8').then(JSON.parse).catch(() => null);

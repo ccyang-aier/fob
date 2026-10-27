@@ -856,8 +856,8 @@
     "sha256": "900912a42db4e349ad67e8ec7eb2f3f830c8142666f6e3e81c3c758312e17102"
   },
   "src/features/knowledge/editor/block-modules/blocks.instance.test.ts": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify the reviewed local OpenMoji artwork, independent callout emoji/theme panels, 400-option palette and preserved selected emoji when switching tones; retain real Tiptap schema/export and authorization coverage. Expand each category to 50 items while retaining the real callout selection and independent-theme regression (docs/ui/emoji-system.md).",
-    "sha256": "cec5851bdb205c0463dc0f1c5c6ba46baf2dadfb61f23d783f2ff9c233b07852"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify the reviewed local OpenMoji artwork, independent callout emoji/theme panels, 448-option palette and preserved selected emoji when switching tones; retain real Tiptap schema/export and authorization coverage. Expand each category to 56 items while retaining the real callout selection and independent-theme regression (docs/ui/emoji-system.md). Complete seven eight-column rows in every category as requested.",
+    "sha256": "77fe0e73c269a6c46beaa12b6e06ad778e073263b4793fbd22e193014f90a1fa"
   },
   "src/features/knowledge/editor/block-modules/callout/callout-node-view.messages.ts": {
     "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Name the left callout control as emoji selection only; the right control owns theme and background choices.",
