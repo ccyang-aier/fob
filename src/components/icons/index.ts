@@ -152,7 +152,7 @@ import { faVideo } from '@fortawesome/free-solid-svg-icons/faVideo';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons/faVolumeHigh';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 import { Heading1 as LucideHeading1, Heading2 as LucideHeading2, Heading3 as LucideHeading3, MessageCircle as LucideMessageCircle, Square as LucideSquare, SquareX as LucideSquareX } from 'lucide-react';
-import { solidIcon, outlineIcon } from './solid-icon';
+import { solidIcon, outlineIcon, multicolorSolidIcon } from './solid-icon';
 
 // Font Awesome 7 Solid is the default. Lucide is reserved for the explicit
 // lightweight controls below. Add official glyphs here; never draw UI SVGs.
@@ -257,6 +257,7 @@ export const MusicNotes = /* @__PURE__ */ solidIcon(faMusic, 'MusicNotes');
 export const Orbit = /* @__PURE__ */ solidIcon(faAtom, 'Orbit');
 export const PaintBrush = /* @__PURE__ */ solidIcon(faPaintbrush, 'PaintBrush');
 export const Palette = /* @__PURE__ */ solidIcon(faPalette, 'Palette');
+export const ColorPalette = /* @__PURE__ */ multicolorSolidIcon(faPalette, 'ColorPalette');
 export const PaperPlaneTilt = /* @__PURE__ */ solidIcon(faPaperPlane, 'PaperPlaneTilt');
 export const Paperclip = /* @__PURE__ */ solidIcon(faPaperclip, 'Paperclip');
 export const Pause = /* @__PURE__ */ solidIcon(faPause, 'Pause');

@@ -5,7 +5,7 @@ import { useTranslation, createTranslator, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './callout-node-view.messages';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
-import { CaretDown, CheckCircle, Emoji, Info, Lightbulb, Palette, Warning, XCircle, ArrowLeft, type Icon } from '@/components/icons';
+import { CaretDown, CheckCircle, ColorPalette, Emoji, Info, Lightbulb, Warning, XCircle, ArrowLeft, type Icon } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { EmojiPalette } from '@/components/ui/emoji-palette';
 import { TableColorPicker } from '../table/table-color-picker';
@@ -75,7 +75,7 @@ export function CalloutNodeView({ node, editor, updateAttributes, HTMLAttributes
             <ToneIcon size={16} aria-hidden style={{ color: candidate.accent }} />{candidate.label}
           </button>;
         })}
-        <button type="button" className={styles.toneOption} aria-label={t('customBackground')} aria-pressed={node.attrs.tone === 'custom'} onClick={() => setPanel('custom')}><Palette size={16} aria-hidden />{t('custom')}</button>
+        <button type="button" className={styles.toneOption} aria-label={t('customBackground')} aria-pressed={node.attrs.tone === 'custom'} onClick={() => setPanel('custom')}><ColorPalette size={16} aria-hidden />{t('custom')}</button>
       </div>}
     </AnchoredPopover>}
   </NodeViewWrapper>;

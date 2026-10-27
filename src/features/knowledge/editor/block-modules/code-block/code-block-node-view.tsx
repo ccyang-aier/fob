@@ -112,7 +112,7 @@ export function CodeBlockNodeView({
           )}
         </div>
       </div>
-        <BlockActions placement="inside">
+        <BlockActions placement="inside" active>
           <button
             type="button"
             className="fob-action"
