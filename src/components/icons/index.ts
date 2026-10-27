@@ -153,10 +153,11 @@ import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons/faVolumeHigh';
 import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMagicSparkles';
 import { Heading1 as LucideHeading1, Heading2 as LucideHeading2, Heading3 as LucideHeading3, MessageCircle as LucideMessageCircle, Square as LucideSquare, SquareX as LucideSquareX } from 'lucide-react';
 import { solidIcon, outlineIcon, multicolorSolidIcon } from './solid-icon';
+import { ICON_SIZES } from './metrics';
 
 // Font Awesome 7 Solid is the default. Lucide is reserved for the explicit
 // lightweight controls below. Add official glyphs here; never draw UI SVGs.
-export { ICON_SIZES } from './metrics';
+export { ICON_SIZES };
 export type { Icon, IconProps, Icon as LucideIcon } from './solid-icon';
 
 export const Archive = /* @__PURE__ */ solidIcon(faBoxArchive, 'Archive');
@@ -354,6 +355,7 @@ export const CaretRight = /* @__PURE__ */ outlineIcon(LucideChevronRight, 'Caret
 export const CaretUp = /* @__PURE__ */ outlineIcon(LucideChevronUp, 'CaretUp', 12);
 export const CaretUpDown = /* @__PURE__ */ outlineIcon(LucideChevronsUpDown, 'CaretUpDown', 12);
 export const Check = /* @__PURE__ */ outlineIcon(LucideCheck, 'Check', 12);
+export const SelectionCheck = /* @__PURE__ */ outlineIcon(LucideCheck, 'SelectionCheck', ICON_SIZES.selection, 2);
 export const Checks = /* @__PURE__ */ outlineIcon(LucideCheckCheck, 'Checks', 12);
 export const CircleNotch = /* @__PURE__ */ outlineIcon(LucideLoaderCircle, 'CircleNotch', 14);
 export const DotsThree = /* @__PURE__ */ outlineIcon(LucideEllipsis, 'DotsThree', 14);

@@ -3,7 +3,7 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './code-block-node-view.messages';
 import { useEffect, useRef, useState, type FC } from 'react';
-import { CaretDown, Check, Copy, DotsThree } from '@/components/icons';
+import { CaretDown, Check, Copy, DotsThree, SelectionCheck } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import {
@@ -99,7 +99,7 @@ export function CodeBlockNodeView({
                     }
                   >
                     {item.label}
-                    {language === item.value && <Check className="ml-auto" aria-hidden />}
+                    {language === item.value && <SelectionCheck className="ml-auto" aria-hidden />}
                   </DropdownMenuItem>
                 ))}
               </ScrollArea>

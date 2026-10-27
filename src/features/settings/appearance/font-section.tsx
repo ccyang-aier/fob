@@ -8,7 +8,7 @@ import { messages } from './i18n/font-section.messages';
  * 行内示例以当前选择实时渲染（字体族 + 字号），所见即所得。
  */
 
-import { CaretDown, Check, Minus, Plus } from '@/components/icons';
+import { CaretDown, SelectionCheck, Minus, Plus } from '@/components/icons';
 
 import {
   getCodeFontOptions,
@@ -160,7 +160,7 @@ function FontFamilyMenu<T extends string>({
               {option.label}
             </span>
             {option.id === selected ? (
-              <Check className="size-3.5 text-[var(--accent-ink)]!" aria-hidden />
+              <SelectionCheck className="text-[var(--accent-ink)]!" aria-hidden />
             ) : null}
           </DropdownMenuItem>
         ))}

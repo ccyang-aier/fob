@@ -1,6 +1,6 @@
 'use client';
 import { useId, useRef, useState, type ReactNode } from 'react';
-import { Check, CaretDown, MagnifyingGlass } from '@/components/icons';
+import { SelectionCheck, CaretDown, MagnifyingGlass } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { useTranslation } from '@/lib/i18n';
 import { messages } from './messages';
@@ -23,7 +23,7 @@ export function SearchFilter({ label, value, options, icon, onChange, disabled }
         const items = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="option"]')]; if (!items.length) return;
         event.preventDefault(); const index = items.indexOf(document.activeElement as HTMLButtonElement);
         items[event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus();
-      }}>{choices.map(option => <button key={option.id} type="button" role="option" aria-selected={value === option.id} className={`fob-menu-item ${styles.filterOption}`} onClick={() => choose(option.id)}><span>{option.name}</span>{value === option.id && <Check size={14} aria-hidden />}</button>)}{!choices.length && <p>{t('noOptions')}</p>}</div>
+      }}>{choices.map(option => <button key={option.id} type="button" role="option" aria-selected={value === option.id} className={`fob-menu-item ${styles.filterOption}`} onClick={() => choose(option.id)}><span>{option.name}</span>{value === option.id && <SelectionCheck aria-hidden />}</button>)}{!choices.length && <p>{t('noOptions')}</p>}</div>
     </AnchoredPopover>}
   </>;
 }

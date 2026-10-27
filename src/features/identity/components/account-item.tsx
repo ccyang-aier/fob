@@ -5,7 +5,7 @@ import { messages } from './i18n/account-item.messages';
 
 import {
   Users,
-  Check,
+  SelectionCheck,
   CircleNotch,
   DoorOpen,
   User,
@@ -171,7 +171,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
                     <span>{option.label}</span>
                     <span className={styles.statusDescription}>{option.description}</span>
                   </span>
-                  {presencePreference === option.value ? <Check /> : null}
+                  {presencePreference === option.value ? <SelectionCheck /> : null}
                 </DropdownMenuItem>
               ))}
               <p className={styles.statusNote}>{uiText('在线时，5 分钟无操作自动显示离开。')}</p>

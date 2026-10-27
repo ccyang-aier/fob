@@ -91,7 +91,7 @@ html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not(
 /* 按下、展开与有效筛选用全局“灰白色”；不覆盖其它功能色控件。 */
 html .fob-action:is([data-surface="plain"], [data-surface="muted"]):is(:active, [aria-expanded="true"]:not([data-variant="collapsible"]), [aria-pressed="true"], [data-active="true"], [data-filter-active]):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
   background: var(--action-selected-bg, var(--action-active-bg));
-  color: var(--ink);
+  color: var(--action-state-ink);
 }
 
 .dropdown-menu-search { display:flex; align-items:center; gap:7px; margin:3px 4px 7px; padding:5px 7px; border:1px solid var(--control-border); border-radius:5px; color:var(--muted); }

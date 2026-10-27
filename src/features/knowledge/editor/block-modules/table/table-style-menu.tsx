@@ -16,7 +16,7 @@ import {
   ArrowsInLineHorizontal,
   ArrowsOutLineHorizontal,
   CaretRight,
-  Check,
+  SelectionCheck,
   DownloadSimple,
   Palette,
   SortAscending,
@@ -159,7 +159,7 @@ export function TableStyleMenu({
                     <Icon size={16} aria-hidden />
                     <span>{label}</span>
                     {align !== undefined && (align ?? 'left') === value ? (
-                      <Check size={16} className={styles.caret} aria-hidden />
+                      <SelectionCheck className={styles.caret} aria-hidden />
                     ) : null}
                   </Menu.Item>
                 ))}

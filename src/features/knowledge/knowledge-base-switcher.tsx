@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpenText, CaretUpDown, Check, MagnifyingGlass, Palette, PencilSimple, Plus, Trash } from '@/components/icons';
+import { BookOpenText, CaretUpDown, SelectionCheck, MagnifyingGlass, Palette, PencilSimple, Plus, Trash } from '@/components/icons';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -47,7 +47,7 @@ export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () =
         <ScrollArea className={styles.list}>{filtered.map(base => {
           const selected = selectedKnowledgeBase?.id === base.id && selectedKnowledgeBase.source === base.source;
           return <DropdownMenuItem key={`${base.source}:${base.id}`} className={styles.item} role="menuitemradio" aria-checked={selected} textValue={base.name} onSelect={() => { selectKnowledgeBase(base.id, { source: base.source }); if (!selected) onSwitch(); }}>
-            <SwitcherAvatar base={base} principal={principal} /><span><strong>{base.name}</strong><small>{t(base.source)}</small></span>{selected && <Check size={14} />}
+            <SwitcherAvatar base={base} principal={principal} /><span><strong>{base.name}</strong><small>{t(base.source)}</small></span>{selected && <SelectionCheck />}
           </DropdownMenuItem>;
         })}{!filtered.length && <p className={styles.status} role="status">{t(status === 'loading' ? 'loading' : query ? 'noResults' : 'empty')}</p>}</ScrollArea>
         {error && <DropdownMenuItem onSelect={event => { event.preventDefault(); void refreshKnowledgeBases(); }}>{t('retry')}</DropdownMenuItem>}
@@ -56,7 +56,7 @@ export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () =
         {selectedKnowledgeBase && <>
           {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem onSelect={() => setAction({ kind: 'rename', knowledgeBase: selectedKnowledgeBase })}><PencilSimple size={16} />{t('rename')}</DropdownMenuItem>}
           <DropdownMenuSub><DropdownMenuSubTrigger><Palette size={16} />{t('palette')}</DropdownMenuSubTrigger><DropdownMenuSubContent>
-            {KNOWLEDGE_BASE_AVATAR_PALETTES.map(palette => <DropdownMenuItem key={palette.id} role="menuitemradio" aria-checked={activePalette === palette.id} onSelect={() => choosePalette(palette.id)}><KnowledgeBaseAvatar seed={selectedKnowledgeBase.id} palette={palette.id} preview className={styles.palettePreview} /><span>{t(palette.id)}</span>{activePalette === palette.id && <Check size={14} className="ml-auto" />}</DropdownMenuItem>)}
+            {KNOWLEDGE_BASE_AVATAR_PALETTES.map(palette => <DropdownMenuItem key={palette.id} role="menuitemradio" aria-checked={activePalette === palette.id} onSelect={() => choosePalette(palette.id)}><KnowledgeBaseAvatar seed={selectedKnowledgeBase.id} palette={palette.id} preview className={styles.palettePreview} /><span>{t(palette.id)}</span>{activePalette === palette.id && <SelectionCheck className="ml-auto" />}</DropdownMenuItem>)}
           </DropdownMenuSubContent></DropdownMenuSub>
           {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: 'remove', knowledgeBase: selectedKnowledgeBase })}><Trash size={16} />{t('remove')}</DropdownMenuItem>}
         </>}

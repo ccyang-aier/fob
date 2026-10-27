@@ -437,9 +437,9 @@ input {
 .menu-surface:not(:has(.fob-menu-item:hover)):has(.fob-menu-item[data-highlighted]) .fob-menu-item:is([data-current="true"], [aria-expanded="true"]):not([data-highlighted]) {
   background: transparent;
 }
-.fob-menu-checkbox { display: grid; place-items: center; width: 14px; height: 14px; border: 1px solid var(--line-strong); border-radius: 3px; background: var(--panel); }
+.fob-menu-checkbox { display: flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: 1px solid var(--line-strong); border-radius: 3px; background: var(--panel); }
 [data-state="checked"] > .fob-menu-checkbox { border-color: var(--accent); background: var(--accent); color: var(--accent-foreground); }
-.fob-menu-checkbox svg { width: 11px; height: 11px; }
+.fob-menu-checkbox > span { display: flex; align-items: center; justify-content: center; }
 /* 原生 dialog、共享 ModalDialog 和显式标记的动作栏使用同一契约。
    选择器覆盖旧局部尺寸，避免懒加载 CSS 的顺序再次改变按钮高度。 */
 html :is(dialog, [role="dialog"], [role="alertdialog"]) :is(footer:has(button), .fob-dialog-footer) {

@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './permission-select.messages';
-import { CaretDown, Check, ShieldCheck } from '@/components/icons';
+import { CaretDown, SelectionCheck, ShieldCheck } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -79,13 +79,12 @@ export function PermissionSelect({
                 </span>
               </span>
               {option.value === value ? (
-                <Check
+                <SelectionCheck
                   aria-label={knowledgeT('currentOption')}
-                  size={14}
                   className="shrink-0 text-[var(--accent-ink)]"
                 />
               ) : (
-                <span className="w-[15px] shrink-0" />
+                <span className="w-[18px] shrink-0" />
               )}
             </DropdownMenuItem>
           ))}

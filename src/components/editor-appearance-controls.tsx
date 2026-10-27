@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/editor-appearance-controls.messages';
 
 import { useId, type CSSProperties } from 'react';
-import { CaretDown, Check } from '@/components/icons';
+import { CaretDown, SelectionCheck } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -67,7 +67,7 @@ export function AppearanceSelect<T extends string | number>({
               >
                 <span style={{ fontFamily: option.family }}>{option.label}</span>
                 {option.id === value && (
-                  <Check size={14} className={styles.check} aria-hidden />
+                  <SelectionCheck className={styles.check} aria-hidden />
                 )}
               </DropdownMenuItem>
             ))}

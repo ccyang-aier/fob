@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, mock, test } from 'bun:test';
 import { Window } from 'happy-dom';
-import { act, useState, type ReactNode } from 'react';
+import { act, createContext, useState, type ReactNode } from 'react';
 import type { Root } from 'react-dom/client';
 
 let browser: Window;
@@ -21,8 +21,8 @@ beforeAll(async () => {
   globals.IS_REACT_ACT_ENVIRONMENT = true;
   globals.requestAnimationFrame = browser.requestAnimationFrame.bind(browser);
   globals.cancelAnimationFrame = browser.cancelAnimationFrame.bind(browser);
-  mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => overlay }));
-  mock.module('@/components/icons', () => Object.fromEntries(['Check', 'CaretRight', 'MagnifyingGlass', 'X'].map(name => [name, () => <svg aria-hidden />])));
+  mock.module('@/lib/overlay-root', () => ({ getOverlayRoot: () => overlay, OverlayRootContext: createContext<HTMLElement | undefined>(undefined) }));
+  mock.module('@/components/icons', () => Object.fromEntries(['SelectionCheck', 'CaretRight', 'MagnifyingGlass', 'X'].map(name => [name, () => <svg aria-hidden />])));
   const { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSearch, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuCheckboxItem } = await import('./dropdown-menu');
   renderMenu = () => <DropdownMenu><DropdownMenuTrigger>Open menu</DropdownMenuTrigger><DropdownMenuContent><DropdownMenuItem>Move task</DropdownMenuItem></DropdownMenuContent></DropdownMenu>;
   function SearchMenu() {

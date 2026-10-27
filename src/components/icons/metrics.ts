@@ -1,5 +1,5 @@
-/** Stable size requests used by callers; the shared renderer draws one step smaller. */
-export const ICON_SIZES = { control: 16, compact: 14, indicator: 12, artwork: 32 } as const;
+/** Numeric requests draw one step smaller; explicit pixel roles keep their optical size. */
+export const ICON_SIZES = { control: 16, compact: 14, indicator: 12, artwork: 32, selection: '18px' } as const;
 
 export function resolveIconSize(size: number | string = ICON_SIZES.control) {
   if (typeof size !== 'number') return size;
