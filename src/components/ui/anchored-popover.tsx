@@ -5,13 +5,15 @@ import { createPortal } from 'react-dom';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import { cn } from '@/lib/utils';
 import styles from './anchored-popover.module.css';
+import { popoverPosition, type PopoverSide } from './popover-position';
 
 export type PopoverAnchor = HTMLElement | { left: number; top: number; right: number; bottom: number; width?: number; height?: number };
 
 /** A non-modal surface for small, anchored forms and context menus. */
-export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', role = 'dialog', className, restoreFocusTo, autoFocus = true, onMouseEnter, onMouseLeave }: {
+export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', side = 'bottom', role = 'dialog', className, restoreFocusTo, autoFocus = true, onMouseEnter, onMouseLeave }: {
   anchor: PopoverAnchor; onClose: () => void; label: string; children: ReactNode;
   width?: number | 'max-content'; align?: 'start' | 'end'; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
+  side?: PopoverSide;
   autoFocus?: boolean; onMouseEnter?: () => void; onMouseLeave?: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -21,12 +23,9 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
     function position() {
       const rect = anchor instanceof HTMLElement ? anchor.getBoundingClientRect() : anchor;
       const bounds = panel!.getBoundingClientRect();
-      const left = align === 'end' ? rect.right - bounds.width : rect.left;
-      const below = rect.bottom + 7;
-      const above = rect.top - bounds.height - 7;
-      const top = below + bounds.height <= window.innerHeight - 8 || above < 8 ? below : above;
-      panel!.style.left = `${Math.max(8, Math.min(left, window.innerWidth - bounds.width - 8))}px`;
-      panel!.style.top = `${Math.max(8, Math.min(top, window.innerHeight - bounds.height - 8))}px`;
+      const position = popoverPosition(rect, bounds, { width: window.innerWidth, height: window.innerHeight }, side, align);
+      panel!.style.left = `${position.left}px`;
+      panel!.style.top = `${position.top}px`;
       panel!.style.visibility = 'visible';
     }
     position();
@@ -43,7 +42,7 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
       const trigger = restoreFocusTo ?? (anchor instanceof HTMLElement ? anchor : null);
       if (trigger?.isConnected && (panel.contains(document.activeElement) || document.activeElement === document.body)) trigger.focus({ preventScroll: true });
     };
-  }, [anchor, align, restoreFocusTo, autoFocus]);
+  }, [anchor, align, side, restoreFocusTo, autoFocus]);
 
   useEffect(() => {
     function pointerDown(event: Event) {

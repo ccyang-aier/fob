@@ -11,6 +11,7 @@ export const blockLabels = defineMessages({
   taskList: ['任务列表', 'Task list'],
   blockquote: ['引用', 'Blockquote'],
   callout: ['提示框', 'Callout'],
+  emoji: ['表情块', 'Emoji block'],
   codeBlock: ['代码', 'Code'],
   math: ['数学公式', 'Equation'],
   horizontalRule: ['分隔线', 'Divider'],

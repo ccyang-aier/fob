@@ -376,8 +376,8 @@
     "sha256": "9f359e3b5687bdb8881cb7868a90978b648bed2160cbba7a9a8e7195d3d9f55c"
   },
   "src/features/knowledge/comments/components/comment-composer.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
-    "sha256": "04b2ea16848466c7086abb57c147308118e89006aaf178441187fc54da9fa23a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md. Place the shared comment emoji picker to the left with viewport fallback for sidebar and selection composers.",
+    "sha256": "eead0ca56cc46db5c7a39a905c916c0ae4f7b7773b0a50e9a220a409b71641ae"
   },
   "src/features/knowledge/comments/components/comment-entry.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -600,8 +600,8 @@
     "sha256": "c3c6d87d4d56cbe9e8b94da90175357ef8a3fb387222530e580b2ad465334088"
   },
   "src/features/knowledge/editor/commands/slash-items.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "eea2b4fc518337118156223096fe6921460f1492e55b255c2ae3a24793ec3f5e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
+    "sha256": "0b080c1459fb88bb27a0f94c96ec18745b0efec35bd0f8644e4b91b0b7283057"
   },
   "src/features/knowledge/editor/comments-integration.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -804,24 +804,24 @@
     "sha256": "b74b71cbb992acac5c2b26062eb99cfac2e1d36f3a50642d86cbd75026a4d6e2"
   },
   "shared/src/knowledge/schema/schema.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output.",
-    "sha256": "05132f648f55e75119cf665ac432019ae9c2210d00256351cf096a82c57fdd2a"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output. Define and verify the standalone emoji atom with Unicode text, stable block identity and portable serialization.",
+    "sha256": "1049a48370c85e1653c8cb6de8e97e0f94a0cc968d395cb0eb5e98de7d023484"
   },
   "src/features/knowledge/editor/block-modules/index.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "f75df1b9a709ea52870f55ae37012d6bd306f2044ddfd4814d8d5e6f60774343"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Register the standalone OpenMoji emoji block browser module.",
+    "sha256": "b72da79ca6351cad9d5203ad0a5afa0d658de6302d9b07bf9e77ee120f351ac5"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.messages.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
     "sha256": "991026091d04782afbd96b0a2ab41eb7d37c0fa07abb75718cf0d8896db08750"
   },
   "src/features/knowledge/editor/commands/block-labels.messages.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "520e7bf748474a339269ce17dddffe599139b118e5fd59a5372255bf05906136"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
+    "sha256": "285ef382951781cc91b8a58d9e0b8d7f41655cbd5890f39c7a7c2e72863d5496"
   },
   "src/features/knowledge/editor/commands/slash-items.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "cb08c8632ebaaab5d56bedc49487854569951b33a8ab52bfc4a13f4d489e9bb2"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
+    "sha256": "fbbc87edaaa92289a3ef7d06ec542be209ee21d2da12a96f6af4ec2449923d79"
   },
   "src/features/knowledge/editor/commands/slash-paste.instance.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Cover zero-length empty-line insertion, clean cancellation and readonly/code/nonempty guards alongside the existing slash and paste tests.",

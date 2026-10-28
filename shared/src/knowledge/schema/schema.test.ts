@@ -6,9 +6,24 @@ import { createMarkdownPipeline } from '../markdown';
 
 import { BlockRegistry, KNOWLEDGE_BLOCKS, KNOWLEDGE_MARKS, createKnowledgeExtensions, createKnowledgeRegistry, defineBlock, isKnowledgeBlock, knowledgeSchema } from './index';
 
-const expectedBlocks = ['paragraph', 'heading', 'bulletList', 'orderedList', 'listItem', 'taskList', 'taskItem', 'blockquote', 'callout', 'codeBlock', 'math', 'horizontalRule', 'table', 'tableRow', 'tableCell', 'tableHeader', 'columns', 'column', 'image', 'video', 'audio', 'file', 'embed', 'linkCard', 'mermaid', 'pdf', 'whiteboard', 'blockReference', 'pageLink', 'databaseView', 'aiBlock'];
+const expectedBlocks = ['paragraph', 'heading', 'bulletList', 'orderedList', 'listItem', 'taskList', 'taskItem', 'blockquote', 'callout', 'emoji', 'codeBlock', 'math', 'horizontalRule', 'table', 'tableRow', 'tableCell', 'tableHeader', 'columns', 'column', 'image', 'video', 'audio', 'file', 'embed', 'linkCard', 'mermaid', 'pdf', 'whiteboard', 'blockReference', 'pageLink', 'databaseView', 'aiBlock'];
 
 describe('first-party knowledge schema', () => {
+  it('emoji blocks keep readable Unicode, identity and Markdown semantics', () => {
+    const emoji = knowledgeSchema.nodes.emoji.create({ value: '🧑‍🚀', blockId: 'emoji-1' });
+    const document = knowledgeSchema.nodes.doc.create(null, emoji);
+    document.check();
+    assert.equal(document.textContent, '🧑‍🚀');
+    const markdown = createMarkdownPipeline();
+    assert.ok(markdown.parse(markdown.serialize(document)).eq(document));
+    assert.ok(knowledgeSchema.nodeFromJSON(document.toJSON()).eq(document));
+    const output = emoji.type.spec.toDOM!(emoji) as [string, Record<string, string>, string];
+    assert.equal(output[1]['data-emoji-value'], '🧑‍🚀');
+    assert.equal(output[2], '🧑‍🚀');
+    for (const value of ['', 'a'.repeat(65), '\n', 123]) {
+      assert.throws(() => knowledgeSchema.nodes.emoji.create({ value }).check(), /emoji/);
+    }
+  });
   it('renders only safe hex highlight colors while preserving legacy mark data', () => {
     for (const color of ['#fff2b3', '#BFE7DB80', '#abc', '#abcd']) {
       const mark = knowledgeSchema.marks.highlight.create({ color });

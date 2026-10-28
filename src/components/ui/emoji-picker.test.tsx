@@ -78,6 +78,26 @@ test('a disabled picker cannot open or emit a selection', async () => {
   expect(onSelect.mock.calls).toHaveLength(0);
 });
 
+test('left-side comment pickers keep the card beside the trigger and restore focus', async () => {
+  const original = browser.HTMLElement.prototype.getBoundingClientRect;
+  browser.HTMLElement.prototype.getBoundingClientRect = function () {
+    return this.getAttribute('aria-label') === 'Add emoji' && this.tagName === 'BUTTON'
+      ? new browser.DOMRect(1045, 810, 26, 26) : new browser.DOMRect(0, 0, 296, 400);
+  };
+  try {
+    Object.defineProperty(browser, 'innerWidth', { configurable: true, value: 1398 });
+    Object.defineProperty(browser, 'innerHeight', { configurable: true, value: 871 });
+    await act(async () => root.render(<Picker onSelect={onSelect} side="left" />));
+    await act(async () => host.querySelector<HTMLButtonElement>('button')!.click());
+    const panel = document.querySelector<HTMLElement>('[role="dialog"]')!;
+    expect(panel.style.left).toBe('742px');
+    expect(panel.style.top).toBe('436px');
+    await key('Escape');
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(host.querySelector('button'));
+  } finally { browser.HTMLElement.prototype.getBoundingClientRect = original; }
+});
+
 test('categories browse 56 emoji each while search can still find a result from another category', async () => {
   await open();
   await act(async () => document.querySelector<HTMLButtonElement>('[aria-label="Faces and moods"]')!.click());

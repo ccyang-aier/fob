@@ -207,7 +207,7 @@ export function CommentComposer({
         </div>
         <div className={styles.composerActions} data-comment-actions={popover ? '' : undefined}>
           <div className={styles.composeTools} data-comment-tools={popover ? '' : undefined}>
-            <EmojiPicker disabled={sending} className={styles.iconButton} onSelect={emoji => ref.current?.insertText(emoji)} />
+          <EmojiPicker side="left" disabled={sending} className={styles.iconButton} onSelect={emoji => ref.current?.insertText(emoji)} />
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button

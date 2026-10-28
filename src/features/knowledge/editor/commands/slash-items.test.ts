@@ -213,8 +213,8 @@ describe('filterSlashItems', () => {
     expect(lists.every((item) => item.title.includes('列'))).toBe(true);
     // 'code' is a keyword of 代码 (no title matches it).
     expect(filterSlashItems(items, 'code').map((item) => item.name)).toEqual(['codeBlock']);
-    // Prefix tier first: '表' prefixes 表格 even though nothing else matches.
-    expect(filterSlashItems(items, '表')[0]?.name).toBe('table');
+    // Both titles start with 表, so their shared prefix tier keeps menu order.
+    expect(filterSlashItems(items, '表').slice(0, 2).map(item => item.name)).toEqual(['emoji', 'table']);
   });
 
   test('matching is case-insensitive and misses are empty', () => {

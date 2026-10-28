@@ -6,6 +6,20 @@ import { parseWhiteboardScene } from '../rich-content';
 const boundedText = (limit: number) => ({ default: '', validate(value: unknown) { if (typeof value !== 'string' || value.length > limit) throw new RangeError('Rich content text is too long'); } });
 export const RICH_CONTENT_BLOCKS = [
   defineBlock({
+    name: 'emoji',
+    schema: {
+      atom: true, draggable: true,
+      attrs: { value: { default: '😀', validate(value: unknown) {
+        if (typeof value !== 'string' || value.length === 0 || value.length > 64 || /[\u0000-\u001f\u007f]/.test(value)) throw new TypeError('Invalid emoji value');
+      } } },
+      leafText: node => String(node.attrs.value),
+      toDOM: node => ['div', { 'data-emoji-block': '', 'data-emoji-value': node.attrs.value }, node.attrs.value],
+    },
+    markdown: { fromMd: { directive: 'emoji', kind: 'leaf' } }, index: { mode: 'text' },
+    ai: { describe: node => String(node.attrs.value) },
+    slash: { title: '表情块', keywords: ['emoji', 'emoticon', 'smiley', '表情', '表情块'], group: 'media' },
+  }),
+  defineBlock({
     name: 'linkCard',
     schema: { atom: true, draggable: true, attrs: { url: stringAttribute, title: boundedText(500), description: boundedText(2000), image: boundedText(4096), siteName: boundedText(200), fetched: { default: false, validate: 'boolean' } },
       toDOM: node => ['figure', { 'data-link-card': '' }, ['a', { href: safeKnowledgeUrl(node.attrs.url, 'link'), rel: 'noopener noreferrer' }, node.attrs.title || node.attrs.url], ['p', node.attrs.description]] },

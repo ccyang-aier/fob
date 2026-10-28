@@ -7,6 +7,7 @@ import { OrderedListModule } from './ordered-list';
 import { TaskListModule } from './task-list';
 import { BlockquoteModule } from './blockquote';
 import { CalloutModule } from './callout';
+import { EmojiModule } from './emoji';
 import { CodeBlockModule } from './code-block';
 import { MathModule } from './math';
 import { HorizontalRuleModule } from './horizontal-rule';
@@ -32,6 +33,7 @@ export const EDITOR_BLOCK_MODULES: readonly EditorBlockModule[] = [
   TaskListModule(),
   BlockquoteModule,
   CalloutModule,
+  EmojiModule,
   CodeBlockModule,
   MathModule,
   HorizontalRuleModule,

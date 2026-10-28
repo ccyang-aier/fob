@@ -43,11 +43,12 @@ const priority: Record<string, number> = {
   taskList: 4,
   bulletList: 5,
   orderedList: 6,
-  image: 7,
-  video: 8,
-  audio: 9,
-  file: 10,
-  paragraph: 11,
+  emoji: 7,
+  image: 8,
+  video: 9,
+  audio: 10,
+  file: 11,
+  paragraph: 12,
 };
 
 export function buildSlashItems(
