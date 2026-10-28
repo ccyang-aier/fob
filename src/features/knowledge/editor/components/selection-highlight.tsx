@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { Editor } from '@tiptap/react';
+import { useEditorState, type Editor } from '@tiptap/react';
 import { Highlighter, SelectionCheck } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { useTranslation } from '@/lib/i18n';
@@ -14,6 +14,7 @@ const presets = [
   ['yellowHighlight', '#fff2b3'], ['orangeHighlight', '#ffe3cc'],
   ['pinkHighlight', '#fbe0ec'], ['purpleHighlight', '#eee3ff'],
   ['blueHighlight', '#dceeff'], ['greenHighlight', '#dff3e3'],
+  ['cyanHighlight', '#dff4f2'],
 ] as const;
 
 export function SelectionHighlight({ editor, onOpenChange }: {
@@ -21,12 +22,16 @@ export function SelectionHighlight({ editor, onOpenChange }: {
 }) {
   const { t } = useTranslation(knowledgeMessages);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastColor = useRef('#fff2b3');
   const selection = useRef({ from: 0, to: 0 });
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
   const open = anchor !== null;
   const [pinned, setPinned] = useState(false);
   const [custom, setCustom] = useState(false);
   const [color, setColor] = useState('#fff2b3');
+  const highlight = useEditorState({ editor, selector: ({ editor }) => ({
+    active: editor.isActive('highlight'), color: editor.getAttributes('highlight').color,
+  }) });
   const cancelClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = null;
@@ -44,7 +49,7 @@ export function SelectionHighlight({ editor, onOpenChange }: {
     if (!open) {
       selection.current = { from: editor.state.selection.from, to: editor.state.selection.to };
       const current = editor.getAttributes('highlight').color;
-      setColor(typeof current === 'string' && parseTableColor(current) ? current : '#fff2b3');
+      setColor(typeof current === 'string' && parseTableColor(current) ? current : lastColor.current);
       setCustom(false);
       setPinned(pin);
       setAnchor(element);
@@ -55,18 +60,29 @@ export function SelectionHighlight({ editor, onOpenChange }: {
     cancelClose();
     if (!pinned) closeTimer.current = setTimeout(close, 180);
   };
-  const apply = (value: string | null) => {
-    const chain = editor.chain().focus().setTextSelection(selection.current);
-    if (value) chain.setMark('highlight', { color: value });
+  const apply = (value: string | null, range = selection.current) => {
+    const chain = editor.chain().focus().setTextSelection(range);
+    if (value) {
+      lastColor.current = value;
+      chain.setMark('highlight', { color: value });
+    }
     else chain.unsetMark('highlight');
     chain.run();
     close();
   };
+  const toggle = () => {
+    const active = editor.isActive('highlight');
+    const current = editor.getAttributes('highlight').color;
+    if (active && typeof current === 'string' && parseTableColor(current)) lastColor.current = current;
+    apply(active ? null : lastColor.current,
+      open ? selection.current : { from: editor.state.selection.from, to: editor.state.selection.to });
+  };
   return <>
     <button type="button" className={styles.tool}
-      aria-label={t('highlight')} title={t('highlight')} aria-haspopup="dialog" aria-expanded={open}
-      aria-pressed={editor.isActive('highlight')} disabled={!editor.can().toggleMark('highlight')}
-      onMouseEnter={event => show(event.currentTarget)} onMouseLeave={leave} onClick={event => show(event.currentTarget, true)}
+      aria-label={t('highlight')} title={t(highlight.active ? 'cancelHighlight' : 'highlight')} aria-haspopup="dialog" aria-expanded={open}
+      aria-pressed={highlight.active} disabled={!editor.can().toggleMark('highlight')}
+      onMouseEnter={event => show(event.currentTarget)} onMouseLeave={leave}
+      onClick={toggle}
       onKeyDown={event => {
         if (event.key !== 'ArrowDown') return;
         event.preventDefault();
@@ -76,29 +92,28 @@ export function SelectionHighlight({ editor, onOpenChange }: {
       <Highlighter size={16} />
     </button>
     {anchor && <AnchoredPopover anchor={anchor} label={t('highlightColor')}
-      onClose={close} width={244} align="end" autoFocus={false} className={styles.highlightPanel}
+      onClose={close} width={custom ? 244 : 164} align="end" autoFocus={false} className={styles.highlightPanel}
       onMouseEnter={cancelClose} onMouseLeave={leave}>
       <div data-selection-highlight onFocusCapture={() => setPinned(true)}>
         <div className={styles.highlightPresets} role="group" aria-label={t('presetHighlights')}>
           {presets.map(([label, value]) => <button key={value} type="button"
             className={`fob-action ${styles.highlightSwatch}`} data-surface="plain"
-            aria-label={t(label)} title={t(label)} aria-pressed={editor.getAttributes('highlight').color === value}
+            aria-label={t(label)} title={t(label)} aria-pressed={highlight.color === value}
             onClick={() => apply(value)}>
             <span style={{ backgroundColor: value }} />
-            {editor.getAttributes('highlight').color === value && <SelectionCheck size={20} />}
+            {highlight.color === value && <SelectionCheck size={20} />}
           </button>)}
+          <button type="button" className={`fob-action ${styles.highlightSwatch}`} data-surface="plain"
+            aria-label={t('customColor')} title={t('customColor')} aria-expanded={custom}
+            onClick={() => { setCustom(!custom); setPinned(true); }}>
+            <span className={styles.highlightCustomSwatch} aria-hidden />
+          </button>
         </div>
-        <button type="button" className={`fob-action ${styles.highlightAction}`} data-surface="plain"
-          aria-expanded={custom} onClick={() => { setCustom(!custom); setPinned(true); }}>
-          {t('customColor')}
-        </button>
         {custom && <div className={styles.highlightCustom}>
           <TableColorPicker value={color} onChange={setColor} trapFocus={false} />
           <button type="button" className={`fob-action ${styles.highlightApply}`} data-surface="muted"
             onClick={() => apply(color)}>{t('apply')}</button>
         </div>}
-        <button type="button" className={`fob-action ${styles.highlightAction}`} data-surface="plain"
-          onClick={() => apply(null)}>{t('removeHighlight')}</button>
       </div>
     </AnchoredPopover>}
   </>;

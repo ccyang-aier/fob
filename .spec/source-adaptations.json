@@ -948,12 +948,12 @@
     "sha256": "b2842c81bfcca06efae19f796d1f9786e7be9fe7195178fd8a87fd99db4b11e9"
   },
   "src/features/knowledge/editor/components/selection-toolbar.messages.ts": {
-    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
-    "sha256": "8f4492d8a65999c9ef19c6662c49fda751f5803cfb1792f5d885f75f0ec6ac5c"
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing.",
+    "sha256": "3f180d4a33b7ac1815e89139ff788dc9a6b71da943ab40e143618bd52f18b4aa"
   },
   "src/features/knowledge/editor/components/selection-toolbar.module.css": {
-    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
-    "sha256": "3528a97871b9731e3d17eb1ee9ec2c1c1c955e8f6e270b6015af2de65640bb9c"
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing.",
+    "sha256": "20ba14e3fd3335109587d42862fc064303a2ee562725d2799fdd5f88ee43b6bb"
   },
   "shared/src/knowledge/schema/marks.ts": {
     "reason": "Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output.",

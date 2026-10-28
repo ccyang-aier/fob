@@ -51,13 +51,20 @@ async function click(label: string) {
   if (!button) throw new Error(`Missing button: ${label}`);
   await act(async () => button.click());
 }
+async function openPalette() {
+  const trigger = document.querySelector<HTMLButtonElement>('[aria-label="高亮"]')!;
+  await act(async () => trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true })));
+}
 
 test('hover opens pastel choices without changing content; applying affects only the selection and can undo', async () => {
   const trigger = await mount();
   const before = editor.state.doc;
   await act(async () => trigger.dispatchEvent(new MouseEvent('mouseover', { bubbles: true })));
   expect(document.querySelector('[role="dialog"][aria-label="高亮颜色"]')).not.toBeNull();
-  expect(document.querySelectorAll('[aria-label="预置高亮颜色"] button')).toHaveLength(6);
+  const choices = document.querySelectorAll('[aria-label="预置高亮颜色"] button');
+  expect(choices).toHaveLength(8);
+  expect(choices[7].getAttribute('aria-label')).toBe('自定义颜色');
+  expect(document.body.textContent).not.toContain('移除高亮');
   expect(editor.state.doc.eq(before)).toBe(true);
   await click('浅粉色');
   expect(editor.state.doc.textContent).toBe('前面选择文字后面');
@@ -65,13 +72,13 @@ test('hover opens pastel choices without changing content; applying affects only
   expect(editor.view.dom.querySelector('mark')?.textContent).toBe('选择文字');
   expect(editor.view.dom.querySelector('mark')?.style.backgroundColor).toBe('#fbe0ec');
   expect(document.querySelector('[data-selection-highlight]')).toBeNull();
-  undo(editor.state, editor.view.dispatch);
+  await act(async () => { undo(editor.state, editor.view.dispatch); });
   expect(editor.state.doc.eq(before)).toBe(true);
 });
 
 test('custom hex and alpha survive HTML and Markdown; clearing removes the mark', async () => {
   await mount();
-  await click('高亮');
+  await openPalette();
   await click('自定义颜色');
   const hex = document.querySelector<HTMLInputElement>('[aria-label="十六进制颜色"]')!;
   expect(hex).not.toBeNull();
@@ -92,8 +99,25 @@ test('custom hex and alpha survive HTML and Markdown; clearing removes the mark'
   const serialized = markdown.serialize(editor.state.doc);
   expect(markdown.parse(serialized).toJSON()).toEqual(editor.state.doc.toJSON());
   await click('高亮');
-  await click('移除高亮');
   expect(editor.getHTML()).not.toContain('<mark');
+  expect(document.querySelector('[aria-label="高亮"]')?.getAttribute('aria-pressed')).toBe('false');
+  await click('高亮');
+  expect(editor.getHTML()).toContain('data-color="#bfe7db80"');
+});
+
+test('the highlighter icon toggles the current selection and exposes its pressed state', async () => {
+  const trigger = await mount();
+  await click('高亮');
+  expect(editor.view.dom.querySelector('mark')?.textContent).toBe('选择文字');
+  expect(trigger.getAttribute('aria-pressed')).toBe('true');
+  expect(trigger.title).toBe('取消高亮');
+  expect(document.querySelector('[data-selection-highlight]')).toBeNull();
+  await click('高亮');
+  expect(editor.getHTML()).not.toContain('<mark');
+  expect(trigger.getAttribute('aria-pressed')).toBe('false');
+  expect(editor.state.doc.textContent).toBe('前面选择文字后面');
+  await act(async () => { undo(editor.state, editor.view.dispatch); });
+  expect(editor.getHTML()).toContain('data-color="#fff2b3"');
 });
 
 test('Escape closes the palette and does not apply the custom draft', async () => {
@@ -108,8 +132,8 @@ test('Escape closes the palette and does not apply the custom draft', async () =
 
 test('legacy named highlight colors can open the custom picker safely', async () => {
   await mount();
-  editor.commands.setMark('highlight', { color: 'yellow' });
-  await click('高亮');
+  await act(async () => { editor.commands.setMark('highlight', { color: 'yellow' }); });
+  await openPalette();
   await click('自定义颜色');
   expect(document.querySelector<HTMLInputElement>('[aria-label="十六进制颜色"]')?.value).toBe('#fff2b3');
   expect(editor.getAttributes('highlight').color).toBe('yellow');
