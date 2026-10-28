@@ -6,18 +6,18 @@ import { useAppAlert } from '@/components/app-alert-provider';
 import { saveLocalAsset } from '../assets/local-assets';
 import { documentFileAccept, documentFileFormat, type DocumentFile } from './file-format';
 import { FilePlus } from '@/components/icons';
+import type { JSONContent } from '@tiptap/core';
+import { MAX_TEXT_IMPORT_BYTES, parseTextDocument, textDocumentFormat, textDocumentTitle } from '@fob/shared/knowledge/text-import';
+import { decodeDocumentText } from './file-format';
+export type LocalDocumentImportItem = { name: string; text: string; file?: DocumentFile; body?: JSONContent };
 export function LocalDocumentImport({
   onImport,
   knowledgeBaseId,
+  asFiles = false,
 }: {
   knowledgeBaseId: string;
-  onImport: (
-    items: {
-      name: string;
-      text: string;
-      file: DocumentFile;
-    }[],
-  ) => boolean;
+  asFiles?: boolean;
+  onImport: (items: LocalDocumentImportItem[]) => boolean;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -33,6 +33,12 @@ export function LocalDocumentImport({
             throw new Error(knowledgeT('chooseASupportedFormatSuchAsPdfPptx'));
           if (file.size > 100 * 1024 * 1024)
             throw new Error(knowledgeT('eachPreviewFileMustBeNoLargerThan'));
+          const format = textDocumentFormat(file.name);
+          if (format && !asFiles) {
+            if (file.size > MAX_TEXT_IMPORT_BYTES) throw new Error(knowledgeT('textTooLarge'));
+            const text = await decodeDocumentText(file);
+            return { name: textDocumentTitle(file.name), text, body: parseTextDocument(text, format).toJSON() as JSONContent };
+          }
           const source = await saveLocalAsset(knowledgeBaseId, file);
           return {
             name: file.name,

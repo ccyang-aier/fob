@@ -1,4 +1,4 @@
-.sidebar { --comment-accent:var(--accent); --comment-ink:var(--ink-soft); --comment-strong:var(--ink); --comment-muted:var(--muted); --comment-line:var(--separator-color); display:flex; flex:none; flex-direction:column; width:364px; min-width:0; min-height:0; border-inline-start:1px solid var(--comment-line); background:var(--panel); color:var(--comment-strong); container-type:inline-size; }
+.sidebar { --comment-accent:var(--accent); --comment-ink:var(--ink-soft); --comment-strong:var(--ink); --comment-muted:var(--muted); --comment-line:var(--separator-color); position:relative; display:flex; flex:none; flex-direction:column; width:var(--document-sidebar-width,364px); min-width:0; min-height:0; border-inline-start:1px solid var(--comment-line); background:var(--panel); color:var(--comment-strong); container-type:inline-size; }
 .header { display:flex; align-items:center; gap:10px; flex:none; height:40px; padding:0 12px; }
 .heading { margin:0; font-size:18px; font-weight:650; line-height:1.4; letter-spacing:-.4px; }
 .count { color:var(--comment-ink); font-size:13px; font-variant-numeric:tabular-nums; }
@@ -114,8 +114,8 @@
 .linkForm p { color:var(--err-ink); margin-top:6px; }
 .sidebar button:focus-visible,.composer button:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
 .body:focus-visible { outline:2px solid var(--focus-ring); outline-offset:-2px; }
-@container (width < 900px) { .sidebar { position:absolute; inset:0 0 0 auto; z-index:20; width:min(364px,100%); } }
-@media (max-width:700px) { .sidebar { position:fixed; inset:44px 0 0 auto; z-index:40; width:min(364px,calc(100vw - 48px)); } }
+@container (width < 900px) { .sidebar { position:absolute; inset:0 0 0 auto; z-index:20; width:min(var(--document-sidebar-width,364px),100%); } }
+@media (max-width:700px) { .sidebar { position:fixed; inset:44px 0 0 auto; z-index:40; width:min(var(--document-sidebar-width,364px),calc(100vw - 48px)); } }
 @container (width < 340px) { .sendHint { display:none; }.sendButton { margin-inline-start:auto; }.entryToolbar { gap:16px; } }
 :global(html[data-theme=dark]) .sidebar { --comment-accent:var(--accent-ink); --comment-ink:var(--ink-soft); --comment-strong:var(--ink); --comment-muted:var(--muted); --comment-line:var(--line); }
 

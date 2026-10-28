@@ -22,7 +22,11 @@ const MIN_WIDTH = 204;
 const MAX_WIDTH = 360;
 const DEFAULT_WIDTH = 224;
 
-export function useSidebarWidth(defaultWidth = DEFAULT_WIDTH) {
+export function useSidebarWidth(defaultWidth = DEFAULT_WIDTH, {
+  minWidth = MIN_WIDTH,
+  maxWidth = MAX_WIDTH,
+  side = 'left',
+}: { minWidth?: number; maxWidth?: number; side?: 'left' | 'right' } = {}) {
   const [width, setWidth] = useState(defaultWidth);
   const [dragging, setDragging] = useState(false);
   const dragStart = useRef<{ pointerX: number; width: number } | null>(null);
@@ -33,7 +37,7 @@ export function useSidebarWidth(defaultWidth = DEFAULT_WIDTH) {
       const start = dragStart.current;
       if (!start) return;
       setWidth(
-        Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, start.width + event.clientX - start.pointerX)),
+        Math.min(maxWidth, Math.max(minWidth, start.width + (event.clientX - start.pointerX) * (side === 'right' ? -1 : 1))),
       );
     };
     const stop = () => {
@@ -52,7 +56,7 @@ export function useSidebarWidth(defaultWidth = DEFAULT_WIDTH) {
       window.removeEventListener('lostpointercapture', stop);
       window.removeEventListener('blur', stop);
     };
-  }, [dragging]);
+  }, [dragging, minWidth, maxWidth, side]);
 
   function startResize(event: ReactPointerEvent<HTMLButtonElement>) {
     if (event.button !== 0) return;
@@ -62,10 +66,14 @@ export function useSidebarWidth(defaultWidth = DEFAULT_WIDTH) {
     setDragging(true);
   }
 
-  return { width, dragging, startResize };
+  function resizeBy(delta: number) {
+    setWidth(current => Math.min(maxWidth, Math.max(minWidth, current + delta)));
+  }
+
+  return { width, dragging, startResize, resizeBy };
 }
 
-/** 侧栏右缘拖拽手柄：全系统共享即时出现的 2px 黑色指示线。 */
+/** 侧栏拖拽手柄：复用全系统即时出现的分隔指示线。 */
 export function SidebarResizeHandle({
   dragging,
   onPointerDown,

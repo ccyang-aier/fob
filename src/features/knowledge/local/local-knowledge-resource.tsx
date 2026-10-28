@@ -310,7 +310,8 @@ export function LocalKnowledgeResource({
       ) : selected ? (
         selected.file ||
         (documentFileFormat(selected.title) &&
-          documentFileFormat(selected.title) !== 'markdown') ? (
+          documentFileFormat(selected.title) !== 'markdown' &&
+          documentFileFormat(selected.title) !== 'text') ? (
           <LocalFileDocument
             key={selected.id}
             knowledgeBaseId={knowledgeBaseId}
@@ -322,9 +323,10 @@ export function LocalKnowledgeResource({
             onCreateDocument={() => setCreation('document')}
             attach={(setFile) => (
               <LocalDocumentImport
+                asFiles
                 knowledgeBaseId={knowledgeBaseId}
                 onImport={(items) => {
-                  return items[0] ? setFile(items[0].file) : false;
+                  return items[0]?.file ? setFile(items[0].file) : false;
                 }}
               />
             )}
@@ -355,7 +357,7 @@ export function LocalKnowledgeResource({
       }} editorContext={folderEditorContext} onOpen={openDocument} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
         if (!write(current => ({ ...current, folders: current.folders.map(folder => folder.id === folderId ? { ...folder, ...(name ? { name } : {}), metadata: { ...folder.metadata, ...patch, revision: (folder.metadata?.revision ?? 0) + 1 } } : folder) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
         return store.getSnapshot().folders.find(folder => folder.id === folderId)?.metadata?.revision ?? 0;
-      }} upload={<LocalDocumentImport knowledgeBaseId={knowledgeBaseId} onImport={items => write(current => ({ ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(base.id, item.name), folderId, file: item.file, body: { type: 'doc', content: item.text.split(/\r?\n/).map(text => ({ type: 'paragraph', ...(text ? { content: [{ type: 'text', text }] } : {}) })) } }))] }))} />} renderMenu={id => <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem><DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>} /> : view === 'all-documents' ? (
+      }} upload={<LocalDocumentImport knowledgeBaseId={knowledgeBaseId} onImport={items => write(current => ({ ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(base.id, item.name), folderId, file: item.file, body: item.body ?? { type: 'doc', content: item.text.split(/\r?\n/).map(text => ({ type: 'paragraph', ...(text ? { content: [{ type: 'text', text }] } : {}) })) } }))] }))} />} renderMenu={id => <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem><DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>} /> : view === 'all-documents' ? (
         <DocumentsPage
           key={`${base.id}:${folderId ?? activeTagId ?? 'all'}`}
           documents={listed.map((item) => ({
@@ -399,7 +401,7 @@ export function LocalKnowledgeResource({
                       ...newLocalDocument(base.id, item.name),
                       folderId: folderId ?? folders[0]?.id,
                       file: item.file,
-                      body: {
+                      body: item.body ?? {
                         type: 'doc',
                         content: item.text.split(/\r?\n/).map((text) => ({
                           type: 'paragraph',

@@ -52,6 +52,7 @@ import { DocumentAppearanceMenu } from './document-appearance-menu';
 import { DocumentStarMenuItem } from './document-star-menu-item';
 import { SubscriptionMenuItem } from '../../subscriptions/subscription-menu-item';
 import { SaveTemplateDialog } from '../../templates/save-template-dialog';
+import { DocumentManagementDialog } from '../../documents/document-management-dialog';
 import {
   documentContent,
   downloadDocument,
@@ -66,6 +67,8 @@ export type DocumentMenuActions = {
   onComments?: () => void;
   onHistory?: () => void;
   onDelete?: () => Promise<void> | void;
+  canImport?: boolean;
+  canMove?: boolean;
 };
 
 function ReservedItem({ children, icon }: { children: string; icon: ReactNode }) {
@@ -104,6 +107,7 @@ export function DocumentMoreMenu({
   const busyRef = useRef(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [templateOpen, setTemplateOpen] = useState(false);
+  const [management, setManagement] = useState<'import' | 'move' | null>(null);
   const [deleteError, setDeleteError] = useUiMessage(knowledgeMessages, '');
   const action = async (work: () => Promise<void> | void, success: string, failure?: string) => {
     if (busyRef.current) return;
@@ -302,11 +306,15 @@ export function DocumentMoreMenu({
               <Printer aria-hidden />
               {knowledgeT('print')}
             </DropdownMenuItem>
-            <ReservedItem icon={<FileArrowUp aria-hidden />}>{knowledgeT('import')}</ReservedItem>
+            <DropdownMenuItem className={styles.item} disabled={!actions.canImport} onSelect={() => setManagement('import')}>
+              <FileArrowUp aria-hidden />{knowledgeT('import')}
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup aria-label={knowledgeT('organizeAndBrowse')}>
-            <ReservedItem icon={<FolderSimple aria-hidden />}>{knowledgeT('move')}</ReservedItem>
+            <DropdownMenuItem className={styles.item} disabled={!actions.canMove} onSelect={() => setManagement('move')}>
+              <FolderSimple aria-hidden />{knowledgeT('move')}
+            </DropdownMenuItem>
             <DropdownMenuItem
               className={styles.item}
               disabled={!navigation?.onTogglePin}
@@ -358,6 +366,7 @@ export function DocumentMoreMenu({
         </DropdownMenuContent>
       </DropdownMenu>
       {templateOpen && <SaveTemplateDialog sourcePageId={actions.target.pageId} title={title} getBody={() => editor?.getJSON()} onClose={() => setTemplateOpen(false)} />}
+      {management && <DocumentManagementDialog key={`${actions.target.source}:${actions.target.knowledgeBaseId}:${actions.target.pageId}:${management}`} operation={management} target={actions.target} onClose={() => setManagement(null)} />}
       {permissionsOpen && <DocumentShareDialog title={title} target={actions.target} onClose={() => setPermissionsOpen(false)} settings />}
       {statisticsOpen && <DocumentStatisticsDialog scope={actions.target} onClose={() => setStatisticsOpen(false)} />}
       <ModalDialog

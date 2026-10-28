@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 import type { Editor } from '@tiptap/react';
 import { TextSelection } from '@tiptap/pm/state';
 import {
-  CommentOutline,
+  ChatCircleDots,
   Code,
   Highlighter,
   LinkSimple,
@@ -344,7 +344,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
               })
             }
           >
-            <CommentOutline size={16} />
+            <ChatCircleDots size={16} />
           </button>
         )}
       </div>

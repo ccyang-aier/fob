@@ -38,12 +38,13 @@ export function KnowledgeBaseFileDocument({
   page,
   canEdit,
   canComment,
+  canMove = false,
   avatarName,
   folderName,
   onBack,
   onOpenSidebar,
   onCreateDocument,
-}: SurfaceProps & { page: Page; canEdit: boolean; canComment: boolean; avatarName: string }) {
+}: SurfaceProps & { page: Page; canEdit: boolean; canComment: boolean; canMove?: boolean; avatarName: string }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const client = useQueryClient();
@@ -174,6 +175,8 @@ export function KnowledgeBaseFileDocument({
           onCreateDocument={onCreateDocument}
           shareDescription={knowledgeT('theOriginalFileUsesThisKnowledgeBaseS')}
           menuActions={{
+            canImport: canEdit,
+            canMove,
             onComments: pdf ? () => setRailOpen((value) => !value) : undefined,
             target: { knowledgeBaseId, pageId: page.id, source: 'server' },
             onDelete: canEdit
@@ -294,6 +297,8 @@ export function LocalFileDocument({
           onCreateDocument={onCreateDocument}
           shareDescription={knowledgeT('theOriginalFileIsStoredOnlyInThis')}
           menuActions={{
+            canImport: true,
+            canMove: true,
             target: { knowledgeBaseId: document.baseId, pageId: document.id, source: 'local' },
             onDelete: () => {
               if (onChange({ deleted: true })) onBack();

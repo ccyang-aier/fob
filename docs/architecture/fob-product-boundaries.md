@@ -125,6 +125,8 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 文档在线成员、分享/邀请、guest 范围、公开附件、历史恢复和统计遵循 [文档协作设计](../document-collaboration.md)。guest 必须通过页面用户或分组明确授权，不继承知识库默认访问；其附件下载同时验证可访问页面中的实际引用。验证证据见 `.spec/tasks/document-collaboration.md`。
 
+文档菜单导入和移动遵循[文档管理设计](../document-management.md)：文本进入同一原生编辑器与权威正文存储，服务端创建正文保持事务原子性；移动保留内容与显式权限，重新执行目标文件夹授权和继承规则。
+
 ### 运行与部署
 
 - 前端静态导出，由 Nginx 提供页面并反代 API/WebSocket；业务服务、作业 worker 和 Python 媒体服务分别运行。

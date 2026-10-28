@@ -5,6 +5,7 @@ import { knowledgeMessages } from './comments-sidebar.messages';
 import { useState, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { getOverlayRoot } from '@/lib/overlay-root';
+import { DocumentSidebar } from '../../editor/components/document-sidebar';
 import { ChatsCircle, WarningCircle, X } from '@/components/icons';
 import type { CommentThreadKind } from '@fob/shared/knowledge/comments';
 import {
@@ -120,7 +121,9 @@ export function CommentsSidebar({
       </div>
     ) : null;
   const sidebar = (
-    <aside
+    <DocumentSidebar
+      panel="comments"
+      defaultWidth={364}
       data-knowledge-comments
       aria-label={knowledgeT('pageComment')}
       className={styles.sidebar}
@@ -240,7 +243,7 @@ export function CommentsSidebar({
           </p>
         )}
       </footer>
-    </aside>
+    </DocumentSidebar>
   );
   // The shell clips its main column; the mobile rail needs the overlay host.
   return narrow ? createPortal(sidebar, getOverlayRoot() ?? document.body) : sidebar;

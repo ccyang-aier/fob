@@ -94,6 +94,8 @@ export function LocalDocumentEditor({
           onCreateDocument={onCreateDocument}
           shareDescription={knowledgeT('localDocumentsAreStoredOnlyInThisBrowser')}
           menuActions={{
+            canImport: true,
+            canMove: true,
             target: { knowledgeBaseId: document.baseId, pageId: document.id, source: 'local' },
             onDelete: () => {
               if (!onChange({ deleted: true })) throw new Error('save-failed');

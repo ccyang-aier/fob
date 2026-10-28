@@ -30,6 +30,7 @@ import { createSlashPasteExtensions } from './commands';
 import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from './editor-layout';
 import { PageIconPicker } from '../navigation/page-icon-picker';
 import { DocumentEditorHeader } from './components/document-editor-header';
+import { DocumentSidebar } from './components/document-sidebar';
 import { AppAlert } from '@/components/app-alert';
 import { readonlyMessageCopy } from './editor-state';
 import { SyncIndicator } from './components/sync-indicator';
@@ -208,7 +209,7 @@ export function PageEditorSurface({
         >
           <PageReviewRail editor={editor} editable={view.editable} />
           {historyOpen && (
-            <aside className={historyStyles.rail}>
+            <DocumentSidebar panel="history" defaultWidth={400} className={historyStyles.rail}>
               <HistoryPanel
                 knowledgeBaseId={scope.knowledgeBaseId}
                 pageId={scope.pageId}
@@ -216,7 +217,7 @@ export function PageEditorSurface({
                 canEdit={view.editable}
                 onClose={() => setHistoryOpen(false)}
               />
-            </aside>
+            </DocumentSidebar>
           )}
         </PageCommentsLayer>
       }
@@ -243,6 +244,8 @@ export function PageEditorSurface({
             ) : undefined
           }
           menuActions={{
+            canImport: canCreateDocument,
+            canMove: level === 'full',
             target: {
               knowledgeBaseId: scope.knowledgeBaseId,
               pageId: scope.pageId,

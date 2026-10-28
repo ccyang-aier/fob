@@ -17,6 +17,8 @@ import { UploadQueueItem } from './upload-queue-item';
 
 export interface AssetUploaderProps {
   knowledgeBaseId: string;
+  accept?: string;
+  onFiles?: (files: File[], upload: (files: File[]) => void) => void;
   onUploaded?: (asset: UploadedAsset) => void;
   /** 注入完整控制器(测试/宿主装配);缺省时由本面板自建浏览器装配。 */
   uploads?: ReturnType<typeof useAssetUploads>;
@@ -27,6 +29,7 @@ export interface AssetUploaderProps {
 
 export function AssetUploader(props: AssetUploaderProps) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { onFiles } = props;
 
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,9 +44,11 @@ export function AssetUploader(props: AssetUploaderProps) {
   const acceptFiles = useCallback(
     (files: Iterable<File>) => {
       const list = [...files];
-      if (list.length > 0) uploads.addFiles(list);
+      if (!list.length) return;
+      if (onFiles) onFiles(list, uploads.addFiles);
+      else uploads.addFiles(list);
     },
-    [uploads],
+    [uploads, onFiles],
   );
 
   const finished = uploads.items.filter(
@@ -98,6 +103,7 @@ export function AssetUploader(props: AssetUploaderProps) {
         <input
           ref={inputRef}
           type="file"
+          accept={props.accept}
           multiple
           className="hidden"
           aria-label={knowledgeT('selectFilesToUpload')}

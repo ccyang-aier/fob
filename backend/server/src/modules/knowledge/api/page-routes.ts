@@ -1,10 +1,14 @@
 import { TRPCError } from '@trpc/server';
 import { and, asc, eq, isNull, isNotNull, or, sql } from 'drizzle-orm';
 import {
-  createPageInputSchema, listPagesInputSchema, movePageInputSchema, pageSchema,
+  createPageInputSchema, importTextPageInputSchema, listPagesInputSchema, movePageInputSchema, pageSchema,
   recyclePageInputSchema, restorePageInputSchema, updatePageInputSchema, transferPageInputSchema, principal,
 } from '@fob/shared/knowledge/contracts';
-import { page, pageAcl } from '../../../platform/database/resources/schema';
+import { docState, page, pageAcl } from '../../../platform/database/resources/schema';
+import { parseTextDocument } from '@fob/shared/knowledge/text-import';
+import { prosemirrorDocToYDoc } from '../import-export/y-encoding';
+import { collectAssetReferences } from '../import-export/body';
+import { appendKnowledgeOutbox } from '../workers/outbox';
 import { ResourceRequestError } from '../../../platform/resources/errors';
 import { effectivePageAccessCondition, expandRequestPrincipals, lockPermissionKnowledgeBase } from '../permissions';
 import { requirePageAccess, requirePageDestination, refreshPagePermissions, requireActivePageWriter } from './page-route-guards';
@@ -57,6 +61,37 @@ export const knowledgePageRouterRecord = {
       const result = await createAuthorizedPage(db, input, authority.userId);
       if (!existing) await db.insert(pageAcl).values({ knowledgeBaseId: input.knowledgeBaseId, pageId: input.id, principal: principal('user', authority.userId), level: 'full', inherited: false });
       await refreshPagePermissions(db, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.id });
+      return result;
+    })),
+  }),
+  importText: knowledgeMutation({
+    input: importTextPageInputSchema, scopes: ['read', 'write'],
+    resolve: ({ ctx, input }) => guarded(() => ctx.withResource(async (db, authority) => {
+      await lockPermissionKnowledgeBase(db, input.knowledgeBaseId);
+      await requireActivePageWriter(db, authority);
+      const scope = { knowledgeBaseId: input.knowledgeBaseId, pageId: input.id };
+      const [existing] = await db.select().from(page).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId)));
+      if (existing) await requirePageAccess(db, authority.userId, scope, 'edit');
+      else await requirePageDestination(db, authority.userId, input);
+      let document;
+      try { document = parseTextDocument(input.text, input.format); }
+      catch { throw new TRPCError({ code: 'BAD_REQUEST' }); }
+      // A standalone text file cannot claim access to another document's assets.
+      if (collectAssetReferences(document).length) throw new TRPCError({ code: 'BAD_REQUEST' });
+      const result = await createAuthorizedPage(db, {
+        knowledgeBaseId: input.knowledgeBaseId, id: input.id, teamspaceId: input.teamspaceId,
+        parentId: input.parentId, title: input.title, kind: 'doc', databaseId: null,
+        properties: {}, icon: null, cover: null, inheritsPermissions: true, afterPageId: null,
+      }, authority.userId);
+      // A retried request must never overwrite edits made since the first import.
+      if (!existing) {
+        await db.insert(pageAcl).values({ ...scope, principal: principal('user', authority.userId), level: 'full', inherited: false });
+        const encoded = prosemirrorDocToYDoc(document);
+        try { await db.insert(docState).values({ ...scope, state: Buffer.from(encoded.state), stateVector: Buffer.from(encoded.stateVector) }); }
+        finally { encoded.ydoc.destroy(); }
+        await refreshPagePermissions(db, scope);
+        await appendKnowledgeOutbox(db, { topic: 'doc.changed', ...scope, actor: authority.actor, occurredAt: new Date().toISOString() });
+      }
       return result;
     })),
   }),

@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
+  textTooLarge: ['文本文件最大支持 1 MB，请拆分后导入。', 'Text files can be up to 1 MB. Split the file before importing.'],
   chooseASupportedFormatSuchAsPdfPptx: [
     '请选择 PDF、PPTX、Word、CSV、JSON、TXT 或 Markdown 等支持的格式。',
     'Choose a supported format such as PDF, PPTX, Word, CSV, JSON, TXT or Markdown.',

@@ -81,6 +81,15 @@ export const movePageInputSchema = pageScopeSchema.extend({
 }).refine((value) => value.pageId !== value.parentId && value.pageId !== value.afterPageId, '不能相对自身移动页面');
 /** Cross-folder transfer keeps page identity; distinct from reordering within a folder. */
 export const transferPageInputSchema = pageScopeSchema.extend({ targetTeamspaceId: entityIdSchema });
+/** Text import creates metadata and the initial Y.Doc atomically; it cannot replace a live body. */
+export const importTextPageInputSchema = knowledgeBaseScopeSchema.extend({
+  id: entityIdSchema,
+  teamspaceId: entityIdSchema,
+  parentId: entityIdSchema.nullable().default(null),
+  title: z.string().trim().min(1).max(500),
+  text: z.string().max(1024 * 1024),
+  format: z.enum(['text', 'markdown']),
+});
 export const updatePropertiesInputSchema = pageScopeSchema.extend({ properties: propertiesSchema, operationId: entityIdSchema });
 export const listPagesInputSchema = knowledgeBaseScopeSchema.extend({ teamspaceId: entityIdSchema.optional(), parentId: entityIdSchema.nullable().optional() });
 

@@ -72,7 +72,7 @@ export function PageEditor({
     flattenKnowledgeBaseList(folders.data).find((folder) => folder.id === page?.teamspaceId)
       ?.name ?? knowledgeT('containingFolder');
   const format = page ? documentFileFormat(page.title) : null;
-  const isFile = Boolean(page?.properties.fileAsset || (format && format !== 'markdown'));
+  const isFile = Boolean(page?.properties.fileAsset || (format && format !== 'markdown' && format !== 'text'));
   const { gate, error: gateError, retry } = usePageEditorGate(scope.knowledgeBaseId, scope.pageId);
   // The collaboration session only exists once view access has been granted —
   // a denied page never opens a WebSocket or an IndexedDB copy.
@@ -125,6 +125,7 @@ export function PageEditor({
         page={page}
         canComment={gate.level !== 'view'}
         canEdit={gate.level === 'edit' || gate.level === 'full'}
+        canMove={gate.level === 'full'}
         avatarName={user?.name ?? knowledgeT('me')}
         folderName={folderName}
         onBack={onBack}

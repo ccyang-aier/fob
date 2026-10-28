@@ -1,4 +1,4 @@
-.rail { display:flex; flex:none; flex-direction:column; min-height:0; width:400px; max-width:85vw; height:100%; border-left:1px solid var(--line); background:var(--panel); }
+.rail { position:relative; display:flex; flex:none; flex-direction:column; min-width:0; min-height:0; width:var(--document-sidebar-width,400px); max-width:min(85vw,100cqw); height:100%; border-left:1px solid var(--line); background:var(--panel); }
 @container(max-width:850px) { .rail { position:absolute; z-index:30; inset-block:0; right:0; box-shadow:-8px 0 24px rgb(0 0 0 / 6%); } }
 .panel { display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; padding:20px 16px 72px; color:var(--ink); }
 .heading { display:flex; flex:none; align-items:center; justify-content:space-between; margin:0 0 18px; }
