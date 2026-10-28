@@ -24,6 +24,7 @@ import type { PageDocumentSession } from '../collaboration/page-provider';
 import { createPageUndo } from '../collaboration/page-undo';
 import type { PageUndo } from '../collaboration/page-undo';
 import { pageCollaborationExtension } from './page-collaboration';
+import { pageBodyReady } from './editor-state';
 
 const scope = { knowledgeBaseId: '00000000-0000-4000-8000-000000000001', pageId: '00000000-0000-4000-8000-000000000002' };
 
@@ -56,6 +57,39 @@ function mountEditor(document: Y.Doc, pageUndo: PageUndo, editable = true): Edit
 }
 
 describe('editor stack under a real Tiptap instance', () => {
+  test('cache restoration and first cloud hydration do not accumulate blank leading paragraphs', () => {
+    const original = new Y.Doc();
+    const originalUndo = createPageUndo({ document: original, bindingOrigins: [ySyncPluginKey] });
+    const originalEditor = mountEditor(original, originalUndo);
+    originalEditor.commands.setContent('<h1>导入标题</h1><p>导入正文</p>');
+    let snapshot = Y.encodeStateAsUpdate(original);
+    originalEditor.destroy();
+    originalUndo.destroy();
+    original.destroy();
+
+    for (let reopen = 0; reopen < 3; reopen++) {
+      const document = new Y.Doc();
+      const fragment = document.getXmlFragment('default');
+      expect(pageBodyReady({ localReady: false, phase: 'local-only', cloudPending: false }, fragment.length > 0)).toBe(false);
+      // An uncached import must wait for its first server snapshot too.
+      expect(pageBodyReady({ localReady: true, phase: 'syncing', cloudPending: false }, fragment.length > 0)).toBe(false);
+      expect(fragment.length).toBe(0);
+      Y.applyUpdate(document, snapshot, 'cached-or-remote');
+      expect(pageBodyReady({ localReady: false, phase: 'local-only', cloudPending: false }, true)).toBe(false);
+      expect(pageBodyReady({ localReady: true, phase: 'syncing', cloudPending: false }, fragment.length > 0)).toBe(true);
+      const undo = createPageUndo({ document, bindingOrigins: [ySyncPluginKey] });
+      const editor = mountEditor(document, undo);
+      expect(editor.state.doc.childCount).toBe(2);
+      expect(editor.state.doc.firstChild?.type.name).toBe('heading');
+      expect(editor.state.doc.textContent).toBe('导入标题导入正文');
+      expect(fragment.length).toBe(2);
+      snapshot = Y.encodeStateAsUpdate(document);
+      editor.destroy();
+      undo.destroy();
+      document.destroy();
+    }
+  });
+
   test('the editor schema is the shared registry schema (no second schema)', () => {
     const document = new Y.Doc();
     const extensions = editorExtensions(scope.pageId, document, createPageUndo({ document }));

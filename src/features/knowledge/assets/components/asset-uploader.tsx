@@ -9,7 +9,7 @@ import { knowledgeMessages } from './asset-uploader.messages';
  * (含秒传)时回调,是编辑器插入 `asset:<hash>` 媒体块的挂点。
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useId, useRef, useState } from 'react';
 import { CloudArrowUp } from '@/components/icons';
 import { useAssetUploads } from '../use-asset-uploads';
 import type { UploadedAsset, UseAssetUploadsOptions } from '../use-asset-uploads';
@@ -18,6 +18,7 @@ import { UploadQueueItem } from './upload-queue-item';
 export interface AssetUploaderProps {
   knowledgeBaseId: string;
   accept?: string;
+  hint?: string;
   onFiles?: (files: File[], upload: (files: File[]) => void) => void;
   onUploaded?: (asset: UploadedAsset) => void;
   /** 注入完整控制器(测试/宿主装配);缺省时由本面板自建浏览器装配。 */
@@ -33,6 +34,7 @@ export function AssetUploader(props: AssetUploaderProps) {
 
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hintId = useId();
   const owned = useAssetUploads({
     knowledgeBaseId: props.knowledgeBaseId,
     onUploaded: props.onUploaded,
@@ -57,7 +59,10 @@ export function AssetUploader(props: AssetUploaderProps) {
 
   return (
     <section aria-label={knowledgeT('attachmentUploads')} className="flex flex-col gap-3">
-      <div
+      <button
+        type="button"
+        aria-label={knowledgeT('chooseFiles')}
+        onClick={() => inputRef.current?.click()}
         onDragOver={(event) => {
           event.preventDefault();
           if (event.dataTransfer.types.includes('Files')) setDragging(true);
@@ -71,12 +76,12 @@ export function AssetUploader(props: AssetUploaderProps) {
           acceptFiles(event.dataTransfer.files);
         }}
         className={[
-          'group relative flex flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-7 text-center transition-colors',
+          'group relative flex w-full cursor-pointer flex-col items-center gap-2 rounded-xl border border-dashed px-4 py-7 text-center transition-colors',
           dragging
             ? 'border-[var(--accent)] bg-accent-soft'
             : 'border-border-strong bg-panel hover:border-[var(--accent)]',
         ].join(' ')}
-        aria-describedby="asset-upload-hint"
+        aria-describedby={hintId}
       >
         <span
           className={[
@@ -87,32 +92,28 @@ export function AssetUploader(props: AssetUploaderProps) {
         >
           <CloudArrowUp size={16} />
         </span>
-        <p className="text-[13px] leading-5 text-ink">
+        <span className="text-[13px] leading-5 text-ink">
           {knowledgeT('dropFilesHereOr')}
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="mx-0.5 rounded font-medium text-accent-ink outline-none hover:underline focus-visible:ring-2 focus-visible:ring-[color:var(--focus-ring)]"
-          >
+          <span className="mx-0.5 font-medium text-accent-ink group-hover:underline">
             {knowledgeT('chooseFiles')}
-          </button>
-        </p>
-        <p id="asset-upload-hint" className="text-2xs leading-4 text-ink-faint">
-          {knowledgeT('upTo5GibPerFile')}
-        </p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept={props.accept}
-          multiple
-          className="hidden"
-          aria-label={knowledgeT('selectFilesToUpload')}
-          onChange={(event) => {
-            acceptFiles(event.target.files ?? []);
-            event.target.value = '';
-          }}
-        />
-      </div>
+          </span>
+        </span>
+        <span id={hintId} className="text-2xs leading-4 text-ink-faint">
+          {props.hint ?? knowledgeT('upTo5GibPerFile')}
+        </span>
+      </button>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={props.accept}
+        multiple
+        className="hidden"
+        aria-label={knowledgeT('selectFilesToUpload')}
+        onChange={(event) => {
+          acceptFiles(event.target.files ?? []);
+          event.target.value = '';
+        }}
+      />
 
       {uploads.items.length > 0 && (
         <ul className="flex flex-col gap-1.5" aria-label={knowledgeT('uploadQueue')}>

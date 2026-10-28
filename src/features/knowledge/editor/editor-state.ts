@@ -17,6 +17,12 @@ import type { PageDocumentStatus } from '../collaboration/page-sync-state';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
+/** Do not let a blank editor write a filler paragraph before stored content arrives. */
+export function pageBodyReady(status: PageDocumentStatus | null, hasBody: boolean): boolean {
+  if (!status?.localReady) return false;
+  return hasBody || !['local-only', 'syncing'].includes(status.phase);
+}
+
 /** Whether `level` grants at least `required` (view < comment < edit < full). */
 export function levelSatisfies(level: PermissionLevel, required: PermissionLevel): boolean {
   return permissionLevels.indexOf(level) >= permissionLevels.indexOf(required);

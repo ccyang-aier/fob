@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
+  fileLimits: ['文本文件最大 1 MB，其他文件最大 5 GiB', 'Text files up to 1 MB; other files up to 5 GiB'],
   textTooLarge: ['文本文件最大支持 1 MB，请拆分后导入。', 'Text files can be up to 1 MB. Split the file before importing.'],
   importingText: ['正在导入正文…', 'Importing document content…'],
   fileSavedAsAnAttachmentDocumentPreviewIs: [

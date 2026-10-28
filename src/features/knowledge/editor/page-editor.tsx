@@ -26,7 +26,7 @@ import type { FobAuthUser } from '../../identity/auth-api';
 import { CanvasError, CanvasForbidden, CanvasSpinner } from '../canvas-states';
 import { Button } from '@/components/ui/button';
 import { knowledgeErrorCodeOf } from '../entry-state';
-import { derivePageEditorView } from './editor-state';
+import { derivePageEditorView, pageBodyReady } from './editor-state';
 import { PageEditorSurface } from './editor-surface';
 import { usePageEditorGate } from './page-access';
 import { usePageEditorSession } from './page-session';
@@ -142,7 +142,9 @@ export function PageEditor({
       />
     );
   }
-  if (!session.session || !session.undo) {
+  if (!session.session || !session.undo || !pageBodyReady(
+    session.status, session.session.document.getXmlFragment('default').length > 0,
+  )) {
     return <CanvasSpinner label={knowledgeT('openingDocument')} />;
   }
   return (

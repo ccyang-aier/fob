@@ -321,15 +321,16 @@ export function ensureCommentAnchorStyles(): void {
   style.id = commentStylesId;
   style.textContent = `
 .ProseMirror .fob-comment-anchor{
-  background:color-mix(in srgb,var(--accent) 16%,transparent);
-  border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+  background:var(--comment-anchor-wash,#eaf3ff);
+  border-bottom:1px solid var(--comment-anchor-line,#bad4f3);
   border-radius:3px;
   box-decoration-break:clone;-webkit-box-decoration-break:clone;
   cursor:pointer;
   transition:background-color .16s ease,box-shadow .16s ease;
 }
 .ProseMirror .fob-comment-active{
-  border-bottom-color:var(--accent);
+  background:var(--comment-anchor-active,#dcecff);
+  border-bottom-color:#78a7dc;
 }
 .ProseMirror .fob-comment-resolved{
   background:transparent;
@@ -337,14 +338,14 @@ export function ensureCommentAnchorStyles(): void {
   border-bottom-color:color-mix(in srgb,var(--muted-strong) 45%,transparent);
 }
 .ProseMirror .fob-comment-resolved.fob-comment-active{
-  background:color-mix(in srgb,var(--accent) 16%,transparent);
+  background:var(--comment-anchor-wash,#eaf3ff);
 }
 .ProseMirror .fob-comment-orphan{
   border-bottom-color:color-mix(in srgb,var(--err-ink) 55%,transparent);
   background:color-mix(in srgb,var(--err-ink) 7%,transparent);
 }
 .ProseMirror .fob-comment-pending{
-  border-bottom-color:color-mix(in srgb,var(--accent) 35%,transparent);
+  border-bottom-color:var(--comment-anchor-line,#bad4f3);
 }
 .ProseMirror .fob-comment-flash{animation:fob-comment-flash 1.1s ease-out 1;}
 @keyframes fob-comment-flash{
@@ -353,11 +354,12 @@ export function ensureCommentAnchorStyles(): void {
 }
 .ProseMirror .fob-comment-badge{
   position:relative;display:inline-block;width:0;height:0;
+  top:-.9em;
   vertical-align:baseline;line-height:0;overflow:visible;
   user-select:none;cursor:pointer;
 }
 .ProseMirror .fob-comment-badge-label{
-  position:absolute;inset-inline-start:1px;bottom:1.6em;
+  position:absolute;inset-inline-start:1px;bottom:0;
   display:inline-flex;align-items:center;justify-content:center;
   height:12px;min-width:12px;padding:0 2px;
   border-radius:5px;border:1px solid color-mix(in srgb,var(--accent) 25%,var(--panel));
@@ -371,6 +373,7 @@ export function ensureCommentAnchorStyles(): void {
 }
 .ProseMirror .fob-comment-badge:hover .fob-comment-badge-label,
 .ProseMirror .fob-comment-badge[data-hovered] .fob-comment-badge-label{background:var(--accent);color:#fff;}
+html[data-theme="dark"] .ProseMirror{--comment-anchor-wash:#20384e;--comment-anchor-active:#294866;--comment-anchor-line:#4a7399;}
 `;
   if (!existing) document.head.append(style);
 }

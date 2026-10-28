@@ -12,4 +12,4 @@
 .hint { margin:14px 0 0; color:var(--muted-strong); font-size:12px; line-height:1.65; }
 .error { margin-top:14px; }
 .actions { display:flex; justify-content:flex-end; gap:8px; margin-top:20px; }
-.actions button { height:30px; }
+.actions button { height:30px; font-size:14px; }

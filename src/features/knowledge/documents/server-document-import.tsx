@@ -97,6 +97,7 @@ function ScopedDocumentImport({
         key={`${knowledgeBaseId}:${teamspaceId}`}
         knowledgeBaseId={knowledgeBaseId}
         accept={documentFileAccept}
+        hint={knowledgeT('fileLimits')}
         onFiles={(files, upload) => {
           const attachments: File[] = [];
           for (const file of files) {

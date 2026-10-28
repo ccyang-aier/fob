@@ -225,6 +225,46 @@ function menuItem(menu: HTMLElement, text: string) {
 }
 
 describe('CommentsSidebar states and interactions', () => {
+  test('posted emoji use OpenMoji across formatted text while code stays literal', async () => {
+    const sidebar = await mountSidebar({ threads: [thread('emoji', {
+      comments: [{ id: 'emoji-body', authorId: 'me', bodyMd: '你好 **🚀**，🧑‍🚀 和未知表情 🫩\n\n`🚀`\n\n```txt\n🙏\n```' }],
+    })] });
+    const body = sidebar.querySelector('[data-comment-id="emoji-body"]')!;
+    expect(body.querySelector('strong [data-icon-library="openmoji"] img')?.getAttribute('src')).toBe('/icons/openmoji/1F680.svg');
+    expect(body.querySelector('[data-emoji="🧑‍🚀"] img')).not.toBeNull();
+    expect(body.textContent).toContain('未知表情 🫩');
+    expect(body.querySelector('code')?.textContent).toBe('🚀');
+    expect(body.querySelectorAll('code img')).toHaveLength(0);
+  });
+
+  test('inline and quick comment composers insert emoji at the caret and preserve failed submissions', async () => {
+    const { CommentComposer } = await import('./comment-composer');
+    for (const variant of ['inline', 'popover'] as const) {
+      const host = document.createElement('div');
+      document.body.append(host);
+      const root = createRoot(host);
+      roots.push(root);
+      const submissions: string[] = [];
+      await act(async () => {
+        root.render(<CommentComposer knowledgeBaseId="ws" placeholder="表情草稿" submitLabel="发表" sendingLabel="发送中"
+          sending={false} initialBodyMd="前后" variant={variant} autoFocus={false} persistent
+          onSubmit={async body => { submissions.push(body); return false; }} />);
+      });
+      const input = host.querySelector<HTMLElement>('[role="textbox"]')!;
+      const editor = (input as HTMLElement & { editor: Editor }).editor;
+      await act(async () => editor.commands.setTextSelection(2));
+      await click(host.querySelector('[aria-label="添加表情"]')!);
+      expect(document.querySelectorAll('button[data-emoji]')).toHaveLength(448);
+      await click(document.querySelector('button[data-emoji="🚀"]')!);
+      expect(editor.state.doc.textContent).toBe('前🚀后');
+      expect(document.querySelector('[role="dialog"][aria-label="添加表情"]')).toBeNull();
+      await click(buttonByText(host, '发表'));
+      expect(submissions).toEqual(['前🚀后']);
+      expect(editor.state.doc.textContent).toBe('前🚀后');
+      await act(async () => root.render(null));
+    }
+  });
+
   test('an open comment editor updates its label and placeholder while preserving the focused draft and history', async () => {
     await act(async () => {
       setLocale('en-US');

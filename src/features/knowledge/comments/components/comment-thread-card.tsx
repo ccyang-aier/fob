@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './comment-thread-card.messages';
-import { ArrowUpRight, Chat, CheckCircle, WarningCircle, Quotes } from '@/components/icons';
+import { ArrowUpRight, ChatCircleDots, CheckCircle, WarningCircle, Quotes } from '@/components/icons';
 import type { ReactNode } from 'react';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import type { CommentThreadGroup, OrphanAnchorGroup } from '../comments-view-model';
@@ -184,7 +184,7 @@ export function CommentThreadCard({
                         onStartReply({ threadId: group.threadId, commentId: entry.id })
                       }
                     >
-                      <Chat size={16} aria-hidden />
+                      <ChatCircleDots size={16} aria-hidden />
                       {knowledgeT('reply')}
                     </button>
                   )}

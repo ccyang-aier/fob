@@ -6,6 +6,10 @@ const formattingMark = (name: string, tag: string, mdastType: string): MarkDefin
   name, schema: { parseDOM: [{ tag }], toDOM: () => [tag, 0] }, markdown: { fromMd: { type: mdastType } },
 });
 
+const highlightColor = (value: unknown): string | null =>
+  typeof value === 'string' && /^#(?:[\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
+    ? value.toLowerCase() : null;
+
 /** Annotation marks remain legal inside code so comments and AI review cover all text. */
 export const KNOWLEDGE_MARKS: readonly MarkDefinition[] = Object.freeze<MarkDefinition[]>([
   formattingMark('bold', 'strong', 'strong'),
@@ -26,7 +30,14 @@ export const KNOWLEDGE_MARKS: readonly MarkDefinition[] = Object.freeze<MarkDefi
     markdown: { fromMd: { type: 'link' } },
   },
   {
-    name: 'highlight', schema: { attrs: { color: nullableString }, parseDOM: [{ tag: 'mark' }], toDOM: (mark) => ['mark', { 'data-color': mark.attrs.color }, 0] },
+    name: 'highlight', schema: {
+      attrs: { color: nullableString },
+      parseDOM: [{ tag: 'mark', getAttrs: (element) => ({ color: highlightColor(element.getAttribute('data-color')) }) }],
+      toDOM: (mark) => {
+        const color = highlightColor(mark.attrs.color);
+        return ['mark', { 'data-color': color, ...(color ? { style: `background-color: ${color}` } : {}) }, 0];
+      },
+    },
     markdown: { fromMd: { directive: 'highlight', kind: 'text' } },
   },
   ...(['suggestion_insert', 'suggestion_delete'] as const).map((name): MarkDefinition => ({

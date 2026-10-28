@@ -9,7 +9,6 @@ import { TextSelection } from '@tiptap/pm/state';
 import {
   ChatCircleDots,
   Code,
-  Highlighter,
   LinkSimple,
   ListBullets,
   ListChecks,
@@ -36,6 +35,7 @@ import {
   type BlockFormat,
 } from '../extensions/format/block-format';
 import styles from './selection-toolbar.module.css';
+import { SelectionHighlight } from './selection-highlight';
 
 function SelectionLink({
   editor,
@@ -156,7 +156,7 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
     const active = document.activeElement;
     const inTools =
       active instanceof Element &&
-      (toolbar.current?.contains(active) || active.closest('[data-selection-link]'));
+      (toolbar.current?.contains(active) || active.closest('[data-selection-link], [data-selection-highlight]'));
     if (!editor.isFocused && !inTools && !linkOpen.current) {
       setPosition(null);
       return;
@@ -305,8 +305,6 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
             { mark: 'bold', label: knowledgeT('bold'), Icon: TextB },
             { mark: 'italic', label: knowledgeT('italic'), Icon: TextItalic },
             { mark: 'strike', label: knowledgeT('strikethrough'), Icon: TextStrikethrough },
-            { mark: 'highlight', label: knowledgeT('highlight'), Icon: Highlighter },
-            { mark: 'code', label: knowledgeT('inlineCode'), Icon: Code },
           ] as const
         ).map(({ mark, label, Icon }) => (
           <button
@@ -322,6 +320,16 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
             <Icon size={16} />
           </button>
         ))}
+        <SelectionHighlight editor={editor} onOpenChange={(open) => {
+          linkOpen.current = open;
+          if (!open) requestAnimationFrame(refresh);
+        }} />
+        <button type="button" className={styles.tool} aria-label={knowledgeT('inlineCode')}
+          title={knowledgeT('inlineCode')} aria-pressed={editor.isActive('code')}
+          disabled={!editor.can().toggleMark('code')}
+          onClick={() => editor.chain().focus().toggleMark('code').run()}>
+          <Code size={16} />
+        </button>
       </div>
       <div className={styles.group}>
         <SelectionLink

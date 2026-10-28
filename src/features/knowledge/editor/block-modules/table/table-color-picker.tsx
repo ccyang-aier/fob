@@ -10,9 +10,11 @@ import styles from './table.module.css';
 export function TableColorPicker({
   value,
   onChange,
+  trapFocus = true,
 }: {
   value: string | null;
   onChange: (hex: string) => void;
+  trapFocus?: boolean;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -60,7 +62,7 @@ export function TableColorPicker({
         } as CSSProperties
       }
       onKeyDown={(event) => {
-        if (event.key !== 'Tab') return;
+        if (!trapFocus || event.key !== 'Tab') return;
         event.preventDefault();
         event.stopPropagation();
         const inputs = Array.from(

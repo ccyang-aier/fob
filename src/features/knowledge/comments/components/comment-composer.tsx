@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { EmojiPicker } from '@/components/ui/emoji-picker';
 import type { CommentAuthor } from './comment-avatar';
 import styles from './comments.module.css';
 
@@ -206,6 +207,7 @@ export function CommentComposer({
         </div>
         <div className={styles.composerActions} data-comment-actions={popover ? '' : undefined}>
           <div className={styles.composeTools} data-comment-tools={popover ? '' : undefined}>
+            <EmojiPicker disabled={sending} className={styles.iconButton} onSelect={emoji => ref.current?.insertText(emoji)} />
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <button

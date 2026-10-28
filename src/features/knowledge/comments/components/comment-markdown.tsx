@@ -6,8 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Emoji } from '@/components/icons';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
 import { knowledgeAssetsApi } from '../../assets/assets-api';
+import { commentEmojiPlugin } from './comment-emojis';
 import styles from './comments.module.css';
 
 export function CommentImage({
@@ -96,8 +98,15 @@ export function CommentMarkdown({
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[commentEmojiPlugin]}
       urlTransform={(url, key) => safeKnowledgeUrl(url, key === 'src' ? 'media' : 'link') ?? ''}
       components={{
+        span: ({ node, children, ...props }) => {
+          const emoji = node?.properties.dataCommentEmoji;
+          return typeof emoji === 'string'
+            ? <Emoji value={emoji} size={20} role="img" aria-label={emoji} aria-hidden={false} />
+            : <span {...props}>{children}</span>;
+        },
         a: ({ children, ...props }) => (
           <a {...props} target="_blank" rel="noopener noreferrer">
             {children}

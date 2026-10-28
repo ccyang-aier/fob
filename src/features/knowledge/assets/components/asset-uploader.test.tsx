@@ -136,7 +136,7 @@ function selectFiles(host: HTMLElement, files: File[]) {
 }
 
 function dropFiles(host: HTMLElement, files: File[]) {
-  const zone = host.querySelector('[aria-describedby="asset-upload-hint"]') as unknown as HTMLElement;
+  const zone = host.querySelector('button[aria-label="点击选择"]') as unknown as HTMLElement;
   const fileList = { length: files.length, item: (index: number) => files[index], [Symbol.iterator]: function* () { yield* files; } };
   const dataTransfer = { types: ['Files'], files: fileList };
   for (const type of ['dragover', 'drop']) {
@@ -149,6 +149,21 @@ function dropFiles(host: HTMLElement, files: File[]) {
 }
 
 describe('AssetUploader · 组件闭环', () => {
+  test('整块导入区与内部图标都打开同一个文件选择器,不递归触发', async () => {
+    const { api } = scriptApi({ prepareResults: ['upload'], uploadedHeaders: [] });
+    const { transfer } = fakeTransfer();
+    const host = await mountUploader({ api, transfer });
+    const input = host.querySelector('input[type="file"]')!;
+    let opens = 0;
+    input.addEventListener('click', event => { event.preventDefault(); opens++; });
+    const zone = host.querySelector<HTMLButtonElement>('button[aria-label="点击选择"]')!;
+    expect(zone.contains(input)).toBe(false);
+    expect(host.ownerDocument.getElementById(zone.getAttribute('aria-describedby')!)?.textContent).toContain('5 GiB');
+    await act(async () => zone.click());
+    await act(async () => zone.querySelector<HTMLElement>('[aria-hidden]')!.click());
+    expect(opens).toBe(2);
+  });
+
   test('点选文件:完成上传与完整性确认,展示指纹', async () => {
     const { api, calls } = scriptApi({ prepareResults: ['upload'], uploadedHeaders: [] });
     const { transfer, puts } = fakeTransfer();

@@ -9,6 +9,21 @@ import { BlockRegistry, KNOWLEDGE_BLOCKS, KNOWLEDGE_MARKS, createKnowledgeExtens
 const expectedBlocks = ['paragraph', 'heading', 'bulletList', 'orderedList', 'listItem', 'taskList', 'taskItem', 'blockquote', 'callout', 'codeBlock', 'math', 'horizontalRule', 'table', 'tableRow', 'tableCell', 'tableHeader', 'columns', 'column', 'image', 'video', 'audio', 'file', 'embed', 'linkCard', 'mermaid', 'pdf', 'whiteboard', 'blockReference', 'pageLink', 'databaseView', 'aiBlock'];
 
 describe('first-party knowledge schema', () => {
+  it('renders only safe hex highlight colors while preserving legacy mark data', () => {
+    for (const color of ['#fff2b3', '#BFE7DB80', '#abc', '#abcd']) {
+      const mark = knowledgeSchema.marks.highlight.create({ color });
+      const dom = mark.type.spec.toDOM!(mark, true) as [string, Record<string, string>, number];
+      assert.equal(dom[1]['data-color'], color.toLowerCase());
+      assert.equal(dom[1].style, `background-color: ${color.toLowerCase()}`);
+    }
+    for (const color of ['url(https://example.com)', '#fff; color:red', 'yellow', null]) {
+      const mark = knowledgeSchema.marks.highlight.create({ color });
+      const dom = mark.type.spec.toDOM!(mark, true) as [string, Record<string, unknown>, number];
+      assert.equal(dom[1]['data-color'], null);
+      assert.equal(dom[1].style, undefined);
+      assert.equal(mark.attrs.color, color);
+    }
+  });
   it('accepts opaque and alpha table backgrounds while rejecting unsafe or malformed colors', () => {
     for (const name of ['table', 'tableRow', 'tableCell', 'tableHeader']) {
       for (const background of ['#7e3d3db3', '#AABBCC00', '#d8e4ea', null]) {

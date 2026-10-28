@@ -9,6 +9,7 @@ import type { PageDocumentStatus, PageDocumentPhase } from '../collaboration/pag
 import {
   derivePageEditorView,
   levelSatisfies,
+  pageBodyReady,
   pageEditorGateOf,
   permissionLevelLabel,
   syncIndicatorView,
@@ -19,6 +20,13 @@ const status = (phase: PageDocumentPhase, overrides: Partial<PageDocumentStatus>
   localReady: true,
   cloudPending: false,
   ...overrides,
+});
+
+test('an acknowledged empty document and offline fallback remain available after local loading', () => {
+  expect(pageBodyReady(status('synced'), false)).toBe(true);
+  expect(pageBodyReady(status('offline'), false)).toBe(true);
+  expect(pageBodyReady(status('error'), false)).toBe(true);
+  expect(pageBodyReady(status('offline', { localReady: false }), true)).toBe(false);
 });
 
 describe('levelSatisfies / permissionLevelLabel', () => {

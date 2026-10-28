@@ -188,16 +188,16 @@
     "sha256": "36e786d1f5f86224929eaaab9aeafaa5060686b7dd2a31ed3a8a0b6f32fc42b3"
   },
   "src/features/knowledge/assets/components/asset-uploader.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow document import to route text files into native body creation while keeping the existing attachment queue, integrity checks and file picker.",
-    "sha256": "2b6ee1ffd9049eb5ba4239297324742777dcd0e355c4da291e761f9dbcee5f88"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow document import to route text files into native body creation while keeping the existing attachment queue, integrity checks and file picker. Make the full import dropzone clickable and keyboard-accessible with a sibling file input, preserving drop, upload, progress and retry behavior.",
+    "sha256": "8bcbc4c0d5d56d6c66a50c4ff2ee0cc4ab5dcc6562334224ec189246c3e1dbfe"
   },
   "src/features/knowledge/assets/components/upload-queue-item.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "31bd84524cab79c84bbbdebeb6143edb4ed9ca4123ec0bda1c5a258fc880da6d"
   },
   "src/features/knowledge/comments/components/comment-thread-card.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "70aa9ec5d1af97b7795e46041af6e4f98abbc6eff6b6e8ba465f6befe5505fcb"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
+    "sha256": "175a0c68a3f464d416d9c797b5fb938b0e821bd09b10148d587d2baf8f046066"
   },
   "src/features/knowledge/comments/components/selection-comment-popover.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -256,8 +256,8 @@
     "sha256": "ed8d3f7fc05aa146e22b9dcd200cf070f4373e5bb3e64f41b72798de49ab12ce"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior.",
-    "sha256": "da4d1b98b0e326eed66252548c32ff8e10bd1fb353d922b8ea6b358469e1560d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
+    "sha256": "234981d88df8c81df7ad6a50cdf0044ea0b4f4c524d00751d2c9b377d43eb4c9"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
     "deleted": true,
@@ -376,8 +376,8 @@
     "sha256": "9f359e3b5687bdb8881cb7868a90978b648bed2160cbba7a9a8e7195d3d9f55c"
   },
   "src/features/knowledge/comments/components/comment-composer.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "484157e010f0e4ed2034a7b5cf87a72f4bbe439ef1339d27ba41c91cd99b1959"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
+    "sha256": "04b2ea16848466c7086abb57c147308118e89006aaf178441187fc54da9fa23a"
   },
   "src/features/knowledge/comments/components/comment-entry.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -572,8 +572,8 @@
     "sha256": "0ba9742dac9564288000c8cfcefa478dd3876e576ed8c0afb32142cbcdbcb708"
   },
   "src/features/knowledge/editor/block-modules/table/table-color-picker.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "f7cf03dd87a4cbff4800d4abfcbc8a135ab6cfb92943e5025e9a9c9af336622e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Let containing forms opt out of the color picker focus cycle so keyboard users can reach highlight Apply; preserve existing default behavior.",
+    "sha256": "c3d41b66a7a525a2baa214f6787133d63af207af8bdac93cfe17fbfb48ecaeda"
   },
   "src/features/knowledge/editor/block-modules/table/table-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
@@ -804,8 +804,8 @@
     "sha256": "b74b71cbb992acac5c2b26062eb99cfac2e1d36f3a50642d86cbd75026a4d6e2"
   },
   "shared/src/knowledge/schema/schema.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "2a062943a06a1ba707bc5002ea465cacfdfc2663c8a18b6cd580cdd940fb79c0"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output.",
+    "sha256": "05132f648f55e75119cf665ac432019ae9c2210d00256351cf096a82c57fdd2a"
   },
   "src/features/knowledge/editor/block-modules/index.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
@@ -920,15 +920,55 @@
     "sha256": "7725d5355d34f2fcf9eafb856a19aaa6d6dd7409041493e6a84323a3662fec23"
   },
   "src/features/knowledge/documents/server-document-import.messages.ts": {
-    "reason": "Provide real native text import progress, size-limit and retry feedback in both supported locales.",
-    "sha256": "e8b28ce0211f987f218a38afb178eb73a222ef89b92fffb8867f72e91db7db76"
+    "reason": "Provide real native text import progress, size-limit and retry feedback in both supported locales. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics.",
+    "sha256": "4f44a8c1bb4117fe20b528c28466cebda7f1b4048bfe0098275f92b65e93aa0f"
   },
   "src/features/knowledge/documents/server-document-import.tsx": {
-    "reason": "Route text and Markdown into atomic native document creation with per-file retry identity and scoped UI state; keep other formats on existing authenticated uploads.",
-    "sha256": "5f286aa25ec5b80d8f4b6903097afe45a7214a336e5416686e6d0fb414a646a5"
+    "reason": "Route text and Markdown into atomic native document creation with per-file retry identity and scoped UI state; keep other formats on existing authenticated uploads. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics.",
+    "sha256": "3c2d0b4837ab4c5eeaab6ff45f7611bacbf40d2117dcd9eebe1ef542c6627cb7"
   },
   "src/features/knowledge/editor/page-editor.tsx": {
-    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents.",
-    "sha256": "37119edc51b484c31d50a4e04e3bcedd4bc9e1b9bd782532ac60f251bb6093d5"
+    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents. Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
+    "sha256": "45d026977b2f21d0025cc56cbea2e01046c94f8c8a62f1001109c98558f50ae1"
+  },
+  "src/features/knowledge/assets/components/asset-uploader.test.tsx": {
+    "reason": "Make the full import dropzone clickable and keyboard-accessible with a sibling file input, preserving drop, upload, progress and retry behavior.",
+    "sha256": "38a618e32b873df5343c65e6f4b427e6276151e5b2cb1c147ef7cfd876ec9cc4"
+  },
+  "src/features/knowledge/comments/comments-plugin.ts": {
+    "reason": "Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
+    "sha256": "2904499b7b53727b5576aa24f6c7f31e04c1cd6f60e1b6096d87e23ac3299cb2"
+  },
+  "src/features/knowledge/comments/components/comment-markdown.tsx": {
+    "reason": "Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
+    "sha256": "c8e329e502c06f84f88d5e3719a9fed8859338e16da78105633d1371a2142ecf"
+  },
+  "src/features/knowledge/comments/components/comments-sidebar.test.tsx": {
+    "reason": "Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md.",
+    "sha256": "b2842c81bfcca06efae19f796d1f9786e7be9fe7195178fd8a87fd99db4b11e9"
+  },
+  "src/features/knowledge/editor/components/selection-toolbar.messages.ts": {
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
+    "sha256": "8f4492d8a65999c9ef19c6662c49fda751f5803cfb1792f5d885f75f0ec6ac5c"
+  },
+  "src/features/knowledge/editor/components/selection-toolbar.module.css": {
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
+    "sha256": "3528a97871b9731e3d17eb1ee9ec2c1c1c955e8f6e270b6015af2de65640bb9c"
+  },
+  "shared/src/knowledge/schema/marks.ts": {
+    "reason": "Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output.",
+    "sha256": "c3c33394691f86593b0afc886daff326a0c7286bdfb4b544bd86443fbd01d1ee"
+  },
+  "src/features/knowledge/editor/editor-state.ts": {
+    "reason": "Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
+    "sha256": "94b939eccae3e0f1512ed18cf1f0d8f87ff20f9ccc03d626ba5e6a20cf45df20"
+  },
+  "src/features/knowledge/editor/editor-state.test.ts": {
+    "reason": "Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
+    "sha256": "f61092c56178e0c43ac5834c2d33eb2edc6290af34b642a7ebee6fcee79dd63f"
+  },
+  "src/features/knowledge/editor/page-editor.instance.test.ts": {
+    "reason": "Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
+    "sha256": "1acdc737dcf9bf8d3db2d9e80cc27cbe88a48316f971ffd5fd917e70f0c50c7c"
   }
 }
