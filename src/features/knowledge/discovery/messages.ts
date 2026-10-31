@@ -9,6 +9,7 @@ export const messages = defineMessages({
   documentCount: ['{count} 个文档', '{count} documents'], workspace: ['工作区', 'Workspace'], private: ['私有', 'Private'], device: ['当前设备', 'This device'],
   newDocument: ['新建文档', 'New document'], options: ['文件夹选项', 'Folder options'], edit: ['编辑概览', 'Edit overview'], rename: ['重命名', 'Rename'], permissions: ['访问权限', 'Access permissions'],
   importDocuments: ['导入文档', 'Import documents'],
+  createAction: ['新建', 'New'], importAction: ['导入', 'Import'],
   youCreated: ['你已创建', 'You created'], personCreated: ['{name} 已创建', '{name} created'], lastUpdated: ['最后更新', 'Updated'], viewed: ['已浏览', 'Viewed'], lessThanMinute: ['不到 1 分钟前', 'Less than a minute ago'],
   selectedCount: ['已选择 {count} 项', '{count} selected'], clearSelection: ['清除选择', 'Clear selection'], selectDocument: ['选择 {title}', 'Select {title}'], star: ['收藏', 'Star'], unstar: ['取消收藏', 'Unstar'], move: ['移到文件夹', 'Move to folder'], draft: ['移入草稿', 'Add to drafts'], undraft: ['移出草稿', 'Remove from drafts'], trash: ['删除…', 'Delete…'], trashTitle: ['删除文档', 'Delete documents'], trashHint: ['所选的 {count} 篇文档将移到回收站，可在回收站中恢复。', 'The {count} selected documents will move to Trash and can be restored.'], done: ['操作已完成', 'Done'], moveHint: ['选择目标文件夹', 'Choose a destination folder'],
   deviceViews: ['本机阅读', 'Device views'],

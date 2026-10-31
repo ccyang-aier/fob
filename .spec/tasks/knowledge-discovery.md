@@ -76,3 +76,9 @@
 - 页面身份、非空内容、无框架遮罩、鼠标/键盘交互及截图检查通过，最终控制台 error/warn 为 0。Browser 插件不可用，沿用现有 CUA Playwright 接口，无新浏览器依赖。未模拟系统减少动态效果，也未追加分屏多实例的浏览器验收。
 - `bun test --isolate` 文件夹交互和任务庆祝共 12 项通过；`pnpm typecheck`、修改文件 ESLint、`pnpm icons:verify`、`pnpm architecture:verify`、`pnpm i18n:verify` 与 `git diff --check` 通过。只为两个实际修改的基线任务列表文件登记适配原因和规范化摘要；未扩大为权限矩阵或生产构建。
 - 截图位于仓库外当前聊天 visualizations 目录：`folder-tabs-task-final.png`、`folder-tabs-task-mobile.png`、`folder-tabs-task-dark.png`，不提交截图或运行时数据。
+
+## 文件夹顶栏按钮简化（2026-11-01）
+
+- 按最新批注，仅将文件夹顶栏的“新建文档”“导入文档”简写为“新建”“导入”，并添加对应英文短文案。新建加号使用统一图标入口的显式 18px 尺寸（原实际 14px），保留按钮高度与既有操作；导入弹窗和空态继续使用完整文案。
+- 在原 localhost “协作文档”文件夹验证短文案、加号实际约 18×18px、导入弹窗打开/关闭及文档页展示；页面非空、无框架遮罩，控制台 error/warn 为 0。未创建文档或上传文件。
+- `pnpm typecheck`、修改文件 ESLint、图标、国际化、架构及 diff 检查通过；本轮为文案和尺寸调整，不新增测试或重跑权限矩阵。截图 `folder-actions-compact-final.png` 位于仓库外当前聊天 visualizations 目录。
