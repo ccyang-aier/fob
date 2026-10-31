@@ -1,8 +1,10 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { CoffeeCheckInResult } from '@fob/shared/rewards';
 import { Coffee } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n/react';
 import { useCoffeeRewards } from './rewards-provider';
 import { CoffeeMenuContent } from './coffee-menu-content';
@@ -18,6 +20,17 @@ export function CoffeeBalanceButton() {
 
 function CoffeeMenuTrigger({ rewards }: { rewards: ReturnType<typeof useCoffeeRewards> }) {
   const { t } = useTranslation(rewardsMessages);
+  const developmentPreview = process.env.NODE_ENV === 'development';
+  const [preview, setPreview] = useState(developmentPreview);
+  const [previewClaims, setPreviewClaims] = useState(0);
+  const previewActive = developmentPreview && preview && rewards.identityStatus === 'authenticated' && Boolean(rewards.summary);
+  const previewSummary = previewActive && rewards.summary ? { ...rewards.summary, balance: rewards.summary.balance + previewClaims, checkedInToday: previewClaims > 0 } : undefined;
+  const previewCheckIn = async (): Promise<CoffeeCheckInResult | undefined> => {
+    if (!previewSummary) return;
+    setPreviewClaims(count => count + 1);
+    return { ...previewSummary, balance: previewSummary.balance + 1, checkedInToday: true, awarded: true, reward: 1 };
+  };
+  const displayedRewards = previewSummary ? { ...rewards, summary: previewSummary, checkingIn: false, checkIn: previewCheckIn } : rewards;
   const [popup, setPopup] = useState<Popup | null>(null);
   const opening = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const closing = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -29,7 +42,7 @@ function CoffeeMenuTrigger({ rewards }: { rewards: ReturnType<typeof useCoffeeRe
     clearTimeout(closing.current);
     if (popup?.mode === 'hover') closing.current = setTimeout(() => setPopup(current => current?.mode === 'hover' ? null : current), 220);
   };
-  const label = rewards.summary ? t('balanceLabel', { count: rewards.summary.balance }) : t('open');
+  const label = displayedRewards.summary ? t(previewActive ? 'previewBalanceLabel' : 'balanceLabel', { count: displayedRewards.summary.balance }) : t('open');
   return <>
     <button type="button" className={`fob-action ${styles.balanceButton}`} data-surface="plain" aria-label={label} aria-haspopup="dialog" aria-expanded={Boolean(popup)}
       disabled={rewards.identityStatus === 'checking'}
@@ -49,11 +62,15 @@ function CoffeeMenuTrigger({ rewards }: { rewards: ReturnType<typeof useCoffeeRe
         if (event.key === 'ArrowDown') { event.preventDefault(); cancelTimers(); setPopup({ anchor: event.currentTarget, mode: 'pinned' }); }
       }}>
       <Coffee size={16} aria-hidden />
-      {rewards.summary ? <span className={styles.balanceNumber} aria-hidden>{rewards.summary.balance > 99 ? '99+' : rewards.summary.balance}</span> : null}
+      {displayedRewards.summary ? <span className={styles.balanceNumber} aria-hidden>{displayedRewards.summary.balance > 99 ? '99+' : displayedRewards.summary.balance}</span> : null}
     </button>
     {popup && <AnchoredPopover anchor={popup.anchor} onClose={close} label={t('title')} align="end" width={296} className={styles.coffeeMenu} autoFocus={popup.mode === 'pinned'}
       onMouseEnter={() => clearTimeout(closing.current)} onMouseLeave={leave}>
-      <CoffeeMenuContent rewards={rewards} onSignIn={() => { close(); rewards.openSignIn(); }} />
+      <CoffeeMenuContent key={previewActive ? 'preview' : 'live'} rewards={displayedRewards} allowRepeat={previewActive} onSignIn={() => { close(); rewards.openSignIn(); }} />
+      {developmentPreview && rewards.identityStatus === 'authenticated' && rewards.summary && <div className={styles.previewControls}>
+        <span>{t(previewActive ? 'previewHint' : 'previewOff')}</span>
+        <Button variant="ghost" size="sm" className={styles.previewToggle} onClick={() => { setPreview(current => !current); setPreviewClaims(0); }}>{t(previewActive ? 'endPreview' : 'startPreview')}</Button>
+      </div>}
     </AnchoredPopover>}
   </>;
 }

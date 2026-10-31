@@ -111,6 +111,50 @@ test('a previously claimed day has the receipt style without replaying an award'
   await act(async () => button.click()); expect(claims).toBe(0);
 });
 
+test('development preview repeats awards locally and can restore the real claimed day', async () => {
+  const environment = process.env.NODE_ENV;
+  const variables: Record<string, string | undefined> = process.env;
+  variables.NODE_ENV = 'development';
+  try {
+    authenticate(); rewards = { ...rewards, summary: summary(['2026-10-31', '2026-11-01']) };
+    await render(); await act(async () => trigger().click());
+    expect(panel()?.textContent).toContain('动效预览 · 可重复领取');
+    const collect = () => panel()!.querySelector<HTMLButtonElement>('[data-repeatable="true"]')!;
+    expect(collect().textContent).toContain('签到领 1 杯');
+    await act(async () => collect().click());
+    expect(panel()?.querySelector('strong')?.textContent).toBe('3杯');
+    expect(collect().getAttribute('aria-disabled')).toBeNull();
+    expect(collect().textContent).toContain('已领取');
+    await wait(700); await act(async () => collect().click());
+    expect(panel()?.querySelector('strong')?.textContent).toBe('4杯');
+    expect(panel()?.querySelector('[data-coffee-credit]')?.textContent).toContain('+1');
+    expect(claims).toBe(0); expect(rewards.summary?.balance).toBe(2);
+    await act(async () => panel()!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+    await act(async () => trigger().click());
+    expect(panel()?.querySelector('strong')?.textContent).toBe('4杯');
+    const endPreview = [...panel()!.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent === '结束预览')!;
+    await act(async () => endPreview.click());
+    expect(panel()?.querySelector('strong')?.textContent).toBe('2杯');
+    expect(panel()?.querySelector('[data-repeatable="true"]')).toBeNull();
+    expect(panel()?.querySelector<HTMLButtonElement>('button')?.getAttribute('aria-disabled')).toBe('true');
+    expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+  } finally { if (environment === undefined) delete variables.NODE_ENV; else variables.NODE_ENV = environment; }
+});
+
+test('production cannot enable a repeatable check-in or preview controls', async () => {
+  const environment = process.env.NODE_ENV;
+  const variables: Record<string, string | undefined> = process.env;
+  variables.NODE_ENV = 'production';
+  try {
+    authenticate(); rewards = { ...rewards, summary: summary(['2026-10-31', '2026-11-01']) };
+    await render(); await act(async () => trigger().click());
+    expect(panel()?.textContent).not.toContain('预览');
+    expect(panel()?.querySelector('[data-repeatable="true"]')).toBeNull();
+    await act(async () => panel()!.querySelector<HTMLButtonElement>('button')!.click());
+    expect(claims).toBe(0);
+  } finally { if (environment === undefined) delete variables.NODE_ENV; else variables.NODE_ENV = environment; }
+});
+
 test('a failed or idempotent claim never invents a credit animation', async () => {
   authenticate();
   rewards.checkIn = async () => { claims++; return undefined; };

@@ -23,10 +23,13 @@
 .menuCheckInRow { padding-top:10px; }
 .menuCheckIn { gap:5px; min-width:100px; height:30px; padding-inline:8px; font-size:11px; box-shadow:none; }
 .menuCheckIn[data-claimed=true] { border:1px solid var(--separator-color); background:var(--surface-subtle); color:var(--ink); cursor:default; }
+.menuCheckIn[data-repeatable=true] { cursor:pointer; }
 .claimCup { transition:transform 120ms cubic-bezier(.22,1,.36,1); }
 .menuCheckIn:active .claimCup { transform:translateY(-1px) rotate(-9deg) scale(.92); }
-.claimSeal { display:grid; flex:none; width:18px; height:18px; place-items:center; border-radius:50%; background:var(--ink); color:var(--panel); }
+.claimSeal { display:grid; flex:none; width:14px; height:14px; place-items:center; border-radius:50%; background:var(--ok-ink); color:var(--panel); }
 .claimAmount { margin-left:1px; padding-left:6px; border-left:1px solid var(--control-border); color:var(--muted-strong); font-size:10px; font-variant-numeric:tabular-nums; }
+.previewControls { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:4px; padding-top:8px; border-top:1px solid var(--separator-color); color:var(--muted-strong); font-size:10px; }
+.previewToggle { height:24px; padding-inline:5px; font-size:10px; }
 .creditLayer { position:absolute; inset:0; pointer-events:none; }
 .creditCup { position:absolute; left:0; top:0; display:grid; width:20px; height:20px; place-items:center; color:var(--ink); opacity:0; animation:coffee-credit-flight 480ms cubic-bezier(.22,1,.36,1) both; }
 .creditAmount { position:absolute; color:var(--ink); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; opacity:0; animation:coffee-credit-amount 480ms 100ms cubic-bezier(.22,1,.36,1) both; }
