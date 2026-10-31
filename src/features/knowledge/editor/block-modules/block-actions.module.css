@@ -12,6 +12,7 @@
 
 :global([data-block-actions-root]):hover > .root,
 :global([data-block-actions-root]):focus-within > .root,
+:global([data-block-actions-root]):is(:hover, :focus-within) > :global([data-graphic-heading]) > .root,
 .root[data-active="true"],
 .root:has([aria-expanded="true"]) {
   opacity: 1;
@@ -77,6 +78,30 @@
   --action-state-bg: color-mix(in srgb, var(--code-ink, var(--ink)) 8%, var(--code-bg, var(--panel)));
   --action-state-ink: var(--code-ink, var(--ink));
   --action-selected-bg: var(--action-state-bg);
+}
+
+.root[data-placement="canvas"] {
+  position: relative;
+  inset: auto;
+  flex: none;
+  margin-inline-start: auto;
+  padding: 0;
+}
+.root[data-placement="canvas"] .bar {
+  gap: 2px;
+  padding: 3px;
+  border-color: var(--separator-color);
+  border-radius: 9px;
+  transform: none;
+}
+.root[data-placement="canvas"] .bar > :is(button, a) {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+}
+:global([data-block-actions-root]):fullscreen > :global([data-graphic-heading]) > .root {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Editor links keep their content color; tool links share the neutral button ink. */

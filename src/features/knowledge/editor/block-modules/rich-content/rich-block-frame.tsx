@@ -2,10 +2,14 @@
 
 import { useEffect, useRef, useState, type ComponentType, type MouseEvent, type ReactNode } from 'react';
 import { NodeViewWrapper, useEditorState, type NodeViewProps } from '@tiptap/react';
-import { ArrowsOut } from '@/components/icons';
+import { ArrowsIn, ArrowsOut } from '@/components/icons';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
 import { richMessages } from './messages';
 import { BlockActions } from '../block-actions';
+import { GraphicBlockTitle } from './graphic-block-title';
+import { GraphicBlockSize } from './graphic-block-size';
+import { GraphicToolButton } from './graphic-tool-button';
 import styles from './rich-content.module.css';
 
 export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200, appearance = 'card', showHeader }: {
@@ -24,30 +28,52 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
     return () => document.removeEventListener('fullscreenchange', update);
   }, []);
   const height = Number(props.node.attrs.height || 360);
-  return <NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
+  const width = Number(props.node.attrs.width || 100);
+  const savedTitle = String(props.node.attrs.title || '');
+  const update = (attrs: { title?: string; height?: number; width?: number }) => {
+    if (!props.editor.isDestroyed && props.editor.isEditable) props.updateAttributes(attrs);
+  };
+  async function toggleFullscreen() {
+    try { if (document.fullscreenElement === root.current) await document.exitFullscreen(); else await root.current?.requestFullscreen(); setError(false); }
+    catch { setError(true); }
+  }
+  const tools = <BlockActions placement={canvas ? 'canvas' : 'outside'} touchVisibility={canvas ? 'on-demand' : 'always'}>
+    {actions}
+    {canvas && resizable && editable && !fullscreen && <>
+      <span className={styles.actionDivider} aria-hidden />
+      <GraphicBlockSize width={width} height={height} minHeight={minHeight} defaultHeight={Number(props.node.type.spec.attrs?.height?.default || 360)} onChange={update} />
+    </>}
+    {resizable && (canvas ? <GraphicToolButton label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}>{fullscreen ? <ArrowsIn size={16} aria-hidden /> : <ArrowsOut size={16} aria-hidden />}</GraphicToolButton>
+      : <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}><ArrowsOut size={16} aria-hidden /></button>)}
+  </BlockActions>;
+  return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
+    style={canvas ? { width: `${width}%`, height: resizable ? height : undefined } : undefined}
     role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
-      if (event.target instanceof Element && !event.target.closest('button, a, input, textarea, [role="separator"]')) root.current?.focus({ preventScroll: true });
+      if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [role="separator"]')) root.current?.focus({ preventScroll: true });
     } : undefined}>
-    {(showHeader ?? !canvas) && <div className={styles.header}>
+    {canvas ? <div className={styles.graphicHeading} data-graphic-heading>
+      <span className={styles.graphicLabel}><Icon size={16} aria-hidden />
+        <GraphicBlockTitle key={`${editable}:${savedTitle}`} value={savedTitle} fallback={title} editable={editable} onCommit={title => {
+          const pos = props.getPos();
+          if (typeof pos !== 'number' || String(props.editor.state.doc.nodeAt(pos)?.attrs.title || '') !== savedTitle) return;
+          update({ title });
+        }} />
+      </span>
+      {tools}
+    </div> : (showHeader ?? true) && <div className={styles.header}>
       <Icon size={16} aria-hidden />
       <span className={styles.title}>{editable ? <input className={styles.titleInput} aria-label={t('blockTitle')} placeholder={title} value={String(props.node.attrs.title || '')} maxLength={500} onChange={event => { if (props.editor.isEditable) props.updateAttributes({ title: event.target.value }); }} /> : String(props.node.attrs.title || title)}</span>
     </div>}
-      <BlockActions touchVisibility={canvas ? 'on-demand' : 'always'}>
-        {actions}
-        {resizable && <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={async () => {
-          try { if (document.fullscreenElement === root.current) await document.exitFullscreen(); else await root.current?.requestFullscreen(); setError(false); }
-          catch { setError(true); }
-        }}><ArrowsOut size={16} aria-hidden /></button>}
-      </BlockActions>
+    {!canvas && tools}
     {error && <div className={styles.error} role="alert" data-document-export-omit>{t('fullscreenError')}</div>}
-    <div className={styles.body} style={resizable ? { height } : undefined}>{children}</div>
-    {resizable && editable && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit
+    <div className={styles.body} style={resizable && !canvas ? { height } : undefined}>{children}</div>
+    {resizable && editable && !canvas && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit
       onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.resizing = 'true'; start.current = { y: event.clientY, height, next: height }; }}
       onPointerMove={event => { if (!start.current) return; start.current.next = Math.round(Math.max(minHeight, Math.min(1200, start.current.height + event.clientY - start.current.y))); const body = root.current?.querySelector<HTMLElement>(`.${styles.body}`); if (body) body.style.height = `${start.current.next}px`; }}
       onPointerUp={event => { if (start.current && props.editor.isEditable) props.updateAttributes({ height: start.current.next }); start.current = null; event.currentTarget.dataset.resizing = 'false'; }}
       onPointerCancel={event => { start.current = null; event.currentTarget.dataset.resizing = 'false'; const body = root.current?.querySelector<HTMLElement>(`.${styles.body}`); if (body) body.style.height = `${height}px`; }}
       onLostPointerCapture={event => { event.currentTarget.dataset.resizing = 'false'; start.current = null; }}
       onKeyDown={event => { if (!props.editor.isEditable || !['ArrowUp', 'ArrowDown'].includes(event.key)) return; event.preventDefault(); props.updateAttributes({ height: Math.max(minHeight, Math.min(1200, height + (event.key === 'ArrowDown' ? 20 : -20))) }); }} />}
-  </NodeViewWrapper>;
+  </NodeViewWrapper></TooltipProvider>;
 }

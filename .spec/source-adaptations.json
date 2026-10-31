@@ -836,12 +836,12 @@
     "sha256": "7a2c7db2321fb1024422664c2dbab7d76c9d1641029f89a33fb92284fb83cd55"
   },
   "src/features/knowledge/editor/components/document-markdown-export.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "7205f8879483be4f327409975e1a5e90e8b736106ebc3692eb66647e1a088826"
+    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "8a309c8b4b6f7a05ab9fa5bddc98bc77ae6507b0a5c1d9933dd822de40b59ed6"
   },
   "src/features/knowledge/editor/components/document-markdown-export.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "412291aaddb02121bdbb5e5a0a1edf90133daecf285c508b4ae46d3661b9d39b"
+    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "62539d44d6fbbf1c3aa1f009542456e75181ba5cc056807a953baf084a1a2e03"
   },
   "src/features/knowledge/documents/documents-page.module.css": {
     "reason": "Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",

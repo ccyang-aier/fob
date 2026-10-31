@@ -25,10 +25,10 @@ describe('rich content portable semantics', () => {
   test('keeps rich block identity, metadata, PDF asset references and scene bytes through Markdown', () => {
     const doc = schema.nodes.doc.create(null, [
       schema.nodes.linkCard.create({ blockId: 'card', url: 'https://example.com/', title: 'Article', description: 'A & B', fetched: true }),
-      schema.nodes.mermaid.create({ blockId: 'diagram', source: 'flowchart LR\n A --> B', height: 460 }),
+      schema.nodes.mermaid.create({ blockId: 'diagram', title: 'Capture flow', source: 'flowchart LR\n A --> B', width: 75, height: 460 }),
       schema.nodes.pdf.create({ blockId: 'pdf', src: `asset:${'a'.repeat(64)}`, title: 'report.pdf' }),
       schema.nodes.embed.create({ blockId: 'video', url: 'https://www.bilibili.com/video/BV1B7411m7LV?p=2' }),
-      schema.nodes.whiteboard.create({ blockId: 'board', title: 'Plan', scene, preview: 'data:image/png;base64,iVBORw0KGgo=' }),
+      schema.nodes.whiteboard.create({ blockId: 'board', title: 'Plan', width: 60, height: 640, scene, preview: 'data:image/png;base64,iVBORw0KGgo=' }),
     ]);
     const pipeline = createMarkdownPipeline();
     const markdown = pipeline.serialize(doc);
@@ -45,6 +45,10 @@ describe('rich content portable semantics', () => {
     ];
     for (const value of invalid) expect(() => schema.nodes.whiteboard.create({ scene: value }).check()).toThrow();
     expect(() => schema.nodes.mermaid.create({ height: -1 }).check()).toThrow();
+    for (const type of ['mermaid', 'whiteboard']) {
+      for (const width of [0, 24, 101, 75.5, '75%']) expect(() => schema.nodes[type].create({ width }).check()).toThrow();
+      expect(schema.nodes[type].create().attrs.width).toBe(100);
+    }
     expect(() => schema.nodes.whiteboard.create({ preview: 'data:text/html;base64,PHNjcmlwdD4=' }).check()).toThrow();
   });
 });

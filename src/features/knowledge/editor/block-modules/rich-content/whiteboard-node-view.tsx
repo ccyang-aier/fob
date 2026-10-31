@@ -12,6 +12,7 @@ import { RichBlockFrame } from './rich-block-frame';
 import { richMessages } from './messages';
 import { RichContentLoading } from './loading-state';
 import { whiteboardSceneHash } from './whiteboard-preview';
+import { GraphicToolButton } from './graphic-tool-button';
 import styles from './rich-content.module.css';
 
 const Canvas = dynamic(() => import('./whiteboard-canvas'), { ssr: false, loading: RichContentLoading });
@@ -78,8 +79,8 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   const result = preview?.scene === scene ? preview : null;
   return <>
     <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} appearance="canvas" actions={<>
-      {scene && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('downloadScene')} aria-label={t('downloadScene')} onClick={download}><DownloadSimple size={16} aria-hidden /></button>}
-      {editable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('editWhiteboard')} aria-label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></button>}
+      {editable && <GraphicToolButton label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></GraphicToolButton>}
+      {scene && <GraphicToolButton label={t('downloadScene')} onClick={download}><DownloadSimple size={16} aria-hidden /></GraphicToolButton>}
     </>}>
       {storedPreview || result?.image ? <div className={styles.graphic}><Image src={storedPreview || result!.image} width={1200} height={800} unoptimized alt={title || t('whiteboard')} draggable={false} onError={() => { if (storedPreview) setFailedSnapshot(storedPreview); }} /></div>
         : result?.error ? <div className={styles.state} role="alert">{t('whiteboardError')}</div>

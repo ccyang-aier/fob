@@ -8,6 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { RichBlockFrame } from './rich-block-frame';
 import { richMessages } from './messages';
 import { useRichTheme } from './use-rich-theme';
+import { GraphicToolButton } from './graphic-tool-button';
 import styles from './rich-content.module.css';
 
 let engine: Promise<typeof import('mermaid')> | undefined;
@@ -40,9 +41,9 @@ export function MermaidNodeView(props: NodeViewProps) {
     }, 180);
     return () => { canceled = true; clearTimeout(timer); };
   }, [deferred, id, attempt, editing, dark]);
-  return <RichBlockFrame props={props} icon={ChartBar} title={t('mermaid')} appearance="canvas" showHeader={editing} actions={editable && (editing
-    ? <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => setSourceOpen(false)}>{t('preview')}</button>
-    : <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('editDiagram')} aria-label={t('editDiagram')} onClick={() => setSourceOpen(true)}><PencilSimple size={16} aria-hidden /></button>)}>
+  return <RichBlockFrame props={props} icon={ChartBar} title={t('mermaid')} appearance="canvas" actions={editable && (editing
+    ? <GraphicToolButton label={t('preview')} onClick={() => setSourceOpen(false)}><ChartBar size={16} aria-hidden /></GraphicToolButton>
+    : <GraphicToolButton label={t('editDiagram')} onClick={() => setSourceOpen(true)}><PencilSimple size={16} aria-hidden /></GraphicToolButton>)}>
     {editing ? <textarea className={styles.source} aria-label={t('mermaidSource')} placeholder={'flowchart LR\n  A[Capture] --> B[Organize] --> C[Reuse]'} value={source} maxLength={50_000} spellCheck={false} onChange={event => { if (props.editor.isEditable) props.updateAttributes({ source: event.target.value }); }} />
       : !source.trim() ? <div className={styles.state}>{t('diagramEmpty')}</div>
       : !result || result.source !== source || result.dark !== dark ? <div className={styles.state} role="status">{t('loading')}</div>
