@@ -48,22 +48,20 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
       if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [data-graphic-title-editing], [role="separator"]')) root.current?.focus({ preventScroll: true });
     } : undefined}>
-    {canvas ? <div className={styles.graphicHeading} data-graphic-heading>
-      <span className={styles.graphicLabel}><Icon size={16} aria-hidden />
-        <GraphicBlockTitle key={`${editable}:${savedTitle}`} value={savedTitle} fallback={title} editable={editable} onCommit={title => {
-          const pos = props.getPos();
-          if (typeof pos !== 'number' || String(props.editor.state.doc.nodeAt(pos)?.attrs.title || '') !== savedTitle) return;
-          update({ title });
-        }} />
-      </span>
-      {tools}
-    </div> : (showHeader ?? true) && <div className={styles.header}>
+    {canvas ? tools : (showHeader ?? true) && <div className={styles.header}>
       <Icon size={16} aria-hidden />
       <span className={styles.title}>{editable ? <input className={styles.titleInput} aria-label={t('blockTitle')} placeholder={title} value={String(props.node.attrs.title || '')} maxLength={500} onChange={event => { if (props.editor.isEditable) props.updateAttributes({ title: event.target.value }); }} /> : String(props.node.attrs.title || title)}</span>
     </div>}
     {!canvas && tools}
     {error && <div className={styles.error} role="alert" data-document-export-omit>{t('fullscreenError')}</div>}
     <div className={styles.body} style={resizable && !canvas ? { height } : undefined}>{children}</div>
+    {canvas && <div className={styles.graphicCaption} data-graphic-caption>
+      <GraphicBlockTitle key={`${editable}:${savedTitle}`} value={savedTitle} fallback={title} editable={editable} onCommit={title => {
+        const pos = props.getPos();
+        if (typeof pos !== 'number' || String(props.editor.state.doc.nodeAt(pos)?.attrs.title || '') !== savedTitle) return;
+        update({ title });
+      }} />
+    </div>}
     {canvas && resizable && editable && !fullscreen && <GraphicBlockResize props={props} width={width} height={height} minHeight={minHeight} />}
     {resizable && editable && !canvas && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit
       onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.resizing = 'true'; start.current = { y: event.clientY, height, next: height }; }}

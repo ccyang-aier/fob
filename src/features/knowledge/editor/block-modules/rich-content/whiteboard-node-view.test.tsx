@@ -53,7 +53,7 @@ test('graphic blocks keep titles and internal actions with invisible edge resize
     expect(whiteboard.tabIndex).toBe(0);
     expect(Boolean(whiteboard.querySelector('input'))).toBe(false);
     expect(whiteboard.querySelector('[data-document-export-text]')?.textContent).toBe('Architecture sketch');
-    expect(whiteboard.querySelector('[data-graphic-heading] [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
+    expect(whiteboard.querySelector(':scope > [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
     expect(whiteboard.querySelectorAll('[data-graphic-resize]')).toHaveLength(3);
     expect(Array.from(whiteboard.querySelectorAll('[data-graphic-resize]')).every(target => target.getAttribute('data-resize-feedback') === 'cursor' && target.childElementCount === 0)).toBe(true);
     expect(Boolean(whiteboard.querySelector('[aria-haspopup="dialog"], [role="separator"]'))).toBe(false);
