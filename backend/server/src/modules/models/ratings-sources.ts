@@ -1,6 +1,6 @@
 import { parse } from 'node-html-parser';
 import { z } from 'zod';
-import type { ModelCatalogEntry, ModelRating } from '@fob/shared/model-catalog';
+import type { ModelCatalogEntry, ModelRating } from './catalog';
 
 type Rating = ModelRating;
 export type RatingEvidence = Partial<Record<keyof ModelCatalogEntry['ratings'], Rating | null>>;

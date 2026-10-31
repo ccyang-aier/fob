@@ -11,7 +11,7 @@ import { messages } from './i18n/sign-in-form.messages';
  */
 
 import { useState, type FormEvent } from 'react';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight } from '@/components/icons';
 import { Button } from '@/components/ui/button';

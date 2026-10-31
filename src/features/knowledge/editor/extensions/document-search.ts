@@ -20,30 +20,40 @@ export function findDocumentMatches(doc: Node, query: string, matchCase = false)
   return matches;
 }
 
-type SearchState = { query: string; matchCase: boolean; current: number; matches: SearchMatch[] };
+type SearchQuery = { query: string; matchCase: boolean; current: number };
+type SearchState = SearchQuery & { matches: SearchMatch[]; decorations: DecorationSet; active?: Decoration };
 export const documentSearchKey = new PluginKey<SearchState>('documentSearch');
-export const DocumentSearch = Extension.create({
-  name: 'documentSearch',
-  addProseMirrorPlugins() {
-    return [new Plugin<SearchState>({
+
+export function createDocumentSearchPlugin() {
+  return new Plugin<SearchState>({
       key: documentSearchKey,
       state: {
-        init: () => ({ query: '', matchCase: false, current: 0, matches: [] }),
+        init: () => ({ query: '', matchCase: false, current: 0, matches: [], decorations: DecorationSet.empty }),
         apply(transaction, previous) {
-          const input = transaction.getMeta(documentSearchKey) as Partial<SearchState> | undefined;
+          const input = transaction.getMeta(documentSearchKey) as Partial<SearchQuery> | undefined;
           if (!input && !transaction.docChanged) return previous;
-          const next = { ...previous, ...input };
-          next.matches = findDocumentMatches(transaction.doc, next.query, next.matchCase);
-          next.current = Math.min(Math.max(0, next.current), Math.max(0, next.matches.length - 1));
-          return next;
+          const query = input?.query ?? previous.query;
+          const matchCase = input?.matchCase ?? previous.matchCase;
+          const changed = transaction.docChanged || query !== previous.query || matchCase !== previous.matchCase;
+          const matches = changed ? findDocumentMatches(transaction.doc, query, matchCase) : previous.matches;
+          const current = Math.min(Math.max(0, input?.current ?? previous.current), Math.max(0, matches.length - 1));
+          if (!changed && current === previous.current) return previous;
+          const match = matches[current];
+          const active = match ? Decoration.inline(match.from, match.to, { class: 'document-search-current' }) : undefined;
+          // Match navigation changes two markers, not the full document or every match.
+          const base = changed ? DecorationSet.create(transaction.doc, matches.map(match => Decoration.inline(match.from, match.to, { class: 'document-search-match' })))
+            : previous.decorations.remove(previous.active ? [previous.active] : []);
+          const decorations = active ? base.add(transaction.doc, [active]) : base;
+          return { query, matchCase, current, matches, decorations, active };
         },
       },
       props: { decorations(state) {
-        const search = documentSearchKey.getState(state)!;
-        return DecorationSet.create(state.doc, search.matches.map((match, index) => Decoration.inline(match.from, match.to, {
-          class: index === search.current ? 'document-search-match document-search-current' : 'document-search-match',
-        })));
+        return documentSearchKey.getState(state)!.decorations;
       } },
-    })];
-  },
+    });
+}
+
+export const DocumentSearch = Extension.create({
+  name: 'documentSearch',
+  addProseMirrorPlugins: () => [createDocumentSearchPlugin()],
 });

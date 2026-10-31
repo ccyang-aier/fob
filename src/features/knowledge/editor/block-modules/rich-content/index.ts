@@ -4,10 +4,10 @@ import { ChartBar, FilePdf, LinkSimple, Palette } from '@/components/icons';
 import { withNodeView } from '../../extensions/with-node-view';
 import { insertAtom } from '../insert';
 import type { EditorBlockModule } from '../types';
-import { LinkCardNodeView } from './link-card-node-view';
-import { MermaidNodeView } from './mermaid-node-view';
-import { PdfNodeView } from './pdf-node-view';
-import { WhiteboardNodeView } from './whiteboard-node-view';
+import { LinkCardNodeView } from './link-card';
+import { MermaidNodeView } from './mermaid';
+import { PdfNodeView } from './pdf';
+import { WhiteboardNodeView } from './whiteboard';
 
 export const RichContentModules: readonly EditorBlockModule[] = [
   { name: 'linkCard', icon: LinkSimple, insert: insertAtom('linkCard'), decorate: (extensions, context) => withNodeView(extensions, 'linkCard', () => ReactNodeViewRenderer(props => createElement(LinkCardNodeView, { ...props, context }))) },

@@ -26,7 +26,7 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle', 'localStorage']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('@/features/identity/identity-provider', () => ({ useIdentity: () => ({ session, openSignIn: () => { signIns++; }, refresh: async () => session }) }));
+  mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session, openSignIn: () => { signIns++; }, refresh: async () => session }) }));
   mock.module('@/components/app-alert-provider', () => ({ useAppAlert: () => ({ notify: (...args: unknown[]) => { notices.push(args); } }) }));
   mock.module('./rewards-api', () => ({ RewardsError: class extends Error {}, rewardsApi: {
     summary: (accountId: string) => { const pending = deferred<CoffeeSummary>(); summaries.push({ accountId, pending }); return pending.promise; },

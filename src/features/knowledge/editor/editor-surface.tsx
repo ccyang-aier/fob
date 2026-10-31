@@ -33,7 +33,7 @@ import { DocumentEditorHeader } from './components/document-editor-header';
 import { DocumentSidebar } from './components/document-sidebar';
 import { AppAlert } from '@/components/app-alert';
 import { readonlyMessageCopy } from './editor-state';
-import { SyncIndicator } from './components/sync-indicator';
+import { SyncIndicator } from './components/document-editor-header/sync-indicator';
 import type { PageEditorViewModel } from './editor-state';
 import {
   revealBlockInEditor,

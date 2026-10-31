@@ -36,7 +36,7 @@ import {
   treeOperationErrorText,
   treeOperationSuccessText,
   type TreeActionId,
-} from './tree-actions';
+} from './tree/tree-actions';
 import {
   keyboardMovePlacement,
   liveSiblingsUnder,
@@ -56,7 +56,7 @@ import {
   undoTreeOperation,
   type TreeOperation,
   type TreeOperationKind,
-} from './tree-operations';
+} from './tree/tree-operations';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 

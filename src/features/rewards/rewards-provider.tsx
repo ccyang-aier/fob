@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import type { CoffeeSummary } from '@fob/shared/rewards';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useTranslation } from '@/lib/i18n/react';
 import { rewardsApi, RewardsError } from './rewards-api';

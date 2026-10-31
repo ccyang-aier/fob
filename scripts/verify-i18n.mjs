@@ -130,7 +130,7 @@ function resolveImport(file, specifier) {
       : undefined;
   return (
     target &&
-    [target, `${target}.ts`, `${target}.tsx`, path.join(target, 'index.ts')].find((candidate) =>
+    [target, `${target}.ts`, `${target}.tsx`, path.join(target, 'index.ts'), path.join(target, 'index.tsx')].find((candidate) =>
       units.has(candidate),
     )
   );

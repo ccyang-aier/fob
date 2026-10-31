@@ -1,8 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import type { Pool, PoolClient } from 'pg';
-import { modelCatalogSchema } from '@fob/shared/model-catalog';
-import type { ModelCatalog } from '@fob/shared/model-catalog';
+import { modelCatalogSchema } from './catalog';
+import type { ModelCatalog } from './catalog';
 import { FobDatabaseError } from '../../platform/database/initialize-config';
 import type { FobSqlConnection } from '../../platform/database/initialize-role';
 import { catalogModel } from './schema';

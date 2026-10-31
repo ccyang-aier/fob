@@ -15,9 +15,9 @@ import { AppAlert } from '@/components/app-alert';
 import { EmptyState } from '@/components/empty-state';
 import { CanvasState } from '../canvas-states';
 import { useAppAlert } from '@/components/app-alert-provider';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { KnowledgeWorkbench } from '../knowledge-workbench';
-import { PageTreeSidebar } from '../navigation/page-tree-sidebar';
+import { PageTreeSidebar } from '../navigation/tree/page-tree-sidebar';
 import { SIDEBAR_MAIN_ITEMS } from '../dense-sidebar/sidebar-navigation';
 import { useI18n } from '../dense-sidebar/use-i18n';
 import {
@@ -26,8 +26,8 @@ import {
   type createLocalLibraryStore,
   type LocalDocument,
 } from './local-library';
-import { LocalFileDocument } from '../documents/file-document-surface';
-import { documentFileFormat } from '../documents/file-format';
+import { LocalFileDocument } from '../documents/previews/file-document-surface';
+import { documentFileFormat } from '../documents/previews/file-format';
 import { readDocumentIndexStatus, readDocumentSource } from '../documents/document-metadata';
 import { LocalDocumentEditor } from './local-document-editor';
 import { subscribeOpenPageTarget } from '../editor/open-target';
@@ -35,7 +35,7 @@ import { LocalLibraryNavigation } from './local-library-navigation';
 import { KnowledgeEmptyState } from '../knowledge-empty-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { LocalFolderOverview } from '../discovery/local-folder-overview';
-import { LocalDocumentImport } from '../documents/local-document-import';
+import { LocalDocumentImport } from '../documents/import/local-document-import';
 import {
   DropdownMenu,
   DropdownMenuTrigger,

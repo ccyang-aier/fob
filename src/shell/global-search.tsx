@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { AppAlert } from '@/components/app-alert';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
 import { KnowledgeQueryProvider } from '@/features/knowledge/data/provider';
 import { useLocalLibrary } from '@/features/knowledge/local/use-local-library';

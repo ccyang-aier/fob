@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { BellSimple as Bell, BellSlash as BellOff } from '@/components/icons';
 import { knowledgeSubscriptionResultSchema, type KnowledgeSubscriptionTarget } from '@fob/shared/knowledge/subscriptions';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { ButtonLoading } from '@/components/ui/button-loading';
+import { ButtonLoading } from '@/components/ui/button/loading';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeResourceRequest } from '../data/resource-http';

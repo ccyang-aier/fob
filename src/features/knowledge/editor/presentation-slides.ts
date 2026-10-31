@@ -1,6 +1,6 @@
 import { createTranslator, getLocale, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './presentation-slides.messages';
-import { escapeDocumentHtml } from './components/document-html-export';
+import { escapeDocumentHtml } from './export/document-html-export';
 
 /** Use the exact rendered blocks and embedded assets, grouping at H1/H2 boundaries. */
 export function presentationSlides(

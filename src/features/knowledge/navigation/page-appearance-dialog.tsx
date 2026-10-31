@@ -14,7 +14,7 @@ import { knowledgeMessages } from './page-appearance-dialog.messages';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { DialogButton, ModalDialog } from '../organization/ui';
-import { pageDisplayTitle } from './tree-model';
+import { pageDisplayTitle } from './tree/tree-model';
 
 /** A curated, category-free set that covers common doc marks; enough to be useful, small enough to scan. */
 const iconChoices = [

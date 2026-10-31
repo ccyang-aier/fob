@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { NodeViewWrapper, useEditorState, type NodeViewProps } from '@tiptap/react';
 import { Emoji } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
-import { EmojiPalette } from '@/components/ui/emoji-palette';
+import { EmojiPalette } from '@/components/ui/emoji-picker/palette';
 import { useTranslation } from '@/lib/i18n';
 import { messages } from './emoji-node-view.messages';
 import styles from './emoji.module.css';

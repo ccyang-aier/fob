@@ -3,7 +3,7 @@ import { Window } from 'happy-dom';
 import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { KnowledgeWorkbench } from '../knowledge-workbench';
-import { PageTreeSidebar } from './page-tree-sidebar';
+import { PageTreeSidebar } from './tree/page-tree-sidebar';
 import { KnowledgeNavigationOutlet, KnowledgeNavigationProvider, KnowledgeNavigationScope } from './system-navigation';
 import { useKnowledgeNavigationCompact } from './system-navigation';
 import { KnowledgeMainNavigation } from '../dense-sidebar/knowledge-main-navigation';

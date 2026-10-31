@@ -5,9 +5,7 @@ import { messages } from './i18n/identity-provider.messages';
 const uiText = createTranslator(messages);
 
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -16,27 +14,14 @@ import {
   type ReactNode,
 } from 'react';
 import { sessionExpiredEvent } from '@/lib/authenticated-fetch';
-import { createIdentitySessionStore, type IdentitySession } from './session-store';
+import { createIdentitySessionStore } from './session-store';
+import { IdentityContext, type IdentityContextValue } from './identity-context';
 import { authErrorCopyFor } from './auth-errors';
 import { AccountDialog } from './components/account-dialog';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { createPresenceStore } from './presence-store';
-import type { PresencePreference, PresenceStatus } from './presence';
+import type { PresencePreference } from './presence';
 import { presenceDisplay } from './presence';
-
-type IdentityContextValue = {
-  session: IdentitySession;
-  refresh: () => Promise<IdentitySession>;
-  completeSignIn: () => Promise<void>;
-  signOut: () => Promise<void>;
-  expireSession: () => void;
-  openSignIn: () => void;
-  openSwitchAccount: () => void;
-  presence: PresenceStatus;
-  presencePreference: PresencePreference;
-  setPresence: (value: PresencePreference) => void;
-};
-const IdentityContext = createContext<IdentityContextValue | null>(null);
 
 export function IdentityProvider({ children }: { children: ReactNode }) {
   const [store] = useState(createIdentitySessionStore);
@@ -164,10 +149,4 @@ export function IdentityProvider({ children }: { children: ReactNode }) {
       />
     </IdentityContext.Provider>
   );
-}
-
-export function useIdentity() {
-  const value = useContext(IdentityContext);
-  if (!value) throw new Error('IdentityProvider must wrap the Fob application.');
-  return value;
 }

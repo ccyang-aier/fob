@@ -47,6 +47,7 @@ declare module 'bun:test' {
     mock: { calls: Parameters<T>[] }
     mockClear(): Mock<T>
     mockReset(): Mock<T>
+    mockRestore(): void
     mockImplementation(implementation: T): Mock<T>
   }
   const mock: {
@@ -54,6 +55,7 @@ declare module 'bun:test' {
     module(specifier: string, factory: () => Record<string, unknown>): void
     restore(): void
   }
+  function spyOn<T, K extends keyof T>(object: T, key: K): Mock<Extract<T[K], (...args: never[]) => unknown>>
 }
 
 /** Bun APIs used by frontend tests, without introducing Bun's production globals. */

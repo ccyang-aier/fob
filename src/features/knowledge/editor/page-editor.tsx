@@ -3,8 +3,8 @@ import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './page-editor.messages';
 
 import { useKnowledgePagesQuery } from '../data/pages-queries';
-import { documentFileFormat } from '../documents/file-format';
-import { KnowledgeBaseFileDocument } from '../documents/file-document-surface';
+import { documentFileFormat } from '../documents/previews/file-format';
+import { KnowledgeBaseFileDocument } from '../documents/previews/file-document-surface';
 import { flattenKnowledgeBaseList, useKnowledgeTeamspacesQuery } from '../data/catalog-queries';
 
 /**

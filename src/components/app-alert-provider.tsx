@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { createPortal } from "react-dom"
 
 import { AppAlert, type AppAlertProps, type AppAlertTone } from "./app-alert"
-import styles from "./app-alert.module.css"
+import styles from "./app-alert/styles.module.css"
 
 type AlertOptions = { duration?: number; markerColor?: string }
 type Notification = AppAlertProps & { id: number; duration: number }

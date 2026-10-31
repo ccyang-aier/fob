@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { documentInviteAcceptSchema, pageScopeSchema } from '@fob/shared/knowledge/contracts';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { authenticatedFetch } from '@/lib/authenticated-fetch';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import { useTranslation } from '@/lib/i18n';

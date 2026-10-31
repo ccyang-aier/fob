@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import type { LucideIcon } from '@/components/icons';
 import { motion, type Variants } from 'motion/react';
-import { ButtonLoading } from '@/components/ui/button-loading';
+import { ButtonLoading } from '@/components/ui/button/loading';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import styles from './companion-widget.module.css';

@@ -26,13 +26,13 @@ export function useStandaloneEditor({ content, contentId, context, label, editab
   const applyingExternal = useRef(false);
   // A slash insertion emits deletion + insertion before React commits either snapshot.
   // Acknowledging an intermediate local echo must never replace the newer transaction.
-  const synchronization = useRef<{ editor: unknown; received: string; pending: Set<string>; latest: string | null }>({ editor: null, received: JSON.stringify(content), pending: new Set(), latest: null });
+  const synchronization = useRef<{ editor: unknown; received: string; pending: Set<string>; latest: string | null } | null>(null);
   const extensions = useMemo(() => [...applyEditorBlockModules(createKnowledgeExtensions(), context), createBlockIdExtension({ pageId: contentId }), ...createBlockEditingExtensions(), ...createSlashPasteExtensions(), standaloneHistory], [contentId, context]);
   const editor = useEditor({ extensions, immediatelyRender: false, content, editable, editorProps: { attributes: { 'aria-label': label } }, onUpdate: ({ editor: current }) => {
     if (applyingExternal.current) return;
     const body = current.getJSON(), serialized = JSON.stringify(body);
     let state = synchronization.current;
-    if (state.editor !== current) state = synchronization.current = { editor: current, received: JSON.stringify(content), pending: new Set(), latest: null };
+    if (state?.editor !== current) state = synchronization.current = { editor: current, received: JSON.stringify(content), pending: new Set(), latest: null };
     state.pending.add(state.received); state.pending.add(serialized); state.latest = serialized;
     if (state.pending.size > 32) {
       const obsolete = [...state.pending].find(value => value !== state.received && value !== serialized);
@@ -45,7 +45,7 @@ export function useStandaloneEditor({ content, contentId, context, label, editab
     const anticipate = ({ transaction, nextState }: EditorEvents['beforeTransaction']) => {
       if (applyingExternal.current || transaction.getMeta('preventUpdate') || editor.state.doc.eq(nextState.doc)) return;
       let state = synchronization.current;
-      if (state.editor !== editor) state = synchronization.current = { editor, received: JSON.stringify(editor.getJSON()), pending: new Set(), latest: null };
+      if (state?.editor !== editor) state = synchronization.current = { editor, received: JSON.stringify(editor.getJSON()), pending: new Set(), latest: null };
       const incoming = JSON.stringify(nextState.doc.toJSON());
       state.pending.add(state.received); state.pending.add(incoming); state.latest = incoming;
     };
@@ -59,7 +59,7 @@ export function useStandaloneEditor({ content, contentId, context, label, editab
     if (!synchronize || !editor || editor.isDestroyed) return;
     const incoming = JSON.stringify(content);
     let state = synchronization.current;
-    if (state.editor !== editor) state = synchronization.current = { editor, received: incoming, pending: new Set(), latest: null };
+    if (state?.editor !== editor) state = synchronization.current = { editor, received: incoming, pending: new Set(), latest: null };
     if (state.latest !== null && incoming !== state.latest && state.pending.has(incoming)) return;
     synchronization.current = { ...state, received: incoming, latest: null, pending: new Set() };
     if (JSON.stringify(editor.getJSON()) !== incoming) {

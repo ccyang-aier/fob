@@ -34,7 +34,7 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle', 'localStorage']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('@/features/identity/identity-provider', () => ({ useIdentity: () => ({ session }) }));
+  mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session }) }));
   mock.module('../local/use-local-library', () => ({ useLocalLibrary: () => ({ store, library: useSyncExternalStore(store.subscribe, store.getSnapshot, () => emptyLocalLibrary), error: false }) }));
   mock.module('../knowledge-base-dialog', () => ({ KnowledgeBaseDialog: () => { renderedDialogs++; return <div role="dialog">Shared creation form</div>; } }));
   mock.module('../assets/local-assets', () => ({ removeLocalKnowledgeBaseAssets: async () => { if (assetCleanupFailure) throw assetCleanupFailure; } }));

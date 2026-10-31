@@ -1,8 +1,8 @@
 import { asc } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import type { Pool } from 'pg';
-import { modelCatalogSchema } from '@fob/shared/model-catalog';
-import type { ModelCatalog } from '@fob/shared/model-catalog';
+import { modelCatalogSchema } from './catalog';
+import type { ModelCatalog } from './catalog';
 import { catalogModel } from './schema';
 
 export interface ModelCatalogRepository {

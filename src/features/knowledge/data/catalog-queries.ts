@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { knowledgeCatalogClient } from './knowledge-catalog-client';
 import { organizationQueryKeys } from '../organization/keys';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 
 const firstCursor = null as string | null;
 const nextCursor = (page: { nextCursor: string | null }) => page.nextCursor;

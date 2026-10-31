@@ -4,8 +4,8 @@
     "sha256": "d9db8015940443cea58e5697db126db8accca88a450b7239a720e5cee71d83a7"
   },
   "src/features/knowledge/data/catalog-queries.ts": {
-    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization. Continue folder directory pagination so every existing folder can be resolved from a direct link.",
-    "sha256": "b02ac409c980550f060917a45d2d64fa75f04facd7b8e122a33a700d36d2820d"
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization. Continue folder directory pagination so every existing folder can be resolved from a direct link. Consume the independent identity context to remove the provider/account-view initialization cycle.",
+    "sha256": "c3812b5860742b204f30be922d67c3b64c80dfed3f539faedfe950376718de8e"
   },
   "src/features/knowledge/data/endpoint.test.ts": {
     "reason": "Web-only API endpoint contract: remove desktop IPC test cases, use isolated Fob port 8721, and retain configured-origin/production-failure/scope validation tests.",
@@ -28,8 +28,8 @@
     "sha256": "0c1dc575a6aaa1681781c595bf269c4e1ee88e23c204916ebe966b1858410bc4"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar.",
-    "sha256": "a67846881c0feb16c9038abb4fba8ed5e260e5a083943c75e905fb17119986b2"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar. Update imports for component ownership without changing behavior.",
+    "sha256": "5e98d7c0fd6904c294d71f1e1bd6233bcb4eff40ae1bc9ad39ed06a6b2d67637"
   },
   "src/features/knowledge/knowledge-base-header.messages.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -44,8 +44,8 @@
     "sha256": "1d1ebdfb45f9923de7972198e436eee37debd3f8907def0576a4807a724f44c5"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states.",
-    "sha256": "5f65799b328a8249c0d9ec88994e4c4b1bdf592a3b9c607c89db27ab1a772f3c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle.",
+    "sha256": "7e9582c88caaf60025c3ad0396ac982faf58beb7ca1bc88f1618f2025bd31314"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -64,24 +64,25 @@
     "sha256": "f6ada04fe53f8fa591940038560245afdb1460c9ee57208d9b4f0110a1d14b0b"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews.",
-    "sha256": "f1f0cb6381bf2b37ea84ecd83dce88652daf80bb2c0005666da98d7bfff8981a"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle.",
+    "sha256": "f0f16ca01d894fcfdac234e32664ba292f77007a620ac281549f8f68508fd2c7"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
     "sha256": "49f5a092c2917e3679f7d2fd4196bda08a1b1b3def57f958f92c1325d874168b"
   },
   "src/features/knowledge/local/local-library.ts": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents.",
-    "sha256": "cac488105bebe179e8f4e2d7622e87fd72e972c36335d343ca7eab6593780b09"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents. Update imports for component ownership without changing behavior.",
+    "sha256": "6bdfad1ea898223b0c3251278fb100d75bc95786b4681cceb5c590b16415977f"
   },
   "src/features/knowledge/navigation/knowledge-sidebar.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
     "sha256": "dabbcc88094042b06b65bec5e4b0572a157e8a2f4dff328e253b0e23f7675bb6"
   },
   "src/features/knowledge/navigation/page-tree-sidebar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "6067a1b55055dcbb2a69f86527b33838a70be08cde09584b7056e9d882477b4d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "b39322e36877b0fceb5dcbf3aa80fe31e1da980527d150525d2a73b44eca79f0",
+    "relocatedTo": "src/features/knowledge/navigation/tree/page-tree-sidebar.tsx"
   },
   "src/features/knowledge/notifications/components/notification-bell.messages.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -128,8 +129,8 @@
     "deleted": true
   },
   "src/features/knowledge/organization/organization-panel.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "433207b03e2ff2c31e0b12a84634edf625d237b8ed2afcf8bd76415ad56e337c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consume the independent identity context to remove the provider/account-view initialization cycle.",
+    "sha256": "6efbf05307e309f9b220da7968100178eacb8f90e51df864d2acf4c11a1c6895"
   },
   "src/features/knowledge/use-knowledge-base-selection.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -228,36 +229,41 @@
     "sha256": "c5f908ec0670bbfcf087822e55bff7ee77834564793f0a94ddc998e7378b38a3"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "53b3e4127d561802e4091ef0655f622dbaa110d7180a9a7a4b6e6530bda14324"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "c886a8f902223322c4026ec066c8d6139a4372e91f1d36ed8b9867d503956250",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-document-preview.tsx"
   },
   "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
     "sha256": "2751f81fef5b84d620cded1985d7488e77c4bf2c0edc1f48fcb5447362862c4a"
   },
   "src/features/knowledge/editor/block-modules/file/file-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "76905c0582d2f12b5ddb313f5d216472ffe097b98cbcba8fb1b5789a740bda31"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Update imports for component ownership without changing behavior.",
+    "sha256": "6b4c2d7514edadc31a2d028dc6303f7b87d5a8a5a114022c8a633e1c68f80b11"
   },
   "src/features/knowledge/editor/block-modules/page-link/page-link-node-view.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
     "sha256": "e18ec69cbb689ad313d6b7902ac5c718251fd46cf3be4319ccc1506912d6f944"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md.",
-    "sha256": "5a09254fbf0672b940c672ba99ac59fc7c60237eb55fde5b5c0de4fae096823f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "808608cf39df935d1071aae3924a720a922bfdb91f49c6f48e0d314c4668fb0f",
+    "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/index.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
-    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder. Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration.",
-    "sha256": "7cf2e936622d05789de9653e5302a210db44dfd7d244d7b1fa43d01451785d1a"
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder. Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "8b3493cdb3ead7ec12692d9dbdf052e4fa34f176a249a1c57dd219e1ca1e2645",
+    "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/document-more-menu.test.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu. Replace reserved import and move entries with permission-aware document management dialogs for both resource sources.",
-    "sha256": "ed8d3f7fc05aa146e22b9dcd200cf070f4373e5bb3e64f41b72798de49ab12ce"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu. Replace reserved import and move entries with permission-aware document management dialogs for both resource sources. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "0ab17559585325cf62f70a7ca1cf9ff94cf559f546abac5aeb44f432b9e8ffc2",
+    "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/index.tsx"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md.",
-    "sha256": "234981d88df8c81df7ad6a50cdf0044ea0b4f4c524d00751d2c9b377d43eb4c9"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "748a2608c9cb761c1477c01be9dd5d5066b920788168c35271a3ed98e97618e4",
+    "relocatedTo": "src/features/knowledge/editor/components/selection-toolbar/index.tsx"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
     "deleted": true,
@@ -276,8 +282,8 @@
     "sha256": "2654de4978cd805871c2124503437ad74ade9f34a05bae4a86cb4fd7c502ed55"
   },
   "src/features/knowledge/editor/document-tools.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "1b175a6a7b41c0cae885d8e246f03818762337e9b8a64cf63191b814663cc27e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Update imports for component ownership without changing behavior. Cache document search by content and query; avoid duplicate search metadata transactions while preserving navigation and presentation.",
+    "sha256": "844c33a569658591752f4b73bc8d78ac9907db32209fbe6edba4054f89001b7e"
   },
   "src/features/knowledge/editor/editor-layout.module.css": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Replace the duplicated blank-document placeholder with localized blank-line decorations and keep heading-level labels clear of insertion hints.",
@@ -288,12 +294,13 @@
     "sha256": "4416e141de10fb54a6f56a63189580b21c588da54c4ec1d0149260fbb859ff85"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
-    "sha256": "f6c0c03d9c21295b73983d796616dbcde877d654494fdabccbfa4350fe0b1525"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Update imports for component ownership without changing behavior.",
+    "sha256": "14dd9d4ec39bc76e1d579210765ba8e8529a3ec0cb70d73b281f0e3cee6f65bb"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
-    "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render selected Unicode content icons through the shared local OpenMoji component without changing existing encoded glyph IDs or stored values.",
-    "sha256": "8d859b3a1864208d5315b4bbb478be425124c827e2bcbfce660bc9855e6bbe1b"
+    "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render selected Unicode content icons through the shared local OpenMoji component without changing existing encoded glyph IDs or stored values. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "f58f7661455450c276c56d8cae56d61ea2540e244deee3e100242e0a2b60e704",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon/index.tsx"
   },
   "src/features/knowledge/notifications/notifications-api.test.ts": {
     "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior.",
@@ -352,8 +359,9 @@
     "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
   },
   "src/features/knowledge/editor/components/document-editor-header.module.css": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "3cc8294927fdf9f2ae4d2092d36658ce5a9aa953ceedc815e759865bd7b14ddc"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "3cc8294927fdf9f2ae4d2092d36658ce5a9aa953ceedc815e759865bd7b14ddc",
+    "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/styles.module.css"
   },
   "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -440,16 +448,19 @@
     "sha256": "0bef7dc7d3627d56ac3cb99b94dda7dbef46e65f43e96d4da4a8b1378f055cdc"
   },
   "src/features/knowledge/documents/local-document-import.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports.",
-    "sha256": "ccd8c6583bfa2f656c38dbf81f9149c934cad3efa5e835bd01bd9116a6c4fc42"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "2d208215a49f5dffd61b1d9809372c9a998b01117fe876152b3a34456ae7bc7e",
+    "relocatedTo": "src/features/knowledge/documents/import/local-document-import.tsx"
   },
   "src/features/knowledge/documents/pdf-file-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "a9b928f77ea213fde04492d07a26ec465cce8205a8990cd4718e3ba8aac0aba0"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "2a324156bbcf86c32b531f65373e101b7c91cb4e4968a85fb091ca18ffd3405d",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-file-view.tsx"
   },
   "src/features/knowledge/documents/text-file-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "80304e040f73db355bc13e1ced4f9b308ccc4935805d17fe3059b973ca0d2c4c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "76919a7e63707ba411d8dc33a71f747ba42cee4e4b93bf0a2d52c1dceb40b116",
+    "relocatedTo": "src/features/knowledge/documents/previews/text/text-file-view.tsx"
   },
   "src/features/knowledge/editor/awareness/awareness-members.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Render deduplicated live members and verified role, local time and activity in individual profile cards.",
@@ -516,8 +527,8 @@
     "sha256": "ab24ba4a935d3d0875816e1cd2aea27869d88796ded8824028f1c294c6721370"
   },
   "src/features/knowledge/editor/block-modules/embed/embed-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "7d7ac82e18e61b7ff96cb573378d9196a4aa24fd3d759513468a2c6753924972"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Update imports for component ownership without changing behavior.",
+    "sha256": "8691f8186a5e1073a154cc40917c429435ec2e14ba7a6624fa66855374cf78bb"
   },
   "src/features/knowledge/editor/block-modules/embed/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
@@ -600,8 +611,8 @@
     "sha256": "b7ab0870a4788aec00f48a750b4b489ed17c3f68e7fdace0dda2d0595f42780b"
   },
   "src/features/knowledge/editor/block-modules/task-list/task-progress.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "66a28f3b8c713b7d8a8176905f8b9c7a19449f6662dc548c69104861bbaedbc2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Notify progress only for content transactions and share counts by immutable document without retaining old documents.",
+    "sha256": "4756759d724ede2a16395daed62ea03dbe37cc695ae64090aebae16070b41462"
   },
   "src/features/knowledge/editor/block-modules/video/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
@@ -616,20 +627,24 @@
     "sha256": "d1cf73915df10effc2da74e2c3d501c4bd09f4cd26f8ac82ae2936c1d988a71e"
   },
   "src/features/knowledge/editor/components/document-appearance-menu.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "599666ede53afc208f37bcf8b4f06275254a3d60f62906d94d62f5e3d85e89a4"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "0c70e1ab193826d07c9b1442d14e2c32599cfbee35c288f93bcb88d06412d741",
+    "relocatedTo": "src/features/knowledge/editor/components/document-appearance/menu.tsx"
   },
   "src/features/knowledge/editor/components/document-outline.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "fb403febecc8e8a26fa655a6aabd746a2d8457a2c996970a6274096685776c60"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "b11b4ab6d3c51ffc3b14f22864aaa0eef215a2bdb1c0a760f8b7801c06698626",
+    "relocatedTo": "src/features/knowledge/editor/components/document-outline/index.tsx"
   },
   "src/features/knowledge/editor/components/document-star-icon.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "7ea8d518584c074cc9afd3bdbe60ec6e8944f644f5049c1d809c43447c9fb464"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "2fb279ba642a1a1cd8481a86ef558f8f4f731a0917a8b99be0ea51912dd61b79",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/icon.tsx"
   },
   "src/features/knowledge/editor/components/sync-indicator.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "38a0bbfd1548e9a093a622bb0b77180b22dddd3219178211b9be6b5e8f63b65c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "41c38c6fe07aeb341159a5455cc75f63ddd770477251c9dee8fa33a333507970",
+    "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/sync-indicator.tsx"
   },
   "src/features/knowledge/editor/review/review-card.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -648,8 +663,9 @@
     "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
   },
   "src/features/knowledge/navigation/page-icon-picker.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render emoji choices with the shared OpenMoji component while preserving existing glyph selection, save, read-only and failure behavior.",
-    "sha256": "efd9c62c938c894ace3af202b8d5e7c89ee237b2138e856e061e176e47a78b64"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render emoji choices with the shared OpenMoji component while preserving existing glyph selection, save, read-only and failure behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "a4a80587f0b0f8e8a2b259b88e010739eef246f4f36da7a4760379feb09b4b03",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon-picker/index.tsx"
   },
   "src/features/knowledge/organization/groups-section.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -684,8 +700,8 @@
     "sha256": "c2543da8515bf45b65702573d6060c472645126202bac6c09e94e0a6d2429f10"
   },
   "src/features/companion/companion-tool-button.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "535d9d02c4d81c527e075f0d7aad45a6a5f3328865aa63cbeea5f90cd21479c1"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Update imports for component ownership without changing behavior.",
+    "sha256": "e73a29be95af7b370e3a9db91ef6d214a057d3b41281e3fe50d5f527bee4d869"
   },
   "src/features/knowledge/collaboration/awareness.ts": {
     "reason": "Publish actual editing state and time zone with idle cleanup for the reference member profile card.",
@@ -736,8 +752,9 @@
     "sha256": "5d1e21ff2b2bf3a0e9723692d39d4ae2a2d730d8465787b8e313d582f4bec7fc"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
-    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the star control while preserving its icon, aria-pressed state and actual star operation; see docs/editor-rich-content.md.",
-    "sha256": "eacfb5c916ff5b6d2872180a29de0108cee088d13f5f8898dba4fe734e887ad4"
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the star control while preserving its icon, aria-pressed state and actual star operation; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "ab78973c9f11ce85eb20e0a3e0344c337b7144da0d877423825214ee103e2b40",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/index.tsx"
   },
   "src/features/knowledge/editor/editor-layout.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Mount the shared block hover/drag layer for local, collaborative and folder bodies, preserving saved content and block IDs.",
@@ -748,20 +765,23 @@
     "sha256": "887eb4b8a7397fbeb10c558ce783b532747d1940be0fd7d45ed17da37287d5e0"
   },
   "src/features/knowledge/editor/components/document-outline.module.css": {
-    "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "7706d9f0cb72a7fe699f01e5f40fa7568b87baeceeb368a53a95086694502461"
+    "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "7706d9f0cb72a7fe699f01e5f40fa7568b87baeceeb368a53a95086694502461",
+    "relocatedTo": "src/features/knowledge/editor/components/document-outline/styles.module.css"
   },
   "src/features/knowledge/navigation/page-icon.test.tsx": {
-    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Verify icon-only outline folding and independent parent/leaf anchor navigation while preserving collapse state through position changes. See .spec/tasks/editor-polish.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify preserved Unicode values resolve to local OpenMoji artwork alongside existing glyph and page-icon persistence behavior.",
-    "sha256": "3ba119cac7ddee3aab42037b28c81c390644ab994e4a1d0bc94b4bbaa5dade86"
+    "reason": "Verify outline collapse by clicking the full heading row while retaining independent leaf navigation. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Verify icon-only outline folding and independent parent/leaf anchor navigation while preserving collapse state through position changes. See .spec/tasks/editor-polish.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Verify preserved Unicode values resolve to local OpenMoji artwork alongside existing glyph and page-icon persistence behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "7bd64f9d43c3aae7590bcd8a23a4693cc613fc7bc518641664a83ac3d6cf3357",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon/page-icon.test.tsx"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
     "reason": "Localize unavailable local folder links and document-list recovery.",
     "sha256": "c55a25b60469441db96f73def6cdc7c04b48a17b9190c50a3efaae8255cdc675"
   },
   "src/features/knowledge/navigation/tree-stage.tsx": {
-    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "ce67bfb5cd630432dc4fbb45f5258cd86ef01d5509888c4ab6785e2a1dfd6c41"
+    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "8e92cc0aa9e90be0ba94081d665e682a028d157dedd6c9cf806be41ed75e6d7d",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-stage.tsx"
   },
   "backend/server/src/modules/knowledge/search/keyword.ts": {
     "reason": "Intersect folder and author conditions with the existing indexed ACL predicate before BM25 ranking and limiting.",
@@ -784,12 +804,14 @@
     "sha256": "0cb7d5c5aed815030f068bd9b74580eea85bdbcef9af6e7ceee7419cc5c40b03"
   },
   "src/features/knowledge/navigation/tree-model.ts": {
-    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "5bb5972ddade32c8dacec2846d3cf211c6f507a112518f6b918247dfea034833"
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "5bb5972ddade32c8dacec2846d3cf211c6f507a112518f6b918247dfea034833",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-model.ts"
   },
   "src/features/knowledge/navigation/tree-model.test.ts": {
-    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "9d5eeca71aa12335885ac0f7c25f6c075d8326b0ceebf302e4a4eea60b71b7c5"
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "9d5eeca71aa12335885ac0f7c25f6c075d8326b0ceebf302e4a4eea60b71b7c5",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-model.test.ts"
   },
   "backend/server/src/modules/knowledge/import-export/body.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
@@ -840,16 +862,19 @@
     "sha256": "62320910cc25381db1e31d21870f135ed2e542789961861e8aba4fc7e311c2b9"
   },
   "src/features/knowledge/editor/components/document-markdown-export.messages.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "7a2c7db2321fb1024422664c2dbab7d76c9d1641029f89a33fb92284fb83cd55"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "7a2c7db2321fb1024422664c2dbab7d76c9d1641029f89a33fb92284fb83cd55",
+    "relocatedTo": "src/features/knowledge/editor/export/document-markdown-export.messages.ts"
   },
   "src/features/knowledge/editor/components/document-markdown-export.test.ts": {
-    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "8a309c8b4b6f7a05ab9fa5bddc98bc77ae6507b0a5c1d9933dd822de40b59ed6"
+    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "8a309c8b4b6f7a05ab9fa5bddc98bc77ae6507b0a5c1d9933dd822de40b59ed6",
+    "relocatedTo": "src/features/knowledge/editor/export/document-markdown-export.test.ts"
   },
   "src/features/knowledge/editor/components/document-markdown-export.ts": {
-    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "62539d44d6fbbf1c3aa1f009542456e75181ba5cc056807a953baf084a1a2e03"
+    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "62539d44d6fbbf1c3aa1f009542456e75181ba5cc056807a953baf084a1a2e03",
+    "relocatedTo": "src/features/knowledge/editor/export/document-markdown-export.ts"
   },
   "src/features/knowledge/documents/documents-page.module.css": {
     "reason": "Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
@@ -872,8 +897,8 @@
     "sha256": "497a4f4062c9716c9b9ce70f9ea05e909477403552de14b067b9f94691445d69"
   },
   "src/features/knowledge/editor/block-modules/callout/callout-node-view.tsx": {
-    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the user-approved 200-item OpenMoji palette for callout content icons; separate left emoji from the 168px right semantic-theme menu, preserve chosen emoji across tone changes and retain custom background behavior. Control visibility and color refinement (docs/editor-rich-content.md): Use the shared ColorPalette for the user-requested multicolor custom-theme entry while preserving all emoji, tone and background editing behavior.",
-    "sha256": "d5a311143c18d55b426e5dbd658cf2f379362e902aea2740069a3617bf61293a"
+    "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the user-approved 200-item OpenMoji palette for callout content icons; separate left emoji from the 168px right semantic-theme menu, preserve chosen emoji across tone changes and retain custom background behavior. Control visibility and color refinement (docs/editor-rich-content.md): Use the shared ColorPalette for the user-requested multicolor custom-theme entry while preserving all emoji, tone and background editing behavior. Update imports for component ownership without changing behavior.",
+    "sha256": "8eef90a2bc2ee57c33fa61a56e93bef77ff4a171f14e933511036f7128f6878b"
   },
   "src/features/knowledge/editor/block-modules/callout/callout.module.css": {
     "reason": "Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Keep inherited document typography and compact padding while refining independent emoji/theme panels and semantic theme icons.",
@@ -912,32 +937,37 @@
     "sha256": "87a84bc02918913979ff7fdb4994eaf60344d3dd2d6c8dd1487aa809d68fe7ea"
   },
   "src/features/knowledge/navigation/page-emojis.ts": {
-    "reason": "OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the same reviewed 8-category, 200-item local OpenMoji catalog for document and folder content icons while retaining the page emoji tuple API.",
-    "sha256": "f4fb6f1569fa3e20cc2d8b5952977625d2d90bc763d548925c54ec20344ea940"
+    "reason": "OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Use the same reviewed 8-category, 200-item local OpenMoji catalog for document and folder content icons while retaining the page emoji tuple API. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "f4fb6f1569fa3e20cc2d8b5952977625d2d90bc763d548925c54ec20344ea940",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon/emojis.ts"
   },
   "src/features/knowledge/comments/components/comments.module.css": {
     "reason": "Make comment width configurable through the shared sidebar and retain responsive overlay and viewport bounds.",
     "sha256": "84e96b653e74a1d46dea914e48b96024d395ab405c4cb5f1aade4b2cc9c6d847"
   },
   "src/features/knowledge/documents/file-document-surface.tsx": {
-    "reason": "Enable scoped import and authorized move actions from local and server file document headers; preserve original file preview and attachment behavior.",
-    "sha256": "1ec6b9ca2551cf4322e6785286605c4f6f394c2eafcb58b853c0edd5d144a9a1"
+    "reason": "Enable scoped import and authorized move actions from local and server file document headers; preserve original file preview and attachment behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Consume the independent identity context to remove the provider/account-view initialization cycle.",
+    "sha256": "6da3a60a259681dc3e4945d46fcac8a3ded658830463c2d9025594668fdf38e9",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-document-surface.tsx"
   },
   "src/features/knowledge/documents/local-document-import.messages.ts": {
-    "reason": "Describe the bounded native text import limit in both supported locales.",
-    "sha256": "7725d5355d34f2fcf9eafb856a19aaa6d6dd7409041493e6a84323a3662fec23"
+    "reason": "Describe the bounded native text import limit in both supported locales. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "7725d5355d34f2fcf9eafb856a19aaa6d6dd7409041493e6a84323a3662fec23",
+    "relocatedTo": "src/features/knowledge/documents/import/local-document-import.messages.ts"
   },
   "src/features/knowledge/documents/server-document-import.messages.ts": {
-    "reason": "Provide real native text import progress, size-limit and retry feedback in both supported locales. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics.",
-    "sha256": "4f44a8c1bb4117fe20b528c28466cebda7f1b4048bfe0098275f92b65e93aa0f"
+    "reason": "Provide real native text import progress, size-limit and retry feedback in both supported locales. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "4f44a8c1bb4117fe20b528c28466cebda7f1b4048bfe0098275f92b65e93aa0f",
+    "relocatedTo": "src/features/knowledge/documents/import/server-document-import.messages.ts"
   },
   "src/features/knowledge/documents/server-document-import.tsx": {
-    "reason": "Route text and Markdown into atomic native document creation with per-file retry identity and scoped UI state; keep other formats on existing authenticated uploads. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics.",
-    "sha256": "3c2d0b4837ab4c5eeaab6ff45f7611bacbf40d2117dcd9eebe1ef542c6627cb7"
+    "reason": "Route text and Markdown into atomic native document creation with per-file retry identity and scoped UI state; keep other formats on existing authenticated uploads. Describe the separate native text and original attachment limits in the full-surface import control; retain current native-versus-preview semantics. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "103867e004d3984d969e177633fea8bb0e6e7557e7d030123fc3c2bc9b11d902",
+    "relocatedTo": "src/features/knowledge/documents/import/server-document-import.tsx"
   },
   "src/features/knowledge/editor/page-editor.tsx": {
-    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents. Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
-    "sha256": "45d026977b2f21d0025cc56cbea2e01046c94f8c8a62f1001109c98558f50ae1"
+    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents. Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles. Update imports for component ownership without changing behavior.",
+    "sha256": "36b79c8a335e22e127c4ac29e2c8aaf5d82701790b807c13cbaa170e709a6817"
   },
   "src/features/knowledge/assets/components/asset-uploader.test.tsx": {
     "reason": "Make the full import dropzone clickable and keyboard-accessible with a sibling file input, preserving drop, upload, progress and retry behavior.",
@@ -956,12 +986,14 @@
     "sha256": "b2842c81bfcca06efae19f796d1f9786e7be9fe7195178fd8a87fd99db4b11e9"
   },
   "src/features/knowledge/editor/components/selection-toolbar.messages.ts": {
-    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing.",
-    "sha256": "3f180d4a33b7ac1815e89139ff788dc9a6b71da943ab40e143618bd52f18b4aa"
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "3f180d4a33b7ac1815e89139ff788dc9a6b71da943ab40e143618bd52f18b4aa",
+    "relocatedTo": "src/features/knowledge/editor/components/selection-toolbar/messages.ts"
   },
   "src/features/knowledge/editor/components/selection-toolbar.module.css": {
-    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing.",
-    "sha256": "20ba14e3fd3335109587d42862fc064303a2ee562725d2799fdd5f88ee43b6bb"
+    "reason": "Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Arrange seven highlight presets and the final custom swatch in a two-by-four grid; move removal to the highlighter pressed-state toggle and preserve color editing. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "20ba14e3fd3335109587d42862fc064303a2ee562725d2799fdd5f88ee43b6bb",
+    "relocatedTo": "src/features/knowledge/editor/components/selection-toolbar/styles.module.css"
   },
   "shared/src/knowledge/schema/marks.ts": {
     "reason": "Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output.",
@@ -980,7 +1012,307 @@
     "sha256": "1acdc737dcf9bf8d3db2d9e80cc27cbe88a48316f971ffd5fd917e70f0c50c7c"
   },
   "src/features/knowledge/editor/components/document-star-menu-item.test.tsx": {
-    "reason": "Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration.",
-    "sha256": "9ff460b292903236756144d2095cfbbe62971f5997e6ec1f1a5eff01d6e1223f"
+    "reason": "Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "sha256": "3e9f42f1b4b9cb53db665a8201989fd4aeec249b8908d2cde2fe6cd06ee5989a",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/menu-item.test.tsx"
+  },
+  "src/features/knowledge/collaboration/metadata-queue.test.ts": {
+    "reason": "Update imports for component ownership without changing behavior.",
+    "sha256": "2d7defec987883d503a6466f9d289076beb6a8cd311c30b04b7fb4c2030d490e"
+  },
+  "src/features/knowledge/collaboration/metadata-queue.ts": {
+    "reason": "Update imports for component ownership without changing behavior.",
+    "sha256": "8ac3c7dcc99212c9b2bfe8030bd8f2c3dff9fd5a5bf7bd55e38ab0e51522c4f5"
+  },
+  "src/features/knowledge/documents/document-metadata.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/document-metadata/messages.ts",
+    "sha256": "46bc4182fd8805aa674ca2677082a53211184ab365819fe40deacc43f0984bb6"
+  },
+  "src/features/knowledge/documents/document-metadata.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/document-metadata/document-metadata.test.ts",
+    "sha256": "c9fde91b96c74e2ef7fcb46cf9869cfaf6c8052821e37c697af0f0f2c07d58e9"
+  },
+  "src/features/knowledge/documents/document-metadata.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/document-metadata/index.ts",
+    "sha256": "94d3807e47502d6965c9bb970049f67e0688bbf380b6cc3665145f79a10fef74"
+  },
+  "src/features/knowledge/documents/file-document-preview.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-document-preview.messages.ts",
+    "sha256": "71ae8c0f4fe3a5f4e7d50190f54db9134b129fb6855b164ee8e1e2a188568b3c"
+  },
+  "src/features/knowledge/documents/file-document-surface.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-document-surface.messages.ts",
+    "sha256": "0247abc8abab9235f7894624745ed3f706e0e20dc9042662dffe64ee3aa6d512"
+  },
+  "src/features/knowledge/documents/file-format.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-format.messages.ts",
+    "sha256": "d33c403cf6e313c3a5199749fcba210a6138afbc19a2c3ee27051f0ff331d995"
+  },
+  "src/features/knowledge/documents/file-format.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-format.test.ts",
+    "sha256": "b45fd47ffd8e245229ddc41ae8c5c24fadd7e7fffa952dc3ee54ae0d2f71eef1"
+  },
+  "src/features/knowledge/documents/file-format.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-format.ts",
+    "sha256": "5b7a014485e7235ccaf04d0c421954c09cf146fd4bc5fbe6e5fac79912178b57"
+  },
+  "src/features/knowledge/documents/file-preview.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-preview.module.css",
+    "sha256": "52f800442fe4914d179246c2920630c8a6220118f05deed94238a2965ee77b0e"
+  },
+  "src/features/knowledge/documents/file-source.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-source.messages.ts",
+    "sha256": "a66d25878a83da47f2cde6b55d507574c7f41f79bd213e4c5c3d8d4896746e68"
+  },
+  "src/features/knowledge/documents/file-source.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/file-source.ts",
+    "sha256": "c87b74b7c7f324fe1f5dca8c0dd148d60ce6cddb272b20033a03ee6cb5c40a26"
+  },
+  "src/features/knowledge/documents/office-file-view.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/office/office-file-view.messages.ts",
+    "sha256": "f50f59a577e25ec482d40f062a40916f21012b792fdd081ce58ba27db6ae13c9"
+  },
+  "src/features/knowledge/documents/office-file-view.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/office/office-file-view.tsx",
+    "sha256": "40ea8c5529a496211a66691ecbf8f320865bc99daab6d2e01ca39ec15e169a5e"
+  },
+  "src/features/knowledge/documents/pdf-file-view.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-file-view.messages.ts",
+    "sha256": "b28a0835a77d581294ebefe3d4a438526b0130576b5c27d44f611f6a80c4a26e"
+  },
+  "src/features/knowledge/documents/pdf-file-view.test.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-file-view.test.tsx",
+    "sha256": "8b9e6868927bb247ac3fd97daefef950e5f92e3c6baefaeb6980982690c63916"
+  },
+  "src/features/knowledge/documents/pdf-page-surface.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-page-surface.messages.ts",
+    "sha256": "5f5628455af9d0517b20ec3cadf2cf522551dcd1979501e0fb6c71b891d869e3"
+  },
+  "src/features/knowledge/documents/pdf-page-surface.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-page-surface.tsx",
+    "sha256": "174d0340f8826ada47c13ecde51b8a24afdbbd94ee4c0db4523c39d0d870f87e"
+  },
+  "src/features/knowledge/documents/pdf-selection.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-selection.test.ts",
+    "sha256": "f216ce5e2ee06608301bb14d1765a2aa810f379bb12eeb030c319797a0afc4d7"
+  },
+  "src/features/knowledge/documents/pdf-selection.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-selection.ts",
+    "sha256": "e02d2fcd440848c47235b428d4a6456c9d23bb88032e94ba680070de59372ed5"
+  },
+  "src/features/knowledge/documents/pdf-text-order.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-text-order.ts",
+    "sha256": "d9891f1cdf9006d63f24be253fd330dd1e37880de58d022f77f3ab95a454eadb"
+  },
+  "src/features/knowledge/documents/text-file-view.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/documents/previews/text/text-file-view.messages.ts",
+    "sha256": "f526ae44103a064bc254c9cd5928e1098cff650cfa11401ce74db491704ebfb9"
+  },
+  "src/features/knowledge/editor/components/document-appearance-menu.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-appearance/messages.ts",
+    "sha256": "2724ce9cbe1700ce098653b6e4b2be5837be28ba22cb1fec9e60b9d0b80b9d26"
+  },
+  "src/features/knowledge/editor/components/document-appearance-menu.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-appearance/styles.module.css",
+    "sha256": "1c47024c54434dc6c48aca4077fc82dd7b34fb17375f1dfa2694d9371f6c3f67"
+  },
+  "src/features/knowledge/editor/components/document-appearance.test.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-appearance/appearance.test.tsx",
+    "sha256": "34784b107302e0105129340375e64d536aeb3714de1e04e7c789c28bf2e55c5a"
+  },
+  "src/features/knowledge/editor/components/document-appearance.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-appearance/index.tsx",
+    "sha256": "c961c4ad6976e614b8326796cb6bc54c3dc207143ae0c64a333eecca97bd2c80"
+  },
+  "src/features/knowledge/editor/components/document-content-actions.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-content-actions.messages.ts",
+    "sha256": "c12d8ce571b63e7beb5d8d9529b55e9c2a35ff7435ef34ab31ffd4785b00c7f0"
+  },
+  "src/features/knowledge/editor/components/document-content-actions.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-content-actions.test.ts",
+    "sha256": "4cc4a38fb78fbc2d57b4caeb7f1df1fbba9f6f5b75dd8102a029503fd412ccba"
+  },
+  "src/features/knowledge/editor/components/document-content-actions.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-content-actions.ts",
+    "sha256": "2709237ddfdc96ced4b7c64446f24ade4cc0f0c5915b2c0b20f63dfc2119682e"
+  },
+  "src/features/knowledge/editor/components/document-editor-header.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/messages.ts",
+    "sha256": "e08f9360c8011ca449af75875f8042ecb49e8f6c767d3723148f8be014eb120b"
+  },
+  "src/features/knowledge/editor/components/document-html-export.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-html-export.messages.ts",
+    "sha256": "8670559f4d4b34ef4c97930b19e9b2090e33df1c560fa97d7480b9ee3e93b2d0"
+  },
+  "src/features/knowledge/editor/components/document-html-export.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-html-export.test.ts",
+    "sha256": "e35520ac6b87442cf860e8ea073e2a2d31f09b8ce48420827283073f43d17964"
+  },
+  "src/features/knowledge/editor/components/document-html-export.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-html-export.ts",
+    "sha256": "25141a01ded46ac21c48c37dee7e67a5aa673b376b5fd8f806efdad45d20af07"
+  },
+  "src/features/knowledge/editor/components/document-more-menu.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/messages.ts",
+    "sha256": "1c874f3c099051a5a5453b91876cddfd3f36e046d5ef458d0bf7ad30708b91ab"
+  },
+  "src/features/knowledge/editor/components/document-more-menu.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/styles.module.css",
+    "sha256": "f5f1cf4f37f790c7e765a5f543cc9d05787c43e2a0083229521e5e950adfc7de"
+  },
+  "src/features/knowledge/editor/components/document-outline.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-outline/messages.ts",
+    "sha256": "5c9af3b492a06c2bc523f72363ec31ecad0a57757519bfb5f4e45a54f274d6b7"
+  },
+  "src/features/knowledge/editor/components/document-pdf-export.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-pdf-export.messages.ts",
+    "sha256": "852716ac8440066117c9380de3914be639f4dc8894fe23b166f442121c2413bb"
+  },
+  "src/features/knowledge/editor/components/document-pdf-export.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-pdf-export.test.ts",
+    "sha256": "f1ed8c416fda7d79d5a28eba48d8066de4033ac82f6a0e30b41e2d77fd663569"
+  },
+  "src/features/knowledge/editor/components/document-pdf-export.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/export/document-pdf-export.ts",
+    "sha256": "5bb4ce5195aafc6dd40a657049943306642890c0442374b19c98079875c34b22"
+  },
+  "src/features/knowledge/editor/components/document-star-button.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/button.messages.ts",
+    "sha256": "9196627b7190e73e96ea942e9513e5403190df5273057c1dae7a2e5addd6a971"
+  },
+  "src/features/knowledge/editor/components/document-star-button.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/button.module.css",
+    "sha256": "94c4654cd5012bc0ebf830683f2479f4943a4ec6388ef45a5f2eab2bf657b972"
+  },
+  "src/features/knowledge/editor/components/document-star-icon.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/icon.module.css",
+    "sha256": "0a79e0df40a5ebfa07fcbff40fc1794a74e7feb1fcb47aac67e1ba62e0f401e1"
+  },
+  "src/features/knowledge/editor/components/document-star-menu-item.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/menu-item.messages.ts",
+    "sha256": "71758135c32f593c5fd4ba5bd8895ef28dcea1c827cfeffcf70b4bf8ce48c36e"
+  },
+  "src/features/knowledge/editor/components/document-star-menu-item.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/editor/components/document-star/menu-item.tsx",
+    "sha256": "74478cbfe34024d07e682f29c913188fd6e05e40ad643fe50050ab377457ea30"
+  },
+  "src/features/knowledge/editor/presentation-slides.ts": {
+    "reason": "Update imports for component ownership without changing behavior.",
+    "sha256": "565ad0a54e3b81cfa42234198285708f5310aac9ffc4ea418b83857ae9414c33"
+  },
+  "src/features/knowledge/navigation/page-appearance-dialog.tsx": {
+    "reason": "Update imports for component ownership without changing behavior.",
+    "sha256": "0c0aa00938631ef9b7ba7827ed1e2ae633965fdf38be2cf62a8b4488812f170a"
+  },
+  "src/features/knowledge/navigation/page-icon-picker.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon-picker/messages.ts",
+    "sha256": "eddae98e09ba7bde40ef70966a09fe6deaec250c5b8e9f1c3c83168ac6d55f54"
+  },
+  "src/features/knowledge/navigation/page-icon-picker.module.css": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/page-icon-picker/styles.module.css",
+    "sha256": "9a1c184d953a53a7363311f859f8d8e36b39d919e147c1fe8393c63e060e95ba"
+  },
+  "src/features/knowledge/navigation/page-operations.ts": {
+    "reason": "Update imports for component ownership without changing behavior.",
+    "sha256": "e1c267b4a7749f3002cddb62b8b0e113bd3acd3d514774d23d37943c4f673785"
+  },
+  "src/features/knowledge/navigation/page-tree-sidebar.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/page-tree-sidebar.messages.ts",
+    "sha256": "3142b1862614f522167cc8e24d4b0f77cca2b0e50c0989b7c56272061c5a8ea2"
+  },
+  "src/features/knowledge/navigation/sidebar-documents.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/sidebar-documents.test.ts",
+    "sha256": "5363dbf1976080763bafdf6dfcf32972fe700815acb4c702a789fdbc3c96ace5"
+  },
+  "src/features/knowledge/navigation/sidebar-documents.tsx": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/sidebar-documents.tsx",
+    "sha256": "2bbebf21f6e3a764e7f40afe2546fe633b2d664b60d59f15e39264da48c539ad"
+  },
+  "src/features/knowledge/navigation/tree-actions.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-actions.messages.ts",
+    "sha256": "07e30892d35c4075b210d9fe985885994cc87b099153e528e6123a7660eae3e7"
+  },
+  "src/features/knowledge/navigation/tree-actions.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-actions.test.ts",
+    "sha256": "dd59a404fe718e8bbe82f9b571d74a630bc91070b138b0910c9cd8bb7422c8ee"
+  },
+  "src/features/knowledge/navigation/tree-actions.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-actions.ts",
+    "sha256": "d35c96b2df452dad751f70a81f4452da431d0ce71cc5f3ef83b8bb4dcaf93d01"
+  },
+  "src/features/knowledge/navigation/tree-model.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-model.messages.ts",
+    "sha256": "4a9069f8ecac4424274bc794be9cd3ab88150752ea1815347ea4609e306c4b6d"
+  },
+  "src/features/knowledge/navigation/tree-operations.test.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-operations.test.ts",
+    "sha256": "102b9d79e789e75c15b052eb00fa730d0bab0e4309343fc8b18fd9642de41394"
+  },
+  "src/features/knowledge/navigation/tree-operations.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-operations.ts",
+    "sha256": "40f992b158df8641197b551260f53d01c7a68999facbe073cafadb0faa8426ac"
+  },
+  "src/features/knowledge/navigation/tree-stage.messages.ts": {
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "relocatedTo": "src/features/knowledge/navigation/tree/tree-stage.messages.ts",
+    "sha256": "b49a42111713258dc5e906d78d2982beb53f280706a1900cc321ceff7ff8c600"
+  },
+  "src/features/knowledge/editor/extensions/document-search.ts": {
+    "reason": "Cache matches and decorations; replace only the active highlight when navigating results while invalidating on document or query changes.",
+    "sha256": "7182d8350be25e007616ba9049184a06cbd7775c70c2f79b2b1f79b45f66df0a"
   }
 }

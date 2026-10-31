@@ -19,7 +19,7 @@ import { Button } from '@/components/ui/button';
 import { oauthCallbackErrorCopy, parseOAuthCallbackQuery } from '../oauth-callback';
 import { consumeAuthReturnTo } from '../return-to';
 import { authEntryPath } from '../session';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import { authErrorCopyFor } from '../auth-errors';
 import type { FobAuthUser } from '../auth-api';
 import { AuthPanel, AuthPanelHeading, AuthScene } from '../components/auth-scene';

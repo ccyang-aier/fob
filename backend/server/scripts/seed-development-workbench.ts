@@ -5,7 +5,7 @@ import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import { generateDrizzleJson, generateMigration } from 'drizzle-kit/api';
-import { createDevelopmentKnowledgeBases } from '@fob/shared/development-workbench';
+import { createDevelopmentKnowledgeBases } from './fixtures/workbench';
 import { repairBlockIds } from '@fob/shared/knowledge/schema';
 import { readFobDatabaseConnections, fobDatabaseErrorMessage } from '../src/platform/database/initialize-config';
 import { assertFobApplicationRole } from '../src/platform/database/initialize-role';

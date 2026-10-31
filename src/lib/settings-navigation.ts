@@ -1,8 +1,9 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import type { SettingsSection } from '@/features/settings/settings-canvas';
 import { replaceWorkbenchLocation, WORKBENCH_VIEW_CHANGED } from './navigation-history';
+
+export type SettingsSection = 'appearance' | 'general' | 'about';
 
 export function openSettings(section: SettingsSection = 'general') {
   const url = new URL(window.location.href);

@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserAvatar } from '@/components/user-avatar';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import { presenceDisplay, getPresenceOptions } from '../presence';
 import { LogoutConfirmDialog } from './logout-confirm-dialog';
 import styles from './account-item.module.css';

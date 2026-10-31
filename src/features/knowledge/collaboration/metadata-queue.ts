@@ -21,7 +21,7 @@
 import type { Page, PageLifecycleState, PagePlacement } from '@fob/shared/knowledge/contracts';
 import { isKnowledgeDataError, isRetryableKnowledgeError } from '../data/errors';
 import type { CreateKnowledgePageInput, MoveKnowledgePageInput, RecycleKnowledgePageInput, RestoreKnowledgePageInput, UpdateKnowledgePageInput } from '../data/pages-api';
-import type { TreeOperation } from '../navigation/tree-operations';
+import type { TreeOperation } from '../navigation/tree/tree-operations';
 
 export type MetadataOperationRequest =
   | { kind: 'create'; input: CreateKnowledgePageInput }

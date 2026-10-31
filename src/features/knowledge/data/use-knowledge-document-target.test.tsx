@@ -38,7 +38,7 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'HTMLInputElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('@/features/identity/identity-provider', () => ({ useIdentity: () => ({ session: { status: sessionStatus } }) }));
+  mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session: { status: sessionStatus } }) }));
   mock.module('./knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => resources }));
   mock.module('../local/use-local-library', () => ({ useLocalLibrary: () => ({
     store,

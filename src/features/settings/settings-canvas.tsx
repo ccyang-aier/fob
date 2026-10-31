@@ -9,6 +9,7 @@ import { messages } from './i18n/settings-canvas.messages';
  */
 
 import { useState } from 'react';
+import type { SettingsSection } from '@/lib/settings-navigation';
 import { Info, MagnifyingGlass, PaintBrush, SlidersHorizontal } from '@/components/icons';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -19,8 +20,6 @@ import { SidebarResizeHandle, useSidebarWidth } from '@/components/sidebar-resiz
 import { AboutSettings } from './about-settings';
 import { AppearanceSettings } from './appearance-settings';
 import { GeneralSettings } from './general-settings';
-
-export type SettingsSection = 'appearance' | 'general' | 'about';
 
 const SECTIONS: Array<SidebarRowItem & { id: SettingsSection; label: keyof typeof messages }> = [
   { id: 'appearance', label: '外观', icon: PaintBrush },

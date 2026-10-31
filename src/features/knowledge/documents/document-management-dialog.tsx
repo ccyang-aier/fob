@@ -15,11 +15,11 @@ import { knowledgeQueryKeys } from '../data/query-keys';
 import { organizationQueryKeys } from '../organization/keys';
 import { useLocalLibrary } from '../local/use-local-library';
 import { importLocalDocuments, moveLocalDocument } from '../local/local-document-operations';
-import { KnowledgeBaseDocumentImport } from './server-document-import';
-import { LocalDocumentImport } from './local-document-import';
-import { DocumentMoveForm } from './document-move-form';
-import { messages } from './document-management.messages';
-import styles from './document-management.module.css';
+import { KnowledgeBaseDocumentImport } from './import/server-document-import';
+import { LocalDocumentImport } from './import/local-document-import';
+import { DocumentMoveForm } from './management/document-move-form';
+import { messages } from './management/document-management.messages';
+import styles from './management/document-management.module.css';
 
 type ManagementProps = {
   target: DocumentLinkTarget;

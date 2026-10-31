@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { MemberRole } from '@fob/shared/resources';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { createTranslator } from '@/lib/i18n';
 import { replaceWorkbenchLocation, WORKBENCH_VIEW_CHANGED } from '@/lib/navigation-history';
 import { useLocalLibrary } from '../local/use-local-library';

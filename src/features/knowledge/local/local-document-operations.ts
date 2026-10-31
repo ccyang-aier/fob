@@ -1,5 +1,5 @@
 import type { DocumentLinkTarget } from '../editor/document-link';
-import type { LocalDocumentImportItem } from '../documents/local-document-import';
+import type { LocalDocumentImportItem } from '../documents/import/local-document-import';
 import { newLocalDocument, type createLocalLibraryStore } from './local-library';
 
 type Store = ReturnType<typeof createLocalLibraryStore>;

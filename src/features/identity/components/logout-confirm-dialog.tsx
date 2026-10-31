@@ -8,7 +8,7 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { authErrorCopyFor } from '../auth-errors';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import styles from './logout-confirm-dialog.module.css';
 
 export function LogoutConfirmDialog({ open, onClose }: { open: boolean; onClose: () => void }) {

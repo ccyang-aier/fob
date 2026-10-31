@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useSyncExternalStore } from 'react';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { WORKBENCH_VIEW_CHANGED } from '@/lib/navigation-history';
 import { readDocumentLink } from '../editor/document-link';
 import { useLocalLibrary } from '../local/use-local-library';

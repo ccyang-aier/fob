@@ -4,7 +4,7 @@ import { KnowledgeDataError } from '../data/errors';
 import type { MetadataMutationApi, MetadataOperationRequest, MetadataQueueStorage } from './metadata-queue';
 import { createMetadataQueue } from './metadata-queue';
 import type { MetadataQueue, QueuedMetadataOperation } from './metadata-queue';
-import type { TreeOperation } from '../navigation/tree-operations';
+import type { TreeOperation } from '../navigation/tree/tree-operations';
 
 function memoryStorage(): MetadataQueueStorage {
   let raw: string | null = null;

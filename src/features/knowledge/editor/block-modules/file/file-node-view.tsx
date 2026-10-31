@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './file-node-view.messages';
 import { FileText } from '@/components/icons';
 import { isPdfSource } from '@fob/shared/knowledge/rich-content';
-import { InlinePdfView } from '../rich-content/inline-pdf-view';
+import { InlinePdfView } from '../rich-content/pdf/inline-view';
 import type { NodeViewProps } from '@tiptap/react';
 import { MediaBlockView } from '../media-core/media-block-view';
 import type { ResolvedMedia } from '../media-core/media-block-view';

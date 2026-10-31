@@ -5,6 +5,7 @@
 - [产品边界与完整拆分方案](docs/architecture/fob-product-boundaries.md)
 - [实施进度与验证记录](.spec/tasks/fob-navigation-consolidation.md)
 - [前端开发规则](AI_FRONTEND_RULES.md)
+- [组件组织、共享边界与性能约束](docs/architecture/code-organization.md)
 
 ## 本机开发
 

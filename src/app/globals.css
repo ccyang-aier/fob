@@ -3,7 +3,7 @@
 @import "tw-animate-css";
 @import "../components/ui/interaction-states.css";
 @import "../components/ui/resize-handle.css";
-@import "../components/ui/animated-theme-toggler.css";
+@import "../components/ui/animated-theme-toggler/styles.css";
 @import "../shell/sidebar-material.css";
 @import "../components/sidebar-nav-row.css";
 

@@ -1,7 +1,7 @@
 import { createTranslator } from '@/lib/i18n';
 import { knowledgeMessages } from './local-library.messages';
 
-import type { DocumentFile } from '../documents/file-format';
+import type { DocumentFile } from '../documents/previews/file-format';
 import type { DocumentIndexStatus, DocumentSource } from '../documents/document-metadata';
 import type { JSONContent } from '@tiptap/core';
 import type { FolderMetadata } from '@fob/shared/knowledge/contracts';

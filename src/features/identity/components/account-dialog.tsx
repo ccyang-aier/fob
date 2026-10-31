@@ -5,7 +5,7 @@ import { messages } from './i18n/account-dialog.messages';
 
 import { useEffect, useRef } from 'react';
 import { X } from '@/components/icons';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import { AuthEntryContent } from './auth-entry-content';
 import { AuthShowcase } from './auth-showcase';
 import { AccountProfile } from './account-profile';

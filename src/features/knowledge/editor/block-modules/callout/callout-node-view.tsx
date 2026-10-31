@@ -7,7 +7,7 @@ import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper } from '@tiptap/react';
 import { CaretDown, CheckCircle, ColorPalette, Emoji, Info, Lightbulb, Warning, XCircle, ArrowLeft, type Icon } from '@/components/icons';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
-import { EmojiPalette } from '@/components/ui/emoji-palette';
+import { EmojiPalette } from '@/components/ui/emoji-picker/palette';
 import { TableColorPicker } from '../table/table-color-picker';
 import { BlockActions } from '../block-actions';
 import styles from './callout.module.css';

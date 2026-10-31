@@ -33,7 +33,7 @@ import { DocumentOutline } from './components/document-outline';
 import { documentSearchKey, findDocumentMatches } from './extensions/document-search';
 import type { DocumentLinkTarget } from './document-link';
 import { useDocumentReference } from './document-reference';
-import { exportDocumentHtml } from './components/document-html-export';
+import { exportDocumentHtml } from './export/document-html-export';
 import { presentationSlides } from './presentation-slides';
 import styles from './document-tools.module.css';
 
@@ -170,9 +170,11 @@ export function DocumentNavigationTools({
   }, [editor, headings]);
   useEffect(() => {
     if (!editor?.isInitialized || editor.isDestroyed) return;
-    editor.view.dispatch(
+    const queryText = searchOpen ? query : '';
+    const previous = documentSearchKey.getState(editor.state);
+    if (previous?.query !== queryText || previous.matchCase !== matchCase || previous.current !== current) editor.view.dispatch(
       editor.state.tr.setMeta(documentSearchKey, {
-        query: searchOpen ? query : '',
+        query: queryText,
         matchCase,
         current,
       }),
@@ -187,7 +189,10 @@ export function DocumentNavigationTools({
       });
     }
   }, [editor, searchOpen, query, matchCase, current, revision]);
-  const matches = editor ? findDocumentMatches(editor.state.doc, query, matchCase) : [];
+  // Scroll/outline changes do not invalidate a search over the same document and query.
+  const matches = useMemo(() => editor && searchOpen ? findDocumentMatches(editor.state.doc, query, matchCase) : [],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [editor, searchOpen, query, matchCase, revision]);
   function moveMatch(delta: number) {
     if (!editor || !matches.length) return;
     const index = (current + delta + matches.length) % matches.length;

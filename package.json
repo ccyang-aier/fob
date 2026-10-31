@@ -34,7 +34,7 @@
     "shared:test": "bun test --isolate ./shared/src/knowledge",
     "knowledge:test": "bun test --isolate ./shared/src/knowledge ./src/features/knowledge ./backend/server/src/modules/knowledge",
     "knowledge:verify": "node scripts/verify-extraction.mjs",
-    "architecture:verify": "node scripts/verify-extraction.mjs",
+    "architecture:verify": "node --test scripts/architecture-boundaries.test.mjs && node scripts/verify-extraction.mjs",
     "i18n:verify": "node scripts/verify-i18n.mjs",
     "lint": "node scripts/verify-icons.mjs && eslint . --max-warnings=0",
     "check": "pnpm typecheck && pnpm server:typecheck && pnpm shared:typecheck && pnpm architecture:verify && pnpm i18n:verify && pnpm lint && pnpm build",

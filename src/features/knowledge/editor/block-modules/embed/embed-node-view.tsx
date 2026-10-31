@@ -6,9 +6,9 @@ import { Globe, ArrowSquareOut, PencilSimple } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { resolveEmbedTarget, richContentUrl } from '@fob/shared/knowledge/rich-content';
-import { RichBlockFrame } from '../rich-content/rich-block-frame';
-import { richMessages } from '../rich-content/messages';
-import styles from '../rich-content/rich-content.module.css';
+import { RichBlockFrame } from '../rich-content/frame';
+import { richMessages } from '../rich-content/frame/messages';
+import styles from '../rich-content/frame/styles.module.css';
 
 export function EmbedNodeView(props: NodeViewProps) {
   const { t } = useTranslation(richMessages);

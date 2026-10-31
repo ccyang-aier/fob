@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { check, date, integer, jsonb, pgSchema, varchar } from 'drizzle-orm/pg-core';
-import type { ModelCatalogEntry } from '@fob/shared/model-catalog';
+import type { ModelCatalogEntry } from './catalog';
 
 /** Public reference data has no account, project, knowledge-base, or execution scope. */
 export const catalogNamespace = pgSchema('catalog');

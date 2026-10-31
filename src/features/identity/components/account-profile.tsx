@@ -10,7 +10,7 @@ import { AppAlert } from '@/components/app-alert';
 import { UserAvatar } from '@/components/user-avatar';
 import { fobAuthApi } from '../auth-api';
 import { authErrorCopyFor } from '../auth-errors';
-import { useIdentity } from '../identity-provider';
+import { useIdentity } from '../identity-context';
 import { presenceDisplay } from '../presence';
 import { authNameMaxLength, validateAuthName } from '../validation';
 import { ProfileBackdrop } from './profile-backdrop';

@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect, useMemo, useRef, useState, useSyncE
 import { getKnowledgeUiSession } from '@/lib/knowledge-ui-session';
 import { KnowledgeUiSessionContext } from '@/lib/page-session-state';
 import { useAppAlert } from '@/components/app-alert-provider';
-import { useIdentity } from '@/features/identity/identity-provider';
+import { useIdentity } from '@/features/identity/identity-context';
 import { useTranslation } from '@/lib/i18n';
 import { messages } from './i18n/navigation-sidebar.messages';
 import { TooltipProvider } from '@/components/ui/tooltip';

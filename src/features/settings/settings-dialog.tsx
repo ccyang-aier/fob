@@ -6,7 +6,8 @@ import { messages } from './i18n/settings-dialog.messages';
 import { useEffect, useRef } from 'react';
 import { X } from '@/components/icons';
 
-import { SettingsCanvas, type SettingsSection } from './settings-canvas';
+import { SettingsCanvas } from './settings-canvas';
+import type { SettingsSection } from '@/lib/settings-navigation';
 import styles from './settings-dialog.module.css';
 
 export function SettingsDialog({

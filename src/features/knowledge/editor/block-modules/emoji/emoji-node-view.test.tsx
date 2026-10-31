@@ -9,8 +9,8 @@ import { DOMParser } from '@tiptap/pm/model';
 import { createKnowledgeExtensions, createBlockIdExtension, knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { applyEditorBlockModules } from '..';
 import { buildSlashItems, filterSlashItems } from '../../commands/slash-items';
-import { exportDocumentMarkdown } from '../../components/document-markdown-export';
-import { exportDocumentHtml } from '../../components/document-html-export';
+import { exportDocumentMarkdown } from '../../export/document-markdown-export';
+import { exportDocumentHtml } from '../../export/document-html-export';
 
 let browser: Window;
 let createRoot: (typeof import('react-dom/client'))['createRoot'];
