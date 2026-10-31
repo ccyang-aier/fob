@@ -1,7 +1,7 @@
 import { integerAttribute, nullableString, stringAttribute } from './attributes';
 import { defineBlock } from './types';
 import { safeKnowledgeUrl } from './urls';
-import { isMermaidTheme, parseWhiteboardScene } from '../rich-content';
+import { DEFAULT_MERMAID_THEME, isMermaidTheme, parseWhiteboardScene } from '../rich-content';
 
 const boundedText = (limit: number) => ({ default: '', validate(value: unknown) { if (typeof value !== 'string' || value.length > limit) throw new RangeError('Rich content text is too long'); } });
 export const RICH_CONTENT_BLOCKS = [
@@ -28,7 +28,7 @@ export const RICH_CONTENT_BLOCKS = [
   }),
   defineBlock({
     name: 'mermaid',
-    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), theme: { default: 'blue', validate(value: unknown) { if (!isMermaidTheme(value)) throw new TypeError('Invalid Mermaid theme'); } }, width: integerAttribute(100, 25, 100), height: integerAttribute(360, 200, 1200) },
+    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), theme: { default: DEFAULT_MERMAID_THEME, validate(value: unknown) { if (!isMermaidTheme(value)) throw new TypeError('Invalid Mermaid theme'); } }, width: integerAttribute(100, 25, 100), height: integerAttribute(360, 200, 1200) },
       toDOM: node => ['pre', { 'data-mermaid': '' }, ['code', { class: 'language-mermaid' }, node.attrs.source]] },
     markdown: { fromMd: { type: 'code', variant: 'mermaid' } }, index: { mode: 'text' },
     slash: { title: 'Mermaid 图表', keywords: ['mermaid', 'diagram', 'flowchart', '图表', '流程图', '时序图', '脑图'], group: 'media' },

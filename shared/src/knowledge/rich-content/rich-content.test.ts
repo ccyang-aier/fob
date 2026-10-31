@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { knowledgeSchema as schema } from '../schema';
 import { createMarkdownPipeline } from '../markdown';
-import { MERMAID_THEMES, isPdfSource, parseWhiteboardScene, resolveEmbedTarget, richContentUrl } from '.';
+import { LEGACY_MERMAID_THEMES, MERMAID_THEMES, isPdfSource, parseWhiteboardScene, resolveEmbedTarget, richContentUrl } from '.';
 
 const scene = JSON.stringify({ elements: [{ id: 'shape', type: 'rectangle', x: 0, y: 0, width: 100, height: 60 }], appState: { viewBackgroundColor: '#ffffff' }, files: {} });
 
@@ -38,12 +38,12 @@ describe('rich content portable semantics', () => {
   });
   test('keeps each Mermaid preset through lossless Markdown and rejects unsupported theme values', () => {
     const pipeline = createMarkdownPipeline();
-    for (const theme of MERMAID_THEMES) {
+    for (const theme of [...MERMAID_THEMES, ...LEGACY_MERMAID_THEMES]) {
       const doc = schema.nodes.doc.create(null, [schema.nodes.mermaid.create({ source: 'flowchart LR\n A --> B', theme, blockId: `diagram-${theme}` })]);
       expect(pipeline.parse(pipeline.serialize(doc)).toJSON()).toEqual(doc.toJSON());
     }
-    expect(schema.nodes.mermaid.create().attrs.theme).toBe('blue');
-    expect(pipeline.parse('```mermaid\nflowchart LR\n A --> B\n```').firstChild?.attrs.theme).toBe('blue');
+    expect(schema.nodes.mermaid.create().attrs.theme).toBe('auto');
+    expect(pipeline.parse('```mermaid\nflowchart LR\n A --> B\n```').firstChild?.attrs.theme).toBe('auto');
     for (const theme of ['unknown', '', null, 1, {}, 'dark']) expect(() => schema.nodes.mermaid.create({ theme }).check()).toThrow();
   });
   test('validates whiteboard input at the shared schema boundary', () => {

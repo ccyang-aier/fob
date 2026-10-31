@@ -1,8 +1,16 @@
 /** Portable rich-content semantics. No browser, network or renderer dependencies. */
-export const MERMAID_THEMES = ['blue', 'green', 'amber', 'violet', 'mono'] as const;
-export type MermaidTheme = typeof MERMAID_THEMES[number];
+export const MERMAID_THEMES = ['auto'] as const;
+/** Historical attributes remain valid for imports/history; rendering always follows the interface. */
+export const LEGACY_MERMAID_THEMES = [
+  'blue', 'green', 'amber', 'violet', 'mono',
+  'zinc-light', 'zinc-dark', 'tokyo-night', 'tokyo-night-storm', 'tokyo-night-light',
+  'catppuccin-mocha', 'catppuccin-latte', 'nord', 'nord-light', 'dracula',
+  'github-light', 'github-dark', 'solarized-light', 'solarized-dark', 'one-dark',
+] as const;
+export const DEFAULT_MERMAID_THEME = 'auto';
+export type MermaidTheme = typeof MERMAID_THEMES[number] | typeof LEGACY_MERMAID_THEMES[number];
 export function isMermaidTheme(value: unknown): value is MermaidTheme {
-  return typeof value === 'string' && MERMAID_THEMES.some(theme => theme === value);
+  return typeof value === 'string' && [...MERMAID_THEMES, ...LEGACY_MERMAID_THEMES].some(theme => theme === value);
 }
 
 export function richContentUrl(value: unknown): string | null {
