@@ -248,8 +248,8 @@
     "sha256": "5a09254fbf0672b940c672ba99ac59fc7c60237eb55fde5b5c0de4fae096823f"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
-    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder.",
-    "sha256": "150aa4d3b8975fecacbf2126822bea568919044062bb578fb10f41ea827b163d"
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder. Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration.",
+    "sha256": "7cf2e936622d05789de9653e5302a210db44dfd7d244d7b1fa43d01451785d1a"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu. Replace reserved import and move entries with permission-aware document management dialogs for both resource sources.",
@@ -978,5 +978,9 @@
   "src/features/knowledge/editor/page-editor.instance.test.ts": {
     "reason": "Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles.",
     "sha256": "1acdc737dcf9bf8d3db2d9e80cc27cbe88a48316f971ffd5fd917e70f0c50c7c"
+  },
+  "src/features/knowledge/editor/components/document-star-menu-item.test.tsx": {
+    "reason": "Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration.",
+    "sha256": "9ff460b292903236756144d2095cfbbe62971f5997e6ec1f1a5eff01d6e1223f"
   }
 }

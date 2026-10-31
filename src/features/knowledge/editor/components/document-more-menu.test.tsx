@@ -1,40 +1,18 @@
 import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
 import { AppAlertProvider } from '@/components/app-alert-provider';
-import { Window } from 'happy-dom';
+import { createDomEnvironment } from '@/test/dom-environment';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
 let root: Root;
-let browser: Window;
+let environment: ReturnType<typeof createDomEnvironment>;
 let star = false;
 let comments = 0;
 let history = 0;
 let deletes = 0;
 
 beforeAll(async () => {
-  browser = new Window({ url: 'http://localhost:3000/' });
-  const globals = globalThis as Record<string, unknown>;
-  for (const name of [
-    'document',
-    'navigator',
-    'HTMLElement',
-    'Element',
-    'Node',
-    'Event',
-    'CustomEvent',
-    'MouseEvent',
-    'PointerEvent',
-    'KeyboardEvent',
-    'MutationObserver',
-    'ResizeObserver',
-    'getComputedStyle',
-    'requestAnimationFrame',
-    'cancelAnimationFrame',
-    'localStorage',
-  ])
-    globals[name] = (browser as unknown as Record<string, unknown>)[name];
-  globals.window = browser;
-  globals.IS_REACT_ACT_ENVIRONMENT = true;
+  environment = createDomEnvironment();
   const { DocumentAppearanceProvider } = await import('./document-appearance');
   const { DocumentMoreMenu } = await import('./document-more-menu');
   function MenuHarness() {
@@ -79,7 +57,7 @@ beforeAll(async () => {
 });
 afterAll(async () => {
   await act(async () => root.unmount());
-  await browser.happyDOM.abort();
+  await environment.cleanup();
 });
 
 async function key(element: Element, value: string) {

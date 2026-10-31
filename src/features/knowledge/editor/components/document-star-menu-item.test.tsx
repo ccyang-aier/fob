@@ -1,21 +1,18 @@
-import { afterAll, beforeAll, describe, expect, test } from 'bun:test';
-import { Window } from 'happy-dom';
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'bun:test';
+import { createDomEnvironment } from '@/test/dom-environment';
 import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 
 let root: Root;
-let browser: Window;
+let environment: ReturnType<typeof createDomEnvironment>;
+let Harness: () => React.JSX.Element;
 
 beforeAll(async () => {
-  browser = new Window({ url: 'http://localhost:3000/' });
-  const globals = globalThis as Record<string, unknown>;
-  for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'CustomEvent', 'MouseEvent', 'PointerEvent', 'KeyboardEvent', 'MutationObserver', 'ResizeObserver', 'getComputedStyle', 'requestAnimationFrame', 'cancelAnimationFrame']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
-  globals.window = browser;
-  globals.IS_REACT_ACT_ENVIRONMENT = true;
+  environment = createDomEnvironment();
   const { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent } = await import('@/components/ui/dropdown-menu');
   const { DocumentStarButton } = await import('./document-star-button');
   const { DocumentStarMenuItem } = await import('./document-star-menu-item');
-  function Harness() {
+  Harness = function Harness() {
     const [starred, setStarred] = useState(false);
     const toggle = () => setStarred((value) => !value);
     return <>
@@ -24,17 +21,25 @@ beforeAll(async () => {
         <DocumentStarMenuItem starred={starred} onToggleStar={toggle} />
       </DropdownMenuContent></DropdownMenu>
     </>;
-  }
+  };
   const host = document.createElement('div');
   document.body.append(host);
   root = createRoot(host);
-  await act(async () => root.render(<Harness />));
 });
 
-afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); });
+beforeEach(async () => {
+  await act(async () => root.render(null));
+  await act(async () => root.render(<Harness />));
+});
+afterAll(async () => { await act(async () => root.unmount()); await environment.cleanup(); });
 
 async function key(element: Element, value: string) {
-  await act(async () => element.dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true })));
+  await act(async () => {
+    (element as HTMLElement).focus();
+    element.dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
+    // Radix restores focus in its unmount task after removing the focus scope.
+    await Bun.sleep(0);
+  });
 }
 
 describe('shared document star feedback', () => {
@@ -59,18 +64,20 @@ describe('shared document star feedback', () => {
     expect(menuItem.textContent).toBe('取消收藏');
     expect(menuItem.querySelector('[data-celebrating]')).not.toBeNull();
     await key(menuItem, 'Escape');
-    expect(document.querySelector('[role="menu"]')).toBeNull();
+    expect(document.querySelector('[role="menu"]') === null).toBe(true);
+    await act(async () => { await Bun.sleep(0); });
+    expect(document.activeElement === trigger).toBe(true);
   });
 
   test('header preserves its toggle behavior and uses the same animation', async () => {
-    const button = document.querySelector('[aria-label="取消星标"]') as HTMLButtonElement;
-    await act(async () => button.click());
-    expect(button.getAttribute('aria-pressed')).toBe('false');
-    expect(button.querySelector('[data-celebrating]')).toBeNull();
+    const button = document.querySelector('[aria-label="添加星标"]') as HTMLButtonElement;
     await act(async () => button.click());
     expect(button.getAttribute('aria-pressed')).toBe('true');
     expect(button.querySelector('[data-celebrating]')).not.toBeNull();
     await act(async () => button.querySelector('[data-celebrating] > svg')!.dispatchEvent(new Event('animationend', { bubbles: true })));
+    expect(button.querySelector('[data-celebrating]')).toBeNull();
+    await act(async () => button.click());
+    expect(button.getAttribute('aria-pressed')).toBe('false');
     expect(button.querySelector('[data-celebrating]')).toBeNull();
   });
 });
