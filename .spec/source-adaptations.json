@@ -244,8 +244,8 @@
     "sha256": "e18ec69cbb689ad313d6b7902ac5c718251fd46cf3be4319ccc1506912d6f944"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "b50c07bdbba380d08009b80318c769f330947b093a45978b5b4d69a8137c1968"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md.",
+    "sha256": "5a09254fbf0672b940c672ba99ac59fc7c60237eb55fde5b5c0de4fae096823f"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
     "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder.",
@@ -736,8 +736,8 @@
     "sha256": "5d1e21ff2b2bf3a0e9723692d39d4ae2a2d730d8465787b8e313d582f4bec7fc"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
-    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review.",
-    "sha256": "aa7b4cffefd6975184f2b0d97e080e4e4493eab62a63547273bbf8b6fe3b157d"
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the star control while preserving its icon, aria-pressed state and actual star operation; see docs/editor-rich-content.md.",
+    "sha256": "eacfb5c916ff5b6d2872180a29de0108cee088d13f5f8898dba4fe734e887ad4"
   },
   "src/features/knowledge/editor/editor-layout.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Mount the shared block hover/drag layer for local, collaborative and folder bodies, preserving saved content and block IDs.",
