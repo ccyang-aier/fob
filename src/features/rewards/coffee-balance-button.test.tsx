@@ -4,6 +4,7 @@ import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { QueryClient } from '@tanstack/react-query';
 import { coffeeSummaryFromDays } from '@fob/shared/rewards';
+import type { CoffeeCheckInResult } from '@fob/shared/rewards';
 import { setLocale } from '@/lib/i18n';
 import type { useCoffeeRewards } from './rewards-provider';
 import type { CoffeeBalanceButton as CoffeeButton } from './coffee-balance-button';
@@ -25,7 +26,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await act(async () => root.render(null));
   claims = 0; signIns = 0; retries = 0;
-  rewards = { accountId: null, principal: 'anonymous', identityStatus: 'anonymous', summary: undefined, loading: false, error: null, checkingIn: false, checkIn: async () => { claims++; }, refresh: () => { retries++; }, openSignIn: () => { signIns++; }, client: new QueryClient() };
+  rewards = { accountId: null, principal: 'anonymous', identityStatus: 'anonymous', summary: undefined, loading: false, error: null, checkingIn: false, checkIn: async () => { claims++; return undefined; }, refresh: () => { retries++; }, openSignIn: () => { signIns++; }, client: new QueryClient() };
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 async function render() { await act(async () => root.render(<CoffeeBalanceButton />)); }
@@ -77,20 +78,66 @@ test('click pins an existing hover panel; Escape and outside clicks dismiss with
   expect(panel()).toBeNull(); expect(window.location.search).toBe('?folder=research');
 });
 
-test('check-in retains the confirmed balance while pending and disables the claimed day', async () => {
+test('check-in keeps its label without loading, ignores repeats and celebrates only the confirmed award', async () => {
   authenticate();
-  let complete!: () => void;
-  const pending = new Promise<void>(resolve => { complete = resolve; });
-  rewards.checkIn = async () => { claims++; rewards = { ...rewards, checkingIn: true }; await pending; rewards = { ...rewards, checkingIn: false, summary: summary(['2026-10-31', '2026-11-01']) }; };
+  let complete!: (value: CoffeeCheckInResult) => void;
+  const pending = new Promise<CoffeeCheckInResult>(resolve => { complete = resolve; });
+  rewards.checkIn = async () => { claims++; rewards = { ...rewards, checkingIn: true }; const result = await pending; rewards = { ...rewards, checkingIn: false, summary: result }; return result; };
   await render(); await act(async () => trigger().click());
   const claim = () => panel()!.querySelector<HTMLButtonElement>('button')!;
   await act(async () => claim().click()); await render();
   expect(panel()?.querySelector('strong')?.textContent).toBe('1杯');
-  expect(claim().disabled).toBe(true); expect(claim().getAttribute('aria-busy')).toBe('true');
+  expect(claim().disabled).toBe(false); expect(claim().getAttribute('aria-busy')).not.toBe('true');
+  expect(claim().textContent).toContain('签到领 1 杯');
+  expect(claim().querySelector('[data-slot="button-content"]')).toBeNull();
+  expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
   await act(async () => claim().click()); expect(claims).toBe(1);
-  await act(async () => { complete(); await pending; }); await render();
+  await act(async () => { complete({ ...summary(['2026-10-31', '2026-11-01']), awarded: true, reward: 1 }); await pending; }); await render();
   expect(panel()?.querySelector('strong')?.textContent).toBe('2杯');
-  expect(claim().textContent).toContain('今日已签到'); expect(claim().disabled).toBe(true);
+  expect(claim().textContent).toContain('已领取'); expect(claim().getAttribute('aria-label')).toBe('今日已签到');
+  expect(claim().getAttribute('aria-disabled')).toBe('true'); expect(claim().disabled).toBe(false);
+  expect(panel()?.querySelector('[data-coffee-credit]')?.textContent).toContain('+1');
+  await act(async () => claim().click()); expect(claims).toBe(1);
+  await wait(700); expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+});
+
+test('a previously claimed day has the receipt style without replaying an award', async () => {
+  authenticate(); rewards = { ...rewards, summary: summary(['2026-10-31', '2026-11-01']) };
+  await render(); await act(async () => trigger().click());
+  const button = panel()!.querySelector<HTMLButtonElement>('button')!;
+  expect(button.getAttribute('data-claimed')).toBe('true');
+  expect(button.textContent).toContain('已领取');
+  expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+  await act(async () => button.click()); expect(claims).toBe(0);
+});
+
+test('a failed or idempotent claim never invents a credit animation', async () => {
+  authenticate();
+  rewards.checkIn = async () => { claims++; return undefined; };
+  await render(); await act(async () => trigger().click());
+  await act(async () => panel()!.querySelector<HTMLButtonElement>('button')!.click());
+  expect(panel()?.querySelector('strong')?.textContent).toBe('1杯');
+  expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+  rewards.checkIn = async () => { const result = { ...summary(['2026-10-31', '2026-11-01']), awarded: false, reward: 1 as const }; rewards = { ...rewards, summary: result }; return result; };
+  await render(); await act(async () => panel()!.querySelector<HTMLButtonElement>('button')!.click()); await render();
+  expect(panel()?.querySelector<HTMLButtonElement>('button')?.getAttribute('data-claimed')).toBe('true');
+  expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+});
+
+test('closing during a claim cannot replay the delayed award when the panel reopens', async () => {
+  authenticate();
+  let complete!: (value: CoffeeCheckInResult) => void;
+  const pending = new Promise<CoffeeCheckInResult>(resolve => { complete = resolve; });
+  rewards.checkIn = () => pending;
+  await render(); await act(async () => trigger().click());
+  await act(async () => panel()!.querySelector<HTMLButtonElement>('button')!.click());
+  await act(async () => panel()!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  const result: CoffeeCheckInResult = { ...summary(['2026-10-31', '2026-11-01']), awarded: true, reward: 1 };
+  await act(async () => { complete(result); await pending; });
+  rewards = { ...rewards, summary: result }; await render();
+  await act(async () => trigger().click());
+  expect(panel()?.querySelector('[data-coffee-credit]')).toBeNull();
+  expect(panel()?.querySelector<HTMLButtonElement>('button')?.getAttribute('data-claimed')).toBe('true');
 });
 
 test('changing accounts closes the popup and cancels a late hover opening', async () => {

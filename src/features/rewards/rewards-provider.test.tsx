@@ -62,12 +62,13 @@ test('anonymous accounts have no fabricated balance or API requests and check-in
 test('only confirmed server awards change the shared balance', async () => {
   session = signedIn(alpha); await render(); await publish(snapshot(alpha));
   expect(rewards.summary?.balance).toBe(0);
-  let checking!: Promise<void>;
+  let checking!: ReturnType<Rewards['checkIn']>;
   await act(async () => { checking = rewards.checkIn(); });
   expect(claims).toHaveLength(1); expect(rewards.summary?.balance).toBe(0);
   await act(async () => { claims[0]!.pending.resolve({ ...snapshot(alpha, ['2026-10-25']), awarded: true, reward: 1 }); await checking; });
   await settle();
   expect(rewards.summary?.balance).toBe(1); expect(rewards.summary?.checkedInToday).toBe(true); expect(notices).toHaveLength(1);
+  expect((await checking)?.awarded).toBe(true);
   await act(async () => rewards.checkIn()); expect(claims).toHaveLength(1);
 });
 
@@ -107,7 +108,7 @@ test('switching accounts fences a late query and preserves the mounted workspace
   await publish(snapshot(alpha, ['2026-10-25']), old);
   expect(rewards.accountId).toBe(beta); expect(rewards.summary).toBeUndefined();
   await publish(snapshot(beta)); expect(rewards.summary?.accountId).toBe(beta); expect(rewards.summary?.balance).toBe(0);
-  let checking!: Promise<void>;
+  let checking!: ReturnType<Rewards['checkIn']>;
   await act(async () => { checking = rewards.checkIn(); });
   expect(claims.at(-1)?.accountId).toBe(beta);
   await act(async () => { claims.at(-1)!.pending.resolve({ ...snapshot(beta, ['2026-10-25']), awarded: true, reward: 1 }); await checking; });
@@ -116,18 +117,19 @@ test('switching accounts fences a late query and preserves the mounted workspace
 
 test('an in-flight check-in cannot republish a signed-out account or emit a stale success', async () => {
   session = signedIn(alpha); await render(); await publish(snapshot(alpha));
-  let checking!: Promise<void>;
+  let checking!: ReturnType<Rewards['checkIn']>;
   await act(async () => { checking = rewards.checkIn(); });
   session = { status: 'anonymous' }; await render();
   await act(async () => { claims[0]!.pending.resolve({ ...snapshot(alpha, ['2026-10-25']), awarded: true, reward: 1 }); await checking; });
   await settle();
   expect(rewards.summary).toBeUndefined(); expect(rewards.accountId).toBeNull(); expect(notices).toHaveLength(0);
+  expect(await checking).toBeUndefined();
 });
 
 test('StrictMode setup/cleanup/setup still accepts the active account award', async () => {
   session = signedIn(alpha); await render(true);
   await publish(snapshot(alpha));
-  let checking!: Promise<void>;
+  let checking!: ReturnType<Rewards['checkIn']>;
   await act(async () => { checking = rewards.checkIn(); });
   await act(async () => { claims[0]!.pending.resolve({ ...snapshot(alpha, ['2026-10-25']), awarded: true, reward: 1 }); await checking; });
   await settle();

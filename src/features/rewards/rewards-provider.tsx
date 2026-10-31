@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import type { CoffeeSummary } from '@fob/shared/rewards';
+import type { CoffeeCheckInResult, CoffeeSummary } from '@fob/shared/rewards';
 import { useIdentity } from '@/features/identity/identity-context';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useTranslation } from '@/lib/i18n/react';
@@ -17,7 +17,7 @@ type RewardsContextValue = {
   loading: boolean;
   error: unknown;
   checkingIn: boolean;
-  checkIn: () => Promise<void>;
+  checkIn: () => Promise<CoffeeCheckInResult | undefined>;
   refresh: () => void;
   openSignIn: () => void;
   client: QueryClient;
@@ -82,7 +82,10 @@ export function RewardsProvider({ children }: { children: ReactNode }) {
   const checkIn = useCallback(async () => {
     if (!accountId) { openSignIn(); return; }
     if ((currentMutation && mutation.isPending) || summary?.checkedInToday) return;
-    try { await mutation.mutateAsync({ accountId, scope }); } catch { /* Mutation publishes the shared AppAlert. */ }
+    try {
+      const result = await mutation.mutateAsync({ accountId, scope });
+      return activeScope.current === scope && result.accountId === accountId ? result : undefined;
+    } catch { /* Mutation publishes the shared AppAlert. */ }
   }, [accountId, scope, openSignIn, mutation, currentMutation, summary?.checkedInToday]);
   const value: RewardsContextValue = {
     accountId, principal, identityStatus: session.status, summary,

@@ -11,6 +11,7 @@
 .cardCta:disabled { opacity: 1; color: var(--muted-strong); background: var(--surface-subtle); }
 .cardStatus { margin-top: 11px; color: var(--muted); font-size: 10px; }
 .coffeeMenu { padding:12px; }
+.menuBody { position:relative; }
 .menuBalance { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:2px 2px 12px; border-bottom:1px solid var(--separator-color); }
 .menuBalance>span:first-child { display:flex; align-items:center; gap:8px; font-size:12px; }
 .menuBalance strong { display:flex; align-items:baseline; gap:5px; font-size:22px; font-weight:600; font-variant-numeric:tabular-nums; line-height:1.2; }
@@ -19,5 +20,25 @@
 .menuRow>svg { flex:none; color:var(--muted-strong); }
 .menuCopy { display:flex; flex:1; min-width:0; flex-direction:column; gap:3px; font-size:12px; }
 .menuCopy small,.menuStatus { color:var(--muted-strong); font-size:11px; line-height:1.4; }
-.menuCheckIn { height:30px; padding-inline:8px; font-size:11px; }
+.menuCheckInRow { padding-top:10px; }
+.menuCheckIn { gap:5px; min-width:100px; height:30px; padding-inline:8px; font-size:11px; box-shadow:none; }
+.menuCheckIn[data-claimed=true] { border:1px solid var(--separator-color); background:var(--surface-subtle); color:var(--ink); cursor:default; }
+.claimCup { transition:transform 120ms cubic-bezier(.22,1,.36,1); }
+.menuCheckIn:active .claimCup { transform:translateY(-1px) rotate(-9deg) scale(.92); }
+.claimSeal { display:grid; flex:none; width:18px; height:18px; place-items:center; border-radius:50%; background:var(--ink); color:var(--panel); }
+.claimAmount { margin-left:1px; padding-left:6px; border-left:1px solid var(--control-border); color:var(--muted-strong); font-size:10px; font-variant-numeric:tabular-nums; }
+.creditLayer { position:absolute; inset:0; pointer-events:none; }
+.creditCup { position:absolute; left:0; top:0; display:grid; width:20px; height:20px; place-items:center; color:var(--ink); opacity:0; animation:coffee-credit-flight 480ms cubic-bezier(.22,1,.36,1) both; }
+.creditAmount { position:absolute; color:var(--ink); font-size:11px; font-weight:600; font-variant-numeric:tabular-nums; opacity:0; animation:coffee-credit-amount 480ms 100ms cubic-bezier(.22,1,.36,1) both; }
+.menuBody[data-crediting=true] .balanceValue { animation:coffee-balance-credit 300ms 180ms cubic-bezier(.22,1,.36,1) both; }
+.menuBody[data-crediting=true] .claimSeal { animation:coffee-claim-seal 240ms 160ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes coffee-credit-flight {
+  0% { opacity:0; transform:translate(var(--coffee-start-x),var(--coffee-start-y)) rotate(-12deg) scale(.75); }
+  24% { opacity:1; transform:translate(var(--coffee-mid-x),var(--coffee-mid-y)) rotate(-5deg) scale(1); }
+  100% { opacity:0; transform:translate(var(--coffee-end-x),var(--coffee-end-y)) rotate(0) scale(.5); }
+}
+@keyframes coffee-credit-amount { 0% { opacity:0; transform:translateY(5px); } 30% { opacity:1; } 100% { opacity:0; transform:translateY(-10px); } }
+@keyframes coffee-balance-credit { from { opacity:.55; transform:translateY(3px) scale(1.06); } to { opacity:1; transform:translateY(0) scale(1); } }
+@keyframes coffee-claim-seal { from { opacity:.35; transform:scale(.72) rotate(-15deg); } to { opacity:1; transform:scale(1) rotate(0); } }
+@media (prefers-reduced-motion:reduce) { .claimCup { transition:none; }.menuCheckIn:active .claimCup { transform:none; }.creditLayer { display:none; }.menuBody[data-crediting=true] :is(.balanceValue,.claimSeal) { animation:none; } }
 :global(html[data-theme='dark']) .coffeeIcon { color:#d4ae86; }
