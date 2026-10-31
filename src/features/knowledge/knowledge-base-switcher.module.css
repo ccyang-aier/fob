@@ -4,7 +4,7 @@
 .palettePreview { width: 20px; height: 20px; border-radius: 5px; }
 .name { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; font-weight:500; color:var(--ink); }
 .chevrons { flex-shrink:0; color:var(--muted); }
-.menu { width:304px; padding:5px; }
+.menu { width:240px; max-width:calc(100vw - 16px); padding:5px; }
 .search { display:flex; align-items:center; gap:8px; height:34px; padding:0 8px; color:var(--muted); border-bottom:1px solid var(--line); margin-bottom:4px; }
 .search input { width:100%; min-width:0; border:0; background:transparent; color:var(--ink); font-size:12px; outline:none; }
 .search input::placeholder { color:var(--muted); }

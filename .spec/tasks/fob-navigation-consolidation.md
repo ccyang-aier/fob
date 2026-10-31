@@ -64,3 +64,10 @@
 - 底部辅助导航仅保留成员、模板；知识库栏左侧为可收缩的切换器，右侧依次为帮助、设置两个 28px 图标按钮。复用 FA7 图标、共享交互反馈与 Tooltip，保留可访问名称及原弹窗行为；收起时三个入口纵向排列，工具按钮为 32px。
 - 在用户原 localhost 页面使用内置浏览器验证帮助打开/关闭指南、设置打开/关闭原设置界面、侧栏收起/展开与知识库菜单打开。Logo 实测 20×20px；切换器、帮助及设置的垂直中心均约为 890.20px，图标按钮分别位于切换器右侧。无框架错误遮罩，最终控制台 0 error / 0 warning；原文件夹截图保存在聊天 visualizations 目录，未纳入仓库。
 - `pnpm typecheck`、`pnpm lint`（含图标策略检查）、`pnpm architecture:verify` 与 `git diff --check` 通过。未新增布局镜像测试，也未扩大为知识库 CRUD 或权限回归；工作树中的并行编辑器改动不纳入本次提交。
+
+## 紧凑品牌与知识库菜单（2026-10-31）
+
+- 根据后续批注，将知识库菜单由 304px 收窄至 240px，并限制最大宽度为视口减 16px；保留原搜索、资源列表、管理操作和弹出方向。Logo 容器由 20px 缩至 16px，标题由 25px 缩至 20px；改用 Fraunces SemiBold 正体、600 字重和 0.045em 字距（当前字号下为 0.9px）。
+- 本地保留 `@fontsource/fraunces@5.3.0` 的原版 Latin 600 WOFF2（18,096 字节），下载时核对 npm 发布的 SHA-512 完整性；原版 OFL 许可、上游/发行地址和字体 SHA-256 存于 `public/fonts/fraunces/`，不增加包依赖或运行时远程字体请求。
+- 在原 localhost 页面验证菜单打开、搜索“本机”后只保留匹配库、清空恢复列表与 Escape 关闭。Logo 实测约 16×16px，标题计算样式为 20px / 600 / 0.9px 字距，菜单实测约 239.88px（CSS 240px，存在浏览器缩放取整）。无框架错误遮罩，最终控制台 0 error / 0 warning；最终菜单与品牌同屏截图保存在聊天 visualizations 目录，未提交截图。
+- `pnpm icons:verify`、`pnpm architecture:verify` 与 `git diff --check` 通过；Web、业务 API、新字体文件均返回 HTTP 200。本轮仅样式和字体资源变更，未重跑 TypeScript、CRUD 或权限矩阵。
