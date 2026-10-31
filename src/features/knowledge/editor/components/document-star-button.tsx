@@ -22,7 +22,7 @@ export function DocumentStarButton({
       type="button"
       className={`fob-action ${styles.button}`}
       data-surface="plain"
-      data-active-emphasis="strong"
+      data-variant="hover"
       aria-label={label}
       title={label}
       aria-pressed={starred}

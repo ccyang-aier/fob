@@ -82,14 +82,14 @@ html button.fob-action[data-surface="plain"] {
   --action-state-bg: transparent;
 }
 
-/* 内容折叠按钮仅在当前交互时高亮；展开的内容本身已表达状态。 */
-html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not([data-variant="collapsible"])):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
+/* 内容折叠和 hover 工具仅在当前交互时高亮，展开状态不常驻底色。 */
+html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not([data-variant="collapsible"], [data-variant="hover"])):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
   background: var(--action-state-bg);
   color: var(--action-state-ink);
 }
 
-/* 按下、展开与有效筛选用全局“灰白色”；不覆盖其它功能色控件。 */
-html .fob-action:is([data-surface="plain"], [data-surface="muted"]):is(:active, [aria-expanded="true"]:not([data-variant="collapsible"]), [aria-pressed="true"], [data-active="true"], [data-filter-active]):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
+/* 按下、展开与有效筛选用全局“灰白色”；hover 工具由图标及 ARIA 表达状态。 */
+html .fob-action:is([data-surface="plain"], [data-surface="muted"]):is(:active, [aria-expanded="true"]:not([data-variant="collapsible"]), [aria-pressed="true"], [data-active="true"], [data-filter-active]):not([data-variant="hover"]):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
   background: var(--action-selected-bg, var(--action-active-bg));
   color: var(--action-state-ink);
 }

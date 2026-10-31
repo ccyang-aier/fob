@@ -49,7 +49,7 @@ export function DocumentEditorHeader({
           type="button"
           className={`fob-action ${styles.iconButton}`}
           data-surface="plain"
-          data-active-emphasis="strong"
+          data-variant="hover"
           aria-label={pdfNavigation ? knowledgeT('pdfThumbnails') : knowledgeT('documentOutline')}
           title={
             pdfNavigation
