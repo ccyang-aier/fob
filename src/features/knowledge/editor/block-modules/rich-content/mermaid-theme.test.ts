@@ -7,6 +7,6 @@ test('only the two native GitHub themes are active and match the exact upstream 
   for (const dark of [false, true]) {
     const preset = dark ? 'github-dark' : 'github-light';
     expect(mermaidPalette(dark)).toEqual(THEMES[preset]);
-    expect(mermaidTheme(dark)).toEqual({ ...THEMES[preset], font: 'Inter' });
+    expect(mermaidTheme(dark)).toEqual({ ...THEMES[preset], font: 'Inter', padding: 8 });
   }
 });

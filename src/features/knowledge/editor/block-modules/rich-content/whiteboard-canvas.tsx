@@ -37,7 +37,7 @@ export default function WhiteboardCanvas({ scene, title: initialTitle, onSave, o
     try {
       const hash = await whiteboardSceneHash(clean);
       if (!api.current.getSceneElements().length) { if (!onSave(clean, '', '', title)) setError('whiteboardConflict'); return; }
-      const blob = await library.exportToBlob({ elements: api.current.getSceneElements(), files: api.current.getFiles(), appState: { ...api.current.getAppState(), exportBackground: true, exportEmbedScene: false }, mimeType: 'image/png', maxWidthOrHeight: 1024 });
+      const blob = await library.exportToBlob({ elements: api.current.getSceneElements(), files: api.current.getFiles(), appState: { ...api.current.getAppState(), exportBackground: true, exportEmbedScene: false }, mimeType: 'image/png', maxWidthOrHeight: 1024, exportPadding: 8 });
       const preview = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('PREVIEW_UNAVAILABLE')); reader.onerror = () => reject(reader.error); reader.readAsDataURL(blob); });
       if (!onSave(clean, preview, hash, title)) setError('whiteboardConflict');
     } catch { setError('whiteboardSaveError'); }

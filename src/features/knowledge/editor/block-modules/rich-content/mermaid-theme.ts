@@ -12,5 +12,5 @@ export function mermaidPalette(dark: boolean): DiagramColors {
 }
 
 export function mermaidTheme(dark: boolean): RenderOptions {
-  return { ...mermaidPalette(dark), font: 'Inter' };
+  return { ...mermaidPalette(dark), font: 'Inter', padding: 8 };
 }

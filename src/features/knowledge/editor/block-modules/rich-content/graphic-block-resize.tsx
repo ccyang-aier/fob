@@ -6,14 +6,14 @@ import { useTranslation } from '@/lib/i18n';
 import { richMessages } from './messages';
 import styles from './rich-content.module.css';
 
-type Size = { width: number; height: number };
+type Size = { width: number; height: number; autoHeight: boolean };
 type ResizeAxis = 'x' | 'y' | 'nw-se';
-type Gesture = { axis: ResizeAxis; pointer: number; x: number; y: number; pixels: number; scale: number; minWidth: number; initial: Size; next: Size; element: HTMLButtonElement; frame: HTMLElement };
+type Gesture = { axis: ResizeAxis; pointer: number; x: number; y: number; pixels: number; scale: number; minWidth: number; startHeight: number; initial: Size; next: Size; element: HTMLButtonElement; frame: HTMLElement };
 const zones = [{ axis: 'x', label: 'resizeGraphicWidth' }, { axis: 'y', label: 'resizeGraphicHeight' }, { axis: 'nw-se', label: 'blockSize' }] as const;
 
 /** Preview the whole block locally; persist one undoable change when the pointer is released. */
-export function GraphicBlockResize({ props, width, height, minHeight }: {
-  props: NodeViewProps; width: number; height: number; minHeight: number;
+export function GraphicBlockResize({ props, width, height, autoHeight, minHeight }: {
+  props: NodeViewProps; width: number; height: number; autoHeight: boolean; minHeight: number;
 }) {
   const { t } = useTranslation(richMessages);
   const hint = useId();
@@ -24,7 +24,7 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
     if (editor.isDestroyed) return null;
     const pos = getPos();
     const current = typeof pos === 'number' ? editor.state.doc.nodeAt(pos) : null;
-    return current?.type === node.type ? { width: Number(current.attrs.width || 100), height: Number(current.attrs.height || 360) } : null;
+    return current?.type === node.type ? { width: Number(current.attrs.width || 100), height: Number(current.attrs.height || 360), autoHeight: current.attrs.autoHeight !== false } : null;
   }, [editor, getPos, node.type]);
   const finish = useCallback(() => {
     const drag = gesture.current;
@@ -35,13 +35,13 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
     }
     const current = read();
     const element = drag?.frame ?? handle.current?.closest<HTMLElement>('[data-fob-node]');
-    if (element && current) { element.style.width = `${current.width}%`; element.style.height = `${current.height}px`; }
+    if (element && current) { element.style.width = `${current.width}%`; element.style.height = current.autoHeight ? '' : `${current.height}px`; element.dataset.graphicAutoHeight = String(current.autoHeight); }
   }, [read]);
   useEffect(() => () => finish(), [finish]);
   useEffect(() => {
     const drag = gesture.current;
-    if (drag && (drag.initial.width !== width || drag.initial.height !== height)) finish();
-  }, [width, height, finish]);
+    if (drag && (drag.initial.width !== width || drag.initial.height !== height || drag.initial.autoHeight !== autoHeight)) finish();
+  }, [width, height, autoHeight, finish]);
   return <><span id={hint} hidden data-document-export-omit>{t('resizeGraphicHint')}</span>
     {zones.map(({ axis, label }) => <button key={axis} ref={axis === 'nw-se' ? handle : undefined} type="button" className={`fob-resize-handle ${styles.graphicResize}`} data-resize-axis={axis} data-resize-feedback="cursor" data-graphic-resize={axis} data-document-export-omit
     aria-label={t(label)} aria-describedby={hint}
@@ -60,32 +60,39 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
       event.currentTarget.focus({ preventScroll: true });
       event.currentTarget.setPointerCapture(event.pointerId);
       event.currentTarget.dataset.resizing = 'true';
-      gesture.current = { axis, pointer: event.pointerId, x: event.clientX, y: event.clientY, pixels, scale: scaleY, minWidth, initial, next: initial, element: event.currentTarget, frame: element };
+      gesture.current = { axis, pointer: event.pointerId, x: event.clientX, y: event.clientY, pixels, scale: scaleY, minWidth, startHeight: rect.height / scaleY, initial, next: initial, element: event.currentTarget, frame: element };
     }}
     onPointerMove={event => {
       const drag = gesture.current;
       if (!drag || drag.pointer !== event.pointerId) return;
       const width = drag.axis === 'y' ? drag.initial.width : Math.round(Math.max(drag.minWidth, Math.min(100, Math.max(drag.minWidth, drag.initial.width) + (event.clientX - drag.x) / drag.pixels * 100)) * 1000) / 1000;
-      const height = drag.axis === 'x' ? drag.initial.height : Math.max(minHeight, Math.min(1200, drag.initial.height + (event.clientY - drag.y) / drag.scale));
-      drag.next = { width: drag.axis === 'y' ? drag.initial.width : Math.ceil(width), height: Math.round(height) };
-      drag.frame.style.width = `${width}%`; drag.frame.style.height = `${height}px`;
+      const height = drag.axis === 'x' ? drag.initial.height : Math.max(minHeight, Math.min(1200, drag.startHeight + (event.clientY - drag.y) / drag.scale));
+      const autoHeight = drag.axis === 'x' && drag.initial.autoHeight;
+      drag.next = { width: drag.axis === 'y' ? drag.initial.width : Math.ceil(width), height: Math.round(height), autoHeight };
+      drag.frame.style.width = `${width}%`; drag.frame.style.height = autoHeight ? '' : `${height}px`; drag.frame.dataset.graphicAutoHeight = String(autoHeight);
     }}
     onPointerUp={event => {
       const drag = gesture.current, current = read();
       if (!drag || drag.pointer !== event.pointerId) return;
       finish();
-      if (editor.isEditable && current && current.width === drag.initial.width && current.height === drag.initial.height
-        && (current.width !== drag.next.width || current.height !== drag.next.height)) props.updateAttributes(drag.next);
+      if (editor.isEditable && current && current.width === drag.initial.width && current.height === drag.initial.height && current.autoHeight === drag.initial.autoHeight
+        && (current.width !== drag.next.width || current.height !== drag.next.height || current.autoHeight !== drag.next.autoHeight)) props.updateAttributes(drag.next);
     }}
     onPointerCancel={() => finish()} onLostPointerCapture={() => finish()}
+    onDoubleClick={axis === 'x' ? undefined : event => { event.preventDefault(); event.stopPropagation(); finish(); if (editor.isEditable) props.updateAttributes({ autoHeight: true }); }}
     onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); finish(); return; }
+      if (event.key === 'Home' && axis !== 'x' && editor.isEditable) { event.preventDefault(); event.stopPropagation(); finish(); props.updateAttributes({ autoHeight: true }); return; }
       const keys = axis === 'x' ? ['ArrowLeft', 'ArrowRight'] : axis === 'y' ? ['ArrowUp', 'ArrowDown'] : ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
       if (!editor.isEditable || !keys.includes(event.key)) return;
       event.preventDefault(); event.stopPropagation();
       const current = read();
       if (!current) return;
+      const vertical = event.key === 'ArrowUp' || event.key === 'ArrowDown';
+      const frame = event.currentTarget.closest<HTMLElement>('[data-fob-node]');
+      const startHeight = current.autoHeight && frame ? frame.offsetHeight : current.height;
       props.updateAttributes({ width: Math.max(25, Math.min(100, current.width + (event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : 0))),
-        height: Math.max(minHeight, Math.min(1200, current.height + (event.key === 'ArrowUp' ? -20 : event.key === 'ArrowDown' ? 20 : 0))) });
+        height: vertical ? Math.max(minHeight, Math.min(1200, startHeight + (event.key === 'ArrowUp' ? -20 : 20))) : current.height,
+        autoHeight: vertical ? false : current.autoHeight });
     }} />)}</>;
 }

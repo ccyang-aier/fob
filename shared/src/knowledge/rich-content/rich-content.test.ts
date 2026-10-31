@@ -58,7 +58,22 @@ describe('rich content portable semantics', () => {
     for (const type of ['mermaid', 'whiteboard']) {
       for (const width of [0, 24, 101, 75.5, '75%']) expect(() => schema.nodes[type].create({ width }).check()).toThrow();
       expect(schema.nodes[type].create().attrs.width).toBe(100);
+      expect(schema.nodes[type].create().attrs.autoHeight).toBe(true);
+      for (const autoHeight of ['true', 1, null]) expect(() => schema.nodes[type].create({ autoHeight }).check()).toThrow();
     }
     expect(() => schema.nodes.whiteboard.create({ preview: 'data:text/html;base64,PHNjcmlwdD4=' }).check()).toThrow();
+  });
+  test('keeps automatic and manually sized graphics through Markdown without rewriting legacy content', () => {
+    const pipeline = createMarkdownPipeline();
+    for (const type of ['mermaid', 'whiteboard']) {
+      const legacy = schema.nodeFromJSON({ type, attrs: { height: 689 } });
+      expect(legacy.attrs.autoHeight).toBe(true);
+      expect(legacy.attrs.height).toBe(689);
+      for (const autoHeight of [true, false]) {
+        const doc = schema.nodes.doc.create(null, [schema.nodes[type].create({ autoHeight, height: 80, source: 'flowchart LR\n A --> B', scene })]);
+        doc.check();
+        expect(pipeline.parse(pipeline.serialize(doc)).toJSON()).toEqual(doc.toJSON());
+      }
+    }
   });
 });

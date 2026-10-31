@@ -12,7 +12,7 @@ export const richMessages = defineMessages({
   blockSize: ['拖拽调整宽高', 'Drag to resize block'],
   resizeGraphicWidth: ['拖拽调整宽度', 'Drag to resize width'],
   resizeGraphicHeight: ['拖拽调整高度', 'Drag to resize height'],
-  resizeGraphicHint: ['方向键调整宽高，Esc 取消拖拽。', 'Use arrow keys to resize. Press Escape to cancel dragging.'],
+  resizeGraphicHint: ['方向键调整宽高，Esc 取消拖拽。双击底边或按 Home 恢复自适应高度。', 'Use arrow keys to resize and Escape to cancel. Double-click the bottom edge or press Home to restore automatic height.'],
   url: ['链接地址', 'URL'],
   invalidUrl: ['请输入完整的 HTTP 或 HTTPS 链接。', 'Enter a complete HTTP or HTTPS URL.'],
   save: ['保存', 'Save'],

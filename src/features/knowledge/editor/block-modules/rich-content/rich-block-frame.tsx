@@ -22,6 +22,7 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
   const [error, setError] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const canvas = appearance === 'canvas';
+  const autoHeight = canvas && props.node.attrs.autoHeight !== false;
   useEffect(() => {
     const update = () => setFullscreen(document.fullscreenElement === root.current);
     document.addEventListener('fullscreenchange', update);
@@ -42,8 +43,8 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
     {resizable && (canvas ? <GraphicToolButton label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}>{fullscreen ? <ArrowsIn size={16} aria-hidden /> : <ArrowsOut size={16} aria-hidden />}</GraphicToolButton>
       : <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}><ArrowsOut size={16} aria-hidden /></button>)}
   </BlockActions>;
-  return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
-    style={canvas ? { width: `${width}%`, height: resizable ? height : undefined } : undefined}
+  return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} data-graphic-auto-height={canvas ? autoHeight : undefined} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
+    style={canvas ? { width: `${width}%`, height: resizable && !autoHeight ? height : undefined } : undefined}
     role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
       if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [data-graphic-title-editing], [role="separator"]')) root.current?.focus({ preventScroll: true });
@@ -62,7 +63,7 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
         update({ title });
       }} />
     </div>}
-    {canvas && resizable && editable && !fullscreen && <GraphicBlockResize props={props} width={width} height={height} minHeight={minHeight} />}
+    {canvas && resizable && editable && !fullscreen && <GraphicBlockResize props={props} width={width} height={height} autoHeight={autoHeight} minHeight={80} />}
     {resizable && editable && !canvas && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit
       onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.resizing = 'true'; start.current = { y: event.clientY, height, next: height }; }}
       onPointerMove={event => { if (!start.current) return; start.current.next = Math.round(Math.max(minHeight, Math.min(1200, start.current.height + event.clientY - start.current.y))); const body = root.current?.querySelector<HTMLElement>(`.${styles.body}`); if (body) body.style.height = `${start.current.next}px`; }}

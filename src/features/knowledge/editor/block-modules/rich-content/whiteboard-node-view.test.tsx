@@ -24,15 +24,15 @@ beforeAll(async () => {
 });
 afterAll(async () => { await browser.happyDOM.abort(); });
 
-async function withWhiteboard(editable: boolean, check: (container: HTMLElement, editor: Editor) => void | Promise<void>, source = '') {
+async function withWhiteboard(editable: boolean, check: (container: HTMLElement, editor: Editor) => void | Promise<void>, source = '', autoHeight = false) {
   const container = document.createElement('div'), host = document.createElement('div');
   container.append(host); document.body.append(container);
   const editor = new Editor({ element: host, editable, extensions: [
     ...applyEditorBlockModules([...createKnowledgeExtensions(), createBlockIdExtension({ pageId: 'whiteboard-reading-test' })]),
     Extension.create({ name: 'graphicTestHistory', addProseMirrorPlugins: () => [history()] }),
   ], content: { type: 'doc', content: [
-    { type: 'whiteboard', attrs: { title: 'Architecture sketch', blockId: 'whiteboard-reading', height: 400 } },
-    { type: 'mermaid', attrs: { title: 'Architecture diagram', blockId: 'diagram-reading', source } },
+    { type: 'whiteboard', attrs: { title: 'Architecture sketch', blockId: 'whiteboard-reading', height: 400, autoHeight } },
+    { type: 'mermaid', attrs: { title: 'Architecture diagram', blockId: 'diagram-reading', source, autoHeight } },
   ] } });
   const root = createRoot(container);
   try {
@@ -192,7 +192,7 @@ function resizeTarget(block: HTMLElement, axis = 'nw-se') {
   Object.defineProperty(block.parentElement!, 'clientWidth', { configurable: true, value: 1000 });
   Object.defineProperties(block, {
     offsetWidth: { configurable: true, get: () => parseFloat(block.style.width) * 10 },
-    offsetHeight: { configurable: true, get: () => parseFloat(block.style.height) },
+    offsetHeight: { configurable: true, get: () => block.dataset.graphicAutoHeight === 'true' ? 160 : parseFloat(block.style.height) },
   });
   block.getBoundingClientRect = () => new browser.DOMRect(0, 0, block.offsetWidth, block.offsetHeight) as DOMRect;
   const handle = block.querySelector<HTMLButtonElement>(`[data-graphic-resize="${axis}"]`)!;
@@ -205,6 +205,55 @@ function resizeTarget(block: HTMLElement, axis = 'nw-se') {
 async function pointer(handle: HTMLElement, type: string, x: number, y: number) {
   await act(async () => handle.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, button: 0, clientX: x, clientY: y })));
 }
+
+test('automatic blocks keep width resizing fluid and start height resizing at their rendered size with undo and cancellation', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    for (const type of ['whiteboard', 'mermaid']) {
+      const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
+      const before = JSON.stringify(editor.getJSON());
+      for (const axis of ['x', 'y', 'nw-se']) {
+        const handle = resizeTarget(block, axis);
+        await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+        await pointer(handle, 'pointerdown', 1000, 160);
+        await pointer(handle, 'pointermove', 750, 200);
+        expect(block.style.height).toBe(axis === 'x' ? '' : '200px');
+        expect(block.dataset.graphicAutoHeight).toBe(String(axis === 'x'));
+        expect(JSON.stringify(editor.getJSON())).toBe(before);
+        await pointer(handle, 'pointerup', 750, 200);
+        const attrs = editor.state.doc.content.content.find(node => node.type.name === type)!.attrs;
+        expect(attrs.autoHeight).toBe(axis === 'x');
+        expect(attrs.height).toBe(axis === 'x' ? (type === 'whiteboard' ? 400 : 360) : 200);
+        await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+        expect(JSON.stringify(editor.getJSON())).toBe(before);
+        expect(block.style.height).toBe('');
+        expect(block.dataset.graphicAutoHeight).toBe('true');
+      }
+      const bottom = resizeTarget(block, 'y');
+      for (const event of ['pointercancel', 'lostpointercapture']) {
+        await pointer(bottom, 'pointerdown', 1000, 160);
+        await pointer(bottom, 'pointermove', 1000, 220);
+        await pointer(bottom, event, 1000, 220);
+        expect(block.style.height).toBe('');
+        expect(block.dataset.graphicAutoHeight).toBe('true');
+        expect(JSON.stringify(editor.getJSON())).toBe(before);
+      }
+      await pointer(bottom, 'pointerdown', 1000, 160);
+      await pointer(bottom, 'pointermove', 1000, 220);
+      await act(async () => bottom.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+      expect(block.style.height).toBe('');
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+      await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+      await act(async () => bottom.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })));
+      expect(block.style.height).toBe('180px');
+      expect(block.dataset.graphicAutoHeight).toBe('false');
+      await act(async () => bottom.dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+      expect(block.style.height).toBe('');
+      expect(block.dataset.graphicAutoHeight).toBe('true');
+      await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+    }
+  }, 'flowchart LR\n A --> B', true);
+});
 
 test('right, bottom and corner dragging resize only their intended axes and commit one undoable change', async () => {
   await withWhiteboard(true, async (container, editor) => {

@@ -20,7 +20,7 @@
 .form input::placeholder,.form textarea::placeholder,.source::placeholder { color:var(--muted); }
 .formActions { display:flex; justify-content:flex-end; gap:6px; }
 .source { display:block; height:100%; min-height:200px; border:0; border-radius:0; resize:none; font-family:var(--font-mono, monospace); line-height:1.6; tab-size:2; }
-.graphic { display:flex; align-items:center; justify-content:center; width:100%; height:100%; min-width:0; min-height:0; padding:16px; overflow:hidden; }
+.graphic { display:flex; align-items:center; justify-content:center; width:100%; height:100%; min-width:0; min-height:0; padding:8px 8px 0; overflow:hidden; }
 .graphic img { display:block; width:100%; height:100%; min-width:0; min-height:0; max-width:100%; max-height:100%; margin:0; object-fit:contain; }
 .canvasFrame { display:flex; flex-direction:column; max-width:100%; min-width:min(100%,280px); box-sizing:border-box; border:var(--separator-width) solid transparent; border-radius:8px; background:var(--panel); }
 .canvasFrame:is(:hover,:focus-visible),.canvasFrame:has(:focus-visible,[data-graphic-title-editing]) { border-color:var(--separator-color); }
@@ -28,8 +28,13 @@
 .canvasFrame > .body { flex:1; overflow:hidden; border-radius:7px; }
 .canvasFrame .source,.canvasFrame .state { min-height:0; }
 .canvasFrame .source { padding-block-start:48px; }
+.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) > .body { flex:none; }
+.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .graphic { height:auto; }
+.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .graphic img { height:auto; }
+.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .source { height:360px; }
+.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .state { min-height:120px; }
 .canvasFrame:fullscreen { width:100vw!important; height:100dvh!important; background:var(--panel); }
-.graphicCaption { display:flex; flex:none; justify-content:center; min-width:0; padding:2px 12px 8px; }
+.graphicCaption { display:flex; flex:none; justify-content:center; min-width:0; padding:2px 8px 4px; }
 .graphicTitle { display:block; min-width:0; max-width:100%; padding:2px 5px; border:0; border-radius:5px; background:transparent; color:var(--muted-strong); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 12px/18px var(--font-sans); text-align:center; }
 .graphicTitleEdit { min-width:1ch; cursor:text; text-overflow:clip; outline:none; box-shadow:none; }
 .graphicTitleEdit:empty::before { content:attr(data-placeholder); color:var(--muted); pointer-events:none; }

@@ -15,6 +15,6 @@ export async function whiteboardImage(value: string): Promise<string> {
   const library = await loadWhiteboardLibrary(), data = whiteboardData(value);
   const elements = library.restoreElements(data.elements ?? [], null);
   if (!elements.some(element => !element.isDeleted)) return '';
-  const svg = await library.exportToSvg({ elements, appState: { ...data.appState, exportBackground: true, exportEmbedScene: false }, files: data.files ?? {}, exportPadding: 16 });
+  const svg = await library.exportToSvg({ elements, appState: { ...data.appState, exportBackground: true, exportEmbedScene: false }, files: data.files ?? {}, exportPadding: 8 });
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg.outerHTML)}`;
 }
