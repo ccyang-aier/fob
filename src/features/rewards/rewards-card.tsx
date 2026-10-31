@@ -1,15 +1,14 @@
 'use client';
 
-import { ArrowUpRight, Coffee } from '@/components/icons';
+import { Coffee } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import resourceCard from '@/components/ui/resource-card.module.css';
 import { useTranslation } from '@/lib/i18n/react';
 import { useCoffeeRewards } from './rewards-provider';
-import { openRewardsPage } from './coffee-balance-button';
 import { rewardsMessages } from './rewards.messages';
 import styles from './rewards.module.css';
 
-export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void }) {
+export function RewardsCard() {
   const { t } = useTranslation(rewardsMessages);
   const rewards = useCoffeeRewards();
   const authenticated = rewards.identityStatus === 'authenticated';
@@ -22,9 +21,6 @@ export function RewardsCard({ onOpen = openRewardsPage }: { onOpen?: () => void 
         <strong>{t('daily')}</strong>
         <p className={styles.cardDescription}>{t('dailyReward')}</p>
       </div>
-      <Button type="button" variant="ghost" size="icon-sm" className={styles.cardOpen} aria-label={t('open')} onClick={onOpen}>
-        <ArrowUpRight size={14} aria-hidden />
-      </Button>
     </div>
     {authenticated && !summary ? <p className={styles.cardStatus}>{t(rewards.error ? 'unavailable' : 'loading')}</p> : null}
     <Button type="button" size="sm" className={styles.cardCta}

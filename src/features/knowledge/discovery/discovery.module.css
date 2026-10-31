@@ -25,7 +25,7 @@
 
 .importBody { padding:0 24px 24px; }
 
-.overview { position:relative; }
+.overview { position:relative; padding-top:8px; }
 .folder .overviewContent { --document-font:inherit; --document-size:16px; --document-line-height:1.5; --document-paragraph-gap:12px; --document-code-font:var(--font-code); width:100%; max-width:none; min-height:30vh; margin:0; padding:0 0 30vh; font-family:inherit; color:var(--collection-text); }
 .overviewContent :global(.ProseMirror) { min-height:30vh; color:var(--collection-text); font-family:inherit; }
 .overviewContent :global(.ProseMirror > p:first-child:last-child:has(> br.ProseMirror-trailingBreak)::before) { content:attr(data-placeholder); color:var(--muted); }

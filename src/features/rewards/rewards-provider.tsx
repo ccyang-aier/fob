@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { QueryClient, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import type { CoffeeSummary } from '@fob/shared/rewards';
 import { useIdentity } from '@/features/identity/identity-provider';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -24,7 +24,6 @@ type RewardsContextValue = {
 };
 const Context = createContext<RewardsContextValue | null>(null);
 const summaryKey = (principal: string) => ['rewards', principal, 'coffee'] as const;
-const ledgerKey = (principal: string) => ['rewards', principal, 'ledger'] as const;
 
 /** One in-memory account cache. It never writes a balance to browser storage. */
 export function RewardsProvider({ children }: { children: ReactNode }) {
@@ -58,7 +57,6 @@ export function RewardsProvider({ children }: { children: ReactNode }) {
       const { awarded, reward: _reward, ...summary } = result;
       void _reward;
       client.setQueryData(summaryKey(input.scope.principal), summary);
-      void client.invalidateQueries({ queryKey: ledgerKey(input.scope.principal) });
       notify('success', t(awarded ? 'collected' : 'checkedIn'));
     },
     onError: (error, input) => {
@@ -99,15 +97,4 @@ export function useCoffeeRewards() {
   const value = useContext(Context);
   if (!value) throw new Error('RewardsProvider is required.');
   return value;
-}
-
-export function useCoffeeLedger() {
-  const { accountId, principal, client } = useCoffeeRewards();
-  return useInfiniteQuery({
-    queryKey: ledgerKey(principal), enabled: accountId !== null,
-    queryFn: ({ signal, pageParam }) => rewardsApi.ledger(accountId!, pageParam, signal),
-    initialPageParam: null as string | null,
-    getNextPageParam: page => page.nextCursor,
-    retry: false,
-  }, client);
 }

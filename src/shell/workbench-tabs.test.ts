@@ -68,6 +68,17 @@ test('restoration rejects other account/knowledge scopes and removed product rou
   expect(restoreWorkbenchTabs(state.scope, state)?.active).toBe('knowledge');
 });
 
+test('retired coffee tabs cannot restore an empty page or leave a broken split', () => {
+  const state = createWorkbenchTabs('scope', tabTarget('knowledge', '?folder=research'));
+  const coffee = { key: 'rewards', view: 'rewards', instance: 1, search: '?view=rewards' };
+  const restored = restoreWorkbenchTabs('scope', { ...state, tabs: [...state.tabs, coffee], active: 'rewards', split: { left: 'knowledge', right: 'rewards', ratio: 50 } });
+  expect(restored?.tabs).toHaveLength(1);
+  expect(restored?.active).toBe('knowledge');
+  expect(restored?.tabs[0].search).toContain('folder=research');
+  expect(restored?.split).toBeUndefined();
+  expect(restoreWorkbenchTabs('scope', { ...state, tabs: [coffee] })).toBeNull();
+});
+
 test('folder tab titles and route restore within their knowledge base without inventing a document target', () => {
   const state = createWorkbenchTabs('scope', tabTarget('knowledge', '?knowledgeBase=kb&source=server&folder=folder'));
   state.tabs[0].title = 'Research';

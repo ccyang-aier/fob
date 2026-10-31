@@ -40,7 +40,7 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
       <ThemeSwitch className={styles.button} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
-      <CoffeeBalanceButton onOpen={() => onNavigate('rewards')} />
+      <CoffeeBalanceButton />
     </div>
     </div>
   </header>;

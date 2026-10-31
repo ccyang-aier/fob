@@ -48,7 +48,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
     </header>
     <KnowledgeNavigationOutlet compact={!open} />
     <footer className={cn(styles.footer, open ? 'px-3' : 'px-1')}>
-      {open && <RewardsCard onOpen={() => onViewChange('rewards')} />}
+      {open && <RewardsCard />}
       <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>
         {row('members')}{row('templates')}
       </nav>

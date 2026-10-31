@@ -47,6 +47,8 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
   useEffect(() => {
     function pointerDown(event: Event) {
       const target = event.target as Node;
+      // Focus handoffs can pass through body; outside pointer presses still dismiss.
+      if (event.type === 'focusin' && target === document.body) return;
       if (!panelRef.current?.contains(target) && !(anchor instanceof HTMLElement && anchor.contains(target)) && !restoreFocusTo?.contains(target)) onClose();
     }
     function keyDown(event: KeyboardEvent) {

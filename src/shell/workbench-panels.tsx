@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { DocumentTabContext, type TabDocument } from '@/features/knowledge/editor/document-tab-context';
 import { TemplatesPage } from '@/features/knowledge/templates/templates-page';
-import { RewardsPage } from '@/features/rewards';
 import { KnowledgePage } from '@/features/knowledge/knowledge-page';
 import { KnowledgeNavigationScope } from '@/features/knowledge/navigation/system-navigation';
 import { KnowledgeMembersPage } from '@/features/knowledge/organization/knowledge-members-page';
@@ -56,7 +55,7 @@ function DocumentTabPanel({ tab, visible, pane, onActivate, onReport, onSplit, o
   const reportTitle = useCallback((title: string | null) => onReportTitle?.(tab.key, title), [onReportTitle, tab.key]);
   const value = useMemo(() => ({ search: tab.search, document: tab.document, pinned: Boolean(tab.pinned), reportDocument, splitDocument, togglePin, reportTitle }), [tab.search, tab.document, tab.pinned, reportDocument, splitDocument, togglePin, reportTitle]);
   return <DocumentTabContext value={value}><WorkbenchPanel tab={tab} visible={visible} pane={pane} onActivate={() => onActivate?.(tab.key)}>
-    {tab.view === 'members' ? <KnowledgeMembersPage /> : tab.view === 'templates' ? <TemplatesPage /> : tab.view === 'rewards' ? <RewardsPage /> : <KnowledgePage />}
+    {tab.view === 'members' ? <KnowledgeMembersPage /> : tab.view === 'templates' ? <TemplatesPage /> : <KnowledgePage />}
   </WorkbenchPanel></DocumentTabContext>;
 }
 

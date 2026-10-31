@@ -18,6 +18,7 @@
 | 文件夹/文档/标签 | FA7 `folder` / `file-lines` / `tag` |
 | 成员/模板/设置/帮助 | FA7 `user-group` / `table-cells-large` / `gear` / `circle-question` |
 | 咖啡/通知/分享 | FA7 `mug-saucer` / `bell` / `share-nodes`；咖啡不另加底色容器 |
+| 咖啡券 | FA7 `ticket`，经统一 `Ticket` 入口展示券类内容 |
 | 前进后退/对外打开/更多 | Lucide 细线箭头、`ExternalLink`、`Ellipsis`；更多是独立三点 |
 | 主导航收纳 | 原双栏造型，固定几何的唯一保留例外；不引入新的变体 |
 | 折叠/切换器 | 一级分组用 FA7 caret 实心三角，子级树节点用 Lucide `Chevron*`，切换器用 `ChevronsUpDown` |

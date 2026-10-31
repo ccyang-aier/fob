@@ -27,7 +27,6 @@ beforeAll(async () => {
   mock.module('@/features/knowledge/knowledge-page', () => ({ KnowledgePage: () => <ExamplePage name="knowledge" /> }));
   mock.module('@/features/knowledge/organization/knowledge-members-page', () => ({ KnowledgeMembersPage: () => <ExamplePage name="members" /> }));
   mock.module('@/features/knowledge/templates/templates-page', () => ({ TemplatesPage: () => <ExamplePage name="templates" /> }));
-  mock.module('@/features/rewards', () => ({ RewardsPage: () => <ExamplePage name="rewards" /> }));
   const { WorkbenchPanels } = await import('./workbench-panels');
   renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} split={state.split} onReportDocument={() => {}} onTogglePin={() => {}} onSplitDocument={() => {}} onResizeSplit={() => {}} />;
   host = document.createElement('div');
