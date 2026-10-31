@@ -5,6 +5,7 @@ import { BookOpenText, CaretUpDown, SelectionCheck, MagnifyingGlass, Palette, Pe
 import { useAppAlert } from '@/components/app-alert-provider';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
 import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
 import type { KnowledgeBaseResource } from './knowledge-base';
@@ -14,7 +15,7 @@ import { KnowledgeBaseAvatar, KNOWLEDGE_BASE_AVATAR_PALETTES, resolveKnowledgeBa
 import { useKnowledgeBaseAvatarPalette, saveKnowledgeBaseAvatarPalette } from './knowledge-base-avatar-preferences';
 import styles from './knowledge-base-switcher.module.css';
 
-export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () => void }) {
+export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: { compact?: boolean; onSwitch?: () => void }) {
   const { t } = useTranslation(messages);
   const resources = useKnowledgeBaseResources();
   const { knowledgeBases, selectedKnowledgeBase, selectedKnowledgeBaseRole, principal, scopeKey, selectKnowledgeBase, status, error, refreshKnowledgeBases, openCreateKnowledgeBase } = resources;
@@ -31,11 +32,14 @@ export function KnowledgeBaseSwitcher({ onSwitch = () => {} }: { onSwitch?: () =
   }
   return <>
     <DropdownMenu open={menuOpen} onOpenChange={open => { setMenuOpen(open); if (open) setQuery(''); }}>
-      <DropdownMenuTrigger asChild><button type="button" className={`fob-action ${styles.trigger}`} aria-label={t('switch')}>
-        {selectedKnowledgeBase ? <SwitcherAvatar base={selectedKnowledgeBase} principal={principal} /> : <span className={styles.avatar}><BookOpenText size={16} /></span>}
-        <span className={styles.name}>{selectedKnowledgeBase?.name ?? t(status === 'loading' ? 'loading' : 'select')}</span><CaretUpDown size={14} className={styles.chevrons} />
-      </button></DropdownMenuTrigger>
-      {menuOpen && <DropdownMenuContent className={styles.menu} align="start" side="bottom" sideOffset={6} aria-label={t('switch')}>
+      <Tooltip>
+        <TooltipTrigger asChild><DropdownMenuTrigger asChild><button type="button" className={`fob-action ${styles.trigger}`} data-compact={compact} aria-label={t('switch')}>
+          {selectedKnowledgeBase ? <SwitcherAvatar base={selectedKnowledgeBase} principal={principal} /> : <span className={styles.avatar}><BookOpenText size={16} /></span>}
+          {!compact && <><span className={styles.name}>{selectedKnowledgeBase?.name ?? t(status === 'loading' ? 'loading' : 'select')}</span><CaretUpDown size={14} className={styles.chevrons} /></>}
+        </button></DropdownMenuTrigger></TooltipTrigger>
+        <TooltipContent side={compact ? 'right' : 'top'}>{t('switch')}</TooltipContent>
+      </Tooltip>
+      {menuOpen && <DropdownMenuContent className={styles.menu} align="start" side={compact ? 'right' : 'top'} sideOffset={6} aria-label={t('switch')}>
         <div className={styles.search}><MagnifyingGlass size={14} /><input autoFocus value={query} onChange={event => setQuery(event.target.value)} onKeyDown={event => {
           if (event.key === 'Escape') { event.preventDefault(); setMenuOpen(false); return; }
           event.stopPropagation();

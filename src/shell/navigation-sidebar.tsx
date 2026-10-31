@@ -2,6 +2,7 @@
 
 import { SidebarSimple } from '@/components/icons';
 import { GearSix } from '@/components/icons';
+import { FobMark } from '@/components/fob-mark';
 import { RewardsCard } from '@/features/rewards';
 import { KnowledgeBaseSwitcher } from '@/features/knowledge/knowledge-base-switcher';
 import { KnowledgeNavigationOutlet } from '@/features/knowledge/navigation/system-navigation';
@@ -37,7 +38,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
   const helpButton = <SidebarHelp compact={!open} onNavigate={onViewChange} />;
   return <aside aria-label={t(open ? '主导航' : '主导航（已收起）')} style={{ width: open ? width : 52 }} className={cn('sidebar-material relative flex h-full shrink-0 flex-col', !dragging && 'transition-[width] duration-200 ease-out')}>
     <header className={layout.header} data-compact={!open}>
-      {open && <div className={layout.switcher}><KnowledgeBaseSwitcher onSwitch={onKnowledgeBaseChange} /></div>}
+      {open && <div className={layout.brand}><span className={layout.brandMark}><FobMark /></span><span>Fob</span></div>}
       <Tooltip>
         <TooltipTrigger asChild><button type="button" className={`fob-action ${layout.toggle}`} aria-label={t(open ? '收起主导航' : '展开主导航')} onClick={open ? onCollapse : onExpand}>
           <SidebarSimple size={16} aria-hidden />
@@ -51,6 +52,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
       <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>
         {row('members')}{row('templates')}{helpButton}{settingsButton}
       </nav>
+      <KnowledgeBaseSwitcher compact={!open} onSwitch={onKnowledgeBaseChange} />
     </footer>
     {open && <SidebarResizeHandle className={layout.resizeHandle} dragging={dragging} onPointerDown={startResize} />}
   </aside>;

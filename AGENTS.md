@@ -6,7 +6,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 - 使用 Next.js App Router、React、TypeScript、Tailwind CSS v4、现有 Radix 风格组件、TypeScript/Bun 业务服务和 PostgreSQL；后端 API 保持 Node 兼容，Python 服务负责媒体处理。
 - `src/` 负责前端，`backend/server/` 负责身份、知识与模型，`shared/` 负责纯契约和文档语义。前端仅通过 `@fob/server/knowledge-api` 以 `import type` 引用服务端类型。
-- 知识库是工作空间和权限边界；顶部切换器管理知识库，成员、分组、页面、ACL 及业务操作统一以 `knowledgeBaseId` 为作用域。
+- 知识库是工作空间和权限边界；侧栏底部切换器管理知识库，顶部展示 Fob 品牌，成员、分组、页面、ACL 及业务操作统一以 `knowledgeBaseId` 为作用域。
 - shell 提供唯一系统侧栏与收起状态；资源适配器负责查询、权限和操作，当前导航所有者负责跨功能文档跳转与通知。
 - 界面展示真实产品数据和操作结果，明确呈现外部配置依赖、不可用状态与错误。
 - 数据库、对象存储、认证状态、部署及浏览器存储使用 Fob 自有配置与命名空间；工作范围限当前仓库。
