@@ -47,7 +47,7 @@
 .graphicResize[data-resize-axis="y"] { left:0; right:17px; bottom:-3px; height:10px; }
 .graphicResize[data-resize-axis="nw-se"] { right:-3px; bottom:-3px; z-index:3; width:20px; height:20px; }
 @media (hover:none),(pointer:coarse) { .canvasFrame:focus-within > .canvasSurface { border-color:var(--separator-color); } .graphicResize[data-resize-axis="x"] { width:16px; bottom:29px; } .graphicResize[data-resize-axis="y"] { height:16px; right:29px; } .graphicResize[data-resize-axis="nw-se"] { width:32px; height:32px; } }
-.graphicViewer { position:fixed; inset:0; width:calc(100vw - 40px); max-width:none; height:calc(100dvh - 40px); max-height:none; margin:auto; padding:0; border:1px solid var(--control-border); border-radius:12px; background:var(--panel); color:var(--ink); overflow:hidden; }
+.graphicViewer { position:fixed; inset:0; width:min(80vw,960px); max-width:none; height:min(78dvh,640px); max-height:none; margin:auto; padding:0; border:1px solid var(--control-border); border-radius:12px; background:var(--panel); color:var(--ink); overflow:hidden; }
 .graphicViewer::backdrop { background:rgb(0 0 0 / .55); }
 .graphicViewerHeader { position:absolute; inset:12px 12px auto 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; z-index:1; }
 .graphicViewerHeader > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; color:var(--ink-soft); }
@@ -62,7 +62,7 @@
 .graphicViewerTools .graphicZoomValue { width:60px; border:0; border-radius:5px; color:var(--ink-soft); font:500 12px/20px var(--font-sans); font-variant-numeric:tabular-nums; }
 .graphicViewerSeparator { width:1px; height:18px; margin-inline:2px; background:var(--separator-color); }
 .graphicViewerHint { position:absolute; bottom:28px; left:20px; margin:0; color:var(--muted-strong); font-size:11px; }
-@media (max-width:600px) { .graphicViewer { width:calc(100vw - 16px); height:calc(100dvh - 16px); border-radius:8px; } .graphicViewerStage { inset:56px 12px 76px; } .graphicViewerHint { display:none; } }
+@media (max-width:600px) { .graphicViewer { width:calc(100vw - 32px); height:84dvh; border-radius:8px; } .graphicViewerStage { inset:56px 12px 76px; } .graphicViewerHint { display:none; } }
 @media (hover:none),(pointer:coarse) { .graphicViewerTools button,.graphicViewerHeader button { min-width:44px; min-height:44px; } }
 .card { display:flex; min-height:112px; color:inherit; text-decoration:none; }
 .cardText { flex:1; min-width:0; padding:16px; }

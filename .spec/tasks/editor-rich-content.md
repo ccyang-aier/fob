@@ -160,3 +160,10 @@
 - 用户当前文档的简单白板以约 273px 宽展示，预览本身约 255px，未撑满约 804px 的正文；标题在外框之后。右侧实际拖拽后从约 273px 到 338px（42%），一次正文撤销恢复自动宽度，未遗留测试尺寸修改。白板遮罩滚轮从 300% 到约 405%，拖拽平移及适应窗口正常；Mermaid 遮罩完整展示复杂流程，按钮从约 81% 放大到 101% 并保持，支持拖拽、适配及遮罩 / Escape 关闭，浏览器 fullscreenElement 为 null。
 - 深色与约 421px 窄屏均验证遮罩图形、标题与控件；窄屏弹层约 405px 宽，无横向溢出，图表完整适配约 46%。已恢复桌面视口、主导航展开和浅色界面。首轮开发页出现旧 chunk 加载错误，重启 Web 热更新服务后恢复；最终独立干净页身份正确、内容正常、无框架覆盖层，浏览器 0 error / 0 warning。Web 3001、业务 8721、媒体 8920 均保持监听，未重测实体多指触控。
 - 截图留在仓库外 visualizations 目录：`graphic-natural-width-caption.png`、`graphic-natural-width-caption-hover.png`、`mermaid-zoom-overlay-light.png`、`mermaid-zoom-overlay-dark.png`、`mermaid-zoom-overlay-narrow.png`。当前设计同步至 [编辑器富内容块](../../docs/editor-rich-content.md)，未提交文档内容快照或截图。
+
+## 收紧放大预览弹层（2026-11-01）
+
+- Mermaid / Excalidraw 共用的放大弹层从接近铺满视口改为居中卡片：宽度 80vw、上限 960px，高度 78dvh、上限 640px。窄屏左右各留 16px、高度 84dvh，增加四周可见背景空间。当前设计同步至 [编辑器富内容块](../../docs/editor-rich-content.md)。
+- 在真实用户文档的 1347×758 桌面视口中，弹层约 960×591px，左右各约 194px、上下各约 83px；图形仍完整适配。实际点击放大后从约 50% 到 62%，适应窗口恢复 50%，关闭正常。
+- 约 421×863 窄屏下弹层约 389×725px，上下各约 69px，无横向溢出，图表及操作组可见。已恢复桌面视口与主导航展开，浏览器 0 error / 0 warning，无框架覆盖层。图标规范与差异检查通过；本轮只调整 CSS 尺寸与设计记录。
+- 桌面截图保存于仓库外 visualizations 目录的 `mermaid-zoom-overlay-compact.png`。Web 3001、业务 8721、媒体 8920 保持运行，未改正文内容或块尺寸。
