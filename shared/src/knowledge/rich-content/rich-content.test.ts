@@ -56,10 +56,12 @@ describe('rich content portable semantics', () => {
     for (const value of invalid) expect(() => schema.nodes.whiteboard.create({ scene: value }).check()).toThrow();
     expect(() => schema.nodes.mermaid.create({ height: -1 }).check()).toThrow();
     for (const type of ['mermaid', 'whiteboard']) {
-      for (const width of [0, 24, 101, 75.5, '75%']) expect(() => schema.nodes[type].create({ width }).check()).toThrow();
+      for (const width of [0, -1, 101, 75.5, '75%']) expect(() => schema.nodes[type].create({ width }).check()).toThrow();
       expect(schema.nodes[type].create().attrs.width).toBe(100);
       expect(schema.nodes[type].create().attrs.autoHeight).toBe(true);
+      expect(schema.nodes[type].create().attrs.autoWidth).toBe(true);
       for (const autoHeight of ['true', 1, null]) expect(() => schema.nodes[type].create({ autoHeight }).check()).toThrow();
+      for (const autoWidth of ['true', 1, null]) expect(() => schema.nodes[type].create({ autoWidth }).check()).toThrow();
     }
     expect(() => schema.nodes.whiteboard.create({ preview: 'data:text/html;base64,PHNjcmlwdD4=' }).check()).toThrow();
   });
@@ -68,9 +70,10 @@ describe('rich content portable semantics', () => {
     for (const type of ['mermaid', 'whiteboard']) {
       const legacy = schema.nodeFromJSON({ type, attrs: { height: 689 } });
       expect(legacy.attrs.autoHeight).toBe(true);
+      expect(legacy.attrs.autoWidth).toBe(true);
       expect(legacy.attrs.height).toBe(689);
-      for (const autoHeight of [true, false]) {
-        const doc = schema.nodes.doc.create(null, [schema.nodes[type].create({ autoHeight, height: 80, source: 'flowchart LR\n A --> B', scene })]);
+      for (const autoHeight of [true, false]) for (const autoWidth of [true, false]) {
+        const doc = schema.nodes.doc.create(null, [schema.nodes[type].create({ autoHeight, autoWidth, width: 10, height: 80, source: 'flowchart LR\n A --> B', scene })]);
         doc.check();
         expect(pipeline.parse(pipeline.serialize(doc)).toJSON()).toEqual(doc.toJSON());
       }

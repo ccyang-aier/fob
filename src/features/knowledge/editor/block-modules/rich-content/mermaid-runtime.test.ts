@@ -12,6 +12,14 @@ mock.module('mermaid', () => ({ default: {
 } }));
 
 const { renderMermaid } = await import('./mermaid-runtime');
+const { svgGraphicSize } = await import('./graphic-preview-size');
+
+test('a simple diagram supplies a compact intrinsic width without scaling it to the document width', async () => {
+  const size = svgGraphicSize(await renderMermaid('compact', 'flowchart LR\n A[Start] --> B[Done]', false))!;
+  expect(size.width).toBeGreaterThan(100);
+  expect(size.width).toBeLessThan(400);
+  expect(size.height).toBeGreaterThan(30);
+});
 
 test('complex Chinese flowcharts use beautiful-mermaid layout and retain groups, shapes, edges and metadata', async () => {
   const svg = await renderMermaid('complex', `---

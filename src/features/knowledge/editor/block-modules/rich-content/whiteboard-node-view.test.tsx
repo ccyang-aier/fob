@@ -24,15 +24,15 @@ beforeAll(async () => {
 });
 afterAll(async () => { await browser.happyDOM.abort(); });
 
-async function withWhiteboard(editable: boolean, check: (container: HTMLElement, editor: Editor) => void | Promise<void>, source = '', autoHeight = false) {
+async function withWhiteboard(editable: boolean, check: (container: HTMLElement, editor: Editor) => void | Promise<void>, source = '', autoHeight = false, autoWidth = false) {
   const container = document.createElement('div'), host = document.createElement('div');
   container.append(host); document.body.append(container);
   const editor = new Editor({ element: host, editable, extensions: [
     ...applyEditorBlockModules([...createKnowledgeExtensions(), createBlockIdExtension({ pageId: 'whiteboard-reading-test' })]),
     Extension.create({ name: 'graphicTestHistory', addProseMirrorPlugins: () => [history()] }),
   ], content: { type: 'doc', content: [
-    { type: 'whiteboard', attrs: { title: 'Architecture sketch', blockId: 'whiteboard-reading', height: 400, autoHeight } },
-    { type: 'mermaid', attrs: { title: 'Architecture diagram', blockId: 'diagram-reading', source, autoHeight } },
+    { type: 'whiteboard', attrs: { title: 'Architecture sketch', blockId: 'whiteboard-reading', height: 400, autoHeight, autoWidth } },
+    { type: 'mermaid', attrs: { title: 'Architecture diagram', blockId: 'diagram-reading', source, autoHeight, autoWidth } },
   ] } });
   const root = createRoot(container);
   try {
@@ -53,7 +53,8 @@ test('graphic blocks keep titles and internal actions with invisible edge resize
     expect(whiteboard.tabIndex).toBe(0);
     expect(Boolean(whiteboard.querySelector('input'))).toBe(false);
     expect(whiteboard.querySelector('[data-document-export-text]')?.textContent).toBe('Architecture sketch');
-    expect(whiteboard.querySelector(':scope > [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
+    expect(whiteboard.querySelector('[data-graphic-surface] > [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
+    expect(whiteboard.querySelector('[data-graphic-caption]')?.previousElementSibling?.hasAttribute('data-graphic-surface')).toBe(true);
     expect(whiteboard.querySelectorAll('[data-graphic-resize]')).toHaveLength(3);
     expect(Array.from(whiteboard.querySelectorAll('[data-graphic-resize]')).every(target => target.getAttribute('data-resize-feedback') === 'cursor' && target.childElementCount === 0)).toBe(true);
     expect(Boolean(whiteboard.querySelector('[aria-haspopup="dialog"], [role="separator"]'))).toBe(false);
@@ -66,12 +67,12 @@ test('graphic blocks keep titles and internal actions with invisible edge resize
   });
 });
 
-test('read-only whiteboards retain full-screen reading without edit or resize controls', async () => {
+test('read-only graphics retain an enlargement entry without edit or resize controls', async () => {
   await withWhiteboard(false, (container, editor) => {
     const whiteboard = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
     const buttons = Array.from(whiteboard.querySelectorAll('button'));
     expect(buttons).toHaveLength(1);
-    expect(buttons[0].getAttribute('aria-label')).toMatch(/全屏|Full screen/);
+    expect(buttons[0].getAttribute('aria-label')).toMatch(/放大查看|Enlarge preview/);
     expect(Boolean(whiteboard.querySelector('[role="separator"], input, [data-document-export-text]'))).toBe(false);
     expect(whiteboard.textContent).toContain('Architecture sketch');
     expect(editor.state.doc.firstChild?.attrs.title).toBe('Architecture sketch');
@@ -191,7 +192,7 @@ test('both graphic titles commit on Enter or blur, cancel on Escape and discard 
 function resizeTarget(block: HTMLElement, axis = 'nw-se') {
   Object.defineProperty(block.parentElement!, 'clientWidth', { configurable: true, value: 1000 });
   Object.defineProperties(block, {
-    offsetWidth: { configurable: true, get: () => parseFloat(block.style.width) * 10 },
+    offsetWidth: { configurable: true, get: () => block.dataset.graphicAutoWidth === 'true' ? 200 : parseFloat(block.style.width) * 10 },
     offsetHeight: { configurable: true, get: () => block.dataset.graphicAutoHeight === 'true' ? 160 : parseFloat(block.style.height) },
   });
   block.getBoundingClientRect = () => new browser.DOMRect(0, 0, block.offsetWidth, block.offsetHeight) as DOMRect;
@@ -255,6 +256,41 @@ test('automatic blocks keep width resizing fluid and start height resizing at th
   }, 'flowchart LR\n A --> B', true);
 });
 
+test('natural widths resize from the rendered size, preserve height-only sizing and restore automatically', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    for (const type of ['whiteboard', 'mermaid']) {
+      const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
+      const before = JSON.stringify(editor.getJSON());
+      const right = resizeTarget(block, 'x');
+      await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+      await pointer(right, 'pointerdown', 200, 160);
+      await pointer(right, 'pointermove', 250, 160);
+      expect(block.style.width).toBe('25%');
+      expect(block.dataset.graphicAutoWidth).toBe('false');
+      expect(block.dataset.graphicAutoHeight).toBe('true');
+      await pointer(right, 'pointerup', 250, 160);
+      expect(editor.state.doc.content.content.find(node => node.type.name === type)!.attrs.width).toBe(25);
+      await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+      expect(block.style.width).toBe('');
+      expect(block.dataset.graphicAutoWidth).toBe('true');
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+      const bottom = resizeTarget(block, 'y');
+      await pointer(bottom, 'pointerdown', 200, 160);
+      await pointer(bottom, 'pointermove', 200, 200);
+      expect(block.style.width).toBe('');
+      expect(block.dataset.graphicAutoWidth).toBe('true');
+      await pointer(bottom, 'pointercancel', 200, 200);
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+      await pointer(right, 'pointerdown', 200, 160);
+      await pointer(right, 'pointermove', 250, 160);
+      await pointer(right, 'pointerup', 250, 160);
+      await act(async () => right.dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+      expect(block.style.width).toBe('');
+      expect(block.dataset.graphicAutoWidth).toBe('true');
+    }
+  }, 'flowchart LR\n A --> B', true, true);
+});
+
 test('right, bottom and corner dragging resize only their intended axes and commit one undoable change', async () => {
   await withWhiteboard(true, async (container, editor) => {
     for (const type of ['whiteboard', 'mermaid']) {
@@ -302,7 +338,7 @@ test('corner resize clamps bounds and cancels on Escape, capture loss, remote re
     const handle = resizeTarget(block), before = JSON.stringify(editor.getJSON());
     await pointer(handle, 'pointerdown', 1000, 400);
     await pointer(handle, 'pointermove', -1000, 4000);
-    expect(block.style.width).toBe('28%');
+    expect(block.style.width).toBe('12%');
     expect(block.style.height).toBe('1200px');
     await act(async () => handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
     expect(block.style.width).toBe('100%');

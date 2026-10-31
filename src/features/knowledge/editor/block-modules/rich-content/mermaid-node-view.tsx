@@ -11,6 +11,7 @@ import { useRichTheme } from './use-rich-theme';
 import { GraphicToolButton } from './graphic-tool-button';
 import { renderMermaid } from './mermaid-runtime';
 import { mermaidPalette } from './mermaid-theme';
+import { svgGraphicSize } from './graphic-preview-size';
 import styles from './rich-content.module.css';
 
 export function MermaidNodeView(props: NodeViewProps) {
@@ -21,19 +22,20 @@ export function MermaidNodeView(props: NodeViewProps) {
   const [sourceOpen, setSourceOpen] = useState(!source);
   const editing = sourceOpen && editable;
   const [attempt, setAttempt] = useState(0);
-  const [result, setResult] = useState<{ source: string; dark: boolean; image: string; error: boolean } | null>(null);
+  const [result, setResult] = useState<{ source: string; dark: boolean; image: string; width?: number; error: boolean } | null>(null);
   const id = useId().replace(/[^a-z\d]/gi, '');
   useEffect(() => {
     let canceled = false;
     if (!deferred.trim() || editing) return;
     const timer = setTimeout(() => {
       void renderMermaid(`fobDiagram${id}${attempt}`, deferred, dark).then(svg => {
-        if (!canceled) setResult({ source: deferred, dark, image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`, error: false });
+        if (!canceled) setResult({ source: deferred, dark, image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`, width: svgGraphicSize(svg)?.width, error: false });
       }).catch(() => { if (!canceled) setResult({ source: deferred, dark, image: '', error: true }); });
     }, 180);
     return () => { canceled = true; clearTimeout(timer); };
   }, [deferred, id, attempt, editing, dark]);
-  return <RichBlockFrame props={props} icon={ChartBar} title={t('mermaid')} appearance="canvas" actions={editable && (editing
+  const current = result?.source === source && result.dark === dark && !result.error ? result : null;
+  return <RichBlockFrame props={props} icon={ChartBar} title={t('mermaid')} appearance="canvas" preview={editing ? undefined : current?.image} intrinsicWidth={editing ? 560 : current?.width} actions={editable && (editing
     ? <GraphicToolButton label={t('preview')} onClick={() => setSourceOpen(false)}><ChartBar size={16} aria-hidden /></GraphicToolButton>
     : <GraphicToolButton label={t('editDiagram')} onClick={() => setSourceOpen(true)}><PencilSimple size={16} aria-hidden /></GraphicToolButton>)}>
     {editing ? <textarea className={styles.source} aria-label={t('mermaidSource')} placeholder={'flowchart LR\n  A[Capture] --> B[Organize] --> C[Reuse]'} value={source} maxLength={50_000} spellCheck={false} onChange={event => { if (props.editor.isEditable) props.updateAttributes({ source: event.target.value }); }} />

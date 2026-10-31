@@ -13,6 +13,7 @@
 :global([data-block-actions-root]):hover > .root,
 :global([data-block-actions-root]):focus-within > .root:not([data-placement="canvas"]),
 :global([data-block-actions-root]):is(:focus-visible, :has(:focus-visible, [data-graphic-title-editing])) > .root[data-placement="canvas"],
+:global([data-block-actions-root]):is(:hover, :focus-visible, :has(:focus-visible, [data-graphic-title-editing])) > :global([data-graphic-surface]) > .root[data-placement="canvas"],
 .root[data-active="true"],
 .root:has([aria-expanded="true"]) {
   opacity: 1;
@@ -115,6 +116,7 @@
 @media (hover: none), (pointer: coarse) {
   .root[data-touch-visibility="always"] { opacity: 1; pointer-events: auto; --block-action-offset: 0px; --block-action-scale: 1; }
   :global([data-block-actions-root]):focus-within > .root[data-touch-visibility="on-demand"] { opacity:1; pointer-events:auto; }
+  :global([data-block-actions-root]):focus-within > :global([data-graphic-surface]) > .root[data-touch-visibility="on-demand"] { opacity:1; pointer-events:auto; }
   .root[data-touch-visibility="on-demand"] .bar > :is(button, a) { min-width:44px; min-height:44px; }
 }
 

@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useEditorState, type NodeViewProps } from '@tiptap/react';
 import { Palette, PencilSimple, DownloadSimple } from '@/components/icons';
 import { getOverlayRoot } from '@/lib/overlay-root';
@@ -13,6 +13,7 @@ import { richMessages } from './messages';
 import { RichContentLoading } from './loading-state';
 import { whiteboardSceneHash } from './whiteboard-preview';
 import { GraphicToolButton } from './graphic-tool-button';
+import { whiteboardGraphicSize } from './graphic-preview-size';
 import styles from './rich-content.module.css';
 
 const Canvas = dynamic(() => import('./whiteboard-canvas'), { ssr: false, loading: RichContentLoading });
@@ -35,6 +36,7 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   const { t } = useTranslation(richMessages);
   const editable = useEditorState({ editor: props.editor, selector: ({ editor }) => editor.isEditable });
   const scene = String(props.node.attrs.scene || '');
+  const intrinsicWidth = useMemo(() => whiteboardGraphicSize(scene)?.width, [scene]);
   const snapshot = String(props.node.attrs.preview || '');
   const [failedSnapshot, setFailedSnapshot] = useState('');
   const previewHash = String(props.node.attrs.previewHash || '');
@@ -78,7 +80,7 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   };
   const result = preview?.scene === scene ? preview : null;
   return <>
-    <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} appearance="canvas" actions={<>
+    <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} appearance="canvas" preview={storedPreview || result?.image || undefined} intrinsicWidth={intrinsicWidth} actions={<>
       {editable && <GraphicToolButton label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></GraphicToolButton>}
       {scene && <GraphicToolButton label={t('downloadScene')} onClick={download}><DownloadSimple size={16} aria-hidden /></GraphicToolButton>}
     </>}>

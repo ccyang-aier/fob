@@ -22,19 +22,23 @@
 .source { display:block; height:100%; min-height:200px; border:0; border-radius:0; resize:none; font-family:var(--font-mono, monospace); line-height:1.6; tab-size:2; }
 .graphic { display:flex; align-items:center; justify-content:center; width:100%; height:100%; min-width:0; min-height:0; padding:8px 8px 0; overflow:hidden; }
 .graphic img { display:block; width:100%; height:100%; min-width:0; min-height:0; max-width:100%; max-height:100%; margin:0; object-fit:contain; }
-.canvasFrame { display:flex; flex-direction:column; max-width:100%; min-width:min(100%,280px); box-sizing:border-box; border:var(--separator-width) solid transparent; border-radius:8px; background:var(--panel); }
-.canvasFrame:is(:hover,:focus-visible),.canvasFrame:has(:focus-visible,[data-graphic-title-editing]) { border-color:var(--separator-color); }
-.canvasFrame:focus-visible { outline:none; border-color:var(--control-border); }
-.canvasFrame > .body { flex:1; overflow:hidden; border-radius:7px; }
+.canvasFrame { display:flex; flex-direction:column; max-width:100%; min-width:min(100%,120px); box-sizing:border-box; border:0; border-radius:0; background:transparent; }
+.canvasFrame[data-graphic-auto-width="true"] { width:var(--graphic-preferred-width,338px); }
+.canvasFrame[data-graphic-auto-width="true"] .graphic img { max-width:min(100%,var(--graphic-image-width,100%)); }
+.canvasSurface { position:relative; display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; border:var(--separator-width) solid transparent; border-radius:8px; background:var(--panel); }
+.canvasFrame:is(:hover,:focus-visible) > .canvasSurface,.canvasFrame:has(:focus-visible,[data-graphic-title-editing]) > .canvasSurface { border-color:var(--separator-color); }
+.canvasFrame:focus-visible { outline:none; }
+.canvasFrame:focus-visible > .canvasSurface { border-color:var(--control-border); }
+.canvasSurface > .body { flex:1; overflow:hidden; border-radius:7px; }
+.canvasSurface .graphic img { cursor:zoom-in; }
 .canvasFrame .source,.canvasFrame .state { min-height:0; }
 .canvasFrame .source { padding-block-start:48px; }
-.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) > .body { flex:none; }
-.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .graphic { height:auto; }
-.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .graphic img { height:auto; }
-.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .source { height:360px; }
-.canvasFrame[data-graphic-auto-height="true"]:not(:fullscreen) .state { min-height:120px; }
-.canvasFrame:fullscreen { width:100vw!important; height:100dvh!important; background:var(--panel); }
-.graphicCaption { display:flex; flex:none; justify-content:center; min-width:0; padding:2px 8px 4px; }
+.canvasFrame[data-graphic-auto-height="true"] .canvasSurface > .body { flex:none; }
+.canvasFrame[data-graphic-auto-height="true"] .graphic { height:auto; }
+.canvasFrame[data-graphic-auto-height="true"] .graphic img { height:auto; }
+.canvasFrame[data-graphic-auto-height="true"] .source { height:360px; }
+.canvasFrame[data-graphic-auto-height="true"] .state { min-height:120px; }
+.graphicCaption { display:flex; flex:none; justify-content:center; min-width:0; padding:4px 8px 0; }
 .graphicTitle { display:block; min-width:0; max-width:100%; padding:2px 5px; border:0; border-radius:5px; background:transparent; color:var(--muted-strong); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:400 12px/18px var(--font-sans); text-align:center; }
 .graphicTitleEdit { min-width:1ch; cursor:text; text-overflow:clip; outline:none; box-shadow:none; }
 .graphicTitleEdit:empty::before { content:attr(data-placeholder); color:var(--muted); pointer-events:none; }
@@ -42,7 +46,24 @@
 .graphicResize[data-resize-axis="x"] { top:0; right:-3px; bottom:17px; width:10px; }
 .graphicResize[data-resize-axis="y"] { left:0; right:17px; bottom:-3px; height:10px; }
 .graphicResize[data-resize-axis="nw-se"] { right:-3px; bottom:-3px; z-index:3; width:20px; height:20px; }
-@media (hover:none),(pointer:coarse) { .canvasFrame:focus-within { border-color:var(--separator-color); } .graphicResize[data-resize-axis="x"] { width:16px; bottom:29px; } .graphicResize[data-resize-axis="y"] { height:16px; right:29px; } .graphicResize[data-resize-axis="nw-se"] { width:32px; height:32px; } }
+@media (hover:none),(pointer:coarse) { .canvasFrame:focus-within > .canvasSurface { border-color:var(--separator-color); } .graphicResize[data-resize-axis="x"] { width:16px; bottom:29px; } .graphicResize[data-resize-axis="y"] { height:16px; right:29px; } .graphicResize[data-resize-axis="nw-se"] { width:32px; height:32px; } }
+.graphicViewer { position:fixed; inset:0; width:calc(100vw - 40px); max-width:none; height:calc(100dvh - 40px); max-height:none; margin:auto; padding:0; border:1px solid var(--control-border); border-radius:12px; background:var(--panel); color:var(--ink); overflow:hidden; }
+.graphicViewer::backdrop { background:rgb(0 0 0 / .55); }
+.graphicViewerHeader { position:absolute; inset:12px 12px auto 20px; display:flex; align-items:center; justify-content:space-between; gap:16px; z-index:1; }
+.graphicViewerHeader > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; color:var(--ink-soft); }
+.graphicViewerHeader button { width:36px; height:36px; }
+.graphicViewer button:focus-visible { outline:none; box-shadow:none; border:1px solid var(--control-border); }
+.graphicViewerStage { position:absolute; inset:56px 20px 76px; border:1px solid transparent; overflow:hidden; touch-action:none; cursor:grab; outline:none; }
+.graphicViewerStage:focus-visible { border-color:var(--control-border); }
+.graphicViewerStage[data-dragging="true"] { cursor:grabbing; }
+.graphicViewerImage { position:absolute; top:50%; left:50%; max-width:none; max-height:none; margin:0; transform-origin:center; user-select:none; pointer-events:none; }
+.graphicViewerTools { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:4px; padding:4px; border:1px solid var(--control-border); border-radius:8px; background:var(--panel); }
+.graphicViewerTools button { width:36px; height:36px; flex:none; }
+.graphicViewerTools .graphicZoomValue { width:60px; border:0; border-radius:5px; color:var(--ink-soft); font:500 12px/20px var(--font-sans); font-variant-numeric:tabular-nums; }
+.graphicViewerSeparator { width:1px; height:18px; margin-inline:2px; background:var(--separator-color); }
+.graphicViewerHint { position:absolute; bottom:28px; left:20px; margin:0; color:var(--muted-strong); font-size:11px; }
+@media (max-width:600px) { .graphicViewer { width:calc(100vw - 16px); height:calc(100dvh - 16px); border-radius:8px; } .graphicViewerStage { inset:56px 12px 76px; } .graphicViewerHint { display:none; } }
+@media (hover:none),(pointer:coarse) { .graphicViewerTools button,.graphicViewerHeader button { min-width:44px; min-height:44px; } }
 .card { display:flex; min-height:112px; color:inherit; text-decoration:none; }
 .cardText { flex:1; min-width:0; padding:16px; }
 .cardTitle { display:block; font-size:14px; line-height:1.5; font-weight:600; overflow-wrap:anywhere; }
