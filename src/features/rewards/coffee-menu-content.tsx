@@ -11,7 +11,7 @@ import styles from './rewards.module.css';
 
 type CreditAnimation = { sequence: number; amount: number; startX: number; startY: number; endX: number; endY: number };
 
-export function CoffeeMenuContent({ rewards, onSignIn, allowRepeat = false }: { rewards: ReturnType<typeof useCoffeeRewards>; onSignIn(): void; allowRepeat?: boolean }) {
+export function CoffeeMenuContent({ rewards, onSignIn }: { rewards: ReturnType<typeof useCoffeeRewards>; onSignIn(): void }) {
   const { t } = useTranslation(rewardsMessages);
   const authenticated = rewards.identityStatus === 'authenticated';
   const summary = rewards.summary;
@@ -26,7 +26,7 @@ export function CoffeeMenuContent({ rewards, onSignIn, allowRepeat = false }: { 
   }, [credit]);
   async function collect() {
     if (!authenticated) { onSignIn(); return; }
-    if (!summary || (summary.checkedInToday && !allowRepeat) || (allowRepeat && credit) || inFlight.current || rewards.checkingIn) return;
+    if (!summary || summary.checkedInToday || inFlight.current || rewards.checkingIn) return;
     const epoch = lifetime.current;
     inFlight.current = true;
     try {
@@ -44,7 +44,7 @@ export function CoffeeMenuContent({ rewards, onSignIn, allowRepeat = false }: { 
     <div className={`${styles.menuRow} ${styles.menuCheckInRow}`}>
       <CalendarBlank size={16} aria-hidden />
       <div className={styles.menuCopy}><span>{t('daily')}</span><small>{summary ? t('streak', { count: summary.currentStreak }) : t('dailyReward')}</small></div>
-      <Button ref={claim} size="sm" variant={summary?.checkedInToday ? 'ghost' : 'default'} className={styles.menuCheckIn} data-claimed={Boolean(summary?.checkedInToday)} data-repeatable={allowRepeat || undefined} aria-label={allowRepeat ? t('previewAgain') : summary?.checkedInToday ? t('checkedIn') : undefined} aria-disabled={(summary?.checkedInToday && !allowRepeat) || undefined} disabled={authenticated && !summary} onClick={() => void collect()}>
+      <Button ref={claim} size="sm" variant={summary?.checkedInToday ? 'ghost' : 'default'} className={styles.menuCheckIn} data-claimed={Boolean(summary?.checkedInToday)} aria-label={summary?.checkedInToday ? t('checkedIn') : undefined} aria-disabled={summary?.checkedInToday || undefined} disabled={authenticated && !summary} onClick={() => void collect()}>
         {summary?.checkedInToday ? <><span className={styles.claimSeal}><Check size="9px" aria-hidden /></span><span>{t('claimed')}</span><small className={styles.claimAmount}>{t('dailyCup')}</small></> : <><Coffee size={14} className={styles.claimCup} aria-hidden />{t(!authenticated ? 'signIn' : 'checkIn')}</>}
       </Button>
     </div>
