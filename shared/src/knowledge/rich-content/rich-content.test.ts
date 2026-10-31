@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test';
 import { knowledgeSchema as schema } from '../schema';
 import { createMarkdownPipeline } from '../markdown';
-import { isPdfSource, parseWhiteboardScene, resolveEmbedTarget, richContentUrl } from '.';
+import { MERMAID_THEMES, isPdfSource, parseWhiteboardScene, resolveEmbedTarget, richContentUrl } from '.';
 
 const scene = JSON.stringify({ elements: [{ id: 'shape', type: 'rectangle', x: 0, y: 0, width: 100, height: 60 }], appState: { viewBackgroundColor: '#ffffff' }, files: {} });
 
@@ -25,7 +25,7 @@ describe('rich content portable semantics', () => {
   test('keeps rich block identity, metadata, PDF asset references and scene bytes through Markdown', () => {
     const doc = schema.nodes.doc.create(null, [
       schema.nodes.linkCard.create({ blockId: 'card', url: 'https://example.com/', title: 'Article', description: 'A & B', fetched: true }),
-      schema.nodes.mermaid.create({ blockId: 'diagram', title: 'Capture flow', source: 'flowchart LR\n A --> B', width: 75, height: 460 }),
+      schema.nodes.mermaid.create({ blockId: 'diagram', title: 'Capture flow', source: 'flowchart LR\n A --> B', theme: 'violet', width: 75, height: 460 }),
       schema.nodes.pdf.create({ blockId: 'pdf', src: `asset:${'a'.repeat(64)}`, title: 'report.pdf' }),
       schema.nodes.embed.create({ blockId: 'video', url: 'https://www.bilibili.com/video/BV1B7411m7LV?p=2' }),
       schema.nodes.whiteboard.create({ blockId: 'board', title: 'Plan', width: 60, height: 640, scene, preview: 'data:image/png;base64,iVBORw0KGgo=' }),
@@ -35,6 +35,16 @@ describe('rich content portable semantics', () => {
     expect(pipeline.parse(markdown).toJSON()).toEqual(doc.toJSON());
     expect(pipeline.parse('```mermaid\nflowchart LR\n A --> B\n```').firstChild?.type.name).toBe('mermaid');
     expect(pipeline.parse('```excalidraw\n' + scene + '\n```').firstChild?.attrs.scene).toBe(scene);
+  });
+  test('keeps each Mermaid preset through lossless Markdown and rejects unsupported theme values', () => {
+    const pipeline = createMarkdownPipeline();
+    for (const theme of MERMAID_THEMES) {
+      const doc = schema.nodes.doc.create(null, [schema.nodes.mermaid.create({ source: 'flowchart LR\n A --> B', theme, blockId: `diagram-${theme}` })]);
+      expect(pipeline.parse(pipeline.serialize(doc)).toJSON()).toEqual(doc.toJSON());
+    }
+    expect(schema.nodes.mermaid.create().attrs.theme).toBe('blue');
+    expect(pipeline.parse('```mermaid\nflowchart LR\n A --> B\n```').firstChild?.attrs.theme).toBe('blue');
+    for (const theme of ['unknown', '', null, 1, {}, 'dark']) expect(() => schema.nodes.mermaid.create({ theme }).check()).toThrow();
   });
   test('validates whiteboard input at the shared schema boundary', () => {
     expect(parseWhiteboardScene(scene)?.elements).toHaveLength(1);

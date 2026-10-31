@@ -5,20 +5,22 @@ import { Editor, Extension } from '@tiptap/core';
 import { EditorContent } from '@tiptap/react';
 import { closeHistory, history, undo } from '@tiptap/pm/history';
 import { createKnowledgeExtensions, createBlockIdExtension } from '@fob/shared/knowledge/schema';
-import { applyEditorBlockModules } from '..';
 
 let browser: Window;
 let createRoot: (typeof import('react-dom/client'))['createRoot'];
+let applyEditorBlockModules: (typeof import('..'))['applyEditorBlockModules'];
 beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3001/' });
+  browser.document.write('<!doctype html><html><head></head><body></body></html>');
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Text', 'Event', 'MouseEvent', 'KeyboardEvent',
-    'PointerEvent', 'DOMParser', 'MutationObserver', 'ResizeObserver', 'Range', 'getComputedStyle']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
+    'PointerEvent', 'HTMLInputElement', 'HTMLButtonElement', 'DocumentFragment', 'CustomEvent', 'FocusEvent', 'DOMParser', 'MutationObserver', 'ResizeObserver', 'Range', 'getComputedStyle']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser;
   globals.IS_REACT_ACT_ENVIRONMENT = true;
   globals.requestAnimationFrame = browser.requestAnimationFrame.bind(browser);
   globals.cancelAnimationFrame = browser.cancelAnimationFrame.bind(browser);
   ({ createRoot } = await import('react-dom/client'));
+  ({ applyEditorBlockModules } = await import('..'));
 });
 afterAll(async () => { await browser.happyDOM.abort(); });
 
@@ -124,6 +126,41 @@ async function fill(input: HTMLElement, value: string) {
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
+
+async function openThemeMenu(block: HTMLElement) {
+  await act(async () => { const trigger = control(block, /图表主题|Diagram theme/); trigger.focus(); trigger.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true })); });
+}
+
+test('Mermaid theme selection is per block, undoable and removed immediately when edit permission is revoked', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    await act(async () => editor.commands.insertContentAt(editor.state.doc.content.size, { type: 'mermaid', attrs: { title: 'Second diagram', blockId: 'second-diagram', theme: 'amber' } }));
+    const diagram = container.querySelector<HTMLElement>('[data-fob-node="mermaid"]')!;
+    const before = JSON.stringify(editor.getJSON());
+    await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+    await openThemeMenu(diagram);
+    const choices = Array.from(document.querySelectorAll<HTMLElement>('[role="menuitemradio"]'));
+    expect(choices).toHaveLength(5);
+    expect(choices.find(item => item.getAttribute('aria-checked') === 'true')?.getAttribute('data-mermaid-theme')).toBe('blue');
+    await act(async () => document.querySelector<HTMLElement>('[data-mermaid-theme="green"]')!.click());
+    const diagrams = editor.state.doc.content.content.filter(node => node.type.name === 'mermaid');
+    expect(diagrams[0].attrs.theme).toBe('green');
+    expect(diagrams[0].attrs.title).toBe('Architecture diagram');
+    expect(diagrams[0].attrs.source).toBe('');
+    expect(diagrams[1].attrs.theme).toBe('amber');
+    expect(Boolean(document.querySelector('[role="menu"]'))).toBe(false);
+    await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+    expect(JSON.stringify(editor.getJSON())).toBe(before);
+    await openThemeMenu(diagram);
+    await act(async () => document.querySelector<HTMLElement>('[data-mermaid-theme="violet"]')!.click());
+    const persisted = JSON.stringify(editor.getJSON());
+    await openThemeMenu(diagram);
+    expect(document.querySelector('[role="menuitemradio"][aria-checked="true"]')?.getAttribute('data-mermaid-theme')).toBe('violet');
+    await act(async () => editor.setEditable(false));
+    expect(Boolean(document.querySelector('[role="menu"]'))).toBe(false);
+    expect(Boolean(control(diagram, /图表主题|Diagram theme/))).toBe(false);
+    expect(JSON.stringify(editor.getJSON())).toBe(persisted);
+  });
+});
 
 test('both graphic titles commit on Enter or blur, cancel on Escape and discard remote or revoked drafts', async () => {
   await withWhiteboard(true, async (container, editor) => {

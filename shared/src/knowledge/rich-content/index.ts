@@ -1,4 +1,10 @@
 /** Portable rich-content semantics. No browser, network or renderer dependencies. */
+export const MERMAID_THEMES = ['blue', 'green', 'amber', 'violet', 'mono'] as const;
+export type MermaidTheme = typeof MERMAID_THEMES[number];
+export function isMermaidTheme(value: unknown): value is MermaidTheme {
+  return typeof value === 'string' && MERMAID_THEMES.some(theme => theme === value);
+}
+
 export function richContentUrl(value: unknown): string | null {
   if (typeof value !== 'string' || value.length > 4096) return null;
   try {
