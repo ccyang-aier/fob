@@ -16,7 +16,7 @@
   margin:0 0 4px;
   overflow:hidden;
   border:var(--separator-width) solid var(--separator-color);
-  border-radius:16px;
+  border-radius:0;
   background:var(--panel);
   isolation:isolate;
 }

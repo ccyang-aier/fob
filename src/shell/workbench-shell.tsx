@@ -82,7 +82,7 @@ function WorkbenchChrome() {
     else tabs.open(next);
   }
   return <KnowledgeNavigationProvider onExpand={expandSidebar}><TooltipProvider>
-    <div className="h-dvh w-full p-[var(--win-frame-inset)]">
+    <div className="h-dvh w-full py-[var(--win-frame-inset)] pl-[var(--win-frame-inset)]">
       <div ref={frameRef} className={`${styles.frame} flex h-full w-full min-h-[320px] flex-col overflow-hidden text-[var(--ink)] shadow-[var(--win-shadow)]`}>
         <div className="flex min-h-0 flex-1">
           <div className={`${styles.navigation} flex shrink-0`}><NavigationSidebar open={!sidebarCollapsed} onCollapse={() => setSidebarCollapsed(true)} onExpand={() => setSidebarCollapsed(false)} view={view} onViewChange={changeView} onKnowledgeBaseChange={() => {}} /></div>
