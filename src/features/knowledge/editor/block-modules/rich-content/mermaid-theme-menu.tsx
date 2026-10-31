@@ -19,7 +19,7 @@ export function MermaidThemeMenu({ value, dark, onChange }: { value: MermaidThem
       <DropdownMenuRadioGroup value={value} onValueChange={next => { if (isMermaidTheme(next)) onChange(next); }}>
         {MERMAID_THEMES.map(theme => {
           const color = mermaidPalette(theme, dark);
-          return <DropdownMenuRadioItem key={theme} value={theme} data-mermaid-theme={theme}>
+          return <DropdownMenuRadioItem key={theme} value={theme} indicator="none" data-mermaid-theme={theme}>
             <span className={styles.diagramThemeSwatch} style={{ backgroundColor: color.node, borderColor: color.border }} aria-hidden />
             {t(labels[theme])}
           </DropdownMenuRadioItem>;
