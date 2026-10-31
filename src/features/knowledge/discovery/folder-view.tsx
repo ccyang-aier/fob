@@ -22,12 +22,12 @@ import { FolderSubscriptionMenuItem } from '../subscriptions/subscription-menu-i
 import { useTranslation } from '@/lib/i18n';
 import { FolderDocumentMeta } from './folder-document-meta';
 import { FolderSortMenu } from './folder-sort-menu';
+import { FolderTabs } from './folder-tabs';
 import type { FolderActions, FolderBulkAction } from './folder-actions';
 import { messages } from './messages';
 import styles from './discovery.module.css';
 
 const OverviewEditor = dynamic(() => import('./folder-overview-editor').then(module => module.FolderOverviewEditor), { ssr: false });
-const tabs: FolderTab[] = ['overview', 'documents', 'popular', 'updated', 'oldest', 'alphabetical'];
 
 export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, onCreate, onUpdate, onPermissions, renderMenu, upload, source, more, loadingMore, onMore, actions, viewerId, overview, updating = false }: {
   data: FolderOverview; documents: DiscoveryDocument[]; tab: FolderTab; onTab(value: FolderTab): void; q: string; onSearch(value: string): void; onOpen(id: string): void; onCreate(): void;
@@ -113,7 +113,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
         <div className={styles.folderTitle}><div className={styles.folderGlyph}>{canManage ? <PageIconPicker value={folder.metadata.icon} iconSize={34} toggleSelected fallbackIcon={<OutlineCollectionIcon name="collection" size={40} />} onChange={icon => onUpdate({ icon })} /> : folder.metadata.icon ? <PageIcon value={folder.metadata.icon} size={34} /> : <OutlineCollectionIcon name="collection" size={40} />}</div><h1>{folder.name}</h1></div>
         <div className={styles.meta}><span>{source === 'local' ? <Folder size={18} /> : folder.defaultAccess ? <OutlineCollectionIcon name="team" size={18} /> : <LockSimple size={18} />}{t(source === 'local' ? 'device' : folder.defaultAccess ? 'workspace' : 'private')}</span><span className={styles.metaSeparator}>•</span><span>{t('documentCount', { count: data.total })}</span></div>
       </header>
-      <div className={styles.tabBar}><div className={styles.tabs} role="tablist" aria-label={folder.name}>{tabs.map(value => <button key={value} type="button" role="tab" aria-selected={tab === value} tabIndex={tab === value ? 0 : -1} className={styles.tab} onClick={() => onTab(value)} onKeyDown={event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const index = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (tabs.indexOf(value) + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length; onTab(tabs[index]); (event.currentTarget.parentElement?.children[index] as HTMLButtonElement)?.focus(); } }}>{t(value)}</button>)}</div>{canManage && tab === 'documents' && <FolderSortMenu value={folder.metadata.sort} disabled={busy || updating} onChange={sort => void update({ sort })} />}</div>
+      <div className={styles.tabBar}><FolderTabs value={tab} label={folder.name} onChange={onTab} />{canManage && tab === 'documents' && <FolderSortMenu value={folder.metadata.sort} disabled={busy || updating} onChange={sort => void update({ sort })} />}</div>
       {error && !modal && <AppAlert tone="error" title={error} />}
       {tab === 'overview' ? overview && <OverviewEditor key={overview.draftKey} content={folder.metadata.description} revision={folder.metadata.revision ?? 0} contentId={folder.id} draftKey={overview.draftKey} context={overview.context} editable={canManage} onSave={overview.save} /> : <><div className={styles.list} role="list" aria-label={t('documents')} aria-busy={updating} onKeyDown={event => { if ((event.ctrlKey || event.metaKey) && event.key === 'a') { event.preventDefault(); setSelection({ context, ids: [...visible] }); } }}>{listed.map(document => row(document))}</div>
         {updating && <span role="status" className="sr-only">{t('loading')}</span>}

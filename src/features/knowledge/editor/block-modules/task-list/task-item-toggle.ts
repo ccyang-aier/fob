@@ -23,7 +23,7 @@ export const TaskItemToggle = Extension.create({
           const bounds = item.getBoundingClientRect();
           // The marker sits inside the item's 32px leading gutter.
           if (event.clientX < bounds.left || event.clientX > bounds.left + 25 || event.clientY < bounds.top || event.clientY > bounds.top + 32) return false;
-          if (!node.attrs.checked) celebration.burst(bounds.left + 10.5, bounds.top + parseFloat(item.ownerDocument.defaultView!.getComputedStyle(item).fontSize) * .4 + 9.5);
+          if (!node.attrs.checked) celebration.burst(bounds.left + 10.5, bounds.top + parseFloat(item.ownerDocument.defaultView!.getComputedStyle(item).lineHeight) / 2);
           view.dispatch(view.state.tr.setNodeMarkup(nodePos, undefined, { ...node.attrs, checked: !node.attrs.checked }));
           event.preventDefault();
           return true;

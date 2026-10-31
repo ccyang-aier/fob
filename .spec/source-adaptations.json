@@ -591,6 +591,14 @@
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "5561eca241d6815ea920ced152ea568ca22612707102b34fa2b365c9d9a2e4a7"
   },
+  "src/features/knowledge/editor/block-modules/task-list/task-item-toggle.ts": {
+    "reason": "Center the task checkbox on the first text line using the actual line height, including folder overviews; keep the existing toggle hit area and align the check celebration origin with the corrected marker. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "b477f021e41b40e035dc204fc4e1c6889ce619a3bd6e843d523dc457e7bbcf14"
+  },
+  "src/features/knowledge/editor/block-modules/task-list/task-list.css": {
+    "reason": "Center task checkboxes and their existing check marks on the first text line using line-height units instead of a font-size offset. Preserve the marker shape, dimensions, gutter, checked state and reduced-motion behavior across document and folder overview editors. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "b7ab0870a4788aec00f48a750b4b489ed17c3f68e7fdace0dda2d0595f42780b"
+  },
   "src/features/knowledge/editor/block-modules/task-list/task-progress.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "66a28f3b8c713b7d8a8176905f8b9c7a19449f6662dc548c69104861bbaedbc2"
