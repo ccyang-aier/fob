@@ -42,7 +42,7 @@ async function withWhiteboard(editable: boolean, check: (container: HTMLElement,
   }
 }
 
-test('graphic blocks keep titles and internal actions with one corner resize target and no size menu', async () => {
+test('graphic blocks keep titles and internal actions with invisible edge resize targets and no size menu', async () => {
   await withWhiteboard(true, async (container, editor) => {
     const whiteboard = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
     const before = JSON.stringify(editor.getJSON());
@@ -52,8 +52,9 @@ test('graphic blocks keep titles and internal actions with one corner resize tar
     expect(Boolean(whiteboard.querySelector('input'))).toBe(false);
     expect(whiteboard.querySelector('[data-document-export-text]')?.textContent).toBe('Architecture sketch');
     expect(whiteboard.querySelector('[data-graphic-heading] [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
-    expect(whiteboard.querySelectorAll('[data-graphic-resize]')).toHaveLength(1);
-    expect(Boolean(whiteboard.querySelector('[aria-haspopup="dialog"], [data-resize-axis="y"]'))).toBe(false);
+    expect(whiteboard.querySelectorAll('[data-graphic-resize]')).toHaveLength(3);
+    expect(Array.from(whiteboard.querySelectorAll('[data-graphic-resize]')).every(target => target.getAttribute('data-resize-feedback') === 'cursor' && target.childElementCount === 0)).toBe(true);
+    expect(Boolean(whiteboard.querySelector('[aria-haspopup="dialog"], [role="separator"]'))).toBe(false);
     expect(whiteboard.querySelector('[data-block-actions]')?.getAttribute('data-touch-visibility')).toBe('on-demand');
     expect(Array.from(whiteboard.querySelectorAll('button')).some(button => /编辑白板|Edit whiteboard/.test(button.getAttribute('aria-label') || ''))).toBe(true);
     expect(container.querySelector('[data-fob-node="mermaid"] [data-document-export-text]')?.textContent).toBe('Architecture diagram');
@@ -161,14 +162,14 @@ test('both graphic titles commit on Enter or blur, cancel on Escape and discard 
   });
 });
 
-function resizeTarget(block: HTMLElement) {
+function resizeTarget(block: HTMLElement, axis = 'nw-se') {
   Object.defineProperty(block.parentElement!, 'clientWidth', { configurable: true, value: 1000 });
   Object.defineProperties(block, {
     offsetWidth: { configurable: true, get: () => parseFloat(block.style.width) * 10 },
     offsetHeight: { configurable: true, get: () => parseFloat(block.style.height) },
   });
   block.getBoundingClientRect = () => new browser.DOMRect(0, 0, block.offsetWidth, block.offsetHeight) as DOMRect;
-  const handle = block.querySelector<HTMLButtonElement>('[data-graphic-resize]')!;
+  const handle = block.querySelector<HTMLButtonElement>(`[data-graphic-resize="${axis}"]`)!;
   let captured: number | null = null;
   handle.setPointerCapture = pointer => { captured = pointer; };
   handle.hasPointerCapture = pointer => captured === pointer;
@@ -179,26 +180,44 @@ async function pointer(handle: HTMLElement, type: string, x: number, y: number) 
   await act(async () => handle.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, button: 0, clientX: x, clientY: y })));
 }
 
-test('corner dragging previews both dimensions and commits one undoable change for each graphic type', async () => {
+test('right, bottom and corner dragging resize only their intended axes and commit one undoable change', async () => {
   await withWhiteboard(true, async (container, editor) => {
     for (const type of ['whiteboard', 'mermaid']) {
       const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
-      const handle = resizeTarget(block), before = JSON.stringify(editor.getJSON());
-      const oldHeight = parseFloat(block.style.height);
-      await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
-      await pointer(handle, 'pointerdown', 1000, oldHeight);
-      await pointer(handle, 'pointermove', 750, oldHeight + 100);
-      expect(block.style.width).toBe('75%');
-      expect(block.style.height).toBe(`${oldHeight + 100}px`);
-      expect(JSON.stringify(editor.getJSON())).toBe(before);
-      await pointer(handle, 'pointerup', 750, oldHeight + 100);
-      const attrs = editor.state.doc.content.content.find(node => node.type.name === type)!.attrs;
-      expect(attrs.width).toBe(75);
-      expect(attrs.height).toBe(oldHeight + 100);
-      expect(handle.dataset.resizing).toBe('false');
-      await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
-      expect(JSON.stringify(editor.getJSON())).toBe(before);
+      for (const axis of ['x', 'y', 'nw-se']) {
+        const handle = resizeTarget(block, axis), before = JSON.stringify(editor.getJSON());
+        const oldHeight = parseFloat(block.style.height);
+        await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+        await pointer(handle, 'pointerdown', 1000, oldHeight);
+        await pointer(handle, 'pointermove', 750, oldHeight + 100);
+        expect(block.style.width).toBe(axis === 'y' ? '100%' : '75%');
+        expect(block.style.height).toBe(`${axis === 'x' ? oldHeight : oldHeight + 100}px`);
+        expect(JSON.stringify(editor.getJSON())).toBe(before);
+        await pointer(handle, 'pointerup', 750, oldHeight + 100);
+        const attrs = editor.state.doc.content.content.find(node => node.type.name === type)!.attrs;
+        expect(attrs.width).toBe(axis === 'y' ? 100 : 75);
+        expect(attrs.height).toBe(axis === 'x' ? oldHeight : oldHeight + 100);
+        expect(handle.dataset.resizing).toBe('false');
+        await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+        expect(JSON.stringify(editor.getJSON())).toBe(before);
+      }
     }
+  });
+});
+
+test('edge keyboard resizing respects its axis and clamps without changing the other dimension', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    const block = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
+    const right = resizeTarget(block, 'x'), bottom = resizeTarget(block, 'y');
+    await act(async () => right.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.height).toBe(400);
+    await act(async () => right.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.width).toBe(99);
+    await act(async () => bottom.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.width).toBe(99);
+    await act(async () => bottom.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.height).toBe(380);
+    expect(editor.state.doc.firstChild?.attrs.width).toBe(99);
   });
 });
 

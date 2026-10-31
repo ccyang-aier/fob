@@ -57,6 +57,9 @@ html .fob-resize-handle.fob-resize-handle[data-resize-axis="ne-sw"] { cursor: ne
 html .fob-resize-handle:is([data-resize-axis="nw-se"], [data-resize-axis="ne-sw"])::before { inset-block: 2px; transform: translateX(-50%) rotate(-45deg); }
 html .fob-resize-handle[data-resize-axis="ne-sw"]::before { transform: translateX(-50%) rotate(45deg); }
 
+/* Some content surfaces use invisible edge hit areas and only advertise resizing through the cursor. */
+html .fob-resize-handle[data-resize-feedback="cursor"]::before { content: none; }
+
 /* 拖动高亮互斥：其他手柄可能保留键盘焦点，或因布局移动落在鼠标下方。
    它们在当前手势结束前只显示常态边界，不能同时显示第二条黑线。 */
 html body:has(.fob-resize-handle[data-resizing="true"]) .fob-resize-handle:not([data-resizing="true"])::before {

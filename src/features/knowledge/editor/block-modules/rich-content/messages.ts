@@ -10,6 +10,8 @@ export const richMessages = defineMessages({
   blockTitle: ['内容块标题', 'Block title'],
   renameTitle: ['编辑标题', 'Edit title'],
   blockSize: ['拖拽调整宽高', 'Drag to resize block'],
+  resizeGraphicWidth: ['拖拽调整宽度', 'Drag to resize width'],
+  resizeGraphicHeight: ['拖拽调整高度', 'Drag to resize height'],
   resizeGraphicHint: ['方向键调整宽高，Esc 取消拖拽。', 'Use arrow keys to resize. Press Escape to cancel dragging.'],
   url: ['链接地址', 'URL'],
   invalidUrl: ['请输入完整的 HTTP 或 HTTPS 链接。', 'Enter a complete HTTP or HTTPS URL.'],

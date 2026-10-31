@@ -7,7 +7,9 @@ import { richMessages } from './messages';
 import styles from './rich-content.module.css';
 
 type Size = { width: number; height: number };
-type Gesture = { pointer: number; x: number; y: number; pixels: number; scale: number; minWidth: number; initial: Size; next: Size; element: HTMLButtonElement; frame: HTMLElement };
+type ResizeAxis = 'x' | 'y' | 'nw-se';
+type Gesture = { axis: ResizeAxis; pointer: number; x: number; y: number; pixels: number; scale: number; minWidth: number; initial: Size; next: Size; element: HTMLButtonElement; frame: HTMLElement };
+const zones = [{ axis: 'x', label: 'resizeGraphicWidth' }, { axis: 'y', label: 'resizeGraphicHeight' }, { axis: 'nw-se', label: 'blockSize' }] as const;
 
 /** Preview the whole block locally; persist one undoable change when the pointer is released. */
 export function GraphicBlockResize({ props, width, height, minHeight }: {
@@ -41,8 +43,8 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
     if (drag && (drag.initial.width !== width || drag.initial.height !== height)) finish();
   }, [width, height, finish]);
   return <><span id={hint} hidden data-document-export-omit>{t('resizeGraphicHint')}</span>
-    <button ref={handle} type="button" className={`fob-resize-handle ${styles.graphicResize}`} data-resize-axis="nw-se" data-graphic-resize data-document-export-omit
-    aria-label={t('blockSize')} aria-describedby={hint}
+    {zones.map(({ axis, label }) => <button key={axis} ref={axis === 'nw-se' ? handle : undefined} type="button" className={`fob-resize-handle ${styles.graphicResize}`} data-resize-axis={axis} data-resize-feedback="cursor" data-graphic-resize={axis} data-document-export-omit
+    aria-label={t(label)} aria-describedby={hint}
     onPointerDown={event => {
       const element = event.currentTarget.closest<HTMLElement>('[data-fob-node]'), initial = read();
       if (event.button !== 0 || !element || !initial || !editor.isEditable || gesture.current) return;
@@ -58,14 +60,14 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
       event.currentTarget.focus({ preventScroll: true });
       event.currentTarget.setPointerCapture(event.pointerId);
       event.currentTarget.dataset.resizing = 'true';
-      gesture.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, pixels, scale: scaleY, minWidth, initial, next: initial, element: event.currentTarget, frame: element };
+      gesture.current = { axis, pointer: event.pointerId, x: event.clientX, y: event.clientY, pixels, scale: scaleY, minWidth, initial, next: initial, element: event.currentTarget, frame: element };
     }}
     onPointerMove={event => {
       const drag = gesture.current;
       if (!drag || drag.pointer !== event.pointerId) return;
-      const width = Math.round(Math.max(drag.minWidth, Math.min(100, Math.max(drag.minWidth, drag.initial.width) + (event.clientX - drag.x) / drag.pixels * 100)) * 1000) / 1000;
-      const height = Math.max(minHeight, Math.min(1200, drag.initial.height + (event.clientY - drag.y) / drag.scale));
-      drag.next = { width: Math.ceil(width), height: Math.round(height) };
+      const width = drag.axis === 'y' ? drag.initial.width : Math.round(Math.max(drag.minWidth, Math.min(100, Math.max(drag.minWidth, drag.initial.width) + (event.clientX - drag.x) / drag.pixels * 100)) * 1000) / 1000;
+      const height = drag.axis === 'x' ? drag.initial.height : Math.max(minHeight, Math.min(1200, drag.initial.height + (event.clientY - drag.y) / drag.scale));
+      drag.next = { width: drag.axis === 'y' ? drag.initial.width : Math.ceil(width), height: Math.round(height) };
       drag.frame.style.width = `${width}%`; drag.frame.style.height = `${height}px`;
     }}
     onPointerUp={event => {
@@ -78,11 +80,12 @@ export function GraphicBlockResize({ props, width, height, minHeight }: {
     onPointerCancel={() => finish()} onLostPointerCapture={() => finish()}
     onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); finish(); return; }
-      if (!editor.isEditable || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
+      const keys = axis === 'x' ? ['ArrowLeft', 'ArrowRight'] : axis === 'y' ? ['ArrowUp', 'ArrowDown'] : ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+      if (!editor.isEditable || !keys.includes(event.key)) return;
       event.preventDefault(); event.stopPropagation();
       const current = read();
       if (!current) return;
       props.updateAttributes({ width: Math.max(25, Math.min(100, current.width + (event.key === 'ArrowLeft' ? -1 : event.key === 'ArrowRight' ? 1 : 0))),
         height: Math.max(minHeight, Math.min(1200, current.height + (event.key === 'ArrowUp' ? -20 : event.key === 'ArrowDown' ? 20 : 0))) });
-    }} /></>;
+    }} />)}</>;
 }
