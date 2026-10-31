@@ -24,8 +24,8 @@
     "deleted": true
   },
   "src/features/knowledge/dense-sidebar/expanded-primary-sidebar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "b9d17b8aebd95991c464e761985f5aa3b4b8dd6f43b2238c1f024f636ab03642"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Remove the extra 8px top padding below the shell brand header as requested, moving the main navigation and resource tree upward without changing row spacing or footer placement.",
+    "sha256": "0c1dc575a6aaa1681781c595bf269c4e1ee88e23c204916ebe966b1858410bc4"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
     "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar.",

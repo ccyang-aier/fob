@@ -71,3 +71,10 @@
 - 本地保留 `@fontsource/fraunces@5.3.0` 的原版 Latin 600 WOFF2（18,096 字节），下载时核对 npm 发布的 SHA-512 完整性；原版 OFL 许可、上游/发行地址和字体 SHA-256 存于 `public/fonts/fraunces/`，不增加包依赖或运行时远程字体请求。
 - 在原 localhost 页面验证菜单打开、搜索“本机”后只保留匹配库、清空恢复列表与 Escape 关闭。Logo 实测约 16×16px，标题计算样式为 20px / 600 / 0.9px 字距，菜单实测约 239.88px（CSS 240px，存在浏览器缩放取整）。无框架错误遮罩，最终控制台 0 error / 0 warning；最终菜单与品牌同屏截图保存在聊天 visualizations 目录，未提交截图。
 - `pnpm icons:verify`、`pnpm architecture:verify` 与 `git diff --check` 通过；Web、业务 API、新字体文件均返回 HTTP 200。本轮仅样式和字体资源变更，未重跑 TypeScript、CRUD 或权限矩阵。
+
+## 主导航顶部间距调整（2026-10-31）
+
+- 根据主页导航行批注，移除品牌栏下方展开目录容器的 8px 顶部内边距；收起主导航同步移除 8px 顶部内边距，保留底部内边距。只调整两处布局类；审阅并更新原复制组件的适配说明与规范化内容摘要。
+- 原 localhost 页面实测：主页 top 51.98→43.99px，星标 83.98→75.99px，文件夹 192.97→184.98px；各导航行高仍为 30px，品牌栏底边保持 43.99px，底部工具区 top 保持 682.82px。收起后主页 top 为 43.99px，展开/收起交互通过。
+- 页面非空、无框架错误遮罩；控制台无 error，记录到一条开发期 Fast Refresh 全量刷新提示，刷新后导航正常。恢复展开状态，截图保存在聊天 visualizations 目录，不纳入提交。
+- `pnpm typecheck`、修改文件 ESLint、`pnpm icons:verify`、`pnpm architecture:verify` 与 `git diff --check` 通过；不新增布局镜像测试，不扩大为 CRUD 或权限矩阵回归。

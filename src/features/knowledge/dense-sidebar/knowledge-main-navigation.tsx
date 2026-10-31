@@ -12,7 +12,7 @@ export function KnowledgeMainNavigation({ activeItem, counts, compact = false, o
   onNavigate: (id: string) => void;
 }) {
   const { t } = useI18n();
-  return <nav aria-label={t('sidebar.library')} className={compact ? 'flex flex-col items-center gap-1 py-2' : 'space-y-0.5'}>
+  return <nav aria-label={t('sidebar.library')} className={compact ? 'flex flex-col items-center gap-1 pb-2' : 'space-y-0.5'}>
     {SIDEBAR_MAIN_ITEMS.map(item => {
       const label = t(item.labelKey);
       const button = <SidebarRow label={label} icon={sidebarIconMap[item.icon]} iconTone={item.tone} iconOnly={compact} count={counts[item.id] ?? 0} selected={activeItem === item.id} onClick={() => onNavigate(item.id)} />;

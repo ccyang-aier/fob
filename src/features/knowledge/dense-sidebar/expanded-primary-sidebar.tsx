@@ -126,7 +126,7 @@ export function ExpandedPrimarySidebar({
       )}
     >
       {header}
-      <div className="min-h-0 flex flex-1 flex-col px-[11px] pb-4 pt-2">
+      <div className="min-h-0 flex flex-1 flex-col px-[11px] pb-4">
         <div className="scrollbar-hidden min-h-0 shrink overflow-y-auto pr-px">
           <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={onNavigateMain} />
 
