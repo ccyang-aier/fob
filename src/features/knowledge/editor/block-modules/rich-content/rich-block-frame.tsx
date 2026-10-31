@@ -8,7 +8,7 @@ import { useTranslation } from '@/lib/i18n';
 import { richMessages } from './messages';
 import { BlockActions } from '../block-actions';
 import { GraphicBlockTitle } from './graphic-block-title';
-import { GraphicBlockSize } from './graphic-block-size';
+import { GraphicBlockResize } from './graphic-block-resize';
 import { GraphicToolButton } from './graphic-tool-button';
 import styles from './rich-content.module.css';
 
@@ -39,10 +39,6 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
   }
   const tools = <BlockActions placement={canvas ? 'canvas' : 'outside'} touchVisibility={canvas ? 'on-demand' : 'always'}>
     {actions}
-    {canvas && resizable && editable && !fullscreen && <>
-      <span className={styles.actionDivider} aria-hidden />
-      <GraphicBlockSize width={width} height={height} minHeight={minHeight} defaultHeight={Number(props.node.type.spec.attrs?.height?.default || 360)} onChange={update} />
-    </>}
     {resizable && (canvas ? <GraphicToolButton label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}>{fullscreen ? <ArrowsIn size={16} aria-hidden /> : <ArrowsOut size={16} aria-hidden />}</GraphicToolButton>
       : <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}><ArrowsOut size={16} aria-hidden /></button>)}
   </BlockActions>;
@@ -50,7 +46,7 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
     style={canvas ? { width: `${width}%`, height: resizable ? height : undefined } : undefined}
     role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
-      if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [role="separator"]')) root.current?.focus({ preventScroll: true });
+      if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [data-graphic-title-editing], [role="separator"]')) root.current?.focus({ preventScroll: true });
     } : undefined}>
     {canvas ? <div className={styles.graphicHeading} data-graphic-heading>
       <span className={styles.graphicLabel}><Icon size={16} aria-hidden />
@@ -68,6 +64,7 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
     {!canvas && tools}
     {error && <div className={styles.error} role="alert" data-document-export-omit>{t('fullscreenError')}</div>}
     <div className={styles.body} style={resizable && !canvas ? { height } : undefined}>{children}</div>
+    {canvas && resizable && editable && !fullscreen && <GraphicBlockResize props={props} width={width} height={height} minHeight={minHeight} />}
     {resizable && editable && !canvas && <div className={`fob-resize-handle ${styles.resize}`} role="separator" aria-label={t('resize')} aria-orientation="horizontal" aria-valuemin={minHeight} aria-valuemax={1200} aria-valuenow={height} tabIndex={0} data-resize-axis="y" data-document-export-omit
       onPointerDown={event => { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.resizing = 'true'; start.current = { y: event.clientY, height, next: height }; }}
       onPointerMove={event => { if (!start.current) return; start.current.next = Math.round(Math.max(minHeight, Math.min(1200, start.current.height + event.clientY - start.current.y))); const body = root.current?.querySelector<HTMLElement>(`.${styles.body}`); if (body) body.style.height = `${start.current.next}px`; }}

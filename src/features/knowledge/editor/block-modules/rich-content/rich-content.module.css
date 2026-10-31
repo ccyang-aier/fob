@@ -27,26 +27,16 @@
 .canvasFrame > .body { flex:1; overflow:hidden; border-radius:0 0 7px 7px; }
 .canvasFrame .source,.canvasFrame .state { min-height:0; }
 .canvasFrame:fullscreen { width:100vw!important; height:100dvh!important; background:var(--panel); }
-.graphicHeading { display:flex; flex:none; align-items:center; gap:8px; min-height:52px; padding:7px 10px; }
-.graphicLabel { display:flex; flex:1; align-items:center; gap:4px; min-width:0; color:var(--muted-strong); }
+.graphicHeading { display:flex; flex:none; align-items:center; gap:8px; min-height:48px; padding:6px 10px; }
+.graphicLabel { display:flex; flex:1; align-self:flex-start; align-items:center; gap:4px; min-width:0; color:var(--muted-strong); }
 .graphicLabel > svg { flex:none; margin-inline-start:3px; }
-.graphicTitle { display:block; min-width:0; padding:4px 5px; border:1px solid transparent; border-radius:5px; background:transparent; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:500 12px/20px var(--font-sans); text-align:start; }
-.graphicTitleInput { flex:1; font:500 12px/20px var(--font-sans); padding:4px 5px; }
-.actionDivider { width:var(--separator-width); height:14px; margin:0 3px; background:var(--separator-color); }
-.sizePopover { padding:10px; }
-.sizePresets { display:grid; grid-template-columns:repeat(3,1fr); gap:3px; margin-bottom:14px; padding:3px; border:var(--separator-width) solid var(--separator-color); border-radius:7px; }
-.sizePresets button { min-height:30px; border:0; border-radius:4px; font-size:12px; }
-.dimensionRow { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0; }
-.dimensionRow > label { color:var(--ink-soft); }
-.dimensionControl { display:flex; align-items:center; padding:2px; border:1px solid var(--control-border); border-radius:6px; }
-.dimensionControl:focus-within { border-color:var(--ink-soft); }
-.dimensionControl > button { display:flex; align-items:center; justify-content:center; width:28px; height:28px; border:0; border-radius:4px; }
-.dimensionValue { display:flex; align-items:center; gap:3px; width:72px; padding:0 4px; color:var(--muted-strong); font-size:11px; }
-.dimensionValue input { width:100%; min-width:0; padding:0; border:0; outline:none; box-shadow:none; background:transparent; color:var(--ink); font:500 12px/20px var(--font-sans); text-align:center; appearance:textfield; }
-.dimensionValue input::-webkit-inner-spin-button,.dimensionValue input::-webkit-outer-spin-button { margin:0; appearance:none; }
-.resetSize { width:100%; min-height:30px; margin-top:6px; border:0; border-radius:5px; color:var(--ink-soft); font-size:12px; }
+.graphicTitle { display:block; min-width:0; max-width:100%; padding:2px 5px; border:0; border-radius:5px; background:transparent; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font:500 12px/20px var(--font-sans); text-align:start; }
+.graphicTitleEdit { min-width:1ch; cursor:text; text-overflow:clip; outline:none; box-shadow:none; }
+.graphicTitleEdit:empty::before { content:attr(data-placeholder); color:var(--muted); pointer-events:none; }
+.graphicResize { position:absolute; right:2px; bottom:2px; z-index:2; width:20px; height:20px; opacity:0; --resize-rest-color:var(--separator-color); }
+.canvasFrame:hover > .graphicResize,.canvasFrame:focus-within > .graphicResize,.graphicResize[data-resizing="true"] { opacity:1; }
 @container (max-width:360px) { .graphicHeading { flex-wrap:wrap; gap:2px; } .graphicLabel { flex-basis:100%; } }
-@media (hover:none),(pointer:coarse) { .graphicHeading { gap:4px; padding-inline:7px; } .dimensionControl > button,.sizePresets button,.resetSize { min-width:36px; min-height:40px; } }
+@media (hover:none),(pointer:coarse) { .graphicHeading { gap:4px; padding-inline:7px; } .graphicResize { width:32px; height:32px; } }
 .card { display:flex; min-height:112px; color:inherit; text-decoration:none; }
 .cardText { flex:1; min-width:0; padding:16px; }
 .cardTitle { display:block; font-size:14px; line-height:1.5; font-weight:600; overflow-wrap:anywhere; }

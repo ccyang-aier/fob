@@ -13,7 +13,7 @@ beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3001/' });
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Text', 'Event', 'MouseEvent', 'KeyboardEvent',
-    'DOMParser', 'MutationObserver', 'ResizeObserver', 'Range', 'getComputedStyle']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
+    'PointerEvent', 'DOMParser', 'MutationObserver', 'ResizeObserver', 'Range', 'getComputedStyle']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser;
   globals.IS_REACT_ACT_ENVIRONMENT = true;
   globals.requestAnimationFrame = browser.requestAnimationFrame.bind(browser);
@@ -42,7 +42,7 @@ async function withWhiteboard(editable: boolean, check: (container: HTMLElement,
   }
 }
 
-test('graphic blocks keep editable titles and actions inside their heading without bottom resize handles', async () => {
+test('graphic blocks keep titles and internal actions with one corner resize target and no size menu', async () => {
   await withWhiteboard(true, async (container, editor) => {
     const whiteboard = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
     const before = JSON.stringify(editor.getJSON());
@@ -52,12 +52,13 @@ test('graphic blocks keep editable titles and actions inside their heading witho
     expect(Boolean(whiteboard.querySelector('input'))).toBe(false);
     expect(whiteboard.querySelector('[data-document-export-text]')?.textContent).toBe('Architecture sketch');
     expect(whiteboard.querySelector('[data-graphic-heading] [data-block-actions]')?.getAttribute('data-placement')).toBe('canvas');
-    expect(Boolean(whiteboard.querySelector('.fob-resize-handle'))).toBe(false);
+    expect(whiteboard.querySelectorAll('[data-graphic-resize]')).toHaveLength(1);
+    expect(Boolean(whiteboard.querySelector('[aria-haspopup="dialog"], [data-resize-axis="y"]'))).toBe(false);
     expect(whiteboard.querySelector('[data-block-actions]')?.getAttribute('data-touch-visibility')).toBe('on-demand');
     expect(Array.from(whiteboard.querySelectorAll('button')).some(button => /编辑白板|Edit whiteboard/.test(button.getAttribute('aria-label') || ''))).toBe(true);
     expect(container.querySelector('[data-fob-node="mermaid"] [data-document-export-text]')?.textContent).toBe('Architecture diagram');
     await act(async () => whiteboard.click());
-    expect(document.activeElement).toBe(whiteboard);
+    expect(document.activeElement === whiteboard).toBe(true);
     expect(JSON.stringify(editor.getJSON())).toBe(before);
   });
 });
@@ -116,9 +117,9 @@ function control(root: ParentNode, label: RegExp) {
   return Array.from(root.querySelectorAll<HTMLButtonElement>('button')).find(button => label.test(button.getAttribute('aria-label') || button.textContent || ''))!;
 }
 
-async function fill(input: HTMLInputElement, value: string) {
+async function fill(input: HTMLElement, value: string) {
   await act(async () => {
-    Object.getOwnPropertyDescriptor(browser.HTMLInputElement.prototype, 'value')!.set!.call(input, value);
+    input.textContent = value;
     input.dispatchEvent(new Event('input', { bubbles: true }));
   });
 }
@@ -128,62 +129,130 @@ test('both graphic titles commit on Enter or blur, cancel on Escape and discard 
     for (const type of ['whiteboard', 'mermaid']) {
       const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
       await act(async () => control(block, /编辑标题|Edit title/).click());
-      const input = block.querySelector<HTMLInputElement>('input')!;
+      const input = block.querySelector<HTMLElement>('[role="textbox"]')!;
+      expect(input.tagName).toBe('SPAN');
+      expect(Boolean(block.querySelector('input'))).toBe(false);
       expect(document.activeElement === input).toBe(true);
       await fill(input, `${type} title`);
       await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
       expect(block.getAttribute('aria-label')).toBe(`${type} title`);
       await act(async () => control(block, /编辑标题|Edit title/).click());
-      const canceled = block.querySelector<HTMLInputElement>('input')!;
+      const canceled = block.querySelector<HTMLElement>('[role="textbox"]')!;
       await fill(canceled, 'Canceled rename');
       await act(async () => canceled.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
       expect(block.getAttribute('aria-label')).toBe(`${type} title`);
-      expect(Boolean(block.querySelector('input'))).toBe(false);
+      expect(Boolean(block.querySelector('[role="textbox"]'))).toBe(false);
     }
     const block = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
     await act(async () => control(block, /编辑标题|Edit title/).click());
-    await fill(block.querySelector('input')!, 'Blur title');
+    await fill(block.querySelector('[role="textbox"]')!, 'Blur title');
     await act(async () => block.focus());
     expect(editor.state.doc.firstChild?.attrs.title).toBe('Blur title');
     await act(async () => control(block, /编辑标题|Edit title/).click());
-    await fill(block.querySelector('input')!, 'Stale local draft');
+    await fill(block.querySelector('[role="textbox"]')!, 'Stale local draft');
     await act(async () => editor.view.dispatch(editor.state.tr.setNodeMarkup(0, undefined, { ...editor.state.doc.firstChild!.attrs, title: 'Remote title' })));
     expect(block.getAttribute('aria-label')).toBe('Remote title');
-    expect(Boolean(block.querySelector('input'))).toBe(false);
+    expect(Boolean(block.querySelector('[role="textbox"]'))).toBe(false);
     await act(async () => control(block, /编辑标题|Edit title/).click());
-    await fill(block.querySelector('input')!, 'Revoked draft');
+    await fill(block.querySelector('[role="textbox"]')!, 'Revoked draft');
     await act(async () => editor.setEditable(false));
-    expect(Boolean(block.querySelector('input'))).toBe(false);
+    expect(Boolean(block.querySelector('[role="textbox"]'))).toBe(false);
     expect(editor.state.doc.firstChild?.attrs.title).toBe('Remote title');
   });
 });
 
-test('size presets and steppers persist dimensions, clamp numeric values and disappear on permission loss', async () => {
+function resizeTarget(block: HTMLElement) {
+  Object.defineProperty(block.parentElement!, 'clientWidth', { configurable: true, value: 1000 });
+  Object.defineProperties(block, {
+    offsetWidth: { configurable: true, get: () => parseFloat(block.style.width) * 10 },
+    offsetHeight: { configurable: true, get: () => parseFloat(block.style.height) },
+  });
+  block.getBoundingClientRect = () => new browser.DOMRect(0, 0, block.offsetWidth, block.offsetHeight) as DOMRect;
+  const handle = block.querySelector<HTMLButtonElement>('[data-graphic-resize]')!;
+  let captured: number | null = null;
+  handle.setPointerCapture = pointer => { captured = pointer; };
+  handle.hasPointerCapture = pointer => captured === pointer;
+  handle.releasePointerCapture = () => { captured = null; };
+  return handle;
+}
+async function pointer(handle: HTMLElement, type: string, x: number, y: number) {
+  await act(async () => handle.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, button: 0, clientX: x, clientY: y })));
+}
+
+test('corner dragging previews both dimensions and commits one undoable change for each graphic type', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    for (const type of ['whiteboard', 'mermaid']) {
+      const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
+      const handle = resizeTarget(block), before = JSON.stringify(editor.getJSON());
+      const oldHeight = parseFloat(block.style.height);
+      await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+      await pointer(handle, 'pointerdown', 1000, oldHeight);
+      await pointer(handle, 'pointermove', 750, oldHeight + 100);
+      expect(block.style.width).toBe('75%');
+      expect(block.style.height).toBe(`${oldHeight + 100}px`);
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+      await pointer(handle, 'pointerup', 750, oldHeight + 100);
+      const attrs = editor.state.doc.content.content.find(node => node.type.name === type)!.attrs;
+      expect(attrs.width).toBe(75);
+      expect(attrs.height).toBe(oldHeight + 100);
+      expect(handle.dataset.resizing).toBe('false');
+      await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+    }
+  });
+});
+
+test('corner resize clamps bounds and cancels on Escape, capture loss, remote resize and permission loss', async () => {
   await withWhiteboard(true, async (container, editor) => {
     const block = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
-    await act(async () => control(block, /调整尺寸|Resize block/).click());
-    const panel = document.querySelector<HTMLElement>('[role="dialog"]')!;
-    expect(Boolean(panel)).toBe(true);
-    await act(async () => control(panel, /紧凑|Compact/).click());
-    expect(editor.state.doc.firstChild?.attrs.width).toBe(75);
-    expect(editor.state.doc.firstChild?.attrs.height).toBe(280);
-    expect(block.style.width).toBe('75%');
-    expect(block.style.height).toBe('280px');
-    await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
-    expect(editor.state.doc.firstChild?.attrs.width).toBe(100);
-    expect(editor.state.doc.firstChild?.attrs.height).toBe(400);
-    await act(async () => { editor.view.dispatch(closeHistory(editor.state.tr)); control(panel, /紧凑|Compact/).click(); });
-    await act(async () => control(panel, /增大高度|Increase height/).click());
-    expect(editor.state.doc.firstChild?.attrs.height).toBe(320);
-    const height = panel.querySelectorAll<HTMLInputElement>('input')[1];
-    await fill(height, '9999');
-    await act(async () => height.dispatchEvent(new Event('focusout', { bubbles: true })));
-    expect(editor.state.doc.firstChild?.attrs.height).toBe(1200);
-    await act(async () => control(panel, /恢复默认尺寸|Reset size/).click());
-    expect(editor.state.doc.firstChild?.attrs.height).toBe(400);
-    expect(editor.state.doc.firstChild?.attrs.width).toBe(100);
+    const handle = resizeTarget(block), before = JSON.stringify(editor.getJSON());
+    await pointer(handle, 'pointerdown', 1000, 400);
+    await pointer(handle, 'pointermove', -1000, 4000);
+    expect(block.style.width).toBe('28%');
+    expect(block.style.height).toBe('1200px');
+    await act(async () => handle.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+    expect(block.style.width).toBe('100%');
+    expect(block.style.height).toBe('400px');
+    await pointer(handle, 'pointerup', -1000, 4000);
+    expect(JSON.stringify(editor.getJSON())).toBe(before);
+    for (const end of ['pointercancel', 'lostpointercapture']) {
+      await pointer(handle, 'pointerdown', 1000, 400);
+      await pointer(handle, 'pointermove', 750, 300);
+      await pointer(handle, end, 750, 300);
+      expect(block.style.width).toBe('100%');
+      expect(block.style.height).toBe('400px');
+      expect(JSON.stringify(editor.getJSON())).toBe(before);
+    }
+    await pointer(handle, 'pointerdown', 1000, 400);
+    await pointer(handle, 'pointermove', 750, 300);
+    await act(async () => editor.view.dispatch(editor.state.tr.setNodeMarkup(0, undefined, { ...editor.state.doc.firstChild!.attrs, width: 60, height: 500 })));
+    await pointer(handle, 'pointerup', 750, 300);
+    expect(block.style.width).toBe('60%');
+    expect(block.style.height).toBe('500px');
+    await pointer(handle, 'pointerdown', 600, 500);
+    await pointer(handle, 'pointermove', 400, 600);
     await act(async () => editor.setEditable(false));
-    expect(Boolean(document.querySelector('[role="dialog"]'))).toBe(false);
-    expect(Boolean(control(block, /调整尺寸|Resize block/))).toBe(false);
+    expect(Boolean(block.querySelector('[data-graphic-resize]'))).toBe(false);
+    expect(block.style.width).toBe('60%');
+    expect(block.style.height).toBe('500px');
+    await pointer(handle, 'pointerup', 400, 600);
+    expect(editor.state.doc.firstChild?.attrs.height).toBe(500);
+  });
+});
+
+test('inline titles normalize pasted lines and limit text while keeping composition Enter unsaved', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    const block = container.querySelector<HTMLElement>('[data-fob-node="whiteboard"]')!;
+    await act(async () => control(block, /编辑标题|Edit title/).click());
+    const title = block.querySelector<HTMLElement>('[role="textbox"]')!;
+    await fill(title, 'Title\nsecond line');
+    expect(title.textContent).toBe('Title second line');
+    await act(async () => title.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.title).toBe('Architecture sketch');
+    expect(Boolean(block.querySelector('[role="textbox"]'))).toBe(true);
+    await fill(title, 'x'.repeat(510));
+    expect(title.textContent?.length).toBe(500);
+    await act(async () => title.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+    expect(editor.state.doc.firstChild?.attrs.title.length).toBe(500);
   });
 });
