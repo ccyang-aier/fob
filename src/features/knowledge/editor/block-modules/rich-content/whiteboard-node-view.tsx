@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
-import type { NodeViewProps } from '@tiptap/react';
+import { useEditorState, type NodeViewProps } from '@tiptap/react';
 import { Palette, PencilSimple, DownloadSimple } from '@/components/icons';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import { useTranslation } from '@/lib/i18n';
@@ -32,6 +32,7 @@ function WhiteboardDialog({ scene, title, onSave, onClose }: { scene: string; ti
 
 export function WhiteboardNodeView(props: NodeViewProps) {
   const { t } = useTranslation(richMessages);
+  const editable = useEditorState({ editor: props.editor, selector: ({ editor }) => editor.isEditable });
   const scene = String(props.node.attrs.scene || '');
   const snapshot = String(props.node.attrs.preview || '');
   const [failedSnapshot, setFailedSnapshot] = useState('');
@@ -49,7 +50,7 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   const title = String(props.node.attrs.title || '');
   const [session, setSession] = useState<{ scene: string; title: string } | null>(null);
   const activeSession = useRef<typeof session>(null);
-  const edit = () => { const next = { scene, title }; activeSession.current = next; setSession(next); };
+  const edit = () => { if (props.editor.isDestroyed || !props.editor.isEditable) return; const next = { scene, title }; activeSession.current = next; setSession(next); };
   const close = () => { activeSession.current = null; setSession(null); };
   useEffect(() => () => { activeSession.current = null; }, []);
   const [preview, setPreview] = useState<{ scene: string; image: string; error: boolean } | null>(null);
@@ -78,12 +79,12 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   return <>
     <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} appearance="canvas" actions={<>
       {scene && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('downloadScene')} aria-label={t('downloadScene')} onClick={download}><DownloadSimple size={16} aria-hidden /></button>}
-      {props.editor.isEditable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('editWhiteboard')} aria-label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></button>}
+      {editable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('editWhiteboard')} aria-label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></button>}
     </>}>
-      {storedPreview || result?.image ? <div className={styles.whiteboardPreview}><Image src={storedPreview || result!.image} width={1200} height={800} unoptimized alt={title || t('whiteboard')} draggable={false} onError={() => { if (storedPreview) setFailedSnapshot(storedPreview); }} /></div>
+      {storedPreview || result?.image ? <div className={styles.graphic}><Image src={storedPreview || result!.image} width={1200} height={800} unoptimized alt={title || t('whiteboard')} draggable={false} onError={() => { if (storedPreview) setFailedSnapshot(storedPreview); }} /></div>
         : result?.error ? <div className={styles.state} role="alert">{t('whiteboardError')}</div>
         : scene && !result ? <div className={styles.state} role="status">{t('loading')}</div>
-        : <div className={styles.state}>{props.editor.isEditable ? <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={edit}>{t('whiteboardEmpty')}</button> : t('whiteboard')}</div>}
+        : <div className={styles.state}>{editable ? <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={edit}>{t('whiteboardEmpty')}</button> : t('whiteboard')}</div>}
     </RichBlockFrame>
     {session && <WhiteboardDialog scene={session.scene} title={session.title} onSave={save} onClose={close} />}
   </>;

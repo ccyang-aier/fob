@@ -3,6 +3,7 @@ import { defineMessages } from '@/lib/i18n';
 export const richMessages = defineMessages({
   linkCard: ['链接卡片', 'Link card'],
   mermaid: ['Mermaid 图表', 'Mermaid diagram'],
+  editDiagram: ['编辑图表', 'Edit diagram'],
   whiteboard: ['Excalidraw 白板', 'Excalidraw whiteboard'],
   editWhiteboard: ['编辑白板', 'Edit whiteboard'],
   pdf: ['PDF 预览', 'PDF preview'],
