@@ -9,6 +9,7 @@ import { RichBlockFrame } from './rich-block-frame';
 import { richMessages } from './messages';
 import { useRichTheme } from './use-rich-theme';
 import { GraphicToolButton } from './graphic-tool-button';
+import { mermaidTheme } from './mermaid-theme';
 import styles from './rich-content.module.css';
 
 let engine: Promise<typeof import('mermaid')> | undefined;
@@ -33,7 +34,7 @@ export function MermaidNodeView(props: NodeViewProps) {
     if (!deferred.trim() || editing) return;
     const timer = setTimeout(() => {
       void mermaidEngine().then(module => {
-        module.default.initialize({ startOnLoad: false, securityLevel: 'strict', theme: dark ? 'dark' : 'neutral', htmlLabels: false, suppressErrorRendering: true, maxTextSize: 50_000 });
+        module.default.initialize(mermaidTheme(dark));
         return module.default.render(`fobDiagram${id}${attempt}`, deferred);
       }).then(rendered => {
         if (!canceled) setResult({ source: deferred, dark, image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(rendered.svg)}`, error: false });
