@@ -12,7 +12,7 @@ import help from './sidebar-help.module.css';
 const messages = defineMessages({
   help: ['帮助', 'Help'], title: ['Fob 使用指南', 'Fob guide'], close: ['关闭帮助', 'Close help'],
   knowledgeBase: ['切换与管理知识库', 'Switch and manage knowledge bases'],
-  knowledgeBaseHint: ['侧栏底部菜单可创建、切换知识库。文档、成员和权限始终属于当前知识库。', 'Use the menu at the bottom of the sidebar to create or switch knowledge bases. Documents, members and permissions belong to the selected knowledge base.'],
+  knowledgeBaseHint: ['侧栏顶部菜单可创建、切换知识库。文档、成员和权限始终属于当前知识库。', 'Use the menu at the top of the sidebar to create or switch knowledge bases. Documents, members and permissions belong to the selected knowledge base.'],
   search: ['搜索当前知识库', 'Search this knowledge base'],
   searchHint: ['使用顶栏搜索查找文档标题和正文。', 'Find document titles and content using search in the top bar.'],
   storage: ['本地与团队知识库', 'Local and team knowledge bases'],

@@ -4,7 +4,6 @@ import { ArrowLeft, ArrowRight } from '@/components/icons';
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
-import { AccountItem } from '@/features/identity/components/account-item';
 import { CoffeeBalanceButton } from '@/features/rewards';
 import { useTranslation } from '@/lib/i18n';
 import { GlobalSearch } from './global-search';
@@ -42,8 +41,6 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
       <ThemeSwitch className={styles.button} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
       <CoffeeBalanceButton onOpen={() => onNavigate('rewards')} />
-      <span className={styles.separator} aria-hidden />
-      <AccountItem variant="topbar" compact={Boolean(secondary)} />
     </div>
     </div>
   </header>;

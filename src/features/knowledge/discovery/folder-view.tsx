@@ -80,7 +80,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
   }
   function select(id: string, checked: boolean) { setSelection({ context, ids: checked ? [...selected, id] : selected.filter(value => value !== id) }); }
   function tool(label: string, glyph: OutlineCollectionGlyph, onClick: () => void, key: string, disabled = false, pressed?: boolean) {
-    return <Tooltip key={key}><TooltipTrigger asChild><Button variant="ghost" size="icon-sm" className={styles.bulkButton} data-surface="plain" aria-label={label} aria-pressed={pressed} data-starred={key === 'star' && pressed} data-active-emphasis={pressed ? 'strong' : undefined} loading={busy && operation === key} disabled={disabled || (busy && operation !== key)} onClick={onClick}><OutlineCollectionIcon name={glyph} /></Button></TooltipTrigger><TooltipContent>{label}</TooltipContent></Tooltip>;
+    return <Tooltip key={key}><TooltipTrigger asChild><Button variant="ghost" size="icon-sm" className={styles.bulkButton} data-surface={key === 'pin' ? undefined : 'plain'} data-variant={key === 'pin' ? 'text' : undefined} aria-label={label} aria-pressed={pressed} data-starred={key === 'star' && pressed} data-active-emphasis={pressed && key !== 'pin' ? 'strong' : undefined} loading={key !== 'pin' && busy && operation === key} disabled={disabled || (busy && operation !== key)} onClick={onClick}><OutlineCollectionIcon name={glyph} /></Button></TooltipTrigger><TooltipContent>{label}</TooltipContent></Tooltip>;
   }
   function row(document: DiscoveryDocument, prefix = '') {
     const pinned = pinnedIds.includes(document.id), starred = actions?.starredIds.includes(document.id) ?? false;
@@ -94,7 +94,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
         <button type="button" className={styles.openMeta} tabIndex={-1} onClick={() => onOpen(document.id)}><FolderDocumentMeta document={document} viewerId={viewerId} now={now} /></button>
       </div>
       {tab === 'popular' && <span className={styles.rowMetric}><Eye size={12} />{document.views.toLocaleString(locale)}</span>}
-      <div className={styles.rowActions}>{canManage && <Button type="button" variant="ghost" size="icon-sm" className={`${styles.iconButton} ${styles.pinButton}`} data-surface="plain" aria-label={`${t(pinned ? 'unpin' : 'pin')} · ${document.title}`} aria-pressed={pinned} data-active-emphasis={pinned ? 'strong' : undefined} loading={busy && operation === document.id} disabled={busy && operation !== document.id} onClick={() => void update({ pinnedPageIds: pinned ? pinnedIds.filter(id => id !== document.id) : [...pinnedIds, document.id] }, false, document.id)}><OutlineCollectionIcon name="pin" size={20} /></Button>}{renderMenu?.(document.id)}</div>
+      <div className={styles.rowActions}>{canManage && <Button type="button" variant="ghost" size="icon-sm" className={`${styles.iconButton} ${styles.pinButton}`} data-variant="text" aria-label={`${t(pinned ? 'unpin' : 'pin')} · ${document.title}`} aria-pressed={pinned} onClick={() => void update({ pinnedPageIds: pinned ? pinnedIds.filter(id => id !== document.id) : [...pinnedIds, document.id] }, false, document.id)}><OutlineCollectionIcon name="pin" size={20} /></Button>}{renderMenu?.(document.id)}</div>
     </div>;
   }
   return <section className={styles.folder} aria-label={folder.name} data-page-scroll={`folder:${folder.id}:${tab}`} data-selecting={selected.length > 0}>

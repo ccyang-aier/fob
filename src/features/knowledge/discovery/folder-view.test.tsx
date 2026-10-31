@@ -27,9 +27,9 @@ beforeAll(async () => {
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); });
 
-async function render(options: { fresh?: boolean; q?: string; fail?: boolean; documents?: DiscoveryDocument[]; metadata?: FolderMetadata; tab?: FolderTab } = {}) {
+async function render(options: { fresh?: boolean; q?: string; fail?: boolean; documents?: DiscoveryDocument[]; metadata?: FolderMetadata; tab?: FolderTab; update?: (patch: Partial<FolderMetadata> & { name?: string }) => Promise<void> } = {}) {
   if (options.fresh) { generation++; calls = []; }
-  await act(async () => root.render(<TooltipProvider><FolderView key={generation} data={{ ...data, folder: { ...data.folder, metadata: options.metadata ?? {} } }} documents={options.documents ?? documents} tab={options.tab ?? 'documents'} onTab={() => {}} q={options.q ?? ''} onSearch={() => {}} onOpen={() => {}} onCreate={() => {}} onUpdate={async () => {}} source="local" viewerId="viewer" actions={{ starredIds: [], draftIds: [], folders: [{ id: 'folder', name: 'Research' }, { id: 'destination', name: 'Notes' }], canWrite: true, run: async (action, ids, folder) => { calls.push({ action, ids, folder }); if (options.fail) throw new Error('Permission changed'); } }} /></TooltipProvider>));
+  await act(async () => root.render(<TooltipProvider><FolderView key={generation} data={{ ...data, folder: { ...data.folder, metadata: options.metadata ?? {} } }} documents={options.documents ?? documents} tab={options.tab ?? 'documents'} onTab={() => {}} q={options.q ?? ''} onSearch={() => {}} onOpen={() => {}} onCreate={() => {}} onUpdate={options.update ?? (async () => {})} source="local" viewerId="viewer" actions={{ starredIds: [], draftIds: [], folders: [{ id: 'folder', name: 'Research' }, { id: 'destination', name: 'Notes' }], canWrite: true, run: async (action, ids, folder) => { calls.push({ action, ids, folder }); if (options.fail) throw new Error('Permission changed'); } }} /></TooltipProvider>));
 }
 async function click(selector: string) { const element = document.querySelector<HTMLButtonElement>(selector); expect(element).not.toBeNull(); await act(async () => element!.click()); }
 
@@ -101,4 +101,31 @@ test('sorting belongs beside the document tabs while the folder menu contains on
   expect(document.querySelector('[role="menu"]')?.textContent).toContain('重命名');
   expect(document.querySelector('[role="menu"]')?.textContent).not.toContain('目录顺序');
   expect(document.querySelector('[role="menu"]')?.textContent).not.toContain('更新时间');
+});
+
+test('pin requests retain the icon without loading and ignore duplicate clicks', async () => {
+  let finish!: () => void;
+  const pending = new Promise<void>(resolve => { finish = resolve; });
+  const updates: (Partial<FolderMetadata> & { name?: string })[] = [];
+  await render({ fresh: true, update: patch => { updates.push(patch); return pending; } });
+  const selector = '[aria-label="置顶到文件夹 · Alpha"]';
+  await click(selector);
+  const button = document.querySelector<HTMLButtonElement>(selector)!;
+  expect(button.disabled).toBe(false);
+  expect(button.getAttribute('aria-busy')).not.toBe('true');
+  expect(button.getAttribute('data-variant')).toBe('text');
+  expect(button.hasAttribute('data-active-emphasis')).toBe(false);
+  expect(button.querySelector('[data-slot="button-content"]')).toBeNull();
+  await click(selector);
+  expect(updates).toEqual([{ pinnedPageIds: ['page-0'] }]);
+  await act(async () => { finish(); await pending; });
+  await render({ metadata: { pinnedPageIds: ['page-0'] } });
+  expect(document.querySelector('[aria-label="取消置顶 · Alpha"]')?.getAttribute('aria-pressed')).toBe('true');
+});
+
+test('a failed pin request retains the current pin state and reports the real error', async () => {
+  await render({ fresh: true, metadata: { pinnedPageIds: ['page-0'] }, update: async () => { throw new Error('Pin permission changed'); } });
+  await click('[aria-label="取消置顶 · Alpha"]');
+  expect(document.querySelector('[aria-label="取消置顶 · Alpha"]')?.getAttribute('aria-pressed')).toBe('true');
+  expect(document.body.textContent).toContain('Pin permission changed');
 });

@@ -37,9 +37,9 @@ export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: 
           {selectedKnowledgeBase ? <SwitcherAvatar base={selectedKnowledgeBase} principal={principal} /> : <span className={styles.avatar}><BookOpenText size={16} /></span>}
           {!compact && <><span className={styles.name}>{selectedKnowledgeBase?.name ?? t(status === 'loading' ? 'loading' : 'select')}</span><CaretUpDown size={14} className={styles.chevrons} /></>}
         </button></DropdownMenuTrigger></TooltipTrigger>
-        <TooltipContent side={compact ? 'right' : 'top'}>{t('switch')}</TooltipContent>
+        <TooltipContent side={compact ? 'right' : 'bottom'}>{t('switch')}</TooltipContent>
       </Tooltip>
-      {menuOpen && <DropdownMenuContent className={styles.menu} align="start" side={compact ? 'right' : 'top'} sideOffset={6} aria-label={t('switch')}>
+      {menuOpen && <DropdownMenuContent className={styles.menu} align="start" side={compact ? 'right' : 'bottom'} sideOffset={6} aria-label={t('switch')}>
         <div className={styles.search}><MagnifyingGlass size={14} /><input autoFocus value={query} onChange={event => setQuery(event.target.value)} onKeyDown={event => {
           if (event.key === 'Escape') { event.preventDefault(); setMenuOpen(false); return; }
           event.stopPropagation();
