@@ -5,3 +5,9 @@
 .utilityRow:global(.sidebar-nav-row) { border: 0; }
 .utilityRow > span { display: inline-flex; align-items: center; min-width: 0; height: 16px; }
 .utilityRow[data-compact='true'] { width: 32px; height: 32px; margin-inline: auto; padding: 0; justify-content: center; }
+.workspaceBar { display:flex; align-items:center; gap:2px; min-width:0; }
+.workspaceSwitcher { flex:1; min-width:0; }
+.utilityIcon { display:grid; place-items:center; flex:none; width:28px; height:28px; padding:0; border-radius:6px; color:var(--sidebar-icon); cursor:pointer; }
+.workspaceBar[data-compact='true'] { flex-direction:column; }
+.workspaceBar[data-compact='true'] .workspaceSwitcher { flex:none; width:100%; }
+.utilityIcon[data-compact='true'] { width:32px; height:32px; margin-inline:auto; }

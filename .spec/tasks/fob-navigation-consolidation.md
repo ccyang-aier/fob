@@ -57,3 +57,10 @@
 | 交互 | 搜索过滤、团队/本机切换、展开/收起及 Escape 关闭通过 |
 
 - `pnpm typecheck`、`pnpm lint`（包含 `pnpm icons:verify` 的同一检查脚本）、`pnpm architecture:verify`、`pnpm i18n:verify` 通过。最终修改仅补充品牌深色 CSS 与验证文档，不新增实现镜像测试；未重跑知识库创建/重命名/删除及后端权限矩阵。Web 与业务服务保持运行。
+
+## 品牌字标与知识库栏工具按钮调整（2026-10-31）
+
+- 根据后续批注，Logo 容器由 24px 缩至 20px；Fob 使用仓库已有、附 OFL 许可的 Instrument Serif Italic，本地加载为 25px 艺术字标，不依赖远程字体。
+- 底部辅助导航仅保留成员、模板；知识库栏左侧为可收缩的切换器，右侧依次为帮助、设置两个 28px 图标按钮。复用 FA7 图标、共享交互反馈与 Tooltip，保留可访问名称及原弹窗行为；收起时三个入口纵向排列，工具按钮为 32px。
+- 在用户原 localhost 页面使用内置浏览器验证帮助打开/关闭指南、设置打开/关闭原设置界面、侧栏收起/展开与知识库菜单打开。Logo 实测 20×20px；切换器、帮助及设置的垂直中心均约为 890.20px，图标按钮分别位于切换器右侧。无框架错误遮罩，最终控制台 0 error / 0 warning；原文件夹截图保存在聊天 visualizations 目录，未纳入仓库。
+- `pnpm typecheck`、`pnpm lint`（含图标策略检查）、`pnpm architecture:verify` 与 `git diff --check` 通过。未新增布局镜像测试，也未扩大为知识库 CRUD 或权限回归；工作树中的并行编辑器改动不纳入本次提交。
