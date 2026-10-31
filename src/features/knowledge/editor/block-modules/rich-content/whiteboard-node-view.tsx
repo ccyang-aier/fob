@@ -16,17 +16,18 @@ import styles from './rich-content.module.css';
 
 const Canvas = dynamic(() => import('./whiteboard-canvas'), { ssr: false, loading: RichContentLoading });
 
-function WhiteboardDialog({ scene, onSave, onClose }: { scene: string; onSave: (value: string, preview: string, previewHash: string) => boolean; onClose: () => void }) {
+function WhiteboardDialog({ scene, title, onSave, onClose }: { scene: string; title: string; onSave: (value: string, preview: string, previewHash: string, title: string) => boolean; onClose: () => void }) {
   const { t } = useTranslation(richMessages);
   const dialog = useRef<HTMLDialogElement>(null);
+  const [portalRoot] = useState(() => getOverlayRoot() ?? document.body);
   useEffect(() => {
     const element = dialog.current;
     element?.showModal();
     return () => element?.close();
   }, []);
   return createPortal(<dialog className={styles.dialog} ref={dialog} aria-label={t('whiteboard')} onCancel={event => { event.preventDefault(); onClose(); }}>
-    <Canvas scene={scene} onSave={onSave} onCancel={onClose} />
-  </dialog>, getOverlayRoot() ?? document.body);
+    <Canvas scene={scene} title={title} onSave={onSave} onCancel={onClose} />
+  </dialog>, portalRoot);
 }
 
 export function WhiteboardNodeView(props: NodeViewProps) {
@@ -45,7 +46,12 @@ export function WhiteboardNodeView(props: NodeViewProps) {
     void whiteboardSceneHash(scene).then(hash => { if (!canceled) setChecked({ scene, hash }); }).catch(() => { if (!canceled) setChecked({ scene, hash: '' }); });
     return () => { canceled = true; };
   }, [scene, candidate]);
-  const [session, setSession] = useState<{ scene: string } | null>(null);
+  const title = String(props.node.attrs.title || '');
+  const [session, setSession] = useState<{ scene: string; title: string } | null>(null);
+  const activeSession = useRef<typeof session>(null);
+  const edit = () => { const next = { scene, title }; activeSession.current = next; setSession(next); };
+  const close = () => { activeSession.current = null; setSession(null); };
+  useEffect(() => () => { activeSession.current = null; }, []);
   const [preview, setPreview] = useState<{ scene: string; image: string; error: boolean } | null>(null);
   useEffect(() => {
     if (!scene || storedPreview || checking) return;
@@ -55,13 +61,13 @@ export function WhiteboardNodeView(props: NodeViewProps) {
     }).catch(() => { if (!canceled) setPreview({ scene, image: '', error: true }); });
     return () => { canceled = true; };
   }, [scene, storedPreview, checking]);
-  const save = (value: string, preview: string, previewHash: string) => {
-    if (!props.editor.isEditable || !session) return false;
+  const save = (value: string, preview: string, previewHash: string, nextTitle: string) => {
+    if (props.editor.isDestroyed || !props.editor.isEditable || !session || activeSession.current !== session) return false;
     const pos = props.getPos();
     if (typeof pos !== 'number') return false;
     const current = props.editor.state.doc.nodeAt(pos);
-    if (current?.type.name !== 'whiteboard' || String(current.attrs.scene || '') !== session.scene) return false;
-    props.updateAttributes({ scene: value, preview, previewHash }); setSession(null); return true;
+    if (current?.type.name !== 'whiteboard' || String(current.attrs.scene || '') !== session.scene || String(current.attrs.title || '') !== session.title) return false;
+    props.updateAttributes({ scene: value, preview, previewHash, title: nextTitle }); close(); return true;
   };
   const download = () => {
     const url = URL.createObjectURL(new Blob([JSON.stringify({ type: 'excalidraw', version: 2, source: 'Fob', ...JSON.parse(scene) })], { type: 'application/json' }));
@@ -70,15 +76,15 @@ export function WhiteboardNodeView(props: NodeViewProps) {
   };
   const result = preview?.scene === scene ? preview : null;
   return <>
-    <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} actions={<>
+    <RichBlockFrame props={props} icon={Palette} title={t('whiteboard')} appearance="canvas" actions={<>
       {scene && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('downloadScene')} aria-label={t('downloadScene')} onClick={download}><DownloadSimple size={16} aria-hidden /></button>}
-      {props.editor.isEditable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('edit')} aria-label={t('edit')} onClick={() => setSession({ scene })}><PencilSimple size={16} aria-hidden /></button>}
+      {props.editor.isEditable && <button type="button" className={`fob-action ${styles.iconButton}`} data-surface="plain" title={t('editWhiteboard')} aria-label={t('editWhiteboard')} onClick={edit}><PencilSimple size={16} aria-hidden /></button>}
     </>}>
-      {storedPreview || result?.image ? <div className={styles.graphic}><Image src={storedPreview || result!.image} width={1200} height={800} unoptimized alt={String(props.node.attrs.title || t('whiteboard'))} onError={() => { if (storedPreview) setFailedSnapshot(storedPreview); }} /></div>
+      {storedPreview || result?.image ? <div className={styles.whiteboardPreview}><Image src={storedPreview || result!.image} width={1200} height={800} unoptimized alt={title || t('whiteboard')} draggable={false} onError={() => { if (storedPreview) setFailedSnapshot(storedPreview); }} /></div>
         : result?.error ? <div className={styles.state} role="alert">{t('whiteboardError')}</div>
         : scene && !result ? <div className={styles.state} role="status">{t('loading')}</div>
-        : <div className={styles.state}>{props.editor.isEditable ? <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={() => setSession({ scene })}>{t('whiteboardEmpty')}</button> : t('whiteboard')}</div>}
+        : <div className={styles.state}>{props.editor.isEditable ? <button type="button" className={`fob-action ${styles.action}`} data-surface="plain" onClick={edit}>{t('whiteboardEmpty')}</button> : t('whiteboard')}</div>}
     </RichBlockFrame>
-    {session && <WhiteboardDialog scene={session.scene} onSave={save} onClose={() => setSession(null)} />}
+    {session && <WhiteboardDialog scene={session.scene} title={session.title} onSave={save} onClose={close} />}
   </>;
 }

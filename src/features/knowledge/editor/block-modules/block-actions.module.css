@@ -94,7 +94,8 @@
 }
 
 @media (hover: none), (pointer: coarse) {
-  .root { opacity: 1; pointer-events: auto; --block-action-offset: 0px; --block-action-scale: 1; }
+  .root[data-touch-visibility="always"] { opacity: 1; pointer-events: auto; --block-action-offset: 0px; --block-action-scale: 1; }
+  .root[data-touch-visibility="on-demand"] .bar > :is(button, a) { min-width:44px; min-height:44px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

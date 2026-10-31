@@ -12,12 +12,13 @@ import { whiteboardSceneHash } from './whiteboard-preview';
 import styles from './rich-content.module.css';
 import '@excalidraw/excalidraw/index.css';
 
-export default function WhiteboardCanvas({ scene, onSave, onCancel }: { scene: string; onSave: (value: string, preview: string, previewHash: string) => boolean; onCancel: () => void }) {
+export default function WhiteboardCanvas({ scene, title: initialTitle, onSave, onCancel }: { scene: string; title: string; onSave: (value: string, preview: string, previewHash: string, title: string) => boolean; onCancel: () => void }) {
   const { locale, t } = useTranslation(richMessages);
   const dark = useRichTheme();
   const [library, setLibrary] = useState<Awaited<ReturnType<typeof loadWhiteboardLibrary>> | null>(null);
   const [error, setError] = useState<'whiteboardError' | 'whiteboardLimit' | 'whiteboardConflict' | 'whiteboardSaveError' | null>(null);
   const [saving, setSaving] = useState(false);
+  const [title, setTitle] = useState(initialTitle);
   const api = useRef<ExcalidrawImperativeAPI | null>(null);
   const [initial] = useState(() => { try { return whiteboardData(scene); } catch { return null; } });
   useEffect(() => {
@@ -35,16 +36,16 @@ export default function WhiteboardCanvas({ scene, onSave, onCancel }: { scene: s
     } catch { setError('whiteboardLimit'); setSaving(false); return; }
     try {
       const hash = await whiteboardSceneHash(clean);
-      if (!api.current.getSceneElements().length) { if (!onSave(clean, '', '')) setError('whiteboardConflict'); return; }
+      if (!api.current.getSceneElements().length) { if (!onSave(clean, '', '', title)) setError('whiteboardConflict'); return; }
       const blob = await library.exportToBlob({ elements: api.current.getSceneElements(), files: api.current.getFiles(), appState: { ...api.current.getAppState(), exportBackground: true, exportEmbedScene: false }, mimeType: 'image/png', maxWidthOrHeight: 1024 });
       const preview = await new Promise<string>((resolve, reject) => { const reader = new FileReader(); reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('PREVIEW_UNAVAILABLE')); reader.onerror = () => reject(reader.error); reader.readAsDataURL(blob); });
-      if (!onSave(clean, preview, hash)) setError('whiteboardConflict');
+      if (!onSave(clean, preview, hash, title)) setError('whiteboardConflict');
     } catch { setError('whiteboardSaveError'); }
     finally { setSaving(false); }
   };
   const Canvas = library?.Excalidraw, Menu = library?.MainMenu;
   return <>
-    <div className={styles.dialogHeader}><strong>{t('whiteboard')}</strong><div className={styles.actions}><Button variant="ghost" size="sm" onClick={onCancel}>{t('cancel')}</Button><Button size="sm" onClick={() => void save()} loading={saving} disabled={!library}>{t('save')}</Button></div></div>
+    <div className={styles.dialogHeader}><input className={`${styles.titleInput} ${styles.dialogTitle}`} aria-label={t('blockTitle')} placeholder={t('whiteboard')} value={title} maxLength={500} disabled={saving} onChange={event => setTitle(event.target.value)} /><div className={styles.actions}><Button variant="ghost" size="sm" onClick={onCancel} disabled={saving}>{t('cancel')}</Button><Button size="sm" onClick={() => void save()} loading={saving} disabled={!library}>{t('save')}</Button></div></div>
     {(error || !initial) && <div className={styles.error} role="alert">{t(error || 'whiteboardError')}</div>}
     <div className={styles.canvas} inert={saving} aria-busy={saving}>
       {Canvas && Menu && initial ? <Canvas initialData={{ ...initial, scrollToContent: true }} excalidrawAPI={value => { api.current = value; }} langCode={locale.startsWith('zh') ? 'zh-CN' : 'en'} theme={dark ? 'dark' : 'light'} handleKeyboardGlobally={false} autoFocus UIOptions={{ canvasActions: { saveToActiveFile: false, toggleTheme: false, export: { saveFileToDisk: true } } }}

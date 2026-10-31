@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ComponentType, type MouseEvent, type ReactNode } from 'react';
 import { NodeViewWrapper, type NodeViewProps } from '@tiptap/react';
 import { ArrowsOut } from '@/components/icons';
 import { useTranslation } from '@/lib/i18n';
@@ -8,22 +8,33 @@ import { richMessages } from './messages';
 import { BlockActions } from '../block-actions';
 import styles from './rich-content.module.css';
 
-export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200 }: {
-  props: NodeViewProps; icon: ComponentType<{ size?: number; 'aria-hidden'?: boolean }>; title: string; actions?: ReactNode; children: ReactNode; resizable?: boolean; minHeight?: number;
+export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200, appearance = 'card' }: {
+  props: NodeViewProps; icon: ComponentType<{ size?: number; 'aria-hidden'?: boolean }>; title: string; actions?: ReactNode; children: ReactNode; resizable?: boolean; minHeight?: number; appearance?: 'card' | 'canvas';
 }) {
   const { t } = useTranslation(richMessages);
   const root = useRef<HTMLDivElement>(null);
   const start = useRef<{ y: number; height: number; next: number } | null>(null);
   const [error, setError] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const canvas = appearance === 'canvas';
+  useEffect(() => {
+    const update = () => setFullscreen(document.fullscreenElement === root.current);
+    document.addEventListener('fullscreenchange', update);
+    return () => document.removeEventListener('fullscreenchange', update);
+  }, []);
   const height = Number(props.node.attrs.height || 360);
-  return <NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={styles.root} contentEditable={false}>
-    <div className={styles.header}>
+  return <NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
+    role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
+    onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
+      if (event.target instanceof Element && !event.target.closest('button, a, input, textarea, [role="separator"]')) root.current?.focus({ preventScroll: true });
+    } : undefined}>
+    {!canvas && <div className={styles.header}>
       <Icon size={16} aria-hidden />
       <span className={styles.title}>{props.editor.isEditable ? <input className={styles.titleInput} aria-label={t('blockTitle')} placeholder={title} value={String(props.node.attrs.title || '')} maxLength={500} onChange={event => props.updateAttributes({ title: event.target.value })} /> : String(props.node.attrs.title || title)}</span>
-    </div>
-      <BlockActions>
+    </div>}
+      <BlockActions touchVisibility={canvas ? 'on-demand' : 'always'}>
         {actions}
-        {resizable && <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t('fullscreen')} aria-label={t('fullscreen')} onClick={async () => {
+        {resizable && <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={async () => {
           try { if (document.fullscreenElement === root.current) await document.exitFullscreen(); else await root.current?.requestFullscreen(); setError(false); }
           catch { setError(true); }
         }}><ArrowsOut size={16} aria-hidden /></button>}

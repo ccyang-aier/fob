@@ -4,6 +4,7 @@ export const richMessages = defineMessages({
   linkCard: ['链接卡片', 'Link card'],
   mermaid: ['Mermaid 图表', 'Mermaid diagram'],
   whiteboard: ['Excalidraw 白板', 'Excalidraw whiteboard'],
+  editWhiteboard: ['编辑白板', 'Edit whiteboard'],
   pdf: ['PDF 预览', 'PDF preview'],
   blockTitle: ['内容块标题', 'Block title'],
   url: ['链接地址', 'URL'],
