@@ -34,6 +34,13 @@ export const RICH_CONTENT_BLOCKS = [
     slash: { title: 'Mermaid 图表', keywords: ['mermaid', 'diagram', 'flowchart', '图表', '流程图', '时序图', '脑图'], group: 'media' },
   }),
   defineBlock({
+    name: 'plantuml',
+    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(360, 80, 1200), autoHeight: { default: true, validate: 'boolean' } },
+      toDOM: node => ['pre', { 'data-plantuml': '' }, ['code', { class: 'language-plantuml' }, node.attrs.source]] },
+    markdown: { fromMd: { type: 'code', variant: 'plantuml' } }, index: { mode: 'text' },
+    slash: { title: 'PlantUML 图表', keywords: ['plantuml', 'puml', 'uml', 'diagram', '图表', '时序图', '类图', '活动图'], group: 'media' },
+  }),
+  defineBlock({
     name: 'pdf',
     schema: { atom: true, draggable: true, attrs: { src: stringAttribute, title: nullableString, alt: stringAttribute, caption: stringAttribute, mime: { default: 'application/pdf', validate: 'string' }, height: integerAttribute(520, 240, 1200) },
       toDOM: node => ['figure', { 'data-pdf': '' }, ['a', { href: safeKnowledgeUrl(node.attrs.src, 'media') }, node.attrs.title || 'PDF']] },

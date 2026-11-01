@@ -6,7 +6,7 @@ import { createMarkdownPipeline } from '../markdown';
 
 import { BlockRegistry, KNOWLEDGE_BLOCKS, KNOWLEDGE_MARKS, createKnowledgeExtensions, createKnowledgeRegistry, defineBlock, isKnowledgeBlock, knowledgeSchema } from './index';
 
-const expectedBlocks = ['paragraph', 'heading', 'bulletList', 'orderedList', 'listItem', 'taskList', 'taskItem', 'blockquote', 'callout', 'emoji', 'codeBlock', 'math', 'horizontalRule', 'table', 'tableRow', 'tableCell', 'tableHeader', 'columns', 'column', 'image', 'video', 'audio', 'file', 'embed', 'linkCard', 'mermaid', 'pdf', 'whiteboard', 'blockReference', 'pageLink', 'databaseView', 'aiBlock'];
+const expectedBlocks = ['paragraph', 'heading', 'bulletList', 'orderedList', 'listItem', 'taskList', 'taskItem', 'blockquote', 'callout', 'emoji', 'codeBlock', 'math', 'horizontalRule', 'table', 'tableRow', 'tableCell', 'tableHeader', 'columns', 'column', 'image', 'video', 'audio', 'file', 'embed', 'linkCard', 'mermaid', 'plantuml', 'pdf', 'whiteboard', 'blockReference', 'pageLink', 'databaseView', 'aiBlock'];
 
 describe('first-party knowledge schema', () => {
   it('emoji blocks keep readable Unicode, identity and Markdown semantics', () => {

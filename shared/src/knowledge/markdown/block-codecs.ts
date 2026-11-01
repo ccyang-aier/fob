@@ -133,10 +133,11 @@ export const STANDARD_BLOCK_CODECS: Readonly<Record<string, MarkdownBlockCodec>>
     decode: (node, context) => [context.createBlock(context.blockDefinition('blockquote'), null, context.decodeBlocks(node.children ?? []), node)],
   },
   code: {
-    encode: (node) => ({ type: 'code', lang: node.type.name === 'mermaid' ? 'mermaid' : node.attrs.language, value: node.type.name === 'mermaid' ? node.attrs.source : node.textContent }),
+    encode: (node) => ({ type: 'code', lang: ['mermaid', 'plantuml'].includes(node.type.name) ? node.type.name : node.attrs.language, value: ['mermaid', 'plantuml'].includes(node.type.name) ? node.attrs.source : node.textContent }),
     decode(node, context) {
       if (node.meta) throw new KnowledgeMarkdownError('invalid_attribute', 'Code fence metadata is not represented by the code schema', node);
       if (node.lang?.toLowerCase() === 'mermaid') return [context.createBlock(context.blockDefinition('code', 'mermaid'), { source: node.value ?? '' }, [], node)];
+      if (/^(plantuml|puml)$/i.test(node.lang ?? '')) return [context.createBlock(context.blockDefinition('code', 'plantuml'), { source: node.value ?? '' }, [], node)];
       if (node.lang?.toLowerCase() === 'excalidraw' && context.registry.get('whiteboard')) return [context.createBlock(context.registry.get('whiteboard')!, { scene: node.value ?? '' }, [], node)];
       return [context.createBlock(context.blockDefinition('code'), { language: node.lang ?? null }, node.value ? [context.schema.text(node.value)] : [], node)];
     },

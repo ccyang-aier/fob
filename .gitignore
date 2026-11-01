@@ -30,3 +30,4 @@ Thumbs.db
 **/.pytest_cache/
 **/.runtime/
 public/vendor/excalidraw/
+public/vendor/plantuml/

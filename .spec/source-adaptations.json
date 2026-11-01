@@ -826,16 +826,16 @@
     "sha256": "582bebac7d5863f1cb6d04bfdcc4cdc3cd262d9eb68b7e1d062c058a0cc88735"
   },
   "shared/src/knowledge/markdown/block-codecs.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "dad1c0869552126cfd5ec1310c7c8be4e7ddb882b9c10fbd1bf60c8e618093f1"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Round-trip PlantUML source as a portable plantuml code fence and accept the puml import alias without converting ordinary code blocks. See docs/editor-rich-content.md.",
+    "sha256": "c42792683ba26cd6e058d8f79371e0a73b46c5d2e9b67e3ee548ba851fcaf62a"
   },
   "shared/src/knowledge/schema/blocks.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
     "sha256": "b74b71cbb992acac5c2b26062eb99cfac2e1d36f3a50642d86cbd75026a4d6e2"
   },
   "shared/src/knowledge/schema/schema.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output. Define and verify the standalone emoji atom with Unicode text, stable block identity and portable serialization.",
-    "sha256": "1049a48370c85e1653c8cb6de8e97e0f94a0cc968d395cb0eb5e98de7d023484"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Render validated hex highlight backgrounds and preserve colors through semantic HTML and Markdown; retain legacy attributes and reject unsafe CSS output. Define and verify the standalone emoji atom with Unicode text, stable block identity and portable serialization. Include PlantUML in the schema parity and identity coverage for every registered document block. See docs/editor-rich-content.md.",
+    "sha256": "85c0e37fa3e671cffea0a86c8fd740bc875c1fb90a64fe6d4cee0c6167bb94b3"
   },
   "src/features/knowledge/editor/block-modules/index.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Register the standalone OpenMoji emoji block browser module.",
@@ -846,8 +846,8 @@
     "sha256": "991026091d04782afbd96b0a2ab41eb7d37c0fa07abb75718cf0d8896db08750"
   },
   "src/features/knowledge/editor/commands/block-labels.messages.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
-    "sha256": "285ef382951781cc91b8a58d9e0b8d7f41655cbd5890f39c7a7c2e72863d5496"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Expose the bilingual PlantUML block label through the existing registry-driven slash menu. See docs/editor-rich-content.md.",
+    "sha256": "ff2523a70d3ade2ac326707b76165f584cb677055280f0c0fec9d97ac7975184"
   },
   "src/features/knowledge/editor/commands/slash-items.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
@@ -872,8 +872,8 @@
     "relocatedTo": "src/features/knowledge/editor/export/document-markdown-export.test.ts"
   },
   "src/features/knowledge/editor/components/document-markdown-export.ts": {
-    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "62539d44d6fbbf1c3aa1f009542456e75181ba5cc056807a953baf084a1a2e03",
+    "reason": "Support editor rich content and portable source data; retain custom Mermaid titles in public Markdown and HTML fallback exports, with a focused export regression. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Export PlantUML as escaped HTML source and a re-importable public Markdown fence while retaining source backticks. See docs/editor-rich-content.md.",
+    "sha256": "7f216310329325ee21189a79d727808c94438f1cd304af283006655c7b530e40",
     "relocatedTo": "src/features/knowledge/editor/export/document-markdown-export.ts"
   },
   "src/features/knowledge/documents/documents-page.module.css": {

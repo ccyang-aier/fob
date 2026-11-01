@@ -25,6 +25,7 @@ export const blockLabels = defineMessages({
   bilibili: ['B站视频', 'Bilibili video'],
   linkCard: ['链接卡片', 'Link card'],
   mermaid: ['Mermaid 图表', 'Mermaid diagram'],
+  plantuml: ['PlantUML 图表', 'PlantUML diagram'],
   pdf: ['PDF 预览', 'PDF preview'],
   whiteboard: ['Excalidraw 白板', 'Excalidraw whiteboard'],
   blockReference: ['块引用', 'Block reference'],

@@ -7,12 +7,12 @@ Fob 是 Web 客户端、TypeScript 业务服务与 Python 媒体服务组成的�
 - 按能力拥有实现：组件的视图、样式、文案、测试和专属辅助代码放在同一个目录；导入导出、数据协议等无界面逻辑归对应能力，不放进 `components`。
 - `src/components` 仅容纳跨功能控件；`src/components/ui` 保留基础控件。业务组件留在其功能内，不通过根组件目录反向依赖业务实现。
 - 单文件控件保持单文件；需要多份配套文件时才建立目录。目录入口直接提供组件，不增加只转发内部实现的兼容文件或全量聚合出口。
-- 富内容按 Mermaid、白板、PDF、链接卡片分开维护；画布外框和放大预览作为两类图形共用的组件。编辑器文档工具、导出与选区工具分开维护；文件预览按格式组织。
+- 富内容按 Mermaid、PlantUML、白板、PDF、链接卡片分开维护；画布外框和放大预览作为图形内容共用的组件。编辑器文档工具、导出与选区工具分开维护；文件预览按格式组织。
 - 跨领域调用使用公开入口；边界检查同时覆盖静态导入、重导出和动态导入。源码搬迁保留迁移基线的来源身份和目标路径，继续校验内容，避免为通过检查保留旧路径空壳。
 
 | 能力 | 组织位置 |
 | --- | --- |
-| 富内容块 | `editor/block-modules/rich-content/{mermaid,whiteboard,pdf,link-card}`；共用 `frame` 与 `graphic-preview` |
+| 富内容块 | `editor/block-modules/rich-content/{mermaid,plantuml,whiteboard,pdf,link-card}`；共用 `frame` 与 `graphic-preview` |
 | 文档工具 | `editor/components/` 下各文档组件目录；序列化与输出位于 `editor/export/` |
 | 文件预览 | `documents/previews/{pdf,office,text}`；导入、移动与元数据各自独立 |
 | 导航 | 页面图标、图标选择器分别拥有配套文件，树模型与操作位于 `navigation/tree/` |

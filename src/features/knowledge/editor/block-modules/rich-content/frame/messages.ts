@@ -3,6 +3,10 @@ import { defineMessages } from '@/lib/i18n';
 export const richMessages = defineMessages({
   linkCard: ['链接卡片', 'Link card'],
   mermaid: ['Mermaid 图表', 'Mermaid diagram'],
+  plantuml: ['PlantUML 图表', 'PlantUML diagram'],
+  plantumlSource: ['PlantUML 源码', 'PlantUML source'],
+  plantumlEmpty: ['输入 PlantUML 源码以生成图表。', 'Enter PlantUML source to create a diagram.'],
+  plantumlError: ['PlantUML 无法渲染，请检查语法后重试。外部文件及标准库扩展暂不支持。', 'Unable to render PlantUML. Check the syntax and retry. External files and extended standard libraries are not supported yet.'],
   editDiagram: ['编辑图表', 'Edit diagram'],
   whiteboard: ['Excalidraw 白板', 'Excalidraw whiteboard'],
   editWhiteboard: ['编辑白板', 'Edit whiteboard'],

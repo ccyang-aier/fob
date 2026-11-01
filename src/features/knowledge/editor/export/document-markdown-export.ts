@@ -182,7 +182,8 @@ function htmlBlock(node: ProseMirrorNode): string {
     case 'math':
       return `<p>${html(`$$${node.attrs.latex}$$`)}</p>`;
     case 'mermaid':
-      return `<figure>${node.attrs.title ? `<figcaption>${html(String(node.attrs.title))}</figcaption>` : ''}<pre><code class="language-mermaid">${html(String(node.attrs.source || ''))}</code></pre></figure>`;
+    case 'plantuml':
+      return `<figure>${node.attrs.title ? `<figcaption>${html(String(node.attrs.title))}</figcaption>` : ''}<pre><code class="language-${node.type.name}">${html(String(node.attrs.source || ''))}</code></pre></figure>`;
     case 'whiteboard':
       return `<figure><figcaption>${html(String(node.attrs.title || knowledgeT('whiteboard')))}</figcaption><pre><code>${html(String(node.attrs.scene || ''))}</code></pre></figure>`;
     case 'horizontalRule':
@@ -316,10 +317,11 @@ function block(node: ProseMirrorNode): string {
     }
     case 'math':
       return `$$\n${node.attrs.latex}\n$$`;
-    case 'mermaid': {
+    case 'mermaid':
+    case 'plantuml': {
       const source = String(node.attrs.source || '');
       const fence = '`'.repeat(Math.max(3, ...Array.from(source.matchAll(/`+/g), match => match[0].length + 1)));
-      return `${node.attrs.title ? `${text(String(node.attrs.title))}\n\n` : ''}${fence}mermaid\n${source}\n${fence}`;
+      return `${node.attrs.title ? `${text(String(node.attrs.title))}\n\n` : ''}${fence}${node.type.name}\n${source}\n${fence}`;
     }
     case 'whiteboard': {
       const source = String(node.attrs.scene || '');
