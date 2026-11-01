@@ -144,11 +144,9 @@ export function DocumentNavigationTools({
     const update = () => {
       animationFrame = 0;
       if (!scroll.getClientRects().length) return;
-      const scrolled = String(scroll.scrollTop > 0);
       const readingTop = Math.max(scroll.getBoundingClientRect().top, toolbar.getBoundingClientRect().bottom);
       const titleVisible = String(scroll.scrollTop > 0 && Boolean(titleHeading && titleHeading.getBoundingClientRect().bottom <= readingTop));
       // Scroll feedback stays in DOM/CSS without re-rendering the editor tree.
-      if (surface.dataset.scrolled !== scrolled) surface.dataset.scrolled = scrolled;
       if (surface.dataset.titleVisible !== titleVisible) surface.dataset.titleVisible = titleVisible;
       if (!editor.isInitialized || editor.isDestroyed || !editor.view.dom.getClientRects().length) return;
       let active = -1;
@@ -303,7 +301,7 @@ export function DocumentNavigationTools({
         onToggleOutline: editor ? () => setOutlineOpen(!outlineOpen) : undefined,
       }}
     >
-      <div ref={host} className={styles.toolsSurface} data-reading={Boolean(editor)} data-scrolled="false" data-title-visible="false">
+      <div ref={host} className={styles.toolsSurface} data-reading={Boolean(editor)} data-title-visible="false">
         <div className={styles.documentPrimary}>
           <div className={styles.toolbarHost} data-document-toolbar>
             {header}
