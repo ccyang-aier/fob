@@ -10,9 +10,8 @@
 .fieldError { margin:6px 0 0; color:var(--err-ink); font-size:11px; }
 .fieldHint { margin:6px 0 0; color:var(--muted-strong); font-size:11px; }
 .content > [role=alert] { margin-top:8px; }
-.accessNote { display:flex; align-items:center; gap:7px; margin:11px 0 14px; color:var(--muted-strong); font-size:11px; }
 .linkCard { display:flex; align-items:center; gap:9px; margin:10px 0 14px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--surface-subtle); }
-.noteIcon { display:grid; flex:0 0 auto; width:30px; height:30px; place-items:center; border:1px solid var(--control-border); border-radius:50%; color:var(--muted-strong); background:var(--panel); }
+.noteIcon { display:grid; flex:0 0 auto; width:34px; height:34px; place-items:center; border:1px solid var(--control-border); border-radius:50%; color:var(--muted-strong); background:var(--panel); }
 .linkCard > div { flex:1; min-width:0; }
 .linkCard strong { display:block; font-size:12px; font-weight:500; }
 .linkCard p { overflow:hidden; margin:3px 0 0; color:var(--muted-strong); text-overflow:ellipsis; white-space:nowrap; font-size:10px; }

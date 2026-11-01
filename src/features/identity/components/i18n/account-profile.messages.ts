@@ -12,4 +12,8 @@ export const messages = defineMessages({
   取消: ['取消', 'Cancel'],
   '正在保存…': ['正在保存…', 'Saving…'],
   保存更改: ['保存更改', 'Save changes'],
+  取消编辑: ['取消编辑','Cancel editing'], 更换头像: ['更换头像','Change avatar'],
+  签名: ['签名','Signature'], 还没有签名: ['还没有签名','No signature yet'],
+  写一句介绍自己的话: ['写一句介绍自己的话','A few words about yourself'],
+  点击昵称或签名即可编辑: ['点击昵称或签名即可编辑，按 Enter 保存','Edit your name or signature, then press Enter to save'],
 });

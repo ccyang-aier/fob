@@ -102,6 +102,25 @@ describe('Better Auth with real PostgreSQL and HTTP', () => {
     expect(await session('fob.session_token=tampered')).toBeNull();
   });
 
+  test('profile edits persist signatures and approved avatars without accepting arbitrary image URLs', async () => {
+    expect((await server.request('/update-user',{ signature: 'anonymous' })).status).toBe(401);
+    for (const signature of ['x'.repeat(161),'line\nbreak']) expect((await server.request('/update-user',{ signature },primaryCookie)).status).toBe(400);
+    const image = `${server.webOrigin}/avatars/v1/pets-01.webp`;
+    expect((await server.request('/update-user',{ name: '  Person  ',signature: '  Knowledge grows  ',image },primaryCookie)).status).toBe(200);
+    const updated = await session(primaryCookie);
+    expect(updated?.user.name).toBe('Person');
+    expect(updated?.user.signature).toBe('Knowledge grows');
+    expect(updated?.user.image).toBe(image);
+    expect((await server.request('/update-user',{ image: 'https://evil.test/avatar.svg' },primaryCookie)).status).toBe(400);
+    expect((await server.request('/update-user',{ image: 'data:image/svg+xml,<svg/>' },primaryCookie)).status).toBe(400);
+    const uploaded = 'data:image/webp;base64,UklGRjYAAABXRUJQVlA4ICoAAACwAQCdASoBAAEAAUAmJaACdLoABdQAAP6k1/8lP67vKLtc/xbSOhSeAAA=';
+    expect((await server.request('/update-user',{ image: uploaded },primaryCookie)).status).toBe(200);
+    expect((await session(primaryCookie))?.user.image).toBe(uploaded);
+    expect((await server.request('/update-user',{ signature: '',image: null },primaryCookie)).status).toBe(200);
+    expect((await session(primaryCookie))?.user.signature).toBe('');
+    expect((await session(primaryCookie))?.user.image).toBeNull();
+  });
+
   test('duplicate registration is non-enumerating and cannot replace the credential', async () => {
     const response = await server.request('/sign-up/email', { name: 'Other name', email, password: 'replacement-password-44' });
     expect(response.status).toBe(200);

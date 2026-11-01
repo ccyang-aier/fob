@@ -12,7 +12,7 @@ export function usePersonalProfileSummary() {
   const { selectedKnowledgeBase: base, principal } = useKnowledgeBaseResources();
   const local = useLocalLibrary();
   const query = useQuery({
-    queryKey: ['knowledge',base?.id,'personal-profile-summary',principal],
+    queryKey: ['knowledge',base?.id,'personal-profile',principal],
     enabled: base?.source === 'server' && principal !== 'guest',
     queryFn: ({ signal }) => knowledgeResourceRequest(base!.id,'discovery/profile',personalProfileSchema,{ signal }),
     staleTime: 0,

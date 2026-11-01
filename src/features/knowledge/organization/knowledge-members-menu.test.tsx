@@ -59,6 +59,17 @@ test('only the verified owner response exposes the invitation form; ordinary mem
   expect(host.querySelector('input[type=email]')).not.toBeNull();
 });
 
+test('the invitation-link card is always visible and a blank Get link focuses the email field without creating a token', async () => {
+  await render(); await open();
+  expect(host.textContent).toContain('邀请链接');
+  expect(host.textContent).not.toContain('公开文档，默认只读');
+  const getLink = [...host.querySelectorAll('button')].find(button => button.textContent === '获取链接')!;
+  await act(async () => getLink.click());
+  expect(document.activeElement).toBe(host.querySelector('input[type=email]'));
+  expect(host.textContent).toContain('请输入有效的邮箱地址');
+  expect(createdFor).toEqual([]);
+});
+
 test('switching knowledge bases closes the previous panel and never renders the previous member list', async () => {
   await render(); await open();
   expect(host.textContent).toContain('alpha member');

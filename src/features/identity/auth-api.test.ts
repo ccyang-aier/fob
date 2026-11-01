@@ -38,6 +38,13 @@ describe('fobAuthUrl — routes live under /api/auth', () => {
 });
 
 describe('transport shape', () => {
+  test('profile patches preserve an empty signature and explicit avatar reset without changing other fields', async () => {
+    const { api, requests } = apiWith(() => jsonResponse(200,{ status: true }));
+    await api.updateProfile({ signature: '',image: null });
+    expect(requests[0].url).toBe(`${origin}/api/auth/update-user`);
+    expect(requests[0].init.credentials).toBe('include');
+    expect(JSON.parse(requests[0].init.body as string)).toEqual({ signature: '',image: null });
+  });
   test('providers: GET with credentials include and no JSON content type', async () => {
     const { api, requests } = apiWith(() => jsonResponse(200, [{ id: 'company', name: 'Company SSO', kind: 'oidc' }]));
     const providers = await api.listOAuthProviders();

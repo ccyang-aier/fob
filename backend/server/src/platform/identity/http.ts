@@ -7,6 +7,7 @@ import { cors } from 'hono/cors';
 import { bodyLimit } from 'hono/body-limit';
 import { hasTrustedFobOrigin, fobAuthBasePath, fobAuthClientIpHeader } from './config';
 import type { FobAuth } from './service';
+import { validProfileImage } from './profile-image';
 
 /** Mount at / before any legacy bearer-token catch-all. Peer IP is transport-owned. */
 export function createFobAuthRoutes(auth: FobAuth, resolveClientAddress: (context: Context) => string, socketTickets?: FobSocketTickets) {
@@ -26,6 +27,13 @@ export function createFobAuthRoutes(auth: FobAuth, resolveClientAddress: (contex
     credentials: true, allowMethods: ['GET', 'POST', 'OPTIONS'], allowHeaders: ['Content-Type'], maxAge: 600,
   }));
   app.use(route, bodyLimit({ maxSize: 16 * 1_024, onError: (context) => context.json({ code: 'PAYLOAD_TOO_LARGE', message: 'Authentication request is too large.' }, 413) }));
+  app.use(`${fobAuthBasePath}/update-user`, async (context, next) => {
+    if (context.req.method === 'POST') {
+      const body = await context.req.raw.clone().json().catch(() => null) as Record<string,unknown> | null;
+      if (body && Object.hasOwn(body,'image') && !validProfileImage(body.image,origins)) return context.json({ code: 'INVALID_PROFILE_IMAGE', message: 'Choose a built-in avatar or upload a small WebP portrait.' },400);
+    }
+    await next();
+  });
   if (socketTickets) app.post(`${fobAuthBasePath}/socket-ticket`, requireFobIdentity(auth), async (context) => {
     const body = await context.req.json().catch(() => null) as { path?: unknown } | null;
     const ticket = typeof body?.path === 'string' ? socketTickets.issue(body.path, context.req.raw.headers) : null;

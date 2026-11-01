@@ -48,6 +48,10 @@ test('profile projects real personal activity and never includes another author 
   expect(data.activities.map(item => item.kind).sort()).toEqual(['commented','created','liked','subscribed']);
   expect(data.activities.every(item => item.targetId === tree.root.pageId)).toBe(true);
   expect(data.receivedLikes).toBe(1);
+  expect(data.receivedLikesTotal).toBe(1);
+  const historical = await withKnowledgeBase(fixture.pool,kb,db => personalProfile(db,authority,{ day: '2020-01-01' }));
+  expect(historical.receivedLikes).toBe(0);
+  expect(historical.receivedLikesTotal).toBe(1);
   expect(data.dayCounts).toEqual({ created: 1,commented: 1 });
   expect(data.calendar.reduce((sum,day) => sum+day.count,0)).toBe(4);
   expect(data.calendar[0]?.counts).toEqual({ created: 1,commented: 1,liked: 1,subscribed: 1 });
@@ -127,4 +131,5 @@ test('stale ACL materializations cannot leak titles, counts, folders, saved item
   expect(data.activities).toEqual([]);
   expect(data.calendar).toEqual([]);
   expect(data.receivedLikes).toBe(0);
+  expect(data.receivedLikesTotal).toBe(0);
 });

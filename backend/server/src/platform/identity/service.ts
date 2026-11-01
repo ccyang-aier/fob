@@ -5,6 +5,7 @@ import type { BetterAuthRateLimitOptions } from 'better-auth';
 import { APIError } from 'better-auth/api';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import { drizzle } from 'drizzle-orm/node-postgres';
+import { z } from 'zod';
 import { authAccount, authSession, authUser, authVerification } from '../database/identity/schema';
 import { fobAuthBasePath, fobAuthClientIpHeader, validateFobAuthConfig } from './config';
 import type { FobAuthConfig } from './config';
@@ -35,7 +36,10 @@ export function createFobAuth(options: {
     trustedOrigins: [...config.trustedOrigins],
     database: drizzleAdapter(drizzle(options.pool, { schema }), { provider: 'pg', schema, transaction: true }),
     plugins: [oauth.plugin],
-    user: { validateUserInfo: oauth.validateUserInfo },
+    user: { validateUserInfo: oauth.validateUserInfo, additionalFields: {
+      signature: { type: 'string', required: false, defaultValue: '', input: true,
+        validator: { input: z.string().trim().max(160).refine(value => [...value].every(char => char.charCodeAt(0) >= 32 && char.charCodeAt(0) !== 127)) } },
+    } },
     account: { storeAccountCookie: false, encryptOAuthTokens: true,
       accountLinking: { enabled: true, disableImplicitLinking: true, allowDifferentEmails: false, trustedProviders: [] },
     },

@@ -71,7 +71,7 @@ export function AccountDialog({
           >
             <X size={16} aria-hidden />
           </button>
-          {authenticated ? <AccountProfile onClose={requestClose} onBusyChange={updateProfileBusy} /> : <div className={styles.login}>
+          {authenticated ? <AccountProfile onBusyChange={updateProfileBusy} /> : <div className={styles.login}>
               <AuthShowcase />
               <section className={styles.formPanel}>
                 <AuthEntryContent

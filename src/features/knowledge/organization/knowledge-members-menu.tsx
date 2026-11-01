@@ -4,7 +4,7 @@ import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from 
 import { useQuery } from '@tanstack/react-query';
 import { createKnowledgeBaseInvitationInputSchema } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeBaseMemberSummary } from '@fob/shared/knowledge/contracts';
-import { UsersThree, DotsThree, LinkSimple, Eye, Clock, Copy } from '@/components/icons';
+import { UsersThree, DotsThree, LinkSimple, Clock, Copy } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { Button } from '@/components/ui/button';
 import { AnchoredPopover } from '@/components/ui/anchored-popover';
@@ -134,7 +134,12 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
     {fieldError ? <p className={styles.fieldError} role="alert" id={`${emailId}-error`}>{fieldError}</p> : null}
     {owner && replacing && !fieldError ? <p className={styles.fieldHint} id={`${emailId}-hint`}>{t('replacing')}</p> : null}
     {error ? <AppAlert tone="error" title={error} /> : null}
-    {liveInvite ? <div className={styles.linkCard}><span className={styles.noteIcon}><LinkSimple size={18} aria-hidden /></span><div><strong>{t('ready')}</strong><p>{t('expires', { email: liveInvite.invitation.email })}</p></div><Button variant="outline" size="sm" className={styles.copyButton} disabled={Boolean(busy)} onClick={() => void copy()}>{t('copy')}</Button></div> : <p className={styles.accessNote}><Eye size={14} aria-hidden /><span>{t('publicAccess')}</span></p>}
+    <div className={styles.linkCard}><span className={styles.noteIcon}><LinkSimple size={18} aria-hidden /></span><div><strong>{t(liveInvite ? 'ready' : 'inviteLink')}</strong><p>{liveInvite ? t('expires', { email: liveInvite.invitation.email }) : t(owner ? 'linkHint' : 'ownerOnly')}</p></div>
+      <Button variant="outline" size="sm" className={styles.copyButton} loading={!liveInvite && busy === 'create'} disabled={!owner || Boolean(busy && (liveInvite || busy !== 'create'))} onClick={() => {
+        if (liveInvite) void copy();
+        else { if (!email.trim()) { setFieldError(t('invalidEmail')); emailInput.current?.focus(); } else emailInput.current?.form?.requestSubmit(); }
+      }}>{t(liveInvite ? 'copy' : replacing ? 'reissue' : 'getLink')}</Button>
+    </div>
     {directory.isPending ? <div className={styles.state} role="status">{t('loading')}</div> : directory.isError ? <div className={styles.state}><AppAlert tone="error" title={t('failed')} description={organizationErrorTextOf(directory.error)} /><Button variant="outline" size="sm" onClick={() => void directory.refetch()}>{t('retry')}</Button></div> : <>
       <div className={styles.listHeading}><span>{t('joined')}</span><span>{members.length}</span><span className={styles.scope}>{base.name}</span></div>
       <ul className={styles.members} aria-label={t('joined')}>{members.map(member => <JoinedMember member={member} key={member.userId} expanded={memberMenu?.userId === member.userId} onMore={anchor => setMemberMenu(memberMenu?.userId === member.userId ? null : { userId: member.userId, anchor })} />)}</ul>

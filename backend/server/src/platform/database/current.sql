@@ -55,6 +55,7 @@ CREATE TABLE "auth"."user" (
 	"email" text NOT NULL,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"image" text,
+	"signature" varchar(160) DEFAULT '' NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email"),
@@ -508,6 +509,7 @@ CREATE TABLE "resources"."teamspace" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "teamspace_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "teamspace_parent_not_self" CHECK ("resources"."teamspace"."parent_id" IS NULL OR "resources"."teamspace"."parent_id" <> "resources"."teamspace"."id"),
 	CONSTRAINT "teamspace_name_not_empty" CHECK (length(btrim("resources"."teamspace"."name")) > 0)
 );
 
@@ -589,8 +591,6 @@ ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_created_by_user_
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_parent_fk" FOREIGN KEY ("knowledge_base_id","parent_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
-ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_parent_not_self" CHECK ("parent_id" IS NULL OR "parent_id" <> "id");
-CREATE INDEX "teamspace_parent_idx" ON "resources"."teamspace" ("knowledge_base_id","parent_id");
 CREATE INDEX "account_user_idx" ON "auth"."account" USING btree ("user_id");
 CREATE INDEX "session_user_idx" ON "auth"."session" USING btree ("user_id");
 CREATE INDEX "session_expiry_idx" ON "auth"."session" USING btree ("expires_at");
@@ -640,3 +640,4 @@ CREATE INDEX "personal_access_token_user_idx" ON "resources"."personal_access_to
 CREATE INDEX "share_link_page_idx" ON "resources"."share_link" USING btree ("knowledge_base_id","page_id");
 CREATE INDEX "share_link_token_idx" ON "resources"."share_link" USING btree ("knowledge_base_id","token_hash");
 CREATE INDEX "share_link_created_by_idx" ON "resources"."share_link" USING btree ("created_by");
+CREATE INDEX "teamspace_parent_idx" ON "resources"."teamspace" USING btree ("knowledge_base_id","parent_id");

@@ -105,19 +105,20 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
     SELECT count(*) FILTER (WHERE kind='created')::int AS created,
       count(*) FILTER (WHERE kind='commented')::int AS commented
     FROM personal_activity WHERE (at AT TIME ZONE 'Asia/Shanghai')::date = ${day ?? new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' })}::date`)).rows;
-  const [received] = (await db.execute<{ count: number }>(sql`WITH ${visible}
-    SELECT count(*)::int AS count FROM resources.comment_like l
+  const [received] = (await db.execute<{ count: number; total: number }>(sql`WITH ${visible}
+    SELECT count(*) FILTER (WHERE (l.created_at AT TIME ZONE 'Asia/Shanghai')::date = ${day ?? new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' })}::date)::int AS count,
+      count(*)::int AS total FROM resources.comment_like l
     JOIN resources.comment c ON c.knowledge_base_id=l.knowledge_base_id AND c.id=l.comment_id
     JOIN resources.comment_thread t ON t.knowledge_base_id=c.knowledge_base_id AND t.id=c.thread_id
     JOIN visible_pages p ON p.id=t.page_id
     WHERE l.knowledge_base_id=${kb}::uuid AND c.author_id=${user}::uuid AND l.user_id<>${user}::uuid
-      AND (l.created_at AT TIME ZONE 'Asia/Shanghai')::date = ${day ?? new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' })}::date`)).rows;
+      `)).rows;
   return {
     documentTotal: totals?.count ?? 0, sharedDocuments: totals?.shared ?? 0,
     documents: docs.rows.slice(0,40).map(resource), nextDocumentOffset: docs.rows.length>40 ? documentOffset+40 : null,
     folders: folders.rows.map(resource), saved: saved.rows.map(resource), calendar: calendar.rows,
     activities: activities.rows.slice(0,40).map(row => ({ ...row, at: instant(row.at) })),
-    nextActivityOffset: activities.rows.length>40 ? activityOffset+40 : null, receivedLikes: received?.count ?? 0,
+    nextActivityOffset: activities.rows.length>40 ? activityOffset+40 : null, receivedLikes: received?.count ?? 0, receivedLikesTotal: received?.total ?? 0,
     dayCounts: dayCounts ?? { created: 0, commented: 0 },
   };
 }

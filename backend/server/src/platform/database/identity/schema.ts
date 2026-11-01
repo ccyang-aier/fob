@@ -10,6 +10,7 @@ export const authUser = identity.table('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verified').notNull().default(false),
   image: text('image'),
+  signature: varchar('signature', { length: 160 }).notNull().default(''),
   createdAt: instant('created_at').notNull().defaultNow(),
   updatedAt: instant('updated_at').notNull().defaultNow(),
 }, (table) => [

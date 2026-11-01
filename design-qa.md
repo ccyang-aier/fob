@@ -1,54 +1,57 @@
-# Profile dialog and compact member menu QA
+# Profile enhancement and invitation-link QA
 
 final result: passed
 
-2026-11-02 latest revision. The user explicitly retired the full personal page and requested the early Git popup with a six-month calendar and earned medals. This report supersedes the earlier personal-homepage layout report.
+2026-11-02 current revision, superseding the previous 440px gray-cover profile report. The requested flow is: account menu -> profile -> inline edit or second-level avatar picker; system-bar members -> invitation-link card.
 
-## Flow and reference evidence
+## Changes and reference comparison
 
-The flow under test is: current knowledge workspace -> account menu -> Personal information -> native profile dialog; system-bar Members -> compact directory -> member action menu.
+The profile is now 560px wide. It reuses the exact login AuthBackdrop component and removes the old decorative ribbon implementation. Name and signature appear as muted single-line content by default; the top-right pencil enables inline editing, with a focus underline and compact save/cancel controls. Document, earned-coffee and received-like statistics sit above the six-month calendar and earned medals.
 
-Profile baseline: Git 7e67995, immediately before 6464c2a introduced the full page. The original 440px dialog, 100px gray canvas cover and 62px overlapping avatar were recovered selectively. Current identity validation/write guards are retained. Name input, six-month chart and earned medals are arranged below the identity summary. The full-page route, tabs, timeline and resource rail are retired.
+Member evidence: user attachment codex-clipboard-95e3381c-81b1-4bfa-901a-8174626d181b.png and the earlier invitation reference. The tiny public-document note is removed. The 352px popover now always contains the rounded link-icon tile, invitation-link title/caption and pill Get link button, followed by the actual member directory. It produces a recipient-bound invitation, not an invented anonymous knowledge-base share.
 
-Member reference: user image codex-clipboard-1d72afb6-de51-4556-8c49-c253f7ec521c.png. The oversized result in codex-clipboard-d5fcd830-acb0-4d52-b4d4-2455cc97cdb1.png prompted this revision. The current 352px surface follows the rounded invitation field/button and avatar rows with circular ellipsis. Large repeated headings, access card and bottom management strip were removed. A real generated invitation still produces its own link card; the reference's anonymous file-share status is not fabricated for a knowledge-base invitation.
+24 separate imagegen avatars were generated, inspected together and encoded as local 256px WebP assets, 8 each in pets, illustrations and landscapes. The set totals 240550 bytes. The local manifest records file hashes and generation source; no remote avatar dependency is required.
 
-Mismatch ledger resolved: oversized member surface -> reduced width/padding/row geometry; full profile instead of historical modal -> restored original host/cover; annual calendar -> six-month window; extra chart scrollbar -> constrained last-month grid column; invisible/misplaced date popover -> profile animation no longer creates a transformed fixed-position containing block; responsive sidebar collapse destroyed the modal -> account host remains mounted while its trigger is hidden.
+Resolved issues found while iterating: the old boxed name field was replaced; daily likes were unsuitable for a lifetime statistic and now have a separate aggregate; duplicate accessible upload controls were removed; closing the second native dialog originally left focus on body and now explicitly closes/restores focus to the avatar trigger.
 
 ## Environment and checks
 
-Existing authenticated IAB controlled through CUA, localhost:3001, real current knowledge base. Browser plugin skill is not listed; the available CUA browser runtime was used for every browser interaction, with no terminal browser runner. Default CSS viewport 1488x917; narrow CSS viewport approximately 410x888. Temporary viewport override was reset and light theme restored.
+Existing authenticated IAB through CUA only, localhost:3001, original current document and knowledge base. Default CSS 1488x917; narrow CSS approximately 410x888. No standalone browser runner, no altered browser visibility preference. Temporary viewport override was reset and light theme restored.
 
 | Check | Result | Evidence |
 | --- | --- | --- |
-| Page identity and meaningful content | Pass | Fob title, existing knowledge URL and actual document list; profile opening leaves URL unchanged |
-| Framework overlay | Pass | No overlay after final reload and exercised flows |
-| Console health | Pass | Final browser error/warn query returned an empty list |
-| Profile sizing | Pass | Native modal width 440px, height about 624px, no content overflow |
-| Six-month real calendar | Pass | 184 enabled dates, 2026-05-03 through 2026-11-02, 27 columns, total 6 actual activities |
-| Day detail interaction | Pass | November 1 shows 3 document creations and three other category counts of zero; Escape preserves the profile |
-| Earned medals | Pass | Only Knowledge gardener is present for this actual account |
-| Form and authentication separation | Pass | Empty-name validation, Cancel and focus return; switch-account dialog still renders email/password UI with zero calendar cells |
-| Member geometry and interaction | Pass | About 352x227px, actual two-person directory, circular action menu, nested Escape/focus restoration, invalid and duplicate-email feedback |
-| Responsive behavior | Pass | Profile about 387x613px and member panel within narrow viewport; desktop/narrow resize preserves open profile across automatic sidebar collapse |
-| Light/dark | Pass | Profile cover, identity, calendar and medal inspected in both themes |
+| Identity, content and overlay | Pass | Fob title, existing document remains underneath, meaningful profile content, no framework overlay after final reload |
+| Console | Pass | Final fresh-reload window has no error/warn entries |
+| Desktop profile | Pass | About 560x692px; muted read-only fields have no box shadow/border frame |
+| Inline editing | Pass | Pencil unlocks fields; focused name uses ink underline; empty-name validation, Enter save and Escape cancel work |
+| Persistence | Pass | Built-in avatar, uploaded PNG-derived WebP and test signature saved; full reload retained them; original signature/avatar subsequently restored |
+| Avatar modal | Pass | 24 local choices, live preview, confirm/reset/cancel; Escape retains parent and returns focus to avatar trigger |
+| Statistics and calendar | Pass | Real 6 documents, 3 check-in coffees, 0 received likes; 184 dates and 6 real events; November 1 detail shows 3 creations and other categories zero |
+| Narrow layouts | Pass | Profile about 387x650px; picker about 387x723px with all 24 choices; member panel 352x267px; no horizontal overflow |
+| Light/dark | Pass | Profile background/content and invitation card inspected in both themes |
+| Invitation card | Pass | Always visible, Get link validates/focuses blank email without mutation, permission gates retained |
+
+The profile remains a native modal, without a personal workbench page or extra navigation tabs. Sidebar collapse preserves the profile instance. The final account content is the original Local Admin name, empty signature and default initial avatar.
 
 ## Engineering and limits
 
-- Final pnpm check passed: frontend/server/shared TypeScript, architecture and copied-capability verification, bilingual catalogs, full ESLint/icon policy and production build.
-- 31 targeted tests, 201 assertions passed across six files. Includes six-month month-end/leap-year arithmetic and out-of-range counts, retired profile URL/tab/split cleanup, live document hosts, nested popover dismissal and existing member invitation guards.
-- Web 3001, business API 8721 and permission workers remain running. No packages, migrations or development fixture data were added. Invitation and ACL backend code was not changed by this revision.
-- The actual account has only creation events; zero comment/like/subscription counts are shown truthfully. Name updates and new-member invitations were not submitted in the live workspace. No second browser engine was tested.
-- An intermediate hot-reload retained a retired profile tab and showed an error until reload; persisted-tab and URL cleanup are covered by tests and the final fresh-load flow. Acceptance evidence uses the final build, not that intermediate state.
+- Final pnpm check passed: frontend/server/shared TypeScript, architecture and copied-capability gate, bilingual messages, full ESLint, icon policy and production build.
+- 64 targeted tests passed with 1344 assertions: 38 PostgreSQL/HTTP, image/schema tests and 26 frontend API/member/calendar tests. Disposable databases were removed.
+- Existing database received only the additive signature column upgrade; database check reports ready, 37 tables and 32 forced-RLS resource tables. No database reset, new dependency, invitation API change or ACL rewrite.
+- Upload validation is bounded by the existing 16 KiB identity request limit. The browser normalizes the selected image; the server restricts formats/dimensions/catalog origins. A roughly 2 MB generated PNG became a 192px WebP payload of about 6.4 KB and was saved/reloaded successfully.
+- Coffee is cumulative check-in awards from the actual account ledger; the product has no gifting service. Received likes are cumulative likes by others on the user's visible comments in the selected knowledge base, separately from the existing day-specific field.
+- Real account test content was restored. No new member invitation was created in the development knowledge base. No second browser engine, physical mobile device, or SMTP delivery was tested.
+- Web 3001, API 8721 and business workers remain running. Screenshots and high-resolution generated source images stay outside Git.
 
 ## Evidence
 
 Directory: C:/Users/17335/.codex/visualizations/2026/11/01/01a19754-a727-7542-8e55-1378292591bf/
 
-- profile-modal-desktop.jpg: restored modal in its actual desktop context.
-- profile-modal-day-details.jpg: real daily category popover within the native modal.
-- profile-modal-dark.jpg: dark profile material and chart.
-- profile-modal-mobile.jpg: narrow profile layout.
-- members-compact-desktop.jpg: compact current members and invite controls.
-- members-compact-mobile.jpg: compact directory within the narrow viewport.
+- profile-enhanced-desktop.jpg: final default profile.
+- profile-enhanced-dark.jpg and profile-enhanced-mobile.jpg: themes and narrow layout.
+- profile-enhanced-day-details.jpg: actual daily counts.
+- profile-avatar-picker.jpg and profile-avatar-picker-mobile.jpg: 24-asset second-level picker.
+- knowledge-invitation-link.jpg, knowledge-invitation-link-dark.jpg, knowledge-invitation-link-mobile.jpg: actual link card.
+- avatar-catalog.jpg: inspection board for the generated set.
 
-Screenshots remain outside Git. Earlier profile-home and knowledge-members captures describe superseded layouts.
+Earlier profile-modal, profile-home and members-compact captures describe superseded layouts.

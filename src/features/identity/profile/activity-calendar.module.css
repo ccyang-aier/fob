@@ -1,5 +1,5 @@
 .calendarCard { container:activity-calendar / inline-size; --heat-gap:3px; --heat-0:color-mix(in srgb,var(--panel) 96%,var(--ink)); --heat-1:#c5efd6; --heat-2:#82dba6; --heat-3:#39c879; --heat-4:#079344; min-width:0; }
-.calendarLayout,.legend { --heat-cell:clamp(8px,calc((100cqw - 32px - (var(--activity-columns) - 1) * var(--heat-gap)) / var(--activity-columns)),12px); }
+.calendarLayout,.legend { --heat-cell:clamp(8px,calc((100cqw - 32px - (var(--activity-columns) - 1) * var(--heat-gap)) / var(--activity-columns)),16px); }
 .calendarHeading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
 .calendarHeading h3 { display:flex; flex:0 0 auto; align-items:center; margin:0; font-size:12px; font-weight:550; }
 .calendarHeading h3 > span:last-child { font-weight:400; color:var(--muted-strong); }

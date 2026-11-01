@@ -16,7 +16,7 @@
 }
 .dialog::backdrop { background: color-mix(in srgb, var(--modal-backdrop) 50%, transparent); backdrop-filter: blur(3px); }
 .dialog[open] { animation: appear .35s cubic-bezier(.2, .7, .1, 1) both; }
-.profileDialog { width:440px; }
+.profileDialog { width:560px; }
 .profileDialog[open] { animation-name:profile-appear; }
 .close { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid transparent; border-radius: 10px; color: var(--muted-strong); outline: none; cursor: pointer; }
 .close:focus-visible { border-color: var(--control-border); }

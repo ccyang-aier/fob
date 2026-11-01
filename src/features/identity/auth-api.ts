@@ -31,6 +31,7 @@ export type FobAuthUser = {
   name: string;
   emailVerified: boolean;
   image?: string | null;
+  signature?: string;
 };
 
 /** `GET /api/auth/get-session` — `{session, user}` or `null` without a session. */
@@ -122,7 +123,7 @@ export function createFobAuthApi(deps: FobAuthApiDeps = {
     signOut(): Promise<{ success: boolean }> {
       return request('/sign-out', { method: 'POST', body: {} });
     },
-    updateProfile(input: { name: string }): Promise<{ status: boolean }> {
+    updateProfile(input: { name?: string; signature?: string; image?: string | null }): Promise<{ status: boolean }> {
       return request('/update-user', { method: 'POST', body: input });
     },
     getSession(): Promise<FobAuthSessionInfo | null> {

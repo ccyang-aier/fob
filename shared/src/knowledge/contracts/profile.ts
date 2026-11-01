@@ -23,7 +23,7 @@ export const personalProfileSchema = z.object({
   documents: z.array(profileResourceSchema), folders: z.array(profileResourceSchema), saved: z.array(profileResourceSchema),
   calendar: z.array(z.object({ date: z.string(), count: z.number().int().nonnegative(), counts: profileActivityCountsSchema })),
   activities: z.array(profileActivitySchema), nextActivityOffset: z.number().int().nullable(),
-  receivedLikes: z.number().int().nonnegative(), sharedDocuments: z.number().int().nonnegative(),
+  receivedLikes: z.number().int().nonnegative(), receivedLikesTotal: z.number().int().nonnegative().default(0), sharedDocuments: z.number().int().nonnegative(),
   dayCounts: z.object({ created: z.number().int().nonnegative(), commented: z.number().int().nonnegative() }),
 });
 export type PersonalProfile = z.infer<typeof personalProfileSchema>;
