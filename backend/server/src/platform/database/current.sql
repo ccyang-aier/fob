@@ -501,6 +501,7 @@ CREATE TABLE "resources"."share_link" (
 CREATE TABLE "resources"."teamspace" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
+	"parent_id" uuid,
 	"name" varchar(120) NOT NULL,
 	"default_access" "resources"."permission_level",
 	"metadata" jsonb DEFAULT '{}'::jsonb NOT NULL,
@@ -587,6 +588,9 @@ ALTER TABLE "resources"."personal_access_token" ADD CONSTRAINT "personal_access_
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_created_by_user_id_fk" FOREIGN KEY ("created_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_parent_fk" FOREIGN KEY ("knowledge_base_id","parent_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_parent_not_self" CHECK ("parent_id" IS NULL OR "parent_id" <> "id");
+CREATE INDEX "teamspace_parent_idx" ON "resources"."teamspace" ("knowledge_base_id","parent_id");
 CREATE INDEX "account_user_idx" ON "auth"."account" USING btree ("user_id");
 CREATE INDEX "session_user_idx" ON "auth"."session" USING btree ("user_id");
 CREATE INDEX "session_expiry_idx" ON "auth"."session" USING btree ("expires_at");

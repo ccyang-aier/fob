@@ -8,6 +8,7 @@ import {
   Clock,
   DotsThree,
   Folder,
+  FileArrowUp,
   PencilSimple,
   Plus,
   Tag,
@@ -54,6 +55,7 @@ export function LocalLibraryNavigation({
   onCreateDocumentInFolder,
   onRenameFolder,
   onRemoveFolder,
+  onImportFolder,
   onCreateDocumentInTag,
   onCreateTag,
   onRenameTag,
@@ -71,7 +73,8 @@ export function LocalLibraryNavigation({
   onSelectDocument: (id: string) => void;
   onSelectFolder?: (id: string) => void;
   selectedFolderId?: string | null;
-  onCreateFolder: () => void;
+  onCreateFolder: (parentId?: string) => void;
+  onImportFolder: (id: string) => void;
   onCreateDocument: () => void;
   onCreateDocumentInFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
@@ -85,7 +88,21 @@ export function LocalLibraryNavigation({
 
   const compact = useKnowledgeNavigationCompact();
   const [foldersOpen, setFoldersOpen] = useState(true);
-  const [expandedFolderIds, setExpandedFolderIds] = useState<string[]>([]);
+  const revealPath: string[] = [];
+  let ancestor = selectedId
+    ? documents.find(document => document.id === selectedId)?.folderId
+    : folders.find(folder => folder.id === selectedFolderId)?.parentId;
+  while (ancestor && !revealPath.includes(ancestor)) {
+    revealPath.push(ancestor);
+    ancestor = folders.find(folder => folder.id === ancestor)?.parentId;
+  }
+  const revealKey = `${selectedId ?? selectedFolderId ?? ''}:${revealPath.join(',')}`;
+  const [revealedKey, setRevealedKey] = useState(revealKey);
+  const [expandedFolderIds, setExpandedFolderIds] = useState<string[]>(revealPath);
+  if (revealedKey !== revealKey) {
+    setRevealedKey(revealKey);
+    setExpandedFolderIds(current => [...new Set([...current, ...revealPath])]);
+  }
   const [renamingFolderId, setRenamingFolderId] = useState<string | null>(null);
   const [folderRenameDraft, setFolderRenameDraft] = useState('');
   const [tagsOpen, setTagsOpen] = useState(true);
@@ -98,6 +115,16 @@ export function LocalLibraryNavigation({
   const renameInputRef = useRef<HTMLInputElement>(null);
   const folderRenameInputRef = useRef<HTMLInputElement>(null);
   const recent = [...documents].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 10);
+  const folderRows: { folder: LocalLibrary['folders'][number]; depth: number }[] = [];
+  const seenFolders = new Set<string>();
+  function visitFolders(parentId: string | null, depth: number) {
+    for (const folder of folders.filter(item => (item.parentId ?? null) === parentId)) {
+      if (seenFolders.has(folder.id)) continue;
+      seenFolders.add(folder.id); folderRows.push({ folder, depth });
+      if (expandedFolderIds.includes(folder.id)) visitFolders(folder.id, depth + 1);
+    }
+  }
+  visitFolders(null, 0);
 
   useEffect(() => {
     if (!renamingTagId) return;
@@ -162,7 +189,7 @@ export function LocalLibraryNavigation({
                     ? knowledgeT('newFolder')
                     : knowledgeT('createAKnowledgeBaseFirst')
                 }
-                onClick={onCreateFolder}
+                onClick={() => onCreateFolder()}
                 className="rounded p-1 enabled:hover:bg-[var(--surface-hover)] disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <Plus size={14} />
@@ -172,12 +199,13 @@ export function LocalLibraryNavigation({
         />
         {foldersOpen ? (
           <div className="mt-0.5 space-y-0.5">
-            {folders.map((folder) => {
+            {folderRows.map(({ folder, depth }) => {
               const folderDocuments = documents.filter((doc) => doc.folderId === folder.id);
               const expanded = expandedFolderIds.includes(folder.id);
               return (
                 <div key={folder.id}>
                   <div
+                    style={{ paddingLeft: depth * 14 }}
                     data-selected={!selectedId && !activeTagId && selectedFolderId === folder.id ? 'true' : undefined}
                     className={cn(
                       styles.row,
@@ -259,6 +287,8 @@ export function LocalLibraryNavigation({
                             if (renamingFolderId === folder.id) event.preventDefault();
                           }}
                         >
+                          <DropdownMenuItem onSelect={() => { setExpandedFolderIds(current => [...new Set([...current, folder.id])]); onCreateFolder(folder.id); }}><Folder />{knowledgeT('newFolder')}</DropdownMenuItem>
+                          <DropdownMenuItem onSelect={() => onImportFolder(folder.id)}><FileArrowUp />{knowledgeT('importDocuments')}</DropdownMenuItem>
                           <DropdownMenuItem
                             onSelect={() => {
                               setFolderRenameDraft(folder.name);
@@ -285,7 +315,7 @@ export function LocalLibraryNavigation({
                       {folderDocuments.map((doc) => (
                         <SidebarRow
                           key={doc.id}
-                          depth={2}
+                          depth={2 + depth}
                           leading={
                             <PageIcon value={doc.icon} size={15} className="mr-2 shrink-0" />
                           }

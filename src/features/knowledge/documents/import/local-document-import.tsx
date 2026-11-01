@@ -4,7 +4,7 @@ import { knowledgeMessages } from './local-document-import.messages';
 import { useState } from 'react';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { saveLocalAsset } from '../../assets/local-assets';
-import { documentFileAccept, documentFileFormat, type DocumentFile } from '../previews/file-format';
+import { documentFileAccept, documentAttachmentAccept, documentFileFormat, type DocumentFile } from '../previews/file-format';
 import { FilePlus } from '@/components/icons';
 import type { JSONContent } from '@tiptap/core';
 import { MAX_TEXT_IMPORT_BYTES, parseTextDocument, textDocumentFormat, textDocumentTitle } from '@fob/shared/knowledge/text-import';
@@ -13,10 +13,10 @@ export type LocalDocumentImportItem = { name: string; text: string; file?: Docum
 export function LocalDocumentImport({
   onImport,
   knowledgeBaseId,
-  asFiles = false,
+  binaryOnly = false,
 }: {
   knowledgeBaseId: string;
-  asFiles?: boolean;
+  binaryOnly?: boolean;
   onImport: (items: LocalDocumentImportItem[]) => boolean;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
@@ -34,7 +34,8 @@ export function LocalDocumentImport({
           if (file.size > 100 * 1024 * 1024)
             throw new Error(knowledgeT('eachPreviewFileMustBeNoLargerThan'));
           const format = textDocumentFormat(file.name);
-          if (format && !asFiles) {
+          if (binaryOnly && format) throw new Error(knowledgeT('chooseASupportedFormatSuchAsPdfPptx'));
+          if (format) {
             if (file.size > MAX_TEXT_IMPORT_BYTES) throw new Error(knowledgeT('textTooLarge'));
             const text = await decodeDocumentText(file);
             return { name: textDocumentTitle(file.name), text, body: parseTextDocument(text, format).toJSON() as JSONContent };
@@ -88,7 +89,7 @@ export function LocalDocumentImport({
           className="sr-only"
           aria-label={knowledgeT('chooseDocumentFiles')}
           type="file"
-          accept={documentFileAccept}
+          accept={binaryOnly ? documentAttachmentAccept : documentFileAccept}
           multiple
           disabled={busy}
           onChange={(event) => {

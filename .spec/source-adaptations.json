@@ -12,8 +12,8 @@
     "sha256": "ff5e30ee40f9407a461bd3bab7ad8370deaa5c10cae1ad3a5e2847f3491a4de4"
   },
   "src/features/knowledge/data/knowledge-catalog-client.ts": {
-    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization.",
-    "sha256": "13a0d0ff62fad2ff9c5bb09f8af7d575390efe7c353f837644a0a0bea7a140c6"
+    "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "ff1c1204910dfd2de34ac7bdb4ab67d71f8814bef2419d232285bc6f6a7c3609"
   },
   "src/features/knowledge/data/use-project-knowledge-directory.test.tsx": {
     "reason": "Delete project-dependent directory hook/tests; the canonical knowledge-base resource provider owns the membership-only directory and source-qualified selection.",
@@ -44,8 +44,8 @@
     "sha256": "1d1ebdfb45f9923de7972198e436eee37debd3f8907def0576a4807a724f44c5"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle.",
-    "sha256": "7e9582c88caaf60025c3ad0396ac982faf58beb7ca1bc88f1618f2025bd31314"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "2962ab4beced70a6b11afd523c276575851b476fd57f2964b9ea5708c9a965ee"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -64,16 +64,16 @@
     "sha256": "f6ada04fe53f8fa591940038560245afdb1460c9ee57208d9b4f0110a1d14b0b"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle.",
-    "sha256": "f0f16ca01d894fcfdac234e32664ba292f77007a620ac281549f8f68508fd2c7"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "0e39a6a0a0d2dacf161de24b2648f62099590616fdcb4ced2ba097eee7ea4c78"
   },
   "src/features/knowledge/local/local-library.test.ts": {
     "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
     "sha256": "49f5a092c2917e3679f7d2fd4196bda08a1b1b3def57f958f92c1325d874168b"
   },
   "src/features/knowledge/local/local-library.ts": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents. Update imports for component ownership without changing behavior.",
-    "sha256": "6bdfad1ea898223b0c3251278fb100d75bc95786b4681cceb5c590b16415977f"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents. Update imports for component ownership without changing behavior. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "63fe1d04282c3a116c040bd06280ddf0979abc626f08c6a0396e412df0c74ff3"
   },
   "src/features/knowledge/navigation/knowledge-sidebar.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -169,8 +169,8 @@
     "sha256": "5751796247370f72ab946af90b9f8964aface89f848eec41d15e0129500794c9"
   },
   "shared/src/knowledge/contracts/organization.ts": {
-    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "41f180d8ee37ed0f0efe39c6329e3f1df3b070e9cd80b545db924dc475671fc2"
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "97d5cf8992b1ad1ee55c036c7d8e56751c7620487d84520131a5823bfae33546"
   },
   "src/features/companion/companion-layer.tsx": {
     "reason": "Keep the global companion in one viewport-sized manual popover with scoped menus/tooltips, escaping dialog transform/overflow without remounting the character or disabling native modal interactivity.",
@@ -221,16 +221,16 @@
     "sha256": "89ede81b313c12d0a32f06e2bc70bb0a069b2024a044f3a41103bfc46f06f13f"
   },
   "src/features/knowledge/dense-sidebar/sidebar-navigation.ts": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "d06775564725454748b63ea388700c67a160944c38670eeeb761c9bab080ae0c"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "8dc5a4a916ca310f328b6d12906e864a9934d14568031fa701fa5d0db6942912"
   },
   "src/features/knowledge/dense-sidebar/sidebar-project-tree.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Folder names open the real overview; disclosure controls only expand the resource tree. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "c5f908ec0670bbfcf087822e55bff7ee77834564793f0a94ddc998e7378b38a3"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Folder names open the real overview; disclosure controls only expand the resource tree. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "ad92059a7095c64ea37ff5cdb1133b60affd3d8216056fc69f53d6d75b19d134"
   },
   "src/features/knowledge/documents/file-document-preview.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "c886a8f902223322c4026ec066c8d6139a4372e91f1d36ed8b9867d503956250",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "639b18e589028ceba09f0d949f11a6d5a0542564dd0537ea0631640be7db912c",
     "relocatedTo": "src/features/knowledge/documents/previews/file-document-preview.tsx"
   },
   "src/features/knowledge/editor/block-modules/database-view/database-view-node-view.tsx": {
@@ -256,8 +256,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/document-more-menu.test.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu. Replace reserved import and move entries with permission-aware document management dialogs for both resource sources. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "0ab17559585325cf62f70a7ca1cf9ff94cf559f546abac5aeb44f432b9e8ffc2",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Open real document permissions and scoped statistics from the existing menu. Replace reserved import and move entries with permission-aware document management dialogs for both resource sources. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "97fe579dd8cf3ae36407aa4822c945cf93b9be391bdcc229d2aa673b5bc44fa3",
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/index.tsx"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
@@ -290,12 +290,12 @@
     "sha256": "0830426a28f886da4598855c4920909291839e3e63513a2be6e56aff270a1b8c"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "4416e141de10fb54a6f56a63189580b21c588da54c4ec1d0149260fbb859ff85"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Reveal the ancestor path when opening or refreshing a nested local target while preserving manual collapse afterward.",
+    "sha256": "f817bb56bc6a0721ee62df027f8d7d5c962995e6b5c04f20f3cb251292c03695"
   },
   "src/features/knowledge/navigation/library-canvas.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Update imports for component ownership without changing behavior.",
-    "sha256": "14dd9d4ec39bc76e1d579210765ba8e8529a3ec0cb70d73b281f0e3cee6f65bb"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Compose the server folder overview with existing authorized document creation, import and action flows. Supply current knowledge-base folders for the reference collection bulk move flow. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Update imports for component ownership without changing behavior. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "6be413c588c24ed21b9df40d081c00a2ee029283a22ac18abda6a1f0c4b0bad3"
   },
   "src/features/knowledge/navigation/page-icon.tsx": {
     "reason": "Render named icons and Emoji through the shared glyph sizing policy, reducing displayed dimensions by one 2px step while retaining stored IDs, colors, content and control layout. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render selected Unicode content icons through the shared local OpenMoji component without changing existing encoded glyph IDs or stored values. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -343,8 +343,8 @@
     "sha256": "dde4d314811b12f3891e9f3dd9bc11488a801ef5c15555cc36257ebee2f8d596"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
-    "sha256": "d0f514077a737316b9ea9cdda1d3207902da0f55d7a3e2abe13075e0e4c24d7a"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "f633c02998158179bfbecdd3eabfac336f181f07517d1a36716c7d25dfad294d"
   },
   "backend/server/src/modules/knowledge/pages/tree.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
@@ -432,24 +432,24 @@
     "sha256": "d72c0305318721d1c94423b56cb3f6ed69c83226f4a2bc663ba9e331f36fb5ce"
   },
   "src/features/knowledge/documents/document-folders.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "62b9a47cdb9f4c1d236f6299f458b6214e1938121db152710347acd94c4035cf"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "f8c57d1b7b35cce1c1e50539aae6a29a94a5c8e1d4340837748eaba2ac7f4262"
   },
   "src/features/knowledge/documents/document-visuals.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "5ab0ea222c4ebad35caacfacfb7f9bfb025e3239d19499bdb89fc6284aa19529"
   },
   "src/features/knowledge/documents/documents-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions.",
-    "sha256": "f3d32f1ec40c42453a6630ec934b299ffc9a9ecad6abe6d0f7507acf3e0a2923"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "c811fc26aa33a642184f2468ef3d2e5b57f47ef4bab5070cf8cb7d7d02efbc67"
   },
   "src/features/knowledge/documents/documents-toolbar.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
     "sha256": "0bef7dc7d3627d56ac3cb99b94dda7dbef46e65f43e96d4da4a8b1378f055cdc"
   },
   "src/features/knowledge/documents/local-document-import.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "2d208215a49f5dffd61b1d9809372c9a998b01117fe876152b3a34456ae7bc7e",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "8d34b731a6c4f9bda3e2f0e5e7cd17161b51ced8afa5d96315fa08da0d3a8fbb",
     "relocatedTo": "src/features/knowledge/documents/import/local-document-import.tsx"
   },
   "src/features/knowledge/documents/pdf-file-view.tsx": {
@@ -458,8 +458,8 @@
     "relocatedTo": "src/features/knowledge/documents/previews/pdf/pdf-file-view.tsx"
   },
   "src/features/knowledge/documents/text-file-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "76919a7e63707ba411d8dc33a71f747ba42cee4e4b93bf0a2d52c1dceb40b116",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "026e0755f5638ea799852710e20b4f8e23f64aaf8ca0abf2ff47eaaa2f9aec0a",
     "relocatedTo": "src/features/knowledge/documents/previews/text/text-file-view.tsx"
   },
   "src/features/knowledge/editor/awareness/awareness-members.tsx": {
@@ -775,12 +775,12 @@
     "relocatedTo": "src/features/knowledge/navigation/page-icon/page-icon.test.tsx"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
-    "reason": "Localize unavailable local folder links and document-list recovery.",
-    "sha256": "c55a25b60469441db96f73def6cdc7c04b48a17b9190c50a3efaae8255cdc675"
+    "reason": "Localize unavailable local folder links and document-list recovery. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "761420c7be7cd2f453d89b89767c9bb81654a37d73ab58990983cc53082602b8"
   },
   "src/features/knowledge/navigation/tree-stage.tsx": {
-    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "8e92cc0aa9e90be0ba94081d665e682a028d157dedd6c9cf806be41ed75e6d7d",
+    "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "c60f73410f32fe9b67dafab9f17c500525170c16a04c9573bf1b5f291f32bd15",
     "relocatedTo": "src/features/knowledge/navigation/tree/tree-stage.tsx"
   },
   "backend/server/src/modules/knowledge/search/keyword.ts": {
@@ -804,13 +804,13 @@
     "sha256": "0cb7d5c5aed815030f068bd9b74580eea85bdbcef9af6e7ceee7419cc5c40b03"
   },
   "src/features/knowledge/navigation/tree-model.ts": {
-    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "5bb5972ddade32c8dacec2846d3cf211c6f507a112518f6b918247dfea034833",
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "83b9f17b79f3b3f14728ab7c445afc9049e9ae3bfa816ee0dd641914fe15548f",
     "relocatedTo": "src/features/knowledge/navigation/tree/tree-model.ts"
   },
   "src/features/knowledge/navigation/tree-model.test.ts": {
-    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "9d5eeca71aa12335885ac0f7c25f6c075d8326b0ceebf302e4a4eea60b71b7c5",
+    "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "8e8faaec4f50628e2cd404173bf708da978f9a3ee7edd2bf08caaef6de9ceafe",
     "relocatedTo": "src/features/knowledge/navigation/tree/tree-model.test.ts"
   },
   "backend/server/src/modules/knowledge/import-export/body.test.ts": {
@@ -946,8 +946,8 @@
     "sha256": "84e96b653e74a1d46dea914e48b96024d395ab405c4cb5f1aade4b2cc9c6d847"
   },
   "src/features/knowledge/documents/file-document-surface.tsx": {
-    "reason": "Enable scoped import and authorized move actions from local and server file document headers; preserve original file preview and attachment behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Consume the independent identity context to remove the provider/account-view initialization cycle.",
-    "sha256": "6da3a60a259681dc3e4945d46fcac8a3ded658830463c2d9025594668fdf38e9",
+    "reason": "Enable scoped import and authorized move actions from local and server file document headers; preserve original file preview and attachment behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Consume the independent identity context to remove the provider/account-view initialization cycle. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "e00683e0c2bbd5ba05403356c90fdf4455323fe3ce028f94b15eda205aef184f",
     "relocatedTo": "src/features/knowledge/documents/previews/file-document-surface.tsx"
   },
   "src/features/knowledge/documents/local-document-import.messages.ts": {
@@ -1060,14 +1060,14 @@
     "sha256": "b45fd47ffd8e245229ddc41ae8c5c24fadd7e7fffa952dc3ee54ae0d2f71eef1"
   },
   "src/features/knowledge/documents/file-format.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
     "relocatedTo": "src/features/knowledge/documents/previews/file-format.ts",
-    "sha256": "5b7a014485e7235ccaf04d0c421954c09cf146fd4bc5fbe6e5fac79912178b57"
+    "sha256": "c992685dafa65cfc8cb176a10fdcda4c8e0535da80f1d49d73c7e0ff6afc31df"
   },
   "src/features/knowledge/documents/file-preview.module.css": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
     "relocatedTo": "src/features/knowledge/documents/previews/file-preview.module.css",
-    "sha256": "52f800442fe4914d179246c2920630c8a6220118f05deed94238a2965ee77b0e"
+    "sha256": "6065a7313341f811151625675d15600665f786c655bbc523823a7ad27d742574"
   },
   "src/features/knowledge/documents/file-source.messages.ts": {
     "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -1314,5 +1314,33 @@
   "src/features/knowledge/editor/extensions/document-search.ts": {
     "reason": "Cache matches and decorations; replace only the active highlight when navigating results while invalidating on document or query changes.",
     "sha256": "7182d8350be25e007616ba9049184a06cbd7775c70c2f79b2b1f79b45f66df0a"
+  },
+  "src/features/knowledge/dense-sidebar/sidebar-project-tree.messages.ts": {
+    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "72c67550c6dd56c7ce466d08e27d7a2e1225f930cfe5bf8cf78d84fc504aa17b"
+  },
+  "src/features/knowledge/documents/document-folders.messages.ts": {
+    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "ee297a89c0a4f2a8274b2340a2ef862b30fd88659eb5662f4a0ab9a072624ccb"
+  },
+  "src/features/knowledge/editor/block-modules/media-core/insert-media.ts": {
+    "reason": "Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "6bd57579ee0b2ed90c4aed0d7f244b3484d8adfa131a1273f1cd6f5d5d34461b"
+  },
+  "src/features/knowledge/local/local-library-navigation.messages.ts": {
+    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "7ebc2c4c04c735715dd36aab42dacc8d08d8897e2fadcfe6128e95d54c69642b"
+  },
+  "src/features/knowledge/navigation/create-teamspace-dialog.tsx": {
+    "reason": "Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "1ed58507d7c74744010d8b6515fc5a8bf206a922861a84fc24a94704a2c9efa7"
+  },
+  "src/features/knowledge/organization/hooks.tsx": {
+    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "7ac6ecd191cd28cd1051668dbc3effc95d8cd9c5049f5e35adc01223400ac0ff"
+  },
+  "backend/server/src/modules/knowledge/organization/teamspaces.integration.test.ts": {
+    "reason": "Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
+    "sha256": "c4d4910c452b30fc53949bbfc4d9ec7bc7599c77b916cadc7ace755fa62d4733"
   }
 }

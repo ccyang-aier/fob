@@ -31,7 +31,7 @@ export type LocalTag = { id: string; baseId: string; name: string; pageIds: stri
 export type LocalKnowledgeBase = { id: string; name: string };
 export type LocalLibrary = {
   bases: LocalKnowledgeBase[];
-  folders: { id: string; knowledgeBaseId: string; name: string; metadata?: FolderMetadata }[];
+  folders: { id: string; knowledgeBaseId: string; name: string; parentId?: string | null; metadata?: FolderMetadata }[];
   documents: LocalDocument[];
   tags: LocalTag[];
 };

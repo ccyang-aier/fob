@@ -182,9 +182,9 @@ export function useCreateTeamspaceMutation(knowledgeBaseId: string) {
   const queryClient = useQueryClient();
   const key = organizationQueryKeys.teamspaces(knowledgeBaseId);
   return useMutation({
-    mutationFn: (input: { name: string; defaultAccess: TeamspaceAccess }) => knowledgeCatalogClient.createTeamspace(knowledgeBaseId, input),
-    onMutate: ({ name, defaultAccess }) => {
-      const optimistic: TeamspaceRow = { knowledgeBaseId, id: pendingId(), name: name.trim(), defaultAccess };
+    mutationFn: (input: { name: string; defaultAccess: TeamspaceAccess; parentId?: string | null }) => knowledgeCatalogClient.createTeamspace(knowledgeBaseId, input),
+    onMutate: ({ name, defaultAccess, parentId }) => {
+      const optimistic: TeamspaceRow = { knowledgeBaseId, id: pendingId(), name: name.trim(), defaultAccess, parentId: parentId ?? null };
       return { tempId: optimistic.id, snapshot: applyOptimisticList<TeamspaceRow>(queryClient, key, (items) => [...items, optimistic]) };
     },
     onSuccess: (created, _input, context) => {

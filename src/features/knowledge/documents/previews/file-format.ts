@@ -27,6 +27,7 @@ export function documentFileFormat(name: string): FileFormat | null {
 }
 export const documentFileAccept =
   '.md,.markdown,.pdf,.pptx,.doc,.docx,.csv,.json,.txt,.text,.log,.png,.jpg,.jpeg,.webp,.gif';
+export const documentAttachmentAccept = documentFileAccept.split(',').filter(extension => !['markdown', 'text'].includes(documentFileFormat(extension) ?? '')).join(',');
 export function fileFromProperties(properties: Record<string, unknown>): DocumentFile | undefined {
   return typeof properties.fileAsset === 'string' &&
     /^asset:[a-f0-9]{64}$/.test(properties.fileAsset) &&

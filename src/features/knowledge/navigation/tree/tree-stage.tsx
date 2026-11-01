@@ -16,7 +16,7 @@ import { DialogButton, ModalDialog, NameField } from '../../organization/ui';
 import { KnowledgeBaseActions } from '../knowledge-base-actions';
 import { NavigationDialogPortal } from '../navigation-dialog-portal';
 import { TreeError, TreeForbidden, TreeLoading } from './page-tree-sidebar';
-import { buildNavigationSections, type NavigationPageNode } from './tree-model';
+import { buildNavigationSections, nestNavigationSections, type NavigationFolder, type NavigationPageNode } from './tree-model';
 import { sidebarDocuments } from './sidebar-documents';
 import { useSidebarCollections } from '../sidebar-collections';
 import { useDocumentNavigationActions } from '../document-navigation-actions';
@@ -39,6 +39,7 @@ export function KnowledgeTreeStage({
   onSelectPage,
   onRetryTeamspaces,
   onCreateTeamspace,
+  onImportFolder,
   notify,
   view,
   onNavigate,
@@ -53,7 +54,8 @@ export function KnowledgeTreeStage({
   onSelectSection: (id: string) => void;
   onSelectPage: (id: string) => void;
   onRetryTeamspaces: () => void;
-  onCreateTeamspace: () => void;
+  onCreateTeamspace: (parentId?: string) => void;
+  onImportFolder(id: string): void;
   notify: TreeNotifier;
   view: LibraryView;
   onNavigate: (view: LibraryView) => void;
@@ -116,18 +118,14 @@ export function KnowledgeTreeStage({
     defaultExpanded: true,
     children: node.children.map(toNode),
   });
-  const projects: SidebarProjectNode[] = sections.map((section) => ({
-    id: section.id,
-    kind: 'project',
-    label: section.title,
-    count: documents.filter((page) => page.teamspaceId === section.id).length,
-    projectIconId: 'folder',
-    folderIcon: section.icon,
-    starred: collections.starred.includes(section.id),
-    expandable: section.pages.length > 0,
-    defaultExpanded: true,
-    children: section.pages.map(toNode),
-  }));
+  const toFolder = (section: NavigationFolder): SidebarProjectNode => ({
+    id: section.id, kind: 'project', label: section.title, count: section.pageCount,
+    projectIconId: 'folder', folderIcon: section.icon, starred: collections.starred.includes(section.id),
+    canCreateFolder: canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin'), canImport: canEditTree(access),
+    expandable: section.pages.length > 0 || section.folders.length > 0, defaultExpanded: true,
+    children: [...section.folders.map(toFolder), ...section.pages.map(toNode)],
+  });
+  const projects = nestNavigationSections(sections).map(toFolder);
   const tags = collections.tags.map((tag) => ({ id: tag.id, name: tag.name, color: '#ada34e' }));
   const tagDocuments = Object.fromEntries(
     collections.tags.map((tag) => [
@@ -152,6 +150,8 @@ export function KnowledgeTreeStage({
     const teamspace = teamspaces.find((item) => item.id === id);
     if (!teamspace) return;
     if (action === 'new-document') void actions.create(id);
+    if (action === 'new-folder') onCreateTeamspace(id);
+    if (action === 'import') onImportFolder(id);
     if (action === 'rename' || action === 'delete') setFolderAction({ teamspace, action });
     if (action === 'toggle-star') toggleStar(id);
     if (action === 'add-tag') {
@@ -246,7 +246,7 @@ export function KnowledgeTreeStage({
           onToggleSection={(section) =>
             setExpandedSections((current) => ({ ...current, [section]: !current[section] }))
           }
-          onNewProject={onCreateTeamspace}
+          onNewProject={() => onCreateTeamspace()}
           onCreateTag={addTag}
           onSelectTagDocument={(id) => openPage(id, 'tag')}
           onToggleTag={(id) =>

@@ -13,7 +13,7 @@ import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
 
 const targetTeamspace = (scope: TeamspaceScope) => and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, scope.teamspaceId));
-const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, name: row.name, defaultAccess: row.defaultAccess, icon: row.metadata.icon ?? null });
+const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, parentId: row.parentId, name: row.name, defaultAccess: row.defaultAccess, icon: row.metadata.icon ?? null });
 
 async function loadTeamspace(db: ResourceTransaction, scope: TeamspaceScope, lock = false) {
   const query = db.select().from(teamspace).where(targetTeamspace(scope));
@@ -22,10 +22,12 @@ async function loadTeamspace(db: ResourceTransaction, scope: TeamspaceScope, loc
   return record;
 }
 
-async function containsPages(db: ResourceTransaction, scope: TeamspaceScope) {
+async function containsContent(db: ResourceTransaction, scope: TeamspaceScope) {
   // Recycled pages count too: deleting the container must not erase recoverable data.
   const [record] = await db.select({ id: page.id }).from(page).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.teamspaceId, scope.teamspaceId))).limit(1);
-  return record !== undefined;
+  if (record) return true;
+  const [child] = await db.select({ id: teamspace.id }).from(teamspace).where(and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.parentId, scope.teamspaceId))).limit(1);
+  return child !== undefined;
 }
 
 /**
@@ -60,6 +62,10 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
       const parsed = parseInput(createTeamspaceInputSchema, input);
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, role }) => {
         requireManager(role);
+        if (parsed.parentId) {
+          await loadTeamspace(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.parentId }, true);
+          await currentIdentity(db, identity);
+        }
         const [created] = await db.insert(teamspace).values({ ...parsed, id: randomUUID() }).returning();
         return teamspaceView(created!);
       });
@@ -95,7 +101,7 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
     async removeTeamspace(identity: FobIdentity, input: unknown) {
       const scope = parseInput(removeTeamspaceInputSchema, input);
       return mutate(identity, scope, async (db) => {
-        if (await containsPages(db, scope)) throw new ResourceRequestError('TEAMSPACE_NOT_EMPTY', 'Move or permanently remove all pages before deleting this teamspace.', 409);
+        if (await containsContent(db, scope)) throw new ResourceRequestError('TEAMSPACE_NOT_EMPTY', 'Move or remove all pages and child folders before deleting this folder.', 409);
         await db.delete(teamspace).where(targetTeamspace(scope));
         return { removed: true as const };
       });

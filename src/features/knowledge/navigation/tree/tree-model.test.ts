@@ -8,6 +8,7 @@ import {
   recycledRootPages,
   stepNavigationFocus,
   untitledPageLabel,
+  nestNavigationSections,
 } from './tree-model';
 
 const teamspace = (id: string, name: string): Teamspace => ({
@@ -43,6 +44,20 @@ const tsA = 'a0000000-0000-4000-8000-00000000000a';
 const tsB = 'b0000000-0000-4000-8000-00000000000b';
 
 describe('buildNavigationSections', () => {
+  test('nested folders remain under their parent and collapse with it, independently of page parents', () => {
+    const childId = 'child-folder', nestedId = 'nested-folder';
+    const sections = buildNavigationSections([
+      { ...teamspace(nestedId, 'Nested'), parentId: childId },
+      teamspace(tsA, 'Parent'),
+      { ...teamspace(childId, 'Child'), parentId: tsA },
+    ], [page({ id: 'nested-document', teamspaceId: nestedId, parentId: null, position: 'a0', title: 'Nested document' })]);
+    const roots = nestNavigationSections(sections);
+    expect(roots).toHaveLength(1);
+    expect(roots[0].folders[0].folders[0].id).toBe(nestedId);
+    expect(flattenNavigationTree(sections, {}).map(item => item.key)).toEqual([`section:${tsA}`]);
+    const rows = flattenNavigationTree(sections, { [`section:${tsA}`]: true, [`section:${childId}`]: true, [`section:${nestedId}`]: true });
+    expect(rows.map(item => [item.key, item.depth])).toEqual([[`section:${tsA}`, 0], [`section:${childId}`, 1], [`section:${nestedId}`, 2], ['page:nested-document', 3]]);
+  });
   test('folder icons carry the catalog value and removing the value restores the default glyph', () => {
     const folder = { ...teamspace(tsA, '产品'), icon: 'glyph:flask:#20b9eb' };
     expect(buildNavigationSections([folder], [])[0].icon).toBe(folder.icon);

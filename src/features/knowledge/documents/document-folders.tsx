@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { DotsThree } from '@/components/icons';
+import { DotsThree, FileArrowUp, Folder } from '@/components/icons';
 import { FolderArtwork } from './document-visuals';
 import type { DocumentFolder } from './types';
 import styles from './documents-page.module.css';
@@ -16,12 +16,18 @@ export function DocumentFolders({
   onOpenFolder,
   onCreateFolder,
   canEdit,
+  onCreateSubfolder,
+  onImportFolder,
+  canCreateFolder = canEdit,
 }: {
   visibleFolders: DocumentFolder[];
   allFolders: boolean;
   onOpenFolder: (id: string) => void;
   onCreateFolder?: () => void;
   canEdit: boolean;
+  onCreateSubfolder?(id: string): void;
+  onImportFolder?(id: string): void;
+  canCreateFolder?: boolean;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
   return (
@@ -48,6 +54,8 @@ export function DocumentFolders({
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {onImportFolder && <DropdownMenuItem disabled={!canEdit} onSelect={() => onImportFolder(folder.id)}><FileArrowUp size={14} />{knowledgeT('importDocuments')}</DropdownMenuItem>}
+              {onCreateSubfolder && <DropdownMenuItem disabled={!canCreateFolder} onSelect={() => onCreateSubfolder(folder.id)}><Folder size={14} />{knowledgeT('newFolder')}</DropdownMenuItem>}
               <DropdownMenuItem onSelect={() => onOpenFolder(folder.id)}>
                 {knowledgeT('openFolder')}
               </DropdownMenuItem>

@@ -1,5 +1,6 @@
 import { defineMessages } from '@/lib/i18n';
 export const messages = defineMessages({
+  createFolder: ['创建文件夹', 'Create folder'],
   search: ['搜索知识', 'Search knowledge'], placeholder: ['搜索文档标题与正文…', 'Search document titles and content…'],
   anyFolder: ['所有文件夹', 'Any folder'], anyAuthor: ['任何作者', 'Any author'], filterPlaceholder: ['筛选…', 'Filter…'], noOptions: ['无匹配项', 'No matches'], clear: ['清除筛选', 'Clear filters'],
   results: ['搜索结果', 'Search results'], recent: ['最近更新', 'Recently updated'], count: ['{count} 个结果', '{count} results'], limit: ['显示前 {count} 项，请缩小搜索范围', 'Showing the first {count}. Refine your search.'],

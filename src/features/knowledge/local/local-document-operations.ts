@@ -13,10 +13,9 @@ export function moveLocalDocument(store: Store, scope: Scope, folderId: string |
   });
 }
 
-export function importLocalDocuments(store: Store, scope: Scope, items: LocalDocumentImportItem[], missing: string) {
+export function importLocalFolderDocuments(store: Store, scope: { knowledgeBaseId: string; folderId: string }, items: LocalDocumentImportItem[], missing: string) {
   store.update(current => {
-    const source = current.documents.find(item => item.baseId === scope.knowledgeBaseId && item.id === scope.pageId && !item.deleted);
-    if (!source || (source.folderId && !current.folders.some(folder => folder.knowledgeBaseId === scope.knowledgeBaseId && folder.id === source.folderId))) throw new Error(missing);
-    return { ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(scope.knowledgeBaseId, item.name), folderId: source.folderId, file: item.file, ...(item.body ? { body: item.body } : {}) }))] };
+    if (!current.folders.some(folder => folder.knowledgeBaseId === scope.knowledgeBaseId && folder.id === scope.folderId)) throw new Error(missing);
+    return { ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(scope.knowledgeBaseId, item.name), folderId: scope.folderId, file: item.file, ...(item.body ? { body: item.body } : {}) }))] };
   });
 }

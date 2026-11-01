@@ -97,6 +97,35 @@ beforeAll(async () => {
 afterAll(async () => { if (server) await server.close(); }, 30_000);
 
 describe('Teamspace metadata and root defaults over real HTTP/PostgreSQL', () => {
+  test('nested folders persist their parent and a nonempty parent cannot be removed', async () => {
+    const parent = await create('Hierarchy parent', 'edit');
+    const child = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Child', parentId: parent.id, defaultAccess: 'edit' }), 201);
+    const nested = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Nested', parentId: child.id }), 201);
+    expect((await result<Teamspace>(request(path(child)))).parentId).toBe(parent.id);
+    expect(nested.parentId).toBe(child.id);
+    expect((await request(path(parent), owner, 'DELETE', {})).status).toBe(409);
+    expect((await request(path(child), owner, 'PATCH', { parentId: nested.id })).status).toBe(400);
+    await result(request(path(nested), owner, 'DELETE', {}));
+    await result(request(path(child), owner, 'DELETE', {}));
+    await result(request(path(parent), owner, 'DELETE', {}));
+  });
+
+  test('child creation rejects foreign parents and readers, with a database boundary as well', async () => {
+    const parent = await create('Local parent');
+    const foreign = await create('Foreign parent', null, outsider, otherId);
+    expect((await request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Rejected', parentId: foreign.id })).status).toBe(404);
+    expect((await request(`/${knowledgeBaseId}/teamspaces`, regular, 'POST', { name: 'Rejected', parentId: parent.id })).status).toBe(403);
+    await expect(server.database.admin.query('INSERT INTO resources.teamspace (knowledge_base_id, id, parent_id, name) VALUES ($1, $2, $3, $4)', [knowledgeBaseId, randomUUID(), foreign.id, 'Invalid foreign parent'])).rejects.toMatchObject({ code: '23503' });
+  });
+
+  test('removing a disposable knowledge base cascades through its complete folder hierarchy', async () => {
+    const resource = await result<{ id: string }>(request('', owner, 'POST', { name: 'Nested cascade fixture' }), 201);
+    const parent = await create('Parent', null, owner, resource.id);
+    await result(request(`/${resource.id}/teamspaces`, owner, 'POST', { name: 'Child', parentId: parent.id }), 201);
+    await result(request(`/${resource.id}`, owner, 'DELETE', {}));
+    const remaining = await server.database.admin.query('SELECT id FROM resources.teamspace WHERE knowledge_base_id = $1', [resource.id]);
+    expect(remaining.rowCount).toBe(0);
+  });
   test('personal and team knowledgeBases use the same creation path with null as the safe default', async () => {
     for (const target of [personalId, knowledgeBaseId]) {
       const record = await result<Teamspace>(request(`/${target}/teamspaces`, owner, 'POST', { name: '  Research  ' }), 201);

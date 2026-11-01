@@ -36,6 +36,7 @@ import { KnowledgeEmptyState } from '../knowledge-empty-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { LocalFolderOverview } from '../discovery/local-folder-overview';
 import { LocalDocumentImport } from '../documents/import/local-document-import';
+import { FolderImportDialog } from '../documents/import/folder-import-dialog';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -84,6 +85,8 @@ export function LocalKnowledgeResource({
   }, [setStoredSelectedId, navigationActive, knowledgeBaseId, tabSearch]);
   const [activeTagId, setActiveTagId] = usePageSessionState<string | null>('tag', null);
   const [creation, setCreation] = useState<'document' | 'folder' | null>(null);
+  const [creationParentId, setCreationParentId] = useState<string | null>(null);
+  const [importFolderId, setImportFolderId] = useState<string | null>(null);
   const { notify } = useAppAlert();
   useEffect(() => {
     if (!navigationActive || !selectedId) return;
@@ -196,9 +199,10 @@ export function LocalKnowledgeResource({
               onSelectDocument={openDocument}
               selectedFolderId={folderId}
               onSelectFolder={openFolder}
-              onCreateFolder={() => {
-                if (base) setCreation('folder');
+              onCreateFolder={parentId => {
+                if (base) { setCreationParentId(parentId ?? null); setCreation('folder'); }
               }}
+              onImportFolder={setImportFolderId}
               onCreateDocument={() => {
                 if (base) setCreation('document');
               }}
@@ -213,17 +217,18 @@ export function LocalKnowledgeResource({
                 write((current) => ({
                   ...current,
                   folders: current.folders.map((folder) =>
-                    folder.id === id ? { ...folder, name } : folder,
+                    folder.id === id && folder.knowledgeBaseId === knowledgeBaseId ? { ...folder, name } : folder,
                   ),
                 }))
               }
               onRemoveFolder={(id) => {
+                if (folders.some(folder => folder.parentId === id)) { notify('error', knowledgeT('folderHasChildren')); return; }
                 if (
                   write((current) => ({
                     ...current,
-                    folders: current.folders.filter((folder) => folder.id !== id),
+                    folders: current.folders.filter((folder) => folder.knowledgeBaseId !== knowledgeBaseId || folder.id !== id),
                     documents: current.documents.map((doc) =>
-                      doc.folderId === id ? { ...doc, folderId: undefined } : doc,
+                      doc.folderId === id && doc.baseId === knowledgeBaseId ? { ...doc, folderId: undefined } : doc,
                     ),
                   })) &&
                   folderId === id
@@ -264,16 +269,18 @@ export function LocalKnowledgeResource({
         />
       }
       overlays={
+        <>
         <LocalCreationDialog
           kind={creation}
           onClose={() => setCreation(null)}
           onCreate={(name) => {
             if (creation === 'folder' && base) {
+              if (creationParentId && !folders.some(folder => folder.id === creationParentId)) { notify('error', knowledgeT('folderUnavailable')); return; }
               const id = crypto.randomUUID();
               if (
                 !write((current) => ({
                   ...current,
-                  folders: [...current.folders, { id, knowledgeBaseId: base.id, name }],
+                  folders: [...current.folders, { id, knowledgeBaseId: base.id, name, parentId: creationParentId }],
                 }))
               )
                 return;
@@ -303,6 +310,8 @@ export function LocalKnowledgeResource({
             setCreation(null);
           }}
         />
+        {importFolderId && folders.some(folder => folder.id === importFolderId) && <FolderImportDialog knowledgeBaseId={knowledgeBaseId} source="local" folder={folders.find(folder => folder.id === importFolderId)!} onClose={() => setImportFolderId(null)} />}
+        </>
       }
     >
       {!base ? (
@@ -323,7 +332,7 @@ export function LocalKnowledgeResource({
             onCreateDocument={() => setCreation('document')}
             attach={(setFile) => (
               <LocalDocumentImport
-                asFiles
+                binaryOnly
                 knowledgeBaseId={knowledgeBaseId}
                 onImport={(items) => {
                   return items[0]?.file ? setFile(items[0].file) : false;
@@ -354,7 +363,7 @@ export function LocalKnowledgeResource({
           const remove = action === 'star' ? selected.every(item => item.starred) : selected.every(item => item.draft);
           if (!write(current => ({ ...current, documents: current.documents.map(item => item.baseId === base.id && ids.includes(item.id) ? { ...item, ...(action === 'star' ? { starred: !remove } : action === 'draft' ? { draft: !remove } : action === 'move' ? { folderId: destination } : { deleted: true }) } : item) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
         },
-      }} editorContext={folderEditorContext} onOpen={openDocument} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
+      }} editorContext={folderEditorContext} onOpen={openDocument} onOpenFolder={openFolder} childFolders={folders.filter(child => child.parentId === folderId).map(child => ({ id: child.id, name: child.name, icon: child.metadata?.icon }))} onCreateFolder={() => { setCreationParentId(folderId); setCreation('folder'); }} onCreate={() => setCreation('document')} onUpdate={async ({ name, ...patch }) => {
         if (!write(current => ({ ...current, folders: current.folders.map(folder => folder.id === folderId ? { ...folder, ...(name ? { name } : {}), metadata: { ...folder.metadata, ...patch, revision: (folder.metadata?.revision ?? 0) + 1 } } : folder) }))) throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
         return store.getSnapshot().folders.find(folder => folder.id === folderId)?.metadata?.revision ?? 0;
       }} upload={<LocalDocumentImport knowledgeBaseId={knowledgeBaseId} onImport={items => write(current => ({ ...current, documents: [...current.documents, ...items.map(item => ({ ...newLocalDocument(base.id, item.name), folderId, file: item.file, body: item.body ?? { type: 'doc', content: item.text.split(/\r?\n/).map(text => ({ type: 'paragraph', ...(text ? { content: [{ type: 'text', text }] } : {}) })) } }))] }))} />} renderMenu={id => <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem><DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>} /> : view === 'all-documents' ? (
@@ -388,7 +397,9 @@ export function LocalKnowledgeResource({
           onOpen={openDocument}
           onOpenFolder={openFolder}
           onCreate={() => setCreation('document')}
-          onCreateFolder={() => setCreation('folder')}
+          onCreateFolder={() => { setCreationParentId(null); setCreation('folder'); }}
+          onCreateSubfolder={id => { setCreationParentId(id); setCreation('folder'); }}
+          onImportFolder={setImportFolderId}
           upload={
             <LocalDocumentImport
               knowledgeBaseId={knowledgeBaseId}

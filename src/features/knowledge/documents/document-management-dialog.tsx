@@ -14,16 +14,14 @@ import { moveKnowledgePage, transferKnowledgePage } from '../data/pages-api';
 import { knowledgeQueryKeys } from '../data/query-keys';
 import { organizationQueryKeys } from '../organization/keys';
 import { useLocalLibrary } from '../local/use-local-library';
-import { importLocalDocuments, moveLocalDocument } from '../local/local-document-operations';
-import { KnowledgeBaseDocumentImport } from './import/server-document-import';
-import { LocalDocumentImport } from './import/local-document-import';
+import { moveLocalDocument } from '../local/local-document-operations';
 import { DocumentMoveForm } from './management/document-move-form';
 import { messages } from './management/document-management.messages';
 import styles from './management/document-management.module.css';
 
 type ManagementProps = {
   target: DocumentLinkTarget;
-  operation: 'import' | 'move';
+  operation: 'move';
   onClose: () => void;
   onBusyChange: (busy: boolean) => void;
 };
@@ -40,7 +38,7 @@ export function DocumentManagementDialog(props: Omit<ManagementProps, 'onBusyCha
   </DocumentModal>;
 }
 
-function ServerDocumentManagement({ target, operation, onClose, onBusyChange }: ManagementProps) {
+function ServerDocumentManagement({ target, onClose, onBusyChange }: ManagementProps) {
   const { t } = useTranslation(messages), { notify } = useAppAlert();
   const client = useQueryClient();
   const pages = useKnowledgePagesQuery(target.knowledgeBaseId);
@@ -54,11 +52,6 @@ function ServerDocumentManagement({ target, operation, onClose, onBusyChange }: 
   </>;
   if (pages.isPending || directory.isPending || directory.hasNextPage) return <p role="status">{t('loading')}</p>;
   if (!page || !folder) return <AppAlert tone="error" title={t('missing')} />;
-  if (operation === 'import') return <>
-    <p className={styles.location}>{t('importInto', { folder: folder.name })}</p>
-    <KnowledgeBaseDocumentImport knowledgeBaseId={target.knowledgeBaseId} teamspaceId={folder.id} />
-    <div className={styles.actions}><Button size="sm" variant="outline" onClick={onClose}>{t('close')}</Button></div>
-  </>;
   return <DocumentMoveForm
     folders={folders.filter(item => item.id !== page.teamspaceId || page.parentId !== null)}
     server onClose={onClose} onBusyChange={onBusyChange}
@@ -78,20 +71,12 @@ function ServerDocumentManagement({ target, operation, onClose, onBusyChange }: 
   />;
 }
 
-function LocalDocumentManagement({ target, operation, onClose, onBusyChange }: ManagementProps) {
+function LocalDocumentManagement({ target, onClose, onBusyChange }: ManagementProps) {
   const { t } = useTranslation(messages), { notify } = useAppAlert();
   const { library, store, error } = useLocalLibrary();
   const document = library.documents.find(item => item.baseId === target.knowledgeBaseId && item.id === target.pageId && !item.deleted);
   const folders = library.folders.filter(item => item.knowledgeBaseId === target.knowledgeBaseId);
   if (error || !store || !document) return <AppAlert tone="error" title={t('missing')} />;
-  if (operation === 'import') return <>
-    <p className={styles.location}>{t('importInto', { folder: folders.find(item => item.id === document.folderId)?.name ?? t('unfiled') })}</p>
-    <LocalDocumentImport knowledgeBaseId={target.knowledgeBaseId} onImport={items => {
-      importLocalDocuments(store, target, items, t('missing'));
-      return true;
-    }} />
-    <div className={styles.actions}><Button size="sm" variant="outline" onClick={onClose}>{t('close')}</Button></div>
-  </>;
   const destinations = [...folders, ...(document.folderId ? [{ id: 'unfiled', name: t('unfiled') }] : [])].filter(item => item.id !== document.folderId);
   return <DocumentMoveForm folders={destinations} server={false} onClose={onClose} onBusyChange={onBusyChange} onMove={async id => {
     moveLocalDocument(store, target, id === 'unfiled' ? undefined : id, t('missing'));

@@ -27,12 +27,26 @@ export type NavigationSection = {
   /** Teamspace id; the selection target of the skeleton tree. */
   id: string;
   title: string;
+  parentId?: string | null;
   icon?: string | null;
   /** Root-level pages of the teamspace, in fractional-index order. */
   pages: NavigationPageNode[];
   /** Every live page of the teamspace, roots and descendants included. */
   pageCount: number;
 };
+
+export type NavigationFolder = NavigationSection & { folders: NavigationFolder[] };
+
+/** Folder hierarchy is separate from the page hierarchy inside each folder. */
+export function nestNavigationSections(sections: readonly NavigationSection[]): NavigationFolder[] {
+  const nodes = new Map(sections.map(section => [section.id, { ...section, folders: [] } as NavigationFolder]));
+  const roots: NavigationFolder[] = [];
+  for (const section of sections) {
+    const node = nodes.get(section.id)!, parent = section.parentId ? nodes.get(section.parentId) : undefined;
+    if (parent) parent.folders.push(node); else roots.push(node);
+  }
+  return roots;
+}
 
 export function untitledPageLabel(locale?: Locale) {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
@@ -93,6 +107,7 @@ export function buildNavigationSections(
     return {
       id: teamspace.id,
       title: teamspace.name,
+      parentId: teamspace.parentId ?? null,
       icon: teamspace.icon ?? null,
       pages: roots.sort(byPosition).map(toNode),
       pageCount: visible,
@@ -169,7 +184,7 @@ export function flattenNavigationTree(
   expanded: Readonly<Record<string, boolean>>,
 ): FlatNavigationItem[] {
   const items: FlatNavigationItem[] = [];
-  for (const section of sections) {
+  const visit = (section: NavigationFolder, folderDepth: number) => {
     const sectionKey = `section:${section.id}`;
     items.push({
       key: sectionKey,
@@ -177,8 +192,8 @@ export function flattenNavigationTree(
       pageId: null,
       title: section.title,
       kind: 'teamspace',
-      depth: 0,
-      expandable: section.pages.length > 0,
+      depth: folderDepth,
+      expandable: section.pages.length > 0 || section.folders.length > 0,
       expanded: Boolean(expanded[sectionKey]),
     });
     const walk = (nodes: readonly NavigationPageNode[], depth: number) => {
@@ -198,8 +213,9 @@ export function flattenNavigationTree(
         if (isExpanded) walk(node.children, depth + 1);
       }
     };
-    if (expanded[sectionKey]) walk(section.pages, 1);
-  }
+    if (expanded[sectionKey]) { section.folders.forEach(child => visit(child, folderDepth + 1)); walk(section.pages, folderDepth + 1); }
+  };
+  nestNavigationSections(sections).forEach(section => visit(section, 0));
   return items;
 }
 

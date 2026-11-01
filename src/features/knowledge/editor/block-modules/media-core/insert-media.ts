@@ -8,6 +8,9 @@ const knowledgeT = createTranslator(knowledgeMessages);
 
 type PickableMedia = 'image' | 'video' | 'audio';
 const selectedFiles = new Map<string, File>();
+export function rememberInsertedMedia(blockId: string, file: File): void {
+  selectedFiles.set(blockId, file);
+}
 export function takeInsertedMedia(blockId: string): File | undefined {
   const file = selectedFiles.get(blockId);
   selectedFiles.delete(blockId);

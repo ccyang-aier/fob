@@ -7,6 +7,8 @@ import {
   CaretRight,
   DotsThree,
   FilePlus,
+  Folder,
+  FileArrowUp,
   PencilSimple,
   Star,
   Tag,
@@ -35,7 +37,7 @@ import styles from './sidebar-interactions.module.css';
 import { FolderSubscriptionMenuItem } from '../subscriptions/subscription-menu-item';
 import { PageIcon } from '../navigation/page-icon';
 
-export type SidebarProjectAction = 'new-document' | 'rename' | 'add-tag' | 'toggle-star' | 'delete';
+export type SidebarProjectAction = 'new-document' | 'new-folder' | 'import' | 'rename' | 'add-tag' | 'toggle-star' | 'delete';
 
 export function SidebarProjectTreeNode({
   node,
@@ -163,6 +165,12 @@ export function SidebarProjectTreeNode({
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'new-document')}>
                     <FilePlus size={14} /> {t('sidebar.addDocument')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={node.canCreateFolder === false} onSelect={() => onProjectAction(node.id, 'new-folder')}>
+                    <Folder size={14} /> {knowledgeT('newFolder')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled={node.canImport === false} onSelect={() => onProjectAction(node.id, 'import')}>
+                    <FileArrowUp size={14} /> {knowledgeT('import')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => onProjectAction(node.id, 'add-tag')}>
                     <Tag size={14} /> {t('sidebar.addTag')}

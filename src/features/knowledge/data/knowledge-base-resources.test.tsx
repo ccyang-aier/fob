@@ -9,7 +9,7 @@ import type { useKnowledgeBaseResources as ReadResources } from './knowledge-bas
 type Resources = ReturnType<typeof ReadResources>;
 type Base = { id: string; name: string };
 type Page = { items: Base[]; nextCursor: string | null };
-type Session = { status: 'anonymous' } | { status: 'authenticated'; user: { id: string } };
+type Session = { status: 'anonymous' | 'checking' } | { status: 'authenticated'; user: { id: string } };
 function deferred<T>() {
   let resolve!: (value: T) => void;
   let reject!: (error: Error) => void;
@@ -84,6 +84,17 @@ test('an inbound local folder link remains scoped to its selected knowledge base
   seed(); browser.history.replaceState({}, '', '/?knowledgeBase=local-a&source=local&folder=local-folder');
   await render(); expect(resources.scopeKey).toBe('guest:local:local-a');
   expect(new URL(browser.location.href).searchParams.get('folder')).toBe('local-folder');
+});
+
+test.each(['document', 'folder'])('an inbound local %s survives session restoration instead of using the account last workspace', async target => {
+  seed();
+  localStorage.setItem('fob.knowledge-base.active.alice', JSON.stringify({ id: 'server-a', source: 'server' }));
+  browser.history.replaceState({}, '', `/?knowledgeBase=local-a&source=local&${target}=deep-target`);
+  session = { status: 'checking' }; await render();
+  expect(resources.scopeKey).toBe('guest:local:local-a');
+  await user('alice'); await publish([{ id: 'server-a', name: 'Last team workspace' }]);
+  expect(resources.scopeKey).toBe('alice:local:local-a');
+  expect(Object.fromEntries(new URL(browser.location.href).searchParams)).toEqual({ knowledgeBase: 'local-a', source: 'local', [target]: 'deep-target' });
 });
 
 test('an inbound server document is never rewritten to an unrelated local KB while membership loads', async () => {

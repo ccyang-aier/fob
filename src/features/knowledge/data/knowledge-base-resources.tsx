@@ -56,7 +56,8 @@ export function KnowledgeBaseProvider({ children }: { children: ReactNode }) {
   const { session } = useIdentity();
   const principal = session.status === 'authenticated' ? session.user.id : 'guest';
   const [initialTarget, setInitialTarget] = useState(inboundSelection);
-  const consumeTarget = useCallback(() => setInitialTarget(null), []);
+  // Keep inbound local targets until the checking scope settles into its real principal.
+  const consumeTarget = useCallback(() => { if (session.status !== 'checking') setInitialTarget(null); }, [session.status]);
   return <KnowledgeBaseScope key={principal} principal={principal} initialTarget={initialTarget} onConsumeTarget={consumeTarget}>{children}</KnowledgeBaseScope>;
 }
 

@@ -53,6 +53,7 @@ import { DocumentStarMenuItem } from '../document-star/menu-item';
 import { SubscriptionMenuItem } from '../../../subscriptions/subscription-menu-item';
 import { SaveTemplateDialog } from '../../../templates/save-template-dialog';
 import { DocumentManagementDialog } from '../../../documents/document-management-dialog';
+import { EditorDocumentImport } from '../../import';
 import {
   documentContent,
   downloadDocument,
@@ -306,7 +307,7 @@ export function DocumentMoreMenu({
               <Printer aria-hidden />
               {knowledgeT('print')}
             </DropdownMenuItem>
-            <DropdownMenuItem className={styles.item} disabled={!actions.canImport} onSelect={() => setManagement('import')}>
+            <DropdownMenuItem className={styles.item} disabled={!actions.canImport || !editor?.isEditable} onSelect={() => setManagement('import')}>
               <FileArrowUp aria-hidden />{knowledgeT('import')}
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -366,7 +367,8 @@ export function DocumentMoreMenu({
         </DropdownMenuContent>
       </DropdownMenu>
       {templateOpen && <SaveTemplateDialog sourcePageId={actions.target.pageId} title={title} getBody={() => editor?.getJSON()} onClose={() => setTemplateOpen(false)} />}
-      {management && <DocumentManagementDialog key={`${actions.target.source}:${actions.target.knowledgeBaseId}:${actions.target.pageId}:${management}`} operation={management} target={actions.target} onClose={() => setManagement(null)} />}
+      {management === 'import' && editor && <EditorDocumentImport key={`${actions.target.source}:${actions.target.knowledgeBaseId}:${actions.target.pageId}`} editor={editor} onClose={() => setManagement(null)} />}
+      {management === 'move' && <DocumentManagementDialog key={`${actions.target.source}:${actions.target.knowledgeBaseId}:${actions.target.pageId}`} operation="move" target={actions.target} onClose={() => setManagement(null)} />}
       {permissionsOpen && <DocumentShareDialog title={title} target={actions.target} onClose={() => setPermissionsOpen(false)} settings />}
       {statisticsOpen && <DocumentStatisticsDialog scope={actions.target} onClose={() => setStatisticsOpen(false)} />}
       <ModalDialog

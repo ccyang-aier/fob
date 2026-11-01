@@ -75,13 +75,13 @@ export function createKnowledgeCatalogClient(deps: OrganizationClientDeps) {
     },
     createTeamspace(
       knowledgeBaseId: string,
-      input: { name: string; defaultAccess: TeamspaceAccess },
+      input: { name: string; defaultAccess: TeamspaceAccess; parentId?: string | null },
     ) {
       const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
       return request<Teamspace>({
         method: 'POST',
         path: `/api/knowledge-bases/${scope}/teamspaces`,
-        body: { name: requireName(input.name), defaultAccess: requireAccess(input.defaultAccess) },
+        body: { name: requireName(input.name), defaultAccess: requireAccess(input.defaultAccess), ...(input.parentId ? { parentId: requireUuid(input.parentId, 'parentId') } : {}) },
       });
     },
     updateTeamspace(knowledgeBaseId: string, teamspaceId: string, patch: TeamspacePatch) {

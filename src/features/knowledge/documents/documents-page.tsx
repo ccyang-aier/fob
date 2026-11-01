@@ -20,6 +20,9 @@ type Props = {
   onOpenFolder: (id: string) => void;
   onCreate: () => void;
   onCreateFolder?: () => void;
+  onCreateSubfolder?(id: string): void;
+  onImportFolder?(id: string): void;
+  canCreateFolder?: boolean;
   upload: ReactNode;
   renderMenu: (id: string) => ReactNode;
   canEdit?: boolean;
@@ -32,6 +35,9 @@ export function DocumentsPage({
   onOpenFolder,
   onCreate,
   onCreateFolder,
+  onCreateSubfolder,
+  onImportFolder,
+  canCreateFolder,
   upload,
   renderMenu,
   canEdit = true,
@@ -150,6 +156,9 @@ export function DocumentsPage({
           allFolders={allFolders}
           onOpenFolder={onOpenFolder}
           onCreateFolder={onCreateFolder}
+          onCreateSubfolder={onCreateSubfolder}
+          onImportFolder={onImportFolder}
+          canCreateFolder={canCreateFolder}
           canEdit={canEdit}
         />
         <div className={styles.sectionHeading}>

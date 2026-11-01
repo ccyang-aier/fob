@@ -6,7 +6,7 @@ import { CaretDown, CaretRight, MagnifyingGlass } from '@/components/icons';
 import { parseCsv } from '../file-format';
 import styles from '../file-preview.module.css';
 
-export function TextFileView({ text, format }: { text: string; format: 'csv' | 'json' | 'text' }) {
+export function TextFileView({ text, format }: { text: string; format: 'csv' | 'json' }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const [query, setQuery] = useState('');

@@ -15,27 +15,31 @@ export function CreateTeamspaceDialog({
   open,
   onClose,
   onCreated,
+  parent,
+  parentId,
 }: {
   knowledgeBaseId: string;
   open: boolean;
   onClose: () => void;
   onCreated: (folder: Teamspace) => void;
+  parent?: Teamspace;
+  parentId: string | null;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const [name, setName] = useState('');
-  const [access, setAccess] = useState<TeamspaceAccess>('edit');
+  const [access, setAccess] = useState<TeamspaceAccess>(parent ? parent.defaultAccess : 'edit');
   const mutation = useCreateTeamspaceMutation(knowledgeBaseId);
   function close() {
     setName('');
-    setAccess('edit');
+    setAccess(parent ? parent.defaultAccess : 'edit');
     mutation.reset();
     onClose();
   }
   function submit() {
     if (!name.trim() || mutation.isPending) return;
     mutation.mutate(
-      { name: name.trim(), defaultAccess: access },
+      { name: name.trim(), defaultAccess: access, parentId },
       {
         onSuccess: (folder) => {
           onCreated(folder);

@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
+  folderHasChildren: ['请先移走或删除子文件夹。', 'Move or delete the child folders first.'],
   unfiled: ['未归档', 'Unfiled'],
   localSaveFailedChangesWereNotSavedCheck: [
     '本机保存失败，修改未保存。请检查存储空间后重试。',

@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { createLocalLibraryStore, newLocalDocument, type LocalLibrary } from './local-library';
-import { importLocalDocuments, moveLocalDocument } from './local-document-operations';
+import { importLocalFolderDocuments, moveLocalDocument } from './local-document-operations';
 import { parseTextDocument } from '@fob/shared/knowledge/text-import';
 
 function fixture() {
@@ -36,10 +36,10 @@ test('foreign or removed destinations and deleted source pages never change pers
   expect(saved()).toBe(before);
 });
 
-test('local import creates independent file documents in the source folder and preserves the source body', () => {
+test('folder import creates independent binary file documents in the explicitly selected folder', () => {
   const { store, scope, source, other } = fixture();
-  const file = { source: 'local-asset:fixture', name: 'Example.txt', mime: 'text/plain', size: 10 };
-  importLocalDocuments(store, scope, [{ name: file.name, text: '', file }], 'missing');
+  const file = { source: 'local-asset:fixture', name: 'Example.pdf', mime: 'application/pdf', size: 10 };
+  importLocalFolderDocuments(store, { knowledgeBaseId: scope.knowledgeBaseId, folderId: 'first' }, [{ name: file.name, text: '', file }], 'missing');
   const imported = store.getSnapshot().documents[2]!;
   expect(imported).toMatchObject({ baseId: 'a', folderId: 'first', title: file.name, file });
   expect(imported.id).not.toBe(source.id);
@@ -50,10 +50,17 @@ test('local text imports retain native editor content and never become file-prev
   const { store, scope, source } = fixture();
   const text = '# Native heading\n\nEditable **content**';
   const body = parseTextDocument(text, 'markdown').toJSON();
-  importLocalDocuments(store, scope, [{ name: 'Native document', text, body }], 'missing');
+  importLocalFolderDocuments(store, { knowledgeBaseId: scope.knowledgeBaseId, folderId: 'first' }, [{ name: 'Native document', text, body }], 'missing');
   const imported = store.getSnapshot().documents[2]!;
   expect(imported.title).toBe('Native document');
   expect(imported.file).toBeUndefined();
   expect(imported.body).toEqual(body);
   expect(store.getSnapshot().documents[0]).toEqual(source);
+});
+
+test('folder imports reject another knowledge base or a removed folder before persisting anything', () => {
+  const { store, saved } = fixture();
+  const before = saved();
+  for (const folderId of ['foreign', 'removed']) expect(() => importLocalFolderDocuments(store, { knowledgeBaseId: 'a', folderId }, [{ name: 'Never created', text: '' }], 'missing')).toThrow('missing');
+  expect(saved()).toBe(before);
 });

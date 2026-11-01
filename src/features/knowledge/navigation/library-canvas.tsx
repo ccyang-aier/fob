@@ -47,6 +47,7 @@ export function LibraryCanvas({
   onOpenPage,
   onSelectFolder,
   onCreateFolder,
+  onImportFolder,
   notify,
   folder,
   onExpandSidebar,
@@ -59,7 +60,8 @@ export function LibraryCanvas({
   teamspaces: readonly Teamspace[];
   onOpenPage: (id: string) => void;
   onSelectFolder: (id: string) => void;
-  onCreateFolder: () => void;
+  onCreateFolder: (parentId?: string) => void;
+  onImportFolder(id: string): void;
   notify: TreeNotifier;
   folder?: Teamspace | null;
   onExpandSidebar?: () => void;
@@ -102,7 +104,7 @@ export function LibraryCanvas({
       />
     );
   const recycled = recycledRootPages(pages);
-  if (view === 'overview' && folder) return <><ServerFolderOverview key={folder.id} knowledgeBaseId={knowledgeBaseId} folder={folder} folders={teamspaces} onOpen={onOpenPage} onCreate={() => void actions.create(folder.id)} renderMenu={id => <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />} upload={<KnowledgeBaseDocumentImport knowledgeBaseId={knowledgeBaseId} teamspaceId={folder.id} />} />{actions.dialogs}</>;
+  if (view === 'overview' && folder) return <><ServerFolderOverview key={folder.id} knowledgeBaseId={knowledgeBaseId} folder={folder} folders={teamspaces} onOpen={onOpenPage} onCreate={() => void actions.create(folder.id)} onCreateFolder={() => onCreateFolder(folder.id)} onOpenFolder={onSelectFolder} renderMenu={id => <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />} upload={<KnowledgeBaseDocumentImport knowledgeBaseId={knowledgeBaseId} teamspaceId={folder.id} />} />{actions.dialogs}</>;
   if (view === 'all-documents')
     return (
       <>
@@ -137,7 +139,10 @@ export function LibraryCanvas({
           onOpen={onOpenPage}
           onOpenFolder={onSelectFolder}
           onCreate={() => void actions.create()}
-          onCreateFolder={onCreateFolder}
+          onCreateFolder={() => onCreateFolder()}
+          onCreateSubfolder={onCreateFolder}
+          onImportFolder={onImportFolder}
+          canCreateFolder={canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin')}
           canEdit={canEditTree(access)}
           upload={
             <KnowledgeBaseDocumentImport

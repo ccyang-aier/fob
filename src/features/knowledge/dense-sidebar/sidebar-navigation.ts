@@ -36,6 +36,8 @@ export interface SidebarProjectNode {
   starred?: boolean;
   count?: number;
   children?: SidebarProjectNode[];
+  canCreateFolder?: boolean;
+  canImport?: boolean;
 }
 export interface SidebarRecentNote {
   id: string;

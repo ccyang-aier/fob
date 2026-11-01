@@ -18,8 +18,6 @@ import type { PdfComments } from './pdf/pdf-file-view';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import { documentFileFormat, decodeDocumentText, type DocumentFile } from './file-format';
 import { readDocumentFile } from './file-source';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { TextFileView } from './text/text-file-view';
 import styles from './file-preview.module.css';
 
@@ -88,7 +86,7 @@ function FilePreviewSession({
         objectUrl = URL.createObjectURL(data);
         setUrl(objectUrl);
         setBlob(data);
-        if (['text', 'json', 'csv', 'markdown'].includes(format ?? '')) {
+        if (['json', 'csv'].includes(format ?? '')) {
           if (data.size > 10 * 1024 * 1024) {
             setError({ key: 'textStructurePreviewsSupportFilesUpTo10' });
             return;
@@ -300,11 +298,7 @@ function FilePreviewSession({
                 zoom={zoom}
                 onPages={setPages}
               />
-            ) : format === 'markdown' ? (
-              <article className={styles.markdown}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
-              </article>
-            ) : format === 'csv' || format === 'json' || format === 'text' ? (
+            ) : format === 'csv' || format === 'json' ? (
               <TextFileView text={text} format={format} />
             ) : format === 'image' ? (
               <div className={styles.image}>

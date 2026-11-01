@@ -29,10 +29,11 @@ import styles from './discovery.module.css';
 
 const OverviewEditor = dynamic(() => import('./folder-overview-editor').then(module => module.FolderOverviewEditor), { ssr: false });
 
-export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, onCreate, onUpdate, onPermissions, renderMenu, upload, source, more, loadingMore, onMore, actions, viewerId, overview, updating = false }: {
+export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, onCreate, onCreateFolder, childFolders = [], onOpenFolder, onUpdate, onPermissions, renderMenu, upload, source, more, loadingMore, onMore, actions, viewerId, overview, updating = false }: {
   data: FolderOverview; documents: DiscoveryDocument[]; tab: FolderTab; onTab(value: FolderTab): void; q: string; onSearch(value: string): void; onOpen(id: string): void; onCreate(): void;
   onUpdate(patch: Partial<FolderMetadata> & { name?: string }): Promise<void>; onPermissions?: () => void; renderMenu?: (id: string) => ReactNode; upload?: ReactNode; source: 'local' | 'server'; more?: boolean; loadingMore?: boolean; onMore?(): void;
   actions?: FolderActions; viewerId?: string; updating?: boolean;
+  onCreateFolder?(): void; childFolders?: readonly { id: string; name: string; icon?: string | null }[]; onOpenFolder?(id: string): void;
   overview?: { draftKey: string; context: EditorBlockContext; save(content: JSONContent, revision: number): Promise<number> };
 }) {
   const { t, locale } = useTranslation(messages);
@@ -102,6 +103,8 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
       <label><MagnifyingGlass size={14} /><input type="search" aria-label={t('folderSearch')} placeholder={t('folderSearch')} value={q} onChange={event => onSearch(event.target.value)} /></label>
       <div className={styles.folderActions}>{canCreate && <>{upload && <Button size="sm" variant="outline" onClick={() => setModal('import')}><UploadSimple size={16} />{t('importAction')}</Button>}<Button size="sm" variant="outline" onClick={onCreate}><Plus size="18px" />{t('createAction')}</Button></>}
         <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className={`fob-action ${styles.iconButton}`} aria-label={t('options')}><DotsThree size={18} /></button></DropdownMenuTrigger><DropdownMenuContent align="end">
+          {canCreate && upload && <DropdownMenuItem onSelect={() => setModal('import')}><UploadSimple size={14} />{t('importAction')}</DropdownMenuItem>}
+          {canManage && onCreateFolder && <DropdownMenuItem onSelect={onCreateFolder}><Folder size={14} />{t('createFolder')}</DropdownMenuItem>}
           {canManage && <><DropdownMenuItem onSelect={() => onTab('overview')}><PencilSimple size={14} />{t('edit')}</DropdownMenuItem><DropdownMenuItem onSelect={() => { setName(folder.name); setError(''); setModal('rename'); }}><PencilSimple size={14} />{t('rename')}</DropdownMenuItem>{onPermissions && <DropdownMenuItem onSelect={onPermissions}><ShieldCheck size={14} />{t('permissions')}</DropdownMenuItem>}
             {source === 'server' && <DropdownMenuSeparator />}</>}
           {source === 'server' && <FolderSubscriptionMenuItem folderId={folder.id} />}
@@ -113,6 +116,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
         <div className={styles.folderTitle}><div className={styles.folderGlyph}>{canManage ? <PageIconPicker value={folder.metadata.icon} iconSize={34} toggleSelected fallbackIcon={<OutlineCollectionIcon name="collection" size={40} />} onChange={icon => onUpdate({ icon })} /> : folder.metadata.icon ? <PageIcon value={folder.metadata.icon} size={34} /> : <OutlineCollectionIcon name="collection" size={40} />}</div><h1>{folder.name}</h1></div>
         <div className={styles.meta}><span>{source === 'local' ? <Folder size={18} /> : folder.defaultAccess ? <OutlineCollectionIcon name="team" size={18} /> : <LockSimple size={18} />}{t(source === 'local' ? 'device' : folder.defaultAccess ? 'workspace' : 'private')}</span><span className={styles.metaSeparator}>•</span><span>{t('documentCount', { count: data.total })}</span></div>
       </header>
+      {childFolders.length > 0 && <div className={styles.childFolders}>{childFolders.map(child => <button type="button" key={child.id} className={`fob-action ${styles.childFolder}`} data-surface="plain" onClick={() => onOpenFolder?.(child.id)}>{child.icon ? <PageIcon value={child.icon} size={16} /> : <Folder size={16} />}<span>{child.name}</span></button>)}</div>}
       <div className={styles.tabBar}><FolderTabs value={tab} label={folder.name} onChange={onTab} />{canManage && tab === 'documents' && <FolderSortMenu value={folder.metadata.sort} disabled={busy || updating} onChange={sort => void update({ sort })} />}</div>
       {error && !modal && <AppAlert tone="error" title={error} />}
       {tab === 'overview' ? overview && <OverviewEditor key={overview.draftKey} content={folder.metadata.description} revision={folder.metadata.revision ?? 0} contentId={folder.id} draftKey={overview.draftKey} context={overview.context} editable={canManage} onSave={overview.save} /> : <><div className={styles.list} role="list" aria-label={t('documents')} aria-busy={updating} onKeyDown={event => { if ((event.ctrlKey || event.metaKey) && event.key === 'a') { event.preventDefault(); setSelection({ context, ids: [...visible] }); } }}>{listed.map(document => row(document))}</div>

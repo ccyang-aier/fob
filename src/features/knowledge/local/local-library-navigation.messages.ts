@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
+  importDocuments: ['导入文档', 'Import documents'],
   localKnowledgeBaseNavigation: ['本机知识库导航', 'Local knowledge base navigation'],
   folder: ['文件夹', 'Folder'],
   newFolder: ['新建文件夹', 'New folder'],

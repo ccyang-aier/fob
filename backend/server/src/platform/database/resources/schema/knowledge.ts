@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { check, jsonb, primaryKey, uuid, varchar } from 'drizzle-orm/pg-core';
+import { check, foreignKey, index, jsonb, primaryKey, uuid, varchar } from 'drizzle-orm/pg-core';
 import type { FolderMetadata } from '@fob/shared/knowledge/contracts';
 import { permissionLevel } from './enums';
 import { knowledgeBase } from './organization';
@@ -9,6 +9,7 @@ import { instant } from './types';
 export const teamspace = resourcesNamespace.table('teamspace', {
   knowledgeBaseId: uuid('knowledge_base_id').notNull().references(() => knowledgeBase.id, { onDelete: 'cascade' }),
   id: uuid('id').notNull(),
+  parentId: uuid('parent_id'),
   name: varchar('name', { length: 120 }).notNull(),
   defaultAccess: permissionLevel('default_access'),
   metadata: jsonb('metadata').$type<FolderMetadata>().notNull().default({}),
@@ -16,5 +17,8 @@ export const teamspace = resourcesNamespace.table('teamspace', {
   updatedAt: instant('updated_at').notNull().defaultNow(),
 }, (table) => [
   primaryKey({ columns: [table.knowledgeBaseId, table.id] }),
+  foreignKey({ name: 'teamspace_parent_fk', columns: [table.knowledgeBaseId, table.parentId], foreignColumns: [table.knowledgeBaseId, table.id] }),
+  index('teamspace_parent_idx').on(table.knowledgeBaseId, table.parentId),
+  check('teamspace_parent_not_self', sql`${table.parentId} IS NULL OR ${table.parentId} <> ${table.id}`),
   check('teamspace_name_not_empty', sql`length(btrim(${table.name})) > 0`),
 ]);

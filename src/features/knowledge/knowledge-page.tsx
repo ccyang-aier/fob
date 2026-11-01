@@ -24,6 +24,7 @@ import { useKnowledgeNotificationsBridge } from './notifications/notifications-q
 import { subscribeOpenPageTarget } from './editor/open-target';
 import { KnowledgeTreeStage, type TreeStageTeamspaceState, type LibraryView } from './navigation/tree/tree-stage';
 import { CreateTeamspaceDialog } from './navigation/create-teamspace-dialog';
+import { FolderImportDialog } from './documents/import/folder-import-dialog';
 import { PageTreeSidebar } from './navigation/tree/page-tree-sidebar';
 import { organizationErrorTextOf } from './organization/errors';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -167,6 +168,9 @@ function ServerKnowledgeResource({
     if (navigationActive) updateDocumentNavigation(id && activeBaseId ? { knowledgeBaseId: activeBaseId, pageId: id, source: 'server' } : null, tabSearch);
   }, [setStoredSelectedPageId, navigationActive, activeBaseId, tabSearch]);
   const [createTeamspaceOpen, setCreateTeamspaceOpen] = useState(false);
+  const [folderParentId, setFolderParentId] = useState<string | null>(null);
+  const [importFolderId, setImportFolderId] = useState<string | null>(null);
+  function requestFolderCreation(parentId?: string) { setFolderParentId(parentId ?? null); setCreateTeamspaceOpen(true); }
   const [createDocumentOpen, setCreateDocumentOpen] = useState(false);
   const { notify } = useAppAlert();
   const openPage = useCallback(
@@ -249,7 +253,8 @@ function ServerKnowledgeResource({
         onSelectSection={openFolder}
         onSelectPage={openPage}
         onRetryTeamspaces={() => void teamspacesQuery.refetch()}
-        onCreateTeamspace={() => setCreateTeamspaceOpen(true)}
+        onCreateTeamspace={requestFolderCreation}
+        onImportFolder={setImportFolderId}
         notify={notify}
       />
     ) : null;
@@ -357,7 +362,8 @@ function ServerKnowledgeResource({
         folder={selectedTeamspace}
         onOpenPage={openPage}
         onSelectFolder={openFolder}
-        onCreateFolder={() => setCreateTeamspaceOpen(true)}
+        onCreateFolder={requestFolderCreation}
+        onImportFolder={setImportFolderId}
         notify={notify}
       />
     );
@@ -373,6 +379,7 @@ function ServerKnowledgeResource({
       }
       overlays={
         <>
+          {activeId && importFolderId && teamspaces.some(folder => folder.id === importFolderId) && <NavigationDialogPortal><FolderImportDialog source="server" knowledgeBaseId={activeId} folder={teamspaces.find(folder => folder.id === importFolderId)!} onClose={() => setImportFolderId(null)} /></NavigationDialogPortal>}
           {createDocumentOpen && activeId ? (
             <NavigationDialogPortal>
               <CreateDocumentDialog
@@ -385,7 +392,10 @@ function ServerKnowledgeResource({
           ) : null}
           {activeId ? (
             <CreateTeamspaceDialog
+              key={folderParentId ?? 'root'}
               knowledgeBaseId={activeId}
+              parent={teamspaces.find(folder => folder.id === folderParentId)}
+              parentId={folderParentId}
               open={createTeamspaceOpen}
               onClose={() => setCreateTeamspaceOpen(false)}
               onCreated={(folder) => openFolder(folder.id)}

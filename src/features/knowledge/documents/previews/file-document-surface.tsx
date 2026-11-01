@@ -20,6 +20,7 @@ import {
   fileFromProperties,
   fileProperties,
   documentFileFormat,
+  documentAttachmentAccept,
   type DocumentFile,
 } from './file-format';
 import { updateKnowledgePage, recycleKnowledgePage } from '../../data/pages-api';
@@ -114,7 +115,7 @@ export function KnowledgeBaseFileDocument({
         mime: asset.mime,
         size: asset.size,
       };
-      if (!documentFileFormat(asset.name))
+      if (!documentFileFormat(asset.name) || ['markdown', 'text'].includes(documentFileFormat(asset.name)!))
         throw new Error(knowledgeT('chooseASupportedPreviewFormat'));
       const updated = await updateKnowledgePage(knowledgeBaseId, {
         pageId: page.id,
@@ -231,6 +232,7 @@ export function KnowledgeBaseFileDocument({
               </button>
             </div>
             <AssetUploader
+              accept={documentAttachmentAccept}
               knowledgeBaseId={knowledgeBaseId}
               onUploaded={(asset) => {
                 void uploaded(asset);
