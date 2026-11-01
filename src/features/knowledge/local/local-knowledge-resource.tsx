@@ -34,7 +34,6 @@ import { LocalLibraryNavigation } from './local-library-navigation';
 import { KnowledgeEmptyState } from '../knowledge-empty-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { DocumentCollectionPage } from '../documents/collection-page';
-import { documentPreview } from '@fob/shared/knowledge/document-insights';
 import { PermanentDeleteDocumentDialog } from '../documents/collection-page/permanent-delete-dialog';
 import { LocalFolderOverview } from '../discovery/local-folder-overview';
 import { LocalDocumentImport } from '../documents/import/local-document-import';
@@ -513,7 +512,6 @@ export function LocalKnowledgeResource({
           kind={view}
           entries={visible.map(item => ({ id: item.id, title: item.title || knowledgeT('untitledDocument'), icon: item.icon, folderId: item.folderId, creator: item.creator, date: item.updatedAt }))}
           folders={folders}
-          previews={Object.fromEntries(visible.map(item => [item.id, documentPreview(item.body)]))}
           onOpen={openDocument}
           onCreate={view !== 'trash' ? () => setCreation('document') : undefined}
           onRemove={view === 'starred' ? id => updateDocument(id, { starred: false }) : view === 'drafts' ? id => updateDocument(id, { draft: false }) : undefined}

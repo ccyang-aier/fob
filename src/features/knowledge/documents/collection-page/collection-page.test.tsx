@@ -5,6 +5,7 @@ import type { Root } from 'react-dom/client';
 import { createDomEnvironment } from '@/test/dom-environment';
 import { setLocale } from '@/lib/i18n';
 import { collectionRows } from './model';
+import { documentRelativeTime } from '../document-relative-time';
 import type { DocumentCollectionPage as Collection } from './index';
 
 let environment: ReturnType<typeof createDomEnvironment>;
@@ -69,7 +70,7 @@ test('trash exposes adapter restore without opening deleted documents', async ()
   let restored = '';
   await render({ title: '回收站', kind: 'trash', dateKind: 'deleted', renderActions: id => <button onClick={() => { restored = id; }}>恢复 {id}</button> }, 'trash');
   expect(document.querySelector('button[aria-label="Beta"]')).toBeNull();
-  expect(document.body.textContent).toContain('删除时间');
+  expect(document.body.textContent).toContain('删除于');
   await act(async () => Array.from(document.querySelectorAll('button')).find(button => button.textContent === '恢复 old')!.click());
   expect(restored).toBe('old');
   expect(document.body.textContent).not.toContain('新建文档');
@@ -88,24 +89,31 @@ test('loading and errors replace rows, drafts use their specific empty state', a
   expect(document.body.textContent).toContain('标记为草稿的文档会集中在这里');
 });
 
-test('real body previews survive a switch to the compact list and keep open actions', async () => {
-  const opened: string[] = [];
-  await render({ onOpen: id => opened.push(id), previews: { old: { heading: '实际章节', lines: ['保留这段真实摘要'], graphic: false, empty: false } } }, 'previews');
-  expect(document.body.textContent).toContain('实际章节');
-  expect(document.body.textContent).toContain('保留这段真实摘要');
-  await act(async () => (document.querySelector('button[aria-label="列表视图"]') as HTMLButtonElement).click());
-  expect(document.querySelector('button[aria-label="列表视图"]')?.getAttribute('aria-pressed')).toBe('true');
+test('folder filters keep real paths and reset to all documents, with no card mode', async () => {
+  await render({}, 'locations');
+  const navigation = document.querySelector('nav[aria-label="所在位置"]')!;
+  await act(async () => Array.from(navigation.querySelectorAll('button')).find(button => button.textContent === '设计')!.click());
+  expect(document.querySelectorAll('[data-document-id]')).toHaveLength(1);
+  expect(document.querySelector('[data-document-id]')?.getAttribute('data-document-id')).toBe('old');
+  expect(document.querySelector('[data-document-id]')?.textContent).toContain('产品 / 设计');
+  expect(document.querySelector('time')?.getAttribute('datetime')).toBe(entries[0].date);
+  await act(async () => Array.from(navigation.querySelectorAll('button')).find(button => button.textContent === '全部文档')!.click());
   expect(document.querySelectorAll('[data-document-id]')).toHaveLength(2);
-  await act(async () => (document.querySelector('button[aria-label="Alpha"]') as HTMLButtonElement).click());
-  expect(opened).toEqual(['old']);
+  expect(document.querySelector('button[aria-label="卡片视图"]')).toBeNull();
+  expect(document.querySelector('button[aria-label="列表视图"]')).toBeNull();
 });
 
-test('gallery limits visible previews to the displayed page and loads more on request', async () => {
-  const ids: string[][] = [];
-  await render({ entries: Array.from({ length: 25 }, (_, index) => ({ ...entries[0], id: `page-${index}` })), onVisibleIdsChange: next => ids.push(next) }, 'pagination');
+test('lists load more documents on request', async () => {
+  await render({ entries: Array.from({ length: 25 }, (_, index) => ({ ...entries[0], id: `page-${index}` })) }, 'pagination');
   expect(document.querySelectorAll('[data-document-id]')).toHaveLength(24);
-  expect(ids.at(-1)).toHaveLength(24);
   await act(async () => Array.from(document.querySelectorAll('button')).find(button => button.textContent === '显示更多')!.click());
   expect(document.querySelectorAll('[data-document-id]')).toHaveLength(25);
-  expect(ids.at(-1)).toHaveLength(25);
+});
+
+test('folder and collection metadata share relative dates, including missing and future dates', () => {
+  const now = Date.parse('2026-11-01T00:00:00Z');
+  expect(documentRelativeTime('2026-10-25T00:00:00Z', now, 'zh-CN', '1分钟内')).toBe('7天前');
+  expect(documentRelativeTime('2026-11-02T00:00:00Z', now, 'zh-CN', '1分钟内')).toBe('1分钟内');
+  expect(documentRelativeTime('invalid', now, 'en', 'Just now')).toBe('—');
+  expect(documentRelativeTime('2026-10-31T00:00:00Z', now, 'en', 'Just now')).toBe('1 day ago');
 });
