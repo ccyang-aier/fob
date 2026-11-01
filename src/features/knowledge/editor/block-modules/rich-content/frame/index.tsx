@@ -13,8 +13,8 @@ import { GraphicToolButton } from './tool-button';
 import { GraphicPreviewDialog } from '../graphic-preview';
 import styles from './styles.module.css';
 
-export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200, appearance = 'card', showHeader, preview, intrinsicWidth }: {
-  props: NodeViewProps; icon: ComponentType<{ size?: number; 'aria-hidden'?: boolean }>; title: string; actions?: ReactNode; children: ReactNode; resizable?: boolean; minHeight?: number; appearance?: 'card' | 'canvas'; showHeader?: boolean; preview?: string; intrinsicWidth?: number;
+export function RichBlockFrame({ props, icon: Icon, title, actions, children, resizable = true, minHeight = 200, appearance = 'card', showHeader, preview, intrinsicWidth, fillAvailableWidth = false }: {
+  props: NodeViewProps; icon: ComponentType<{ size?: number; 'aria-hidden'?: boolean }>; title: string; actions?: ReactNode; children: ReactNode; resizable?: boolean; minHeight?: number; appearance?: 'card' | 'canvas'; showHeader?: boolean; preview?: string; intrinsicWidth?: number; fillAvailableWidth?: boolean;
 }) {
   const { t } = useTranslation(richMessages);
   const editable = useEditorState({ editor: props.editor, selector: ({ editor }) => editor.isEditable });
@@ -48,7 +48,7 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
       : <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}><ArrowsOut size={16} aria-hidden /></button>)}
   </BlockActions>;
   return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} data-graphic-auto-height={canvas ? autoHeight : undefined} data-graphic-auto-width={canvas ? autoWidth : undefined} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
-    style={canvas ? { width: autoWidth ? undefined : `${width}%`, height: resizable && !autoHeight ? height : undefined, '--graphic-preferred-width': `${(intrinsicWidth ?? 320) + 18}px`, '--graphic-image-width': intrinsicWidth ? `${intrinsicWidth}px` : '100%' } as CSSProperties : undefined}
+    style={canvas ? { width: autoWidth ? undefined : `${width}%`, height: resizable && !autoHeight ? height : undefined, '--graphic-preferred-width': fillAvailableWidth ? '100%' : `${(intrinsicWidth ?? 320) + 18}px`, '--graphic-image-width': fillAvailableWidth ? '100%' : intrinsicWidth ? `${intrinsicWidth}px` : '100%' } as CSSProperties : undefined}
     role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {
       if (event.target instanceof Element && root.current?.contains(event.target) && !event.target.closest('button, a, input, textarea, [data-graphic-title-editing], [role="separator"]')) {
