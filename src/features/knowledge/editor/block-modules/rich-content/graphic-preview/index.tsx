@@ -14,7 +14,7 @@ import styles from '../frame/styles.module.css';
 
 export function GraphicPreviewDialog({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
   const { t } = useTranslation(richMessages);
-  const titleId = useId(), hintId = useId();
+  const titleId = useId();
   const [portalRoot] = useState(() => getOverlayRoot() ?? document.body);
   const [dialog, setDialog] = useState<HTMLDialogElement | null>(null);
   const stage = useRef<HTMLDivElement>(null);
@@ -56,7 +56,7 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
     element.addEventListener('wheel', wheel, { passive: false });
     return () => { observer.disconnect(); element.removeEventListener('wheel', wheel); };
   }, [fit, zoom]);
-  return createPortal(<dialog ref={setDialog} className={styles.graphicViewer} aria-labelledby={titleId} aria-describedby={hintId} data-graphic-viewer data-document-export-omit
+  return createPortal(<dialog ref={setDialog} className={styles.graphicViewer} aria-labelledby={titleId} data-graphic-viewer data-document-export-omit
     onCancel={event => { event.preventDefault(); onClose(); }}
     onClick={event => { if (event.target !== event.currentTarget) return; const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); }}
     onKeyDown={event => {
@@ -82,7 +82,6 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
           onLoad={event => { const image = event.currentTarget; if (!image.naturalWidth || !image.naturalHeight) return; const next = { width: image.naturalWidth, height: image.naturalHeight }; imageSize.current = next; setSize(next); fit(); }} onError={() => setImageError(true)} />
         {imageError && <div className={styles.state} role="alert">{t('graphicPreviewError')}</div>}
       </div>
-      <p id={hintId} className={styles.graphicViewerHint}>{t('graphicPreviewHint')}</p>
       <div className={styles.graphicViewerTools} role="group" aria-label={t('zoom')}>
         <GraphicToolButton label={t('zoomOut')} onClick={() => zoom(current.current.scale / 1.25)}><Minus size={18} aria-hidden /></GraphicToolButton>
         <button type="button" className={`fob-action ${styles.graphicZoomValue}`} data-surface="plain" aria-label={t('actualSize')} onClick={() => zoom(1)}>{Math.round(view.scale * 100)}%</button>

@@ -53,16 +53,15 @@
 .graphicViewerHeader > span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; color:var(--ink-soft); }
 .graphicViewerHeader button { width:36px; height:36px; }
 .graphicViewer button:focus-visible { outline:none; box-shadow:none; border:1px solid var(--control-border); }
-.graphicViewerStage { position:absolute; inset:56px 20px 76px; border:1px solid transparent; overflow:hidden; touch-action:none; cursor:grab; outline:none; }
+.graphicViewerStage { position:absolute; inset:56px 20px 16px; border:1px solid transparent; overflow:hidden; touch-action:none; cursor:grab; outline:none; }
 .graphicViewerStage:focus-visible { border-color:var(--control-border); }
 .graphicViewerStage[data-dragging="true"] { cursor:grabbing; }
 .graphicViewerImage { position:absolute; top:50%; left:50%; max-width:none; max-height:none; margin:0; transform-origin:center; user-select:none; pointer-events:none; }
-.graphicViewerTools { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:4px; padding:4px; border:1px solid var(--control-border); border-radius:8px; background:var(--panel); }
+.graphicViewerTools { position:absolute; right:16px; bottom:16px; z-index:1; display:flex; align-items:center; gap:4px; padding:4px; border:1px solid var(--control-border); border-radius:8px; background:var(--panel); }
 .graphicViewerTools button { width:36px; height:36px; flex:none; }
 .graphicViewerTools .graphicZoomValue { width:60px; border:0; border-radius:5px; color:var(--ink-soft); font:500 12px/20px var(--font-sans); font-variant-numeric:tabular-nums; }
 .graphicViewerSeparator { width:1px; height:18px; margin-inline:2px; background:var(--separator-color); }
-.graphicViewerHint { position:absolute; bottom:28px; left:20px; margin:0; color:var(--muted-strong); font-size:11px; }
-@media (max-width:600px) { .graphicViewer { width:calc(100vw - 32px); height:84dvh; border-radius:8px; } .graphicViewerStage { inset:56px 12px 76px; } .graphicViewerHint { display:none; } }
+@media (max-width:600px) { .graphicViewer { width:calc(100vw - 32px); height:84dvh; border-radius:8px; } .graphicViewerStage { inset:56px 12px 12px; } .graphicViewerTools { right:12px; bottom:12px; } }
 @media (hover:none),(pointer:coarse) { .graphicViewerTools button,.graphicViewerHeader button { min-width:44px; min-height:44px; } }
 .card { display:flex; min-height:112px; color:inherit; text-decoration:none; }
 .cardText { flex:1; min-width:0; padding:16px; }

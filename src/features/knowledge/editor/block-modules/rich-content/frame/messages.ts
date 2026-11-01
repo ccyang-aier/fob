@@ -20,7 +20,6 @@ export const richMessages = defineMessages({
   enlargeGraphic: ['放大查看', 'Enlarge preview'],
   closePreview: ['关闭预览', 'Close preview'],
   graphicViewport: ['图形预览区域', 'Graphic preview area'],
-  graphicPreviewHint: ['滚轮缩放 · 拖拽移动 · 双击放大', 'Scroll to zoom · Drag to pan · Double-click to enlarge'],
   graphicPreviewError: ['预览无法加载，请关闭后重试。', 'Unable to load the preview. Close it and try again.'],
   zoomIn: ['放大', 'Zoom in'],
   zoomOut: ['缩小', 'Zoom out'],

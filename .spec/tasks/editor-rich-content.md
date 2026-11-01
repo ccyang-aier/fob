@@ -198,3 +198,10 @@
 - 按用户明确的尺寸要求，PlantUML 与 Mermaid / 白板共用自然尺寸规则：SVG 内容决定宽度，高度按比例自然排布，超出正文可用宽度时缩小。删除上一轮专为 PlantUML 增加的填充可用宽度分支，当前设计同步至 [编辑器富内容块](../../docs/editor-rich-content.md)。
 - 实机发现当前示例保存了手动宽高，通过现有角区的 Home 操作将其恢复为 `autoWidth=true` / `autoHeight=true`。刷新后仍为自动模式，图像为原始 391×427px，外框约 409×462px，SVG 图片 URL 与修改前一致，源码和图表内容保留。截图保存于仓库外 visualizations 目录的 `plantuml-natural-size.jpg`，临时验证页随后关闭。
 - 图形内容与共享外框回归 39 tests / 372 assertions / 0 fail；修改组件 ESLint、图标、架构、差异检查及生产编译 / TypeScript / 静态页面 8/8 通过。真实页面无应用错误，保留既有 callout 选区恢复警告；本轮聚焦桌面自然尺寸和刷新持久化，开发服务继续运行。
+
+## 放大预览去除底栏并右下固定缩放（2026-11-01）
+
+- Mermaid、PlantUML 与白板共用的放大预览删除底部操作说明、对应 ARIA 描述引用与未使用的双语文案。画布底部占位从 76px 收为桌面 16px / 窄屏 12px，缩放操作组改为固定悬浮在弹层右下角，保持原始尺寸、放大、缩小和适应窗口入口；当前设计同步至 [编辑器富内容块](../../docs/editor-rich-content.md)。
+- 在用户文档的独立真实页面验证 PlantUML 放大预览：桌面按钮组距弹层右、底边均约 16.7px，原底部说明不存在，画布延伸至相同底部内边距。实际点击放大从 132% 到 165%，缩小与适应窗口均恢复 132%。约 391px 窄屏下，弹层约 359px 宽，按钮组距右、底边约 12.7px，完整位于弹层内，页面无横向溢出，图像加载成功。
+- 共享图形预览与外框回归 17 tests / 281 assertions / 0 fail；修改组件 ESLint、图标、国际化、架构、差异检查和生产编译 / TypeScript / 静态页面 8/8 通过。真实页面无应用错误，保留既有 callout 选区警告。
+- 已恢复桌面视口与主导航展开，临时页关闭，开发服务继续运行。截图保存在仓库外 visualizations 目录的 `graphic-zoom-bottom-right.jpg`、`graphic-zoom-bottom-right-mobile.jpg`；本轮未重测实体触控硬件。
