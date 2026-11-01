@@ -70,7 +70,8 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
       }
     }}>
     <OverlayRootContext.Provider value={dialog ?? undefined}>
-      <div className={styles.graphicViewerHeader}><span id={titleId}>{title}</span><GraphicToolButton label={t('closePreview')} onClick={onClose}><X size={18} aria-hidden /></GraphicToolButton></div>
+      <span id={titleId} className={styles.graphicViewerTitle}>{title}</span>
+      <div className={styles.graphicViewerClose}><GraphicToolButton label={t('closePreview')} onClick={onClose}><X size={18} aria-hidden /></GraphicToolButton></div>
       <div ref={stage} className={styles.graphicViewerStage} tabIndex={0} aria-label={t('graphicViewport')} data-graphic-viewport
         onPointerDown={event => { if (event.button !== 0) return; event.preventDefault(); event.currentTarget.focus({ preventScroll: true }); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.dragging = 'true'; drag.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, view: current.current }; }}
         onPointerMove={event => { const start = drag.current; if (start?.pointer !== event.pointerId) return; publish(clampGraphicView({ ...start.view, x: start.view.x + event.clientX - start.x, y: start.view.y + event.clientY - start.y }, imageSize.current, viewport.current)); }}
