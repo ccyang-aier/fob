@@ -78,6 +78,24 @@ test('document and event pagination keep full-day counts, and search runs before
   expect(matching.documentTotal).toBe(first.documentTotal);
 },30_000);
 
+test('the annual calendar includes older activity through day 364 and excludes day 365', async () => {
+  const tree = await fixture.tree({ parents: [null,0,0],defaultAccess: 'view' });
+  await fixture.drain();
+  const dates = [300,364,365].map(days => new Date(Date.now()-days*86_400_000));
+  const day = (date: Date) => new Intl.DateTimeFormat('en-CA',{ timeZone: 'Asia/Shanghai',year: 'numeric',month: '2-digit',day: '2-digit' }).format(date);
+  await withKnowledgeBase(fixture.pool,fixture.alpha.id,async db => {
+    for (const [index,scope] of tree.pages.entries()) {
+      await db.update(page).set({ createdBy: fixture.reader.identity.userId,createdAt: dates[index]! }).where(and(eq(page.knowledgeBaseId,fixture.alpha.id),eq(page.id,scope.pageId)));
+    }
+  });
+  const response = await fetch(`${fixture.server.origin}/api/knowledge/${fixture.alpha.id}/discovery/profile`,{ headers: { origin: fixture.server.webOrigin,cookie: fixture.reader.cookie } });
+  expect(response.status).toBe(200);
+  const data = personalProfileSchema.parse(await response.json());
+  expect(data.calendar.find(item => item.date === day(dates[0]!))?.count).toBe(1);
+  expect(data.calendar.find(item => item.date === day(dates[1]!))?.count).toBe(1);
+  expect(data.calendar.some(item => item.date === day(dates[2]!))).toBe(false);
+},30_000);
+
 test('stale ACL materializations cannot leak titles, counts, folders, saved items or history', async () => {
   await fixture.admin.query('UPDATE resources.page SET acl_revision=acl_revision+1 WHERE knowledge_base_id=$1',[fixture.alpha.id]);
   const response = await fetch(`${fixture.server.origin}/api/knowledge/${fixture.alpha.id}/discovery/profile`,{ headers: { origin: fixture.server.webOrigin,cookie: fixture.reader.cookie } });

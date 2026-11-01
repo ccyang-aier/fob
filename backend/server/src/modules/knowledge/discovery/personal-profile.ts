@@ -89,7 +89,7 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
     ORDER BY "updatedAt" DESC,id`);
   const calendar = await db.execute<{ date: string; count: number }>(sql`WITH ${visible}
     SELECT to_char(at AT TIME ZONE 'Asia/Shanghai','YYYY-MM-DD') AS date,count(*)::int AS count
-    FROM personal_activity WHERE at >= (date_trunc('day',clock_timestamp() AT TIME ZONE 'Asia/Shanghai') - interval '182 days') AT TIME ZONE 'Asia/Shanghai' AND at <= clock_timestamp()
+    FROM personal_activity WHERE at >= (date_trunc('day',clock_timestamp() AT TIME ZONE 'Asia/Shanghai') - interval '364 days') AT TIME ZONE 'Asia/Shanghai' AND at <= clock_timestamp()
     GROUP BY date ORDER BY date`);
   const activities = await db.execute<Omit<ProfileActivity, 'at'> & { at: Date | string }>(sql`WITH ${visible}
     SELECT * FROM personal_activity

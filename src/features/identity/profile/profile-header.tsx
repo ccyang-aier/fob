@@ -44,7 +44,7 @@ export function ProfileHeader({ data, onSection, onRefresh }: { data?: PersonalP
       <div className={styles.identity}>
         <div className={styles.identityHeading}><h1>{user.name}</h1><div className={styles.badges} aria-label={t('honors')}>
           {badges.map(badge => <Tooltip key={badge.key}><TooltipTrigger asChild><button className={`fob-action ${styles.badge}`} data-earned={badge.earned} type="button" onClick={() => setHonors(value => !value)} aria-expanded={honors}>
-            <Emoji value={badge.emoji} size={24} /><span>{badge.title}</span>
+            <Emoji value={badge.emoji} size={20} /><span>{badge.title}</span>
           </button></TooltipTrigger><TooltipContent>{t(badge.earned ? 'earned' : 'locked')} · {badge.hint}</TooltipContent></Tooltip>)}
         </div></div>
         <p className={styles.handle}><span>@{user.email.split('@')[0]}</span><Tooltip><TooltipTrigger asChild><span tabIndex={0} aria-label={t(user.emailVerified ? 'verified' : 'unverified')}>{user.emailVerified ? <CheckCircle size={14} aria-hidden /> : null}</span></TooltipTrigger><TooltipContent>{t(user.emailVerified ? 'verified' : 'unverified')}</TooltipContent></Tooltip></p>

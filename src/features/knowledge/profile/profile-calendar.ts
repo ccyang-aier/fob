@@ -8,13 +8,15 @@ export const profileDay = (date: Date | string) => new Intl.DateTimeFormat('en-C
 export function calendarDays(today: string, counts: ReadonlyMap<string, number>) {
   const end = new Date(`${today}T12:00:00Z`);
   const start = new Date(end);
-  start.setUTCDate(start.getUTCDate() - 182);
+  start.setUTCDate(start.getUTCDate() - 364);
+  const firstDate = start.toISOString().slice(0,10);
   start.setUTCDate(start.getUTCDate() - start.getUTCDay());
-  const days: { date: string; count: number; future: boolean }[] = [];
+  const days: { date: string; count: number; future: boolean; outside: boolean }[] = [];
   const cursor = new Date(start);
   do {
     const date = cursor.toISOString().slice(0, 10);
-    days.push({ date, count: counts.get(date) ?? 0, future: date > today });
+    const outside = date < firstDate;
+    days.push({ date, count: outside || date > today ? 0 : counts.get(date) ?? 0, future: date > today, outside });
     cursor.setUTCDate(cursor.getUTCDate() + 1);
   } while (cursor <= end || days.length % 7 !== 0);
   return days;
@@ -35,7 +37,7 @@ export function localPersonalProfile(library: LocalLibrary, knowledgeBaseId: str
   const folders: ProfileResource[] = library.folders.filter(folder => folder.knowledgeBaseId === knowledgeBaseId).map(folder => ({ id: folder.id, title: folder.name, kind: 'folder', icon: folder.metadata?.icon ?? null, createdAt: null, updatedAt: docs.filter(doc => doc.folderId === folder.id).map(doc => doc.updatedAt).sort().at(-1) ?? `${today}T00:00:00+08:00`, count: docs.filter(doc => doc.folderId === folder.id).length, starred: false, subscribed: false }));
   const events: ProfileActivity[] = docs.flatMap(doc => doc.createdAt ? [{ id: `created:${doc.id}`, kind: 'created' as const, at: doc.createdAt, targetId: doc.id, targetKind: 'document' as const, title: doc.title, excerpt: null }] : []).sort((a,b) => b.at.localeCompare(a.at) || b.id.localeCompare(a.id));
   const counts = new Map<string, number>();
-  const start = new Date(`${today}T12:00:00Z`); start.setUTCDate(start.getUTCDate() - 182);
+  const start = new Date(`${today}T12:00:00Z`); start.setUTCDate(start.getUTCDate() - 364);
   const firstDay = start.toISOString().slice(0,10);
   for (const event of events) { const date = profileDay(event.at); if (date >= firstDay && date <= today) counts.set(date, (counts.get(date) ?? 0) + 1); }
   const filtered = day ? events.filter(event => profileDay(event.at) === day) : events;

@@ -19,7 +19,7 @@ export function ProfileSidebar({ data, selected, onSection, changing, ...actions
     { key: 'receivedLikes' as const, Icon: ThumbsUp, count: data.receivedLikes },
   ];
   return <aside className={styles.sidebar}>
-    <section className={styles.dailySummary} aria-busy={changing}><div className={styles.sectionHeading}><h2>{t('day')}</h2><time dateTime={day}>{date}</time></div><dl>{summary.map(({ key, Icon, count }) => <div key={key}><dt><Icon size={25} aria-hidden /><span>{t(key)}</span></dt><dd>{changing ? '—' : count}</dd></div>)}</dl></section>
+    <section className={styles.dailySummary} aria-busy={changing}><div className={styles.sectionHeading}><h2>{t('day')}</h2><time dateTime={day}>{date}</time></div><dl>{summary.map(({ key, Icon, count }) => <div key={key}><dt><Icon size={21} aria-hidden /><span>{t(key)}</span></dt><dd>{changing ? '—' : count}</dd></div>)}</dl></section>
     <ResourcePreview title={t('myDocuments')} resources={data.documents} limit={2} onMore={() => onSection('documents')} {...actions} />
     <ResourcePreview title={t('myFolders')} resources={data.folders} limit={3} onMore={() => onSection('folders')} {...actions} />
     <ResourcePreview title={t('savedAndFollowed')} resources={data.saved} limit={2} onMore={() => onSection('saved')} {...actions} />
