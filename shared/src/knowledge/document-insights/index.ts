@@ -1,3 +1,4 @@
+export { documentPreview, type DocumentPreview } from './preview';
 export interface DocumentBlockText { id: string; text: string; signature: string }
 type JsonNode = { type?: string; text?: string; attrs?: Record<string, unknown>; content?: JsonNode[] };
 function textOf(node: JsonNode): string {

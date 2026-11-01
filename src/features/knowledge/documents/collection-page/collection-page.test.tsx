@@ -87,3 +87,25 @@ test('loading and errors replace rows, drafts use their specific empty state', a
   expect(document.body.textContent).toContain('草稿为空');
   expect(document.body.textContent).toContain('标记为草稿的文档会集中在这里');
 });
+
+test('real body previews survive a switch to the compact list and keep open actions', async () => {
+  const opened: string[] = [];
+  await render({ onOpen: id => opened.push(id), previews: { old: { heading: '实际章节', lines: ['保留这段真实摘要'], graphic: false, empty: false } } }, 'previews');
+  expect(document.body.textContent).toContain('实际章节');
+  expect(document.body.textContent).toContain('保留这段真实摘要');
+  await act(async () => (document.querySelector('button[aria-label="列表视图"]') as HTMLButtonElement).click());
+  expect(document.querySelector('button[aria-label="列表视图"]')?.getAttribute('aria-pressed')).toBe('true');
+  expect(document.querySelectorAll('[data-document-id]')).toHaveLength(2);
+  await act(async () => (document.querySelector('button[aria-label="Alpha"]') as HTMLButtonElement).click());
+  expect(opened).toEqual(['old']);
+});
+
+test('gallery limits visible previews to the displayed page and loads more on request', async () => {
+  const ids: string[][] = [];
+  await render({ entries: Array.from({ length: 25 }, (_, index) => ({ ...entries[0], id: `page-${index}` })), onVisibleIdsChange: next => ids.push(next) }, 'pagination');
+  expect(document.querySelectorAll('[data-document-id]')).toHaveLength(24);
+  expect(ids.at(-1)).toHaveLength(24);
+  await act(async () => Array.from(document.querySelectorAll('button')).find(button => button.textContent === '显示更多')!.click());
+  expect(document.querySelectorAll('[data-document-id]')).toHaveLength(25);
+  expect(ids.at(-1)).toHaveLength(25);
+});

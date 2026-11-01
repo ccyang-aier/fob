@@ -6,7 +6,9 @@ import { docState, documentVisit, member, page, personalAccessToken, shareLink, 
 import { expandRequestPrincipals, lockPermissionKnowledgeBase } from '../permissions';
 import { effectivePageAccessCondition } from '../permissions/queries';
 import { searchBlocksByKeyword } from '../search/keyword';
-import { discoverySearchInputSchema, folderMetadataSchema, folderTabSchema, folderUpdateSchema, type DiscoveryDocument } from '@fob/shared/knowledge/contracts';
+import { collectionPreviewsInputSchema, discoverySearchInputSchema, folderMetadataSchema, folderTabSchema, folderUpdateSchema, type DiscoveryDocument } from '@fob/shared/knowledge/contracts';
+import { documentPreview } from '@fob/shared/knowledge/document-insights';
+import { yStateToProseMirrorDoc } from '../import-export/y-encoding';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
@@ -34,6 +36,23 @@ export async function discoveryFacets(db: ResourceTransaction, authority: Knowle
   const folders = await db.select({ id: teamspace.id, name: teamspace.name }).from(teamspace).where(and(eq(teamspace.knowledgeBaseId, authority.knowledgeBaseId), authority.role === 'guest' ? inArray(teamspace.id, visible.map(row => row.folderId)) : undefined)).orderBy(asc(teamspace.name));
   const authors = [...new Map(visible.map(row => [row.authorId, { id: row.authorId, name: row.name, image: row.image }])).values()].sort((a, b) => a.name.localeCompare(b.name));
   return { folders, authors };
+}
+/** Read-only, bounded body summaries after applying current page ACLs. */
+export async function collectionPreviews(db: ResourceTransaction, authority: KnowledgeRequestContext, input: unknown) {
+  const parsed = collectionPreviewsInputSchema.safeParse(input);
+  if (!parsed.success) throw new DiscoveryError(400, 'INVALID_INPUT');
+  const { condition } = await access(db, authority);
+  const rows = await db.select({ id: page.id, hasBody: docState.pageId,
+    state: sql<Buffer | null>`case when octet_length(${docState.state}) <= 4194304 then ${docState.state} else null end`,
+  }).from(page).leftJoin(docState, and(eq(docState.knowledgeBaseId, page.knowledgeBaseId), eq(docState.pageId, page.id)))
+    .where(and(condition, isNull(page.deletedAt), inArray(page.id, parsed.data.pageIds))).limit(24);
+  return rows.map(row => {
+    try {
+      if (row.hasBody && !row.state) return { id: row.id, preview: null };
+      const body = row.state ? yStateToProseMirrorDoc(new Uint8Array(row.state), knowledgeSchema) : null;
+      return { id: row.id, preview: documentPreview(body?.toJSON()) };
+    } catch { return { id: row.id, preview: null }; }
+  });
 }
 export async function searchDocuments(db: ResourceTransaction, authority: KnowledgeRequestContext, input: unknown) {
   const parsed = discoverySearchInputSchema.safeParse(input); if (!parsed.success) throw new DiscoveryError(400, 'INVALID_INPUT');

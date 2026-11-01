@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from 'bun:test';
 import { and, eq } from 'drizzle-orm';
-import { discoveryFacetsSchema, discoverySearchResultSchema, folderOverviewSchema, type PageScope } from '@fob/shared/knowledge/contracts';
+import { collectionPreviewsSchema, discoveryFacetsSchema, discoverySearchResultSchema, folderOverviewSchema, type PageScope } from '@fob/shared/knowledge/contracts';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { createPermissionsFixture, type PermissionsFixture, type PermissionTestActor } from '../permissions/permissions-test-fixture';
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
@@ -166,3 +166,35 @@ test('revoked pinned documents do not leak their identifiers through folder meta
   expect(overview.total).toBe(1); expect(overview.pinned).toHaveLength(0);
   expect(overview.folder.metadata.pinnedPageIds).toEqual([tree.root.pageId]);
 });
+
+test('collection previews return only currently visible live documents in the selected knowledge base', async () => {
+  const visible = await fixture.tree({ defaultAccess: 'view', parents: [null, 0], recycled: [1] });
+  const hidden = await fixture.tree({ defaultAccess: null });
+  const foreign = await fixture.tree({ resource: 'beta', defaultAccess: 'view' });
+  await fixture.drain();
+  await seed(visible.root, 'Visible document', '真实正文摘要');
+  await seed(hidden.root, 'Private document', '不可泄漏的正文');
+  await seed(visible.pages[1]!, 'Deleted document', '已删除的正文');
+  const response = await request('previews', fixture.reader, { pageIds: [visible.root.pageId, hidden.root.pageId, foreign.root.pageId, visible.pages[1]!.pageId] });
+  expect(response.status).toBe(200);
+  const result = collectionPreviewsSchema.parse(await response.json());
+  expect(result.map(item => item.id)).toEqual([visible.root.pageId]);
+  expect(result[0]!.preview?.lines).toEqual(['真实正文摘要']);
+  expect(JSON.stringify(result)).not.toContain('不可泄漏');
+  expect((await request('previews', fixture.reader, { pageIds: [] })).status).toBe(400);
+  expect((await request('previews', fixture.reader, { pageIds: Array.from({ length: 25 }, () => visible.root.pageId) })).status).toBe(400);
+}, 30_000);
+
+test('preview reads accept read-only tokens and show unavailable for oversized or unreadable bodies', async () => {
+  const tree = await fixture.tree({ defaultAccess: 'view', parents: [null, 0] });
+  await fixture.drain();
+  await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => {
+    for (const [index, scope] of tree.pages.entries()) await db.insert(docState).values({ ...scope, state: Buffer.alloc(index ? 4194305 : 3, 255), stateVector: Buffer.alloc(0) });
+  });
+  const authorization = await fixture.createToken(fixture.owner, ['read']);
+  const response = await fetch(`${fixture.server.origin}/api/knowledge/${fixture.alpha.id}/discovery/previews`, { method: 'POST', headers: { authorization, 'content-type': 'application/json' }, body: JSON.stringify({ pageIds: tree.pages.map(scope => scope.pageId) }) });
+  expect(response.status).toBe(200);
+  const result = collectionPreviewsSchema.parse(await response.json());
+  expect(result).toHaveLength(2);
+  expect(result.every(item => item.preview === null)).toBe(true);
+}, 30_000);

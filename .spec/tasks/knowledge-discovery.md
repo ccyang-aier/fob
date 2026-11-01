@@ -112,3 +112,13 @@
 - 后台浏览器以真实团队库验证三页、路径搜索、排序菜单、文档菜单与整页刷新；标题排序在刷新后正确恢复。切换本机库后星标/回收站显示其独立空态和本机存储说明，未混入团队记录。窄屏实测宽 410 CSS px，无横向溢出，日期换到信息下方，行内操作保持可用；深浅主题检查通过。未永久删除或恢复任何真实回收站文档。
 - `pnpm check`、最终 CSS 调整后的 `pnpm build`、`git diff --check` 通过；完整检查含前端/服务端/共享类型、架构与来源摘要、国际化、图标、全量 ESLint 和静态生产构建。最后整页刷新后浏览器 error/warn 均为 0。Web 3001 / API 8721 热更新服务持续运行。
 - 截图保存在仓库外当前聊天 visualizations 目录：`collections-starred-final.png`、`collections-drafts-final.png`、`collections-trash-final.png`、`collections-local-final.png`、`collections-mobile-dark-final.png`。未提交临时截图或运行数据。
+
+## 文档集合卡片与真实预览（2026-11-01）
+
+- 集合页默认改为文档卡片：正文预览、标题/位置和作者/时间分层呈现，使用共享资源卡片单层描边、既有中性色和实色新建按钮；复用 `ViewSwitcher` 切换紧凑列表。星标、草稿、回收站共用页面、工具区和空态；回收站明确显示已删除及恢复入口，不读取已删除正文。
+- 增加位置筛选（嵌套文件夹显示完整路径）、搜索、排序和每页 24 篇的继续加载。适配器只为当前显示的卡片批量读取摘要，列表模式取消摘要查询。本机直接读取当前库正文，不上传内容。
+- 新增只读 `POST discovery/previews`，每批最多 24 个 ID，刷新 read 凭据后按当前知识库、页面 ACL 与未删除条件筛选。单篇状态最多 4 MiB，无法解码或超限返回预览不可用；只输出有界正文片段和已有的有界 PNG 白板缩略图，不返回 Y.Doc 或图表源代码。缓存按主体、知识库和页面 ID 隔离，沿用页面变更失效及请求取消。
+- 专项 12 项、53 断言通过：前端集合 6 项、共享摘要 4 项、真实 HTTP/PostgreSQL 2 项。覆盖搜索/排序/记录身份、视图切换、分页可见 ID、真实段落与换行、代码/图表 payload 排除、PNG 白名单与大小、不可变正文，以及只读令牌、外库/无权/已删除页面隔离、非法批次和不可读/超限状态。两个一次性数据库已由 fixture 清理。
+- 浏览器实测三张真实星标卡片，其中白板 PNG 加载成功（原图宽 916px）；位置筛选仅显示两篇协作文档，切换列表保留目标和筛选。草稿空态与回收站卡片保持同一框架；恢复入口可见，未改写、恢复或删除真实文档。410 CSS px 下单列卡片，页面 scrollWidth 等于 innerWidth；深浅主题、图像比例、菜单与操作区均检查，结束恢复默认桌面宽度、浅色主题与展开导航，最后页面 error/warn 均为 0。
+- 初次验证遇到既有 Web 服务触及内存阈值自动重启、冷编译无法在就绪窗口内完成，首次类型检查也撞上生成类型暂时消失。查阅已安装 Next.js 16.3 的内存与 CLI 指南后，验证期 Web 改用同版本默认 Turbopack dev 并限制进程堆；稳定后完整检查通过。Next 配置和启动脚本保持当前仓库版本，Web/API 热更新服务继续运行。
+- `pnpm check` 通过，含全量类型、架构/来源、国际化、图标、ESLint 和 8 路由生产构建；仅更新本轮两个保护源条目的摘要和适配说明。截图在仓库外当前聊天 visualizations 目录：`collection-redesign-starred.png`、`collection-redesign-trash.png`、`collection-redesign-drafts.png`、`collection-redesign-dark.png`、`collection-redesign-mobile.png`。

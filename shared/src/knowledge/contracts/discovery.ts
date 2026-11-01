@@ -13,6 +13,11 @@ export const discoveryDocumentSchema = z.object({
   views: z.number().nonnegative(), public: z.boolean(), snippet: z.string().optional(), blockId: z.string().nullable().optional(), lastViewedAt: timestampSchema.nullable().optional(),
 });
 export type DiscoveryDocument = z.infer<typeof discoveryDocumentSchema>;
+export const collectionPreviewsInputSchema = z.strictObject({ pageIds: z.array(entityIdSchema).min(1).max(24) });
+export const collectionPreviewsSchema = z.array(z.object({
+  id: entityIdSchema,
+  preview: z.object({ heading: z.string().max(180).nullable(), lines: z.array(z.string().max(240)).max(4), graphic: z.boolean(), empty: z.boolean(), image: z.string().max(400_000).regex(/^data:image\/png;base64,iVBORw0KGgo[A-Za-z\d+/=]*$/).optional() }).nullable(),
+})).max(24);
 export const discoveryFacetsSchema = z.object({ folders: z.array(z.object({ id: z.string(), name: z.string() })), authors: z.array(discoveryPersonSchema) });
 export const discoverySearchInputSchema = z.strictObject({ query: z.string().trim().max(200).default(''), folderId: entityIdSchema.optional(), authorId: entityIdSchema.optional(), limit: z.number().int().min(1).max(50).default(40) });
 export const discoverySearchResultSchema = z.object({ documents: z.array(discoveryDocumentSchema), hasMore: z.boolean() });

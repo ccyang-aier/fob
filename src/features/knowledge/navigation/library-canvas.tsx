@@ -10,7 +10,7 @@ import { ArrowCounterClockwise, Folder, Plus } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
 import { EmptyState } from '@/components/empty-state';
-import { DocumentCollectionPage } from '../documents/collection-page';
+import { ServerCollectionPage } from './server-collection-page';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeAccess } from '../data/hooks';
 import { useKnowledgePagesQuery } from '../data/pages-queries';
@@ -169,8 +169,10 @@ export function LibraryCanvas({
     const recycledIds = new Set(recycled.map(page => page.id));
     const entries = view === 'trash' ? pages.filter(page => recycledIds.has(page.id)) : listed;
     return <>
-      <DocumentCollectionPage
+      <ServerCollectionPage
         key={`${knowledgeBaseId}:${view}`}
+        knowledgeBaseId={knowledgeBaseId}
+        principal={userId}
         title={view === 'overview' ? name : titles(locale)[view]}
         kind={view === 'overview' ? 'documents' : view}
         entries={entries.map(page => ({
