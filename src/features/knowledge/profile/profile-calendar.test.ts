@@ -51,6 +51,7 @@ test('local profile preserves knowledge-base boundaries, truthful timestamps and
   const library: LocalLibrary = { bases: [],tags: [],folders: [{ id: 'folder',knowledgeBaseId: 'own',name: 'Personal folder' }],documents: [...documents,{ ...documents[0],id: 'foreign',baseId: 'other' },{ ...documents[0],id: 'deleted',deleted: true },{ ...documents[0],id: 'legacy',createdAt: undefined }] };
   const data = localPersonalProfile(library,'own',undefined,40,40,'2026-11-01');
   expect(data.documentTotal).toBe(46);
+  expect(data.receivedCoffeeTotal).toBe(0);
   expect(data.documents).toHaveLength(40);
   expect(data.activities).toHaveLength(40);
   expect(data.dayCounts.created).toBe(45);

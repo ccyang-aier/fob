@@ -115,6 +115,8 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
       `)).rows;
   return {
     documentTotal: totals?.count ?? 0, sharedDocuments: totals?.shared ?? 0,
+    // No gifting records exist yet. Check-in awards are not received gifts.
+    receivedCoffeeTotal: 0,
     documents: docs.rows.slice(0,40).map(resource), nextDocumentOffset: docs.rows.length>40 ? documentOffset+40 : null,
     folders: folders.rows.map(resource), saved: saved.rows.map(resource), calendar: calendar.rows,
     activities: activities.rows.slice(0,40).map(row => ({ ...row, at: instant(row.at) })),

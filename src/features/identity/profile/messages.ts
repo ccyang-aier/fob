@@ -1,10 +1,9 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const messages = defineMessages({
-  documents: ['文档','Documents'], coffee: ['获得咖啡','Coffee earned'], likes: ['收获点赞','Likes received'],
+  documents: ['文档','Documents'], coffee: ['收获咖啡','Coffee received'], likes: ['收获点赞','Likes received'],
   documentsHint: ['当前知识库中你创建且仍可访问的文档','Your accessible documents in this knowledge base'],
-  coffeeHint: ['账户累计签到获得的咖啡','Total coffee earned from account check-ins'],
-  coffeeUnavailable: ['咖啡统计暂时不可用，可在顶栏咖啡入口重试','Coffee statistics are unavailable. Retry from the coffee menu.'],
+  coffeeHint: ['他人赠送给你的咖啡累计数量','Total coffee gifted to you by others'],
   likesHint: ['当前知识库中，你的评论累计收到的他人点赞','All likes from others on your comments in this knowledge base'],
   halfYear: ['近6个月', 'Last 6 months'], activities: ['{count} 次活动', '{count} activities'],
   mon: ['周一', 'Mon'], wed: ['周三', 'Wed'], fri: ['周五', 'Fri'], less: ['少', 'Less'], moreActivity: ['多', 'More'],

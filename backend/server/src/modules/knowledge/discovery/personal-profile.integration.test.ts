@@ -7,6 +7,7 @@ import { withKnowledgeBase } from '../../../platform/database/resources/transact
 import { page, comment, commentThread, commentLike, knowledgeSubscription } from '../../../platform/database/resources/schema';
 import { personalProfile } from './personal-profile';
 import { createKnowledgeDiscoveryRoutes } from './http';
+import { createRewardsService } from '../../rewards/service';
 
 let fixture: PermissionsFixture;
 beforeAll(async () => {
@@ -59,6 +60,17 @@ test('profile projects real personal activity and never includes another author 
   expect(response.status).toBe(200);
   expect(personalProfileSchema.parse(await response.json()).documentTotal).toBe(1);
 },30_000);
+
+test('profile received coffee excludes real check-in rewards and account balance', async () => {
+  const rewards = createRewardsService(fixture.pool);
+  const award = await rewards.checkIn(fixture.reader.identity, {});
+  expect(award.awarded).toBe(true);
+  expect(award.balance).toBeGreaterThan(0);
+  const response = await fetch(`${fixture.server.origin}/api/knowledge/${fixture.alpha.id}/discovery/profile`, { headers: { origin: fixture.server.webOrigin, cookie: fixture.reader.cookie } });
+  expect(response.status).toBe(200);
+  expect(personalProfileSchema.parse(await response.json()).receivedCoffeeTotal).toBe(0);
+  expect((await rewards.summary(fixture.reader.identity)).balance).toBe(award.balance);
+});
 
 test('profile validates date and pagination, cannot select another user, and requires knowledge membership', async () => {
   const base = `${fixture.server.origin}/api/knowledge/${fixture.alpha.id}/discovery/profile`;
