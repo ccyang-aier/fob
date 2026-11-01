@@ -26,7 +26,7 @@ type OpenResource = (resource: Pick<ProfileResource, 'id' | 'kind'>) => void;
 const sections = ['activity','documents','folders','saved'] as const;
 
 export function PersonalProfilePage({ onOpenResource }: { onOpenResource: OpenResource }) {
-  return <KnowledgeQueryProvider><ProfileContent onOpenResource={onOpenResource} /></KnowledgeQueryProvider>;
+  return <div className={styles.viewport} data-page-scroll="personal-profile"><KnowledgeQueryProvider><ProfileContent onOpenResource={onOpenResource} /></KnowledgeQueryProvider></div>;
 }
 
 function ProfileContent({ onOpenResource }: { onOpenResource: OpenResource }) {
@@ -59,6 +59,7 @@ function ProfileContent({ onOpenResource }: { onOpenResource: OpenResource }) {
     <ProfileHeader data={profile.data} onSection={setSection} onRefresh={() => void refresh()} />
     <div className={styles.navigation}><div className={styles.tabs} role="tablist" aria-label={t('profile')}>
       {sections.map((tab,index) => <button key={tab} type="button" role="tab" id={`${id}-tab-${tab}`} aria-controls={`${id}-panel`} aria-selected={section === tab} tabIndex={section === tab || (!sections.includes(section as typeof sections[number]) && index === 0) ? 0 : -1} onClick={() => setSection(tab)} onKeyDown={event => {
+        if (event.ctrlKey || event.metaKey || event.altKey) return;
         if (['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 0 : event.key === 'End' ? 3 : (index+(event.key === 'ArrowLeft' ? 3 : 1))%4; setSection(sections[next]); document.getElementById(`${id}-tab-${sections[next]}`)?.focus(); }
       }}>{t(tab)}</button>)}
     </div><span className={styles.scope}>{t(base.source === 'local' ? 'localScope' : 'scope', { name: base.name })}</span></div>
@@ -66,7 +67,7 @@ function ProfileContent({ onOpenResource }: { onOpenResource: OpenResource }) {
       {profile.loading && !profile.data ? <ProfileLoading label={t('loading')} /> : profile.error && !profile.data ? <div className={styles.error}><AppAlert tone="error" title={t('loadFailed')} description={profile.error.message === 'LOCAL_STORAGE_UNAVAILABLE' ? undefined : profile.error.message} /><Button variant="outline" onClick={() => void refresh()}>{t('retry')}</Button></div> : profile.data ? <>
         {profile.error ? <AppAlert tone="error" title={t('loadFailed')} /> : null}
         {section === 'activity' ? <div className={styles.columns}>
-          <div className={styles.mainColumn}><ActivityCalendar calendar={profile.data.calendar} selected={selected} onSelect={date => setSelected(current => current === date ? undefined : date)} /><ActivityTimeline activities={profile.data.activities} selected={selected} onClear={() => setSelected(undefined)} onOpen={onOpenResource} nextOffset={profile.data.nextActivityOffset} onMore={() => void profile.loadMore()} loading={profile.fetching} /></div>
+          <div className={styles.mainColumn}><ActivityCalendar calendar={profile.data.calendar} selected={selected} onSelect={setSelected} /><ActivityTimeline activities={profile.data.activities} selected={selected} onClear={() => setSelected(undefined)} onOpen={onOpenResource} nextOffset={profile.data.nextActivityOffset} onMore={() => void profile.loadMore()} loading={profile.fetching} /></div>
           <ProfileSidebar data={profile.data} selected={selected} changing={profile.changing} onSection={setSection} {...actions} />
         </div> : section === 'following' || section === 'followers' ? <div className={styles.relationships}><Button variant="ghost" onClick={() => setSection('activity')}><ArrowLeft size={16} />{t('back')}</Button><h2>{t(section)}</h2><EmptyState label={t('relationshipsUnavailable')} description={t('relationshipsHint')} actions={<Button variant="outline" onClick={() => setSection('saved')}>{t('savedAndFollowed')}</Button>} /></div> : <ProfileResourceList key={section} section={section} resources={section === 'documents' ? profile.data.documents : section === 'folders' ? profile.data.folders : profile.data.saved} nextOffset={section === 'documents' ? profile.data.nextDocumentOffset : null} onMore={() => void profile.loadMore()} loading={profile.fetching} query={section === 'documents' ? { ...documentFilter, onChange: setDocumentFilter } : undefined} {...actions} />}
       </> : null}

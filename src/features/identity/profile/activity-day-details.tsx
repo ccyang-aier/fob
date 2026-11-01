@@ -1,0 +1,39 @@
+'use client';
+
+import type { ProfileActivityCounts } from '@fob/shared/knowledge/contracts';
+import { AnchoredPopover } from '@/components/ui/anchored-popover';
+import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/lib/i18n';
+import { profileTimeZone } from '@/features/knowledge/profile/profile-calendar';
+import { activityKinds } from './activity-kinds';
+import { messages } from './messages';
+import styles from './profile.module.css';
+
+const emptyCounts: ProfileActivityCounts = { created: 0, commented: 0, liked: 0, subscribed: 0 };
+
+export function ActivityDayDetails({ anchor, date, total, counts = emptyCounts, onClose, onView }: {
+  anchor: HTMLElement;
+  date: string;
+  total: number;
+  counts?: ProfileActivityCounts;
+  onClose: () => void;
+  onView: () => void;
+}) {
+  const { t, locale } = useTranslation(messages);
+  const dateLabel = new Intl.DateTimeFormat(locale, { timeZone: profileTimeZone, year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${date}T12:00:00Z`));
+
+  return (
+    <AnchoredPopover anchor={anchor} onClose={onClose} align="end" width={244} label={t('activityDetails', { date: dateLabel })}>
+      <div className={styles.dayDetails}>
+        <div className={styles.dayDetailsHeading}><strong>{dateLabel}</strong><span>{t('activities', { count: total })}</span></div>
+        <dl className={styles.dayDetailsCounts}>
+          {(['created','commented','liked','subscribed'] as const).map(kind => {
+            const { Icon, label } = activityKinds[kind];
+            return <div key={kind} data-kind={kind}><dt><span className={styles.dayDetailsIcon}><Icon size={16} aria-hidden /></span>{t(label)}</dt><dd>{counts[kind]}</dd></div>;
+          })}
+        </dl>
+        <Button variant="ghost" size="sm" className={styles.viewDayActivity} onClick={onView}>{t('viewDayActivity')}</Button>
+      </div>
+    </AnchoredPopover>
+  );
+}

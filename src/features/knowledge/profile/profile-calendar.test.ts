@@ -40,7 +40,7 @@ test('local profile preserves knowledge-base boundaries, truthful timestamps and
   expect(data.documents).toHaveLength(40);
   expect(data.activities).toHaveLength(40);
   expect(data.dayCounts.created).toBe(45);
-  expect(data.calendar).toEqual([{ date: '2026-11-01',count: 45 }]);
+  expect(data.calendar).toEqual([{ date: '2026-11-01',count: 45,counts: { created: 45,commented: 0,liked: 0,subscribed: 0 } }]);
   expect(data.saved).toHaveLength(2);
   expect(data.activities.every(event => event.targetId.startsWith('own-'))).toBe(true);
   expect(localPersonalProfile(library,'own','2026-10-31',80,80,'2026-11-01').activities).toEqual([]);

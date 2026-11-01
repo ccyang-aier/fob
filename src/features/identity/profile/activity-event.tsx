@@ -1,16 +1,15 @@
 'use client';
 
 import type { ProfileActivity } from '@fob/shared/knowledge/contracts';
-import { ArrowRight, BellSimple, CommentOutline, DotsThree, FileText, Folder, ThumbsUp } from '@/components/icons';
+import { ArrowRight, DotsThree, FileText, Folder } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import resourceCard from '@/components/ui/resource-card.module.css';
 import { useTranslation } from '@/lib/i18n';
 import type { ProfileResourceActions } from './profile-resources';
 import { messages } from './messages';
+import { activityKinds } from './activity-kinds';
 import styles from './profile.module.css';
-
-const activityIcons = { created: FileText, commented: CommentOutline, liked: ThumbsUp, subscribed: BellSimple };
 
 type ActivityEventProps = {
   event: ProfileActivity;
@@ -21,7 +20,7 @@ type ActivityEventProps = {
 
 export function ActivityEvent({ event, author, time, onOpen }: ActivityEventProps) {
   const { t } = useTranslation(messages);
-  const Icon = activityIcons[event.kind];
+  const { Icon } = activityKinds[event.kind];
   const ResourceIcon = event.targetKind === 'folder' ? Folder : FileText;
   const open = () => onOpen({ id: event.targetId, kind: event.targetKind });
 
@@ -32,8 +31,7 @@ export function ActivityEvent({ event, author, time, onOpen }: ActivityEventProp
       <article className={styles.eventBody}>
         <div className={styles.eventHeader}>
           <div className={styles.eventSummary}>
-            <span className={styles.eventIcon}><Icon size={16} aria-hidden /></span>
-            <span className={styles.eventVerb}>{t(event.kind)}</span>
+            <span className={styles.eventKind}><span className={styles.eventIcon}><Icon size={16} aria-hidden /></span><span className={styles.eventVerb}>{t(event.kind)}</span></span>
             {event.kind !== 'created' ? (
               <button type="button" className={`fob-action ${styles.eventTitle}`} data-variant="text" onClick={open}>
                 {event.title}

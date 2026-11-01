@@ -13,10 +13,15 @@ export const profileActivitySchema = z.object({
   title: z.string(), excerpt: z.string().nullable(),
 });
 export type ProfileActivity = z.infer<typeof profileActivitySchema>;
+export const profileActivityCountsSchema = z.object({
+  created: z.number().int().nonnegative(), commented: z.number().int().nonnegative(),
+  liked: z.number().int().nonnegative(), subscribed: z.number().int().nonnegative(),
+});
+export type ProfileActivityCounts = z.infer<typeof profileActivityCountsSchema>;
 export const personalProfileSchema = z.object({
   documentTotal: z.number().int().nonnegative(), nextDocumentOffset: z.number().int().nullable(),
   documents: z.array(profileResourceSchema), folders: z.array(profileResourceSchema), saved: z.array(profileResourceSchema),
-  calendar: z.array(z.object({ date: z.string(), count: z.number().int().nonnegative() })),
+  calendar: z.array(z.object({ date: z.string(), count: z.number().int().nonnegative(), counts: profileActivityCountsSchema })),
   activities: z.array(profileActivitySchema), nextActivityOffset: z.number().int().nullable(),
   receivedLikes: z.number().int().nonnegative(), sharedDocuments: z.number().int().nonnegative(),
   dayCounts: z.object({ created: z.number().int().nonnegative(), commented: z.number().int().nonnegative() }),

@@ -82,6 +82,19 @@ html button.fob-action[data-surface="plain"] {
   --action-state-bg: transparent;
 }
 
+/* 资源内容与相邻菜单共用一条反馈面，子操作不再绘制独立底色。 */
+.fob-action[data-variant="group-item"] {
+  --action-state-bg: transparent;
+  --action-selected-bg: transparent;
+}
+html .fob-action[data-variant="group"]:is(:hover, :focus-within, :has([aria-expanded="true"])) {
+  background: var(--action-state-bg);
+  color: var(--action-state-ink);
+}
+html .fob-action[data-variant="group"]:has([aria-expanded="true"]) {
+  background: var(--action-active-bg);
+}
+
 /* 内容折叠和 hover 工具仅在当前交互时高亮，展开状态不常驻底色。 */
 html .fob-action:is(:hover, :focus-visible, :active, [aria-expanded="true"]:not([data-variant="collapsible"], [data-variant="hover"])):not(:disabled):not([aria-disabled="true"]):not([data-disabled]) {
   background: var(--action-state-bg);

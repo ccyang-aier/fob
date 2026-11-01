@@ -15,6 +15,8 @@ export const messages = defineMessages({
   oneYear: ['近12个月', 'Last 12 months'],
   mon: ['周一', 'Mon'], wed: ['周三', 'Wed'], fri: ['周五', 'Fri'], less: ['少', 'Less'], moreActivity: ['多', 'More'],
   activityOnDay: ['{date} · {count} 次活动', '{date} · {count} activities'], heatmap: ['个人活动日历，使用方向键选择日期', 'Activity calendar. Use arrow keys to select a date.'],
+  activityDetails: ['{date}的活动明细', 'Activity details for {date}'], viewDayActivity: ['查看当天活动', 'View this day’s activity'],
+  activityCreated: ['发布文档', 'Documents created'], activityCommented: ['发表评论', 'Comments posted'], activityLiked: ['点赞评论', 'Comments liked'], activitySubscribed: ['关注内容', 'Content followed'],
   today: ['今天', 'Today'], yesterday: ['昨天', 'Yesterday'], allActivity: ['全部活动', 'All activity'], day: ['这一天', 'This day'],
   created: ['发布了文档', 'Created a document'], commented: ['评论了', 'Commented on'], liked: ['点赞了评论', 'Liked a comment on'], subscribed: ['关注了', 'Followed'],
   receivedLikes: ['收获了喜欢', 'Received likes'], postedComment: ['发表了评论', 'Posted comments'],

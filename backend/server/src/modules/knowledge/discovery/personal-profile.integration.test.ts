@@ -18,12 +18,24 @@ test('profile projects real personal activity and never includes another author 
   const tree = await fixture.tree({ defaultAccess: 'view', parents: [null,0], breaks: [1] });
   await fixture.drain();
   const kb = fixture.alpha.id, user = fixture.reader.identity.userId;
-  const threadId = randomUUID(), commentId = randomUUID();
+  const threadId = randomUUID(), commentId = randomUUID(), otherCommentId = randomUUID();
+  const privateThreadId = randomUUID(), privateCommentId = randomUUID();
   await withKnowledgeBase(fixture.pool,kb,async db => {
     await db.update(page).set({ title: 'Visible personal document', createdBy: user }).where(and(eq(page.knowledgeBaseId,kb),eq(page.id,tree.root.pageId)));
-    await db.insert(commentThread).values({ knowledgeBaseId: kb,id: threadId,pageId: tree.root.pageId });
-    await db.insert(comment).values({ knowledgeBaseId: kb,id: commentId,threadId,authorId: user,bodyMd: 'A real personal comment' });
-    await db.insert(commentLike).values({ knowledgeBaseId: kb,commentId,userId: fixture.owner.identity.userId });
+    await db.insert(commentThread).values([
+      { knowledgeBaseId: kb,id: threadId,pageId: tree.root.pageId },
+      { knowledgeBaseId: kb,id: privateThreadId,pageId: tree.pages[1]!.pageId },
+    ]);
+    await db.insert(comment).values([
+      { knowledgeBaseId: kb,id: commentId,threadId,authorId: user,bodyMd: 'A real personal comment' },
+      { knowledgeBaseId: kb,id: otherCommentId,threadId,authorId: fixture.owner.identity.userId,bodyMd: 'A visible comment by another person' },
+      { knowledgeBaseId: kb,id: privateCommentId,threadId: privateThreadId,authorId: fixture.owner.identity.userId,bodyMd: 'An inaccessible comment' },
+    ]);
+    await db.insert(commentLike).values([
+      { knowledgeBaseId: kb,commentId,userId: fixture.owner.identity.userId },
+      { knowledgeBaseId: kb,commentId: otherCommentId,userId: user },
+      { knowledgeBaseId: kb,commentId: privateCommentId,userId: user },
+    ]);
     await db.insert(knowledgeSubscription).values({ knowledgeBaseId: kb,id: randomUUID(),userId: user,pageId: tree.root.pageId });
   });
   const request = new Request(`${fixture.server.origin}/api/knowledge/${kb}/discovery/profile`, { headers: { cookie: fixture.reader.cookie } });
@@ -33,10 +45,12 @@ test('profile projects real personal activity and never includes another author 
   expect(data.documentTotal).toBe(1);
   expect(data.documents.map(item => item.id)).toEqual([tree.root.pageId]);
   expect(data.saved.map(item => item.id)).toEqual([tree.root.pageId]);
-  expect(data.activities.map(item => item.kind).sort()).toEqual(['commented','created','subscribed']);
+  expect(data.activities.map(item => item.kind).sort()).toEqual(['commented','created','liked','subscribed']);
+  expect(data.activities.every(item => item.targetId === tree.root.pageId)).toBe(true);
   expect(data.receivedLikes).toBe(1);
   expect(data.dayCounts).toEqual({ created: 1,commented: 1 });
-  expect(data.calendar.reduce((sum,day) => sum+day.count,0)).toBe(3);
+  expect(data.calendar.reduce((sum,day) => sum+day.count,0)).toBe(4);
+  expect(data.calendar[0]?.counts).toEqual({ created: 1,commented: 1,liked: 1,subscribed: 1 });
   const response = await fetch(request.url,{ headers: { origin: fixture.server.webOrigin,cookie: fixture.reader.cookie } });
   expect(response.status).toBe(200);
   expect(personalProfileSchema.parse(await response.json()).documentTotal).toBe(1);
@@ -73,6 +87,8 @@ test('document and event pagination keep full-day counts, and search runs before
   expect(last.nextDocumentOffset).toBeNull();
   expect(new Set([...first.documents,...last.documents].map(doc => doc.id)).size).toBe(first.documentTotal);
   expect(last.dayCounts).toEqual(first.dayCounts);
+  expect(last.calendar).toEqual(first.calendar);
+  expect(first.calendar.every(day => Object.values(day.counts).reduce((sum,count) => sum+count,0) === day.count)).toBe(true);
   const matching = await withKnowledgeBase(fixture.pool,fixture.alpha.id,db => personalProfile(db,authority,{ q: 'Unique last-page result' }));
   expect(matching.documents.map(doc => doc.id)).toEqual([tree.pages.at(-1)!.pageId]);
   expect(matching.documentTotal).toBe(first.documentTotal);

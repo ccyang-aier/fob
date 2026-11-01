@@ -87,8 +87,14 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
       AND EXISTS (SELECT 1 FROM resources.knowledge_subscription s WHERE s.knowledge_base_id=${kb}::uuid AND s.user_id=${user}::uuid AND s.teamspace_id=f.id)
       AND EXISTS (SELECT 1 FROM visible_pages p WHERE p.teamspace_id=f.id)
     ORDER BY "updatedAt" DESC,id`);
-  const calendar = await db.execute<{ date: string; count: number }>(sql`WITH ${visible}
-    SELECT to_char(at AT TIME ZONE 'Asia/Shanghai','YYYY-MM-DD') AS date,count(*)::int AS count
+  const calendar = await db.execute<PersonalProfile['calendar'][number]>(sql`WITH ${visible}
+    SELECT to_char(at AT TIME ZONE 'Asia/Shanghai','YYYY-MM-DD') AS date,count(*)::int AS count,
+      jsonb_build_object(
+        'created',count(*) FILTER (WHERE kind='created')::int,
+        'commented',count(*) FILTER (WHERE kind='commented')::int,
+        'liked',count(*) FILTER (WHERE kind='liked')::int,
+        'subscribed',count(*) FILTER (WHERE kind='subscribed')::int
+      ) AS counts
     FROM personal_activity WHERE at >= (date_trunc('day',clock_timestamp() AT TIME ZONE 'Asia/Shanghai') - interval '364 days') AT TIME ZONE 'Asia/Shanghai' AND at <= clock_timestamp()
     GROUP BY date ORDER BY date`);
   const activities = await db.execute<Omit<ProfileActivity, 'at'> & { at: Date | string }>(sql`WITH ${visible}

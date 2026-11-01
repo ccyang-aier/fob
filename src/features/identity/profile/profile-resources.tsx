@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { ProfileResource } from '@fob/shared/knowledge/contracts';
-import { ArrowRight, FileText, Folder, DotsThree, Star, StarOutline, MagnifyingGlass } from '@/components/icons';
+import { FileText, Folder, DotsThree, Star, StarOutline, MagnifyingGlass } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/empty-state';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -24,12 +24,12 @@ export function ProfileResourceRow({ resource, compact = false, onOpen, onToggle
   const { t, locale } = useTranslation(messages);
   const isFolder = resource.kind === 'folder';
   const updated = new Intl.DateTimeFormat(locale, { timeZone: profileTimeZone, month: 'short', day: 'numeric' }).format(new Date(resource.updatedAt));
-  return <div className={styles.resourceRow} data-compact={compact} data-folder={isFolder}>
-    <button type="button" className={`fob-action ${styles.resourceMain}`} onClick={() => onOpen(resource)} aria-label={t(isFolder ? 'openFolder' : 'openDocument', { title: resource.title })}>
+  return <div className={`fob-action ${styles.resourceRow}`} data-variant="group" data-compact={compact} data-folder={isFolder}>
+    <button type="button" className={`fob-action ${styles.resourceMain}`} data-variant="group-item" onClick={() => onOpen(resource)} aria-label={t(isFolder ? 'openFolder' : 'openDocument', { title: resource.title })}>
       <span className={styles.resourceIcon} data-folder={isFolder}>{resource.icon ? <PageIcon value={resource.icon} size={24} /> : isFolder ? <Folder size={26} aria-hidden /> : <FileText size={24} aria-hidden />}</span>
       <span className={styles.resourceText}><strong>{resource.title}</strong><span>{isFolder ? t('documentCount', { count: resource.count }) : <>{t('updated', { date: updated })}{!compact && resource.count > 0 ? <> · {t('readCount', { count: resource.count })}</> : null}</>}</span></span>
     </button>
-    <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon-sm" aria-label={t('resourceActions', { title: resource.title })}><DotsThree size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end">
+    <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon-sm" data-variant="group-item" aria-label={t('resourceActions', { title: resource.title })}><DotsThree size={18} /></Button></DropdownMenuTrigger><DropdownMenuContent align="end">
       <DropdownMenuItem onSelect={() => onOpen(resource)}>{isFolder ? <Folder size={16} /> : <FileText size={16} />}{t('open')}</DropdownMenuItem>
       {!isFolder ? <DropdownMenuItem onSelect={() => onToggleStar(resource)}>{resource.starred ? <Star size={16} /> : <StarOutline size={16} />}{t(resource.starred ? 'unsave' : 'save')}</DropdownMenuItem> : null}
       <SubscriptionMenuItem source={source} target={{ knowledgeBaseId, ...(isFolder ? { teamspaceId: resource.id } : { pageId: resource.id }) }} />
@@ -40,7 +40,7 @@ export function ProfileResourceRow({ resource, compact = false, onOpen, onToggle
 export function ResourcePreview({ title, resources, limit, onMore, ...actions }: ProfileResourceActions & { title: string; resources: ProfileResource[]; limit: number; onMore: () => void }) {
   const { t } = useTranslation(messages);
   return <section className={styles.previewSection}>
-    <div className={styles.sectionHeading}><h2>{title}</h2><Button variant="ghost" size="sm" className={styles.seeMore} onClick={onMore} aria-label={`${t('seeMore')} · ${title}`}>{t('seeMore')}<ArrowRight size={16} aria-hidden /></Button></div>
+    <div className={styles.sectionHeading}><h2>{title}</h2><Button variant="ghost" size="sm" className={styles.seeMore} onClick={onMore} aria-label={`${t('seeMore')} · ${title}`}>{t('seeMore')}</Button></div>
     {resources.length ? <div>{resources.slice(0,limit).map(resource => <ProfileResourceRow key={`${resource.kind}:${resource.id}`} resource={resource} {...actions} />)}</div> : <p className={styles.previewEmpty}>{t('emptyPreview')}</p>}
   </section>;
 }
