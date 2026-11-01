@@ -135,15 +135,24 @@ export function DocumentNavigationTools({
     };
   }, [editor]);
   useEffect(() => {
-    const frame = host.current?.closest('[data-knowledge-editor]');
-    const scroll = frame?.querySelector('[data-document-scroll]');
-    if (!editor?.isInitialized || editor.isDestroyed || !scroll) return;
+    const surface = host.current;
+    const scroll = surface?.querySelector('[data-document-scroll]');
+    const toolbar = surface?.querySelector('[data-document-toolbar]');
+    const titleHeading = scroll?.querySelector('[data-document-heading]');
+    if (!editor || editor.isDestroyed || !surface || !scroll || !toolbar) return;
     let animationFrame = 0;
     const update = () => {
       animationFrame = 0;
-      if (editor.isDestroyed || !editor.view.dom.getClientRects().length) return;
+      if (!scroll.getClientRects().length) return;
+      const scrolled = String(scroll.scrollTop > 0);
+      const readingTop = Math.max(scroll.getBoundingClientRect().top, toolbar.getBoundingClientRect().bottom);
+      const titleVisible = String(scroll.scrollTop > 0 && Boolean(titleHeading && titleHeading.getBoundingClientRect().bottom <= readingTop));
+      // Scroll feedback stays in DOM/CSS without re-rendering the editor tree.
+      if (surface.dataset.scrolled !== scrolled) surface.dataset.scrolled = scrolled;
+      if (surface.dataset.titleVisible !== titleVisible) surface.dataset.titleVisible = titleVisible;
+      if (!editor.isInitialized || editor.isDestroyed || !editor.view.dom.getClientRects().length) return;
       let active = -1;
-      const top = scroll.getBoundingClientRect().top + 90;
+      const top = readingTop + 90;
       headings.forEach((heading, index) => {
         const element = editor.view.nodeDOM(heading.pos);
         if (
@@ -159,11 +168,19 @@ export function DocumentNavigationTools({
       if (!animationFrame) animationFrame = requestAnimationFrame(update);
     };
     const observer = new ResizeObserver(schedule);
-    observer.observe(editor.view.dom);
+    const observeEditor = () => {
+      if (editor.isInitialized && !editor.isDestroyed) observer.observe(editor.view.dom);
+      schedule();
+    };
+    observer.observe(scroll);
+    if (titleHeading) observer.observe(titleHeading);
+    editor.on('create', observeEditor);
+    observeEditor();
     scroll.addEventListener('scroll', schedule, { passive: true });
     update();
     return () => {
       scroll.removeEventListener('scroll', schedule);
+      editor.off('create', observeEditor);
       observer.disconnect();
       cancelAnimationFrame(animationFrame);
     };
@@ -286,9 +303,9 @@ export function DocumentNavigationTools({
         onToggleOutline: editor ? () => setOutlineOpen(!outlineOpen) : undefined,
       }}
     >
-      <div ref={host} className={styles.toolsSurface}>
+      <div ref={host} className={styles.toolsSurface} data-reading={Boolean(editor)} data-scrolled="false" data-title-visible="false">
         <div className={styles.documentPrimary}>
-          <div className={styles.toolbarHost}>
+          <div className={styles.toolbarHost} data-document-toolbar>
             {header}
             {fullscreenError && (
               <div role="alert" className={styles.search}>
@@ -402,7 +419,7 @@ export function DocumentNavigationTools({
                                 scroll.scrollTop +
                                 element.getBoundingClientRect().top -
                                 scroll.getBoundingClientRect().top -
-                                28,
+                                (Number.parseFloat(getComputedStyle(scroll).scrollPaddingTop) || 28),
                               behavior: window.matchMedia('(prefers-reduced-motion: reduce)')
                                 .matches
                                 ? 'instant'

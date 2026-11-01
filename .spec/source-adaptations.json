@@ -246,8 +246,8 @@
     "sha256": "e18ec69cbb689ad313d6b7902ac5c718251fd46cf3be4319ccc1506912d6f944"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "808608cf39df935d1071aae3924a720a922bfdb91f49c6f48e0d314c4668fb0f",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Render the current document title in a noninteractive centered reading-header slot revealed after the main heading scrolls away. See docs/editor-rich-content.md. Measure both action groups to reserve equal clearance around the geometric center and hide the duplicate title when less than 80px remains.",
+    "sha256": "0c6faf68d529bed93cdbb3de8846668e9e31a1f2b1bf8bbf7a909e7fa9ae76f6",
     "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/index.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
@@ -278,16 +278,16 @@
     "sha256": "f5e9db0538fe5deda9e6935e06d6d4dbb596e47e48225e71012558f9dd7f665a"
   },
   "src/features/knowledge/editor/document-tools.module.css": {
-    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views.",
-    "sha256": "2654de4978cd805871c2124503437ad74ade9f34a05bae4a86cb4fd7c502ed55"
+    "reason": "Move document split/pin ownership to the single top-level workbench tab group, retain live editors and per-tab navigation/resource isolation, and integrate real template/subscription/coffee views. Overlay the document reading toolbar with theme-aware frosted glass and a scroll divider; align the outline with the tighter title inset while preserving file-preview and stacked-outline layout. See docs/editor-rich-content.md.",
+    "sha256": "5ea2625bcf4376a7d81754b08ccdf07acb2e5dcc66cf36e6111cf9eee25c8b0b"
   },
   "src/features/knowledge/editor/document-tools.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Update imports for component ownership without changing behavior. Cache document search by content and query; avoid duplicate search metadata transactions while preserving navigation and presentation.",
-    "sha256": "844c33a569658591752f4b73bc8d78ac9907db32209fbe6edba4054f89001b7e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Update imports for component ownership without changing behavior. Cache document search by content and query; avoid duplicate search metadata transactions while preserving navigation and presentation. Reuse the passive outline scroll scheduler for threshold-only reading-header DOM state and reserve the overlay toolbar when navigating headings. See docs/editor-rich-content.md. Bind the scroll listener before editor initialization and observe the create event so restored positions and late-mounted editors update correctly.",
+    "sha256": "3a337457394b240c2df2266fc57893fafc1b1f29930e1908cd26b94a5a33562e"
   },
   "src/features/knowledge/editor/editor-layout.module.css": {
-    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Replace the duplicated blank-document placeholder with localized blank-line decorations and keep heading-level labels clear of insertion hints.",
-    "sha256": "44534c9a4799ecaa34838a737884a5addf2f9cd5309aa72ee237e97180cdcaf7"
+    "reason": "Apply the explicit Fob visual reference: rounded outline system/action icons, Dense pastel primary navigation, topbar account/coffee and functional compact sidebar; preserve underlying behavior. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Replace the duplicated blank-document placeholder with localized blank-line decorations and keep heading-level labels clear of insertion hints. Use a shared 16px title inset and account for the overlay toolbar in document padding, scroll padding and narrow layouts. See docs/editor-rich-content.md.",
+    "sha256": "0830426a28f886da4598855c4920909291839e3e63513a2be6e56aff270a1b8c"
   },
   "src/features/knowledge/local/local-library-navigation.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Separate local folder navigation from disclosure and show the selected folder. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls.",
@@ -359,8 +359,8 @@
     "sha256": "4b197daf65134a3747588c76a0cad823a7a8a10fe71f9567f3ee0da420f05032"
   },
   "src/features/knowledge/editor/components/document-editor-header.module.css": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "3cc8294927fdf9f2ae4d2092d36658ce5a9aa953ceedc815e759865bd7b14ddc",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Fade and lift the centered reading title with responsive action clearance, truncation and reduced-motion support; allow the toolbar host frosted material to show through. See docs/editor-rich-content.md.",
+    "sha256": "a9dfd02a468fdacb782a867b7afb775bfc45396b6e68d7f405a238536e106ee3",
     "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/styles.module.css"
   },
   "src/features/knowledge/dense-sidebar/sidebar-document-menu.tsx": {
@@ -757,8 +757,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-star/index.tsx"
   },
   "src/features/knowledge/editor/editor-layout.tsx": {
-    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Mount the shared block hover/drag layer for local, collaborative and folder bodies, preserving saved content and block IDs.",
-    "sha256": "be3464073133467fd2e1d8db35f110670509b053d1e827e4b95a2aa7c38c1e60"
+    "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Mount the shared block hover/drag layer for local, collaborative and folder bodies, preserving saved content and block IDs. Mark the shared editable/read-only title row as the reading-header visibility anchor; keep title editing and metadata ownership unchanged. See docs/editor-rich-content.md.",
+    "sha256": "4bee6458e80854abd05e3e2079cfc36d62c09aa056b16efb7be5e066967b1f45"
   },
   "src/features/knowledge/editor/block-modules/table/table.module.css": {
     "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",

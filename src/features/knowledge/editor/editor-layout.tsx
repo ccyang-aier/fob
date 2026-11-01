@@ -70,7 +70,7 @@ export function DocumentHeading({
 
   return (
     <div className={styles.heading}>
-      <div className={styles.titleRow}>
+      <div className={styles.titleRow} data-document-heading>
         {icon ? <div className={styles.titleIcon}>{icon}</div> : null}
         {onTitleChange && editable ? (
           <input

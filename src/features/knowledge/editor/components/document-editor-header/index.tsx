@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './messages';
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import type { Editor } from '@tiptap/react';
 import { List, Plus } from '@/components/icons';
 import { DocumentShareButton } from '../../../sharing/document-share-dialog';
@@ -40,10 +40,33 @@ export function DocumentEditorHeader({
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const navigation = useDocumentNavigation();
+  const headerRef = useRef<HTMLElement>(null);
+  const leadingRef = useRef<HTMLDivElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    const leading = leadingRef.current;
+    const actions = actionsRef.current;
+    if (!header || !leading || !actions) return;
+    const measure = () => {
+      const bounds = header.getBoundingClientRect();
+      const inset = Math.ceil(Math.max(
+        leading.getBoundingClientRect().right - bounds.left,
+        bounds.right - actions.getBoundingClientRect().left,
+      ) + 12);
+      header.style.setProperty('--document-title-inset', `${inset}px`);
+      header.dataset.titleRoom = String(bounds.width - inset * 2 >= 80);
+    };
+    const observer = new ResizeObserver(measure);
+    [header, leading, actions].forEach(element => observer.observe(element));
+    measure();
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <header className={styles.header}>
-      <div className={styles.leading}>
+    <header ref={headerRef} className={styles.header} data-title-room="false">
+      <div ref={leadingRef} className={styles.leading}>
         <button
           ref={navigation?.outlineTrigger}
           type="button"
@@ -69,7 +92,10 @@ export function DocumentEditorHeader({
         </button>
         <DocumentStarButton starred={starred} onToggle={onToggleStar} />
       </div>
-      <div className={styles.actions}>
+      <div className={styles.readingTitle} aria-hidden="true">
+        <span>{title || knowledgeT('untitledDocument')}</span>
+      </div>
+      <div ref={actionsRef} className={styles.actions}>
         <span className={styles.presence}>
           {presence ?? (
             <span className={styles.avatar} title={avatarName || knowledgeT('me')}>

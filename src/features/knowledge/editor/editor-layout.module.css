@@ -8,13 +8,13 @@
   background: var(--panel);
 }
 
-.scrollArea { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+.scrollArea { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; scroll-padding-top: calc(var(--document-toolbar-height, 0px) + 28px); }
 .document {
   width: min(calc(100% - 112px), max(min(100% - 112px, 360px), var(--document-width)));
   font-family: var(--document-font);
   min-height: 100%;
   margin: 0 auto;
-  padding: clamp(28px, 3.6vh, 40px) 0 160px;
+  padding: calc(var(--document-toolbar-height, 0px) + var(--document-content-top, 16px)) 0 160px;
 }
 .heading { position:relative; margin-bottom: 25px; }
 .titleIcon { position:absolute; display:grid; place-items:center; inset-inline-end:calc(100% + 12px); top:50%; transform:translateY(-50%); }
@@ -74,7 +74,7 @@
 .document :global(.ProseMirror mark) { background: #e6f0ff; }
 
 @media (max-width: 700px) {
-  .document { padding: 28px 0 120px; }
+  .document { padding-bottom: 120px; }
   .heading { margin-bottom: 28px; }
   .metadata > * + *::before { display: none; }
 }
