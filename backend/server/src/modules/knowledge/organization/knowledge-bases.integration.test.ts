@@ -25,7 +25,7 @@ test('multiple independent libraries each create their own default folder and ow
   expect((await organization.listKnowledgeBases(foreign.identity, {})).items.some((item) => item.id === first.id)).toBe(false);
   const folders = await organization.listTeamspaces(owner.identity, { knowledgeBaseId: first.id });
   expect(folders.items).toHaveLength(1);
-  expect(folders.items[0]).toMatchObject({ knowledgeBaseId: first.id, name: '文档' });
+  expect(folders.items[0]).toMatchObject({ knowledgeBaseId: first.id, name: '文档', defaultAccess: 'view' });
   const secondFolders = await organization.listTeamspaces(owner.identity, { knowledgeBaseId: second.id });
   expect(secondFolders.items[0]!.id).not.toBe(folders.items[0]!.id);
 });
@@ -100,6 +100,27 @@ test('revoking direct library membership removes discovery and page access witho
   await expect(client.page.access.query({ ...tree.root, action: 'view' })).rejects.toMatchObject({ data: { code: 'UNAUTHORIZED' } });
   expect((await organization.getKnowledgeBase(foreign.identity, { knowledgeBaseId: beta.id })).role).toBe('owner');
   expect((await request(`/${beta.id}`, owner, 'DELETE', {})).status).toBe(404);
+});
+
+test('joining the library grants read-only access to public documents, including future descendants, but no private access', async () => {
+  const { organization, owner, foreign, alpha } = fixture;
+  const folders = await organization.listTeamspaces(owner.identity, { knowledgeBaseId: alpha.id });
+  const folder = folders.items.find(item => item.name === '文档')!;
+  expect(folder.defaultAccess).toBe('view');
+  const tree = await fixture.tree({ teamspace: folder, parents: [null,0,null], breaks: [2] });
+  await fixture.drain();
+  const client = fixture.apiClient({ cookie: foreign.cookie, origin: fixture.server.webOrigin });
+  await expect(client.page.access.query({ ...tree.root, action: 'view' })).rejects.toMatchObject({ data: { code: 'UNAUTHORIZED' } });
+  const issued = await organization.createInvitation(owner.identity, { knowledgeBaseId: alpha.id, email: foreign.identity.email });
+  await organization.acceptInvitation(foreign.identity, { knowledgeBaseId: alpha.id, invitationId: issued.invitation.id, token: issued.token });
+  for (const item of tree.pages.slice(0,2)) {
+    expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action: 'view' })).toMatchObject({ authorized: true, level: 'view' });
+    for (const action of ['comment', 'edit', 'full'] as const) expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action })).toMatchObject({ authorized: false });
+  }
+  expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: tree.pages[2]!.pageId, action: 'view' })).toMatchObject({ authorized: false });
+  const later = await fixture.tree({ teamspace: folder, parents: [null] });
+  await fixture.drain();
+  expect(await client.page.access.query({ ...later.root, action: 'view' })).toMatchObject({ authorized: true, level: 'view' });
 });
 
 test('owner deletion removes the entire library tree and content while retaining other libraries and accounts', async () => {

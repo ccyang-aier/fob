@@ -19,7 +19,7 @@ export function knowledgeBaseOperations(pool: Pool) {
         const actor = await currentIdentity(db, identity, true);
         const [created] = await db.insert(knowledgeBase).values({ id, name: parsed.name }).returning();
         await db.insert(member).values({ knowledgeBaseId: id, userId: actor.userId, role: 'owner' });
-        await db.insert(teamspace).values({ knowledgeBaseId: id, id: randomUUID(), name: '文档', defaultAccess: 'edit' });
+        await db.insert(teamspace).values({ knowledgeBaseId: id, id: randomUUID(), name: '文档', defaultAccess: 'view' });
         return knowledgeBaseView(created!);
       });
     },

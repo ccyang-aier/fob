@@ -5,6 +5,7 @@ import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode }
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
 import { CoffeeBalanceButton } from '@/features/rewards';
+import { KnowledgeMembersButton } from '@/features/knowledge/organization/knowledge-members-menu';
 import { useTranslation } from '@/lib/i18n';
 import { GlobalSearch } from './global-search';
 import { ThemeSwitch } from './theme-switch';
@@ -23,7 +24,7 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
   const header = useRef<HTMLElement>(null), split = Boolean(secondary), [twoRows, setTwoRows] = useState(false);
   useLayoutEffect(() => {
     const node = header.current; if (!node) return;
-    const measure = () => { const width = node.getBoundingClientRect().width, left = width * (splitRatio ?? 50) / 100; setTwoRows(split && (left < 260 || width - left < 392)); };
+    const measure = () => { const width = node.getBoundingClientRect().width, left = width * (splitRatio ?? 50) / 100; setTwoRows(split && (left < 260 || width - left < 427)); };
     measure(); const observer = new ResizeObserver(measure); observer.observe(node); return () => observer.disconnect();
   }, [split, splitRatio]);
   return <header ref={header} className={styles.bar} data-split={split} data-rows={twoRows ? 2 : 1} style={secondary ? { '--header-split': `${splitRatio ?? 50}%` } as CSSProperties : undefined}>
@@ -38,6 +39,7 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
     {secondary}
     <div className={`${styles.actions} ${styles.trailing}`}>
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
+      <KnowledgeMembersButton className={styles.button} onManage={() => onNavigate('members')} />
       <ThemeSwitch className={styles.button} />
       <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
       <CoffeeBalanceButton />

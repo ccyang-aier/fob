@@ -141,16 +141,16 @@
     "sha256": "e485d03197fcaef6b3a9a65cdcf5bee097c96a5f1f3097ff57238b7ed2075239"
   },
   "backend/server/src/modules/knowledge/organization/knowledge-bases.integration.test.ts": {
-    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
-    "sha256": "20b1ffef9bfd95606a58a901d21348ae0fe07aac1ecfa22b8e2a2d297721ebb3"
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Verify default public view access, private-document isolation, access to subsequently created public documents and lack of default comment/edit/full permissions after joining.",
+    "sha256": "9916e144c567d199cd80c02299f95155805124b05ea7cfaa7b5743e217b3d658"
   },
   "backend/server/src/modules/knowledge/organization/knowledge-bases.ts": {
-    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity.",
-    "sha256": "b765427c0700505b614dcf1e9688b12024d45eda1c50464ba85211bad00e8b9b"
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Create the default public document folder with view access so newly joined members are read-only unless explicitly granted more access.",
+    "sha256": "3da7bdfedad1232f1f37b87d4f3ed5c915f7997063227690f1e2cb9e1fb64e9a"
   },
   "backend/server/src/modules/knowledge/organization/members.integration.test.ts": {
-    "reason": "Update knowledge member API fixture for direct KB creation and test actual shared 128KiB write body limit without changing member authorization.",
-    "sha256": "33e556831603dc6d516c974446b4999f315766215d7c36a4f200a64d03656c2f"
+    "reason": "Update knowledge member API fixture for direct KB creation and test actual shared 128KiB write body limit without changing member authorization. Verify owner-only invitation creation, the ordinary-member default, real directory avatars and invitation invalidation after inviter demotion. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations.",
+    "sha256": "1da6fdb4a40563a4fece46f88f2f057ff9b002815a826fd097a6c500ac9ded39"
   },
   "backend/server/src/modules/knowledge/organization/project-scopes.integration.test.ts": {
     "reason": "Remove project-scope service and tests because Fob has only direct knowledge membership and page ACL; no compatibility route remains.",
@@ -169,8 +169,8 @@
     "sha256": "5751796247370f72ab946af90b9f8964aface89f848eec41d15e0129500794c9"
   },
   "shared/src/knowledge/contracts/organization.ts": {
-    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
-    "sha256": "313ef47f73ab835f770a5f022df900388969fdc26c427cd9bdaaaae004bb29d0"
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Default knowledge-base invitations to ordinary membership and add an optional real avatar to member summaries; preserve strict knowledge-base scoping. See docs/ui/knowledge-base-members.md.",
+    "sha256": "d4868ea8dffabd1f54bce0a10f339d9a5fa7ecd5c168d819cdf007e94c57e551"
   },
   "src/features/companion/companion-layer.tsx": {
     "reason": "Keep the global companion in one viewport-sized manual popover with scoped menus/tooltips, escaping dialog transform/overflow without remounting the character or disabling native modal interactivity.",
@@ -1354,5 +1354,13 @@
   "src/features/knowledge/navigation/library-canvas.messages.ts": {
     "sha256": "468523e5a06cd7ef45ed21276c75920fcaf3e7fdf9843247cd9ec19ac95c158f",
     "reason": " Unify starred, drafts and trash with the shared scoped collection surface, real document metadata and existing actions; remove redundant knowledge-base eyebrows. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md."
+  },
+  "backend/server/src/modules/knowledge/organization/invitations.ts": {
+    "reason": "Restrict knowledge-base member invitation creation to owners while preserving email binding, one-time tokens, expiry, revocation and transactional authority checks. See docs/ui/knowledge-base-members.md. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations.",
+    "sha256": "505a6756c775f09b2ac529140d78cf5ac3673919553670de2a7df11451ba16d4"
+  },
+  "backend/server/src/modules/knowledge/organization/members.ts": {
+    "reason": "Return real account avatars in the knowledge-base-scoped member directory without changing membership or guest directory authorization. See docs/ui/knowledge-base-members.md.",
+    "sha256": "68c795e36e80bc63656ac4d2ee5679eed2ea3e950862247bd13cc6210f626edb"
   }
 }

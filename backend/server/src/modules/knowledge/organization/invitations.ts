@@ -36,6 +36,7 @@ export function invitationOperations(pool: Pool) {
       const parsed = parseInput(createKnowledgeBaseInvitationInputSchema, input);
       const token = randomBytes(32).toString('base64url');
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, actor, role }) => {
+        if (role !== 'owner') throw new ResourceRequestError('FORBIDDEN', 'Only a knowledge base owner may invite members.', 403);
         requireRoleAuthority(role, parsed.role);
         const [existingMember] = await db.select({ userId: member.userId }).from(member).innerJoin(authUser, eq(authUser.id, member.userId))
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), sql`lower(${authUser.email}) = ${parsed.email}`));
@@ -81,7 +82,7 @@ export function invitationOperations(pool: Pool) {
         // Authority may have changed since issue. Revoked membership cannot leave
         // behind a usable invitation that silently grants its previous power.
         const [inviter] = await db.select().from(member).where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, invitation.invitedBy)));
-        if (!inviter || (inviter.role !== 'owner' && (inviter.role !== 'admin' || invitation.role === 'admin' || invitation.role === 'owner'))) throw invalidInvitation();
+        if (!inviter || inviter.role !== 'owner') throw invalidInvitation();
         const [existing] = await db.select().from(member).where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, actor.userId)));
         if (existing) throw new ResourceRequestError('CONFLICT', 'You are already a member of this knowledge base.', 409);
         await db.insert(member).values({ knowledgeBaseId: parsed.knowledgeBaseId, userId: actor.userId, role: invitation.role });

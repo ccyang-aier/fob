@@ -18,7 +18,7 @@ export const renameGroupInputSchema = groupSchema;
 export const removeGroupInputSchema = knowledgeBaseScopeSchema.extend({ groupId: entityIdSchema });
 export const groupMemberInputSchema = groupMemberSchema;
 export const createKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema.extend({
-  email: z.email().max(254).transform((value) => value.toLowerCase()), role: invitationRoleSchema,
+  email: z.email().max(254).transform((value) => value.toLowerCase()), role: invitationRoleSchema.default('member'),
 });
 export const knowledgeBaseInvitationSchema = knowledgeBaseScopeSchema.extend({
   id: entityIdSchema, email: z.email(), role: invitationRoleSchema, invitedBy: entityIdSchema,
@@ -29,7 +29,7 @@ export const acceptKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema
   invitationId: entityIdSchema, token: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
 });
 export const revokeKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema.extend({ invitationId: entityIdSchema });
-export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email() });
+export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email(), image: z.string().nullable().optional() });
 export const teamspaceSchema = knowledgeBaseScopeSchema.extend({
   id: entityIdSchema, name: resourceNameSchema, defaultAccess: permissionLevelSchema.nullable(),
   parentId: entityIdSchema.nullable().optional(),

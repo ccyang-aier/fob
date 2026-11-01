@@ -21,7 +21,7 @@ export function memberOperations(pool: Pool) {
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role }) => {
         requireDirectory(role);
         // Only identities attached to this authorized resource can be discovered.
-        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email })
+        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image })
           .from(member).innerJoin(authUser, eq(authUser.id, member.userId))
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), parsed.cursor ? gt(member.userId, parsed.cursor) : undefined))
           .orderBy(asc(member.userId)).limit(parsed.limit + 1);
