@@ -22,6 +22,7 @@ import {
 import { SidebarRecentNotes } from '@/features/knowledge/dense-sidebar/sidebar-recent-notes';
 import { IconButton } from './icon-button';
 import { KnowledgeMainNavigation } from './knowledge-main-navigation';
+import { CompactLibraryNavigation } from './compact-library-navigation';
 import { useKnowledgeNavigationCompact } from '../navigation/system-navigation';
 import type {
   SidebarProjectNode,
@@ -113,7 +114,14 @@ export function ExpandedPrimarySidebar({
     [onCreateTag, tagName],
   );
 
-  if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={onNavigateMain} />;
+  if (compact) return <CompactLibraryNavigation
+    activeItem={activeResource ? null : activeItem}
+    counts={counts}
+    folders={projects.filter(node => node.kind !== 'document').map(node => ({ id: node.id, label: node.label ?? (node.labelKey ? t(node.labelKey) : ''), icon: node.folderIcon }))}
+    selectedFolderId={activeResource?.startsWith('project:') ? activeResource.slice('project:'.length) : null}
+    onNavigate={onNavigateMain}
+    onSelectFolder={onSelectProject}
+  />;
 
   return (
     <nav

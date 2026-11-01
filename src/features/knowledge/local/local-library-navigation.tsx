@@ -28,6 +28,7 @@ import {
   SidebarSectionHeader,
 } from '../dense-sidebar/sidebar-navigation-primitives';
 import { KnowledgeMainNavigation } from '../dense-sidebar/knowledge-main-navigation';
+import { CompactLibraryNavigation } from '../dense-sidebar/compact-library-navigation';
 import { useKnowledgeNavigationCompact } from '../navigation/system-navigation';
 import styles from '../dense-sidebar/sidebar-interactions.module.css';
 import { PageIcon } from '../navigation/page-icon';
@@ -173,7 +174,14 @@ export function LocalLibraryNavigation({
   }
 
   const activeItem = !selectedId && !activeTagId && !selectedFolderId ? view : null;
-  if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />;
+  if (compact) return <CompactLibraryNavigation
+    activeItem={activeItem}
+    counts={counts}
+    folders={folders.filter(folder => !folder.parentId).map(folder => ({ id: folder.id, label: folder.name, icon: folder.metadata?.icon }))}
+    selectedFolderId={!selectedId && !activeTagId ? selectedFolderId : null}
+    onNavigate={id => onSelectMain(id as MainView)}
+    onSelectFolder={id => onSelectFolder?.(id)}
+  />;
 
   return (
     <TreeDragProvider folders={folders} documents={documents} canMoveFolders={hasKnowledgeBase} canMoveDocuments={hasKnowledgeBase} onMove={onMoveNode} onExpandFolder={expandFolder} errorText={error => error instanceof Error ? error.message : dragT('failed')}>

@@ -88,3 +88,11 @@
 - 同仓库另一聊天正在实现图形预览，本次保留该实现并独立验证白板标题不在描边容器内；遮罩中的滚轮缩放 113%→152%，拖拽位移生效，适应窗口和关闭返回正常。编辑器代码不纳入本次提交。
 - `pnpm typecheck`、修改文件 ESLint、`pnpm icons:verify`、`pnpm architecture:verify`、`pnpm i18n:verify`、文件夹专项 9 项及 `git diff --check` 通过。Web 3001 与 API 8721 返回 HTTP 200，进程分别为 Next dev 和 Bun watch，未重复拉起。未重跑知识库 CRUD、权限矩阵或生产构建。
 - 浏览器证据保存在仓库外聊天 visualizations 目录：`sidebar-account-pin-final.png`、`graphic-overlay-verified.png`，不提交截图或运行快照。
+
+## 收起侧栏一级文件夹入口（2026-11-01）
+
+- 收起侧栏在主页、星标、草稿、回收站下方增加一级文件夹快捷入口，上方使用 24px 宽、共享 1px 分隔线令牌。复用 `SidebarRow`、`PageIcon` 与共享 Tooltip，保留原图标、可访问名称、当前文件夹选中态和资源所有者的真实跳转；本机与服务端适配器共用呈现。文件夹列表可单独滚动，空目录不增加分割线。
+- 验证流程：原 localhost 团队库产品研究 → 收起 → 协作文档 → 产品研究 → 刷新/再次收起；本机文件夹验收库 → 收起 → 本机研究 → 切回原团队库。团队库仅显示产品研究、概览编辑器验收、协作文档三个一级入口，不显示其子目录；本机库仅显示本机研究。跳转后的 URL、标题及 `aria-current=page` 与所选真实文件夹一致，切库无旧入口残留。
+- 使用内置浏览器 CUA/Playwright 接口，无独立 Browser 插件且未安装浏览器依赖。默认桌面、深浅主题及 390×844 覆盖下验证通过；浏览器缩放使窄屏 CSS 宽度实测约 410px，文件夹按钮实测约 32×32px，底部辅助入口可见。分割线实测约 24×1px，深色使用对应分隔色；键盘聚焦显示原文件夹名称 Tooltip。最后恢复原团队库、产品研究、浅色与收起状态，重置视口覆盖。页面身份正确、内容非空、无框架错误遮罩，最终控制台 0 error / 0 warning。
+- `pnpm typecheck`、修改文件 ESLint、`pnpm icons:verify`、`pnpm i18n:verify`、导航和图标既有专项 10 项通过。完整工作树架构检查因原有的 `local-knowledge-resource.tsx`、`library-canvas.tsx` 并行改动尚未更新适配摘要而失败；以当前 HEAD 加本次文件构成隔离快照，6 项边界测试及完整迁移摘要、1036 个运行时模块、静态依赖环检查均通过。未修改并行实现或替其登记摘要，未重跑业务权限或生产构建。
+- 截图位于仓库外聊天 visualizations 目录的 `fob-collapsed-folders.jpg`，不纳入提交。Web 与业务服务继续运行。
