@@ -192,3 +192,9 @@
 - 在用户文档的独立真实页面中验证：1347×758 桌面视口下，约 753px 的正文宽度内显示约 735×803px 图像；收起目录后同步扩大为约 945×1032px，展开后恢复。源码 / 预览切换后回到正文宽度，SVG 图片 URL 保持完全一致。约 391px 窄屏下，块宽约 226px、图像约 209×228px，等比缩小且页面无横向溢出。文档与块身份正确，无框架错误覆盖层；保留既有 callout 选区警告，无应用错误。
 - 图形、源码权限、尺寸撤销、放大预览、斜杠菜单及公共 Markdown 回归 61 tests / 477 assertions / 0 fail；修改组件 ESLint、图标规范、架构边界及差异检查通过。生产编译、TypeScript 与静态页面 8/8 通过；本轮没有新增样式镜像测试。
 - 验证后恢复桌面视口、主导航和目录展开，关闭临时页，未提交文档源码或尺寸修改；开发服务继续运行。截图留在仓库外 visualizations 目录：`plantuml-responsive-desktop.jpg`、`plantuml-responsive-mobile.jpg`。本轮聚焦桌面与窄屏宽度变化，未重测实体触控或所有 PlantUML 图种。
+
+## PlantUML 统一为内容自然宽高（2026-11-01）
+
+- 按用户明确的尺寸要求，PlantUML 与 Mermaid / 白板共用自然尺寸规则：SVG 内容决定宽度，高度按比例自然排布，超出正文可用宽度时缩小。删除上一轮专为 PlantUML 增加的填充可用宽度分支，当前设计同步至 [编辑器富内容块](../../docs/editor-rich-content.md)。
+- 实机发现当前示例保存了手动宽高，通过现有角区的 Home 操作将其恢复为 `autoWidth=true` / `autoHeight=true`。刷新后仍为自动模式，图像为原始 391×427px，外框约 409×462px，SVG 图片 URL 与修改前一致，源码和图表内容保留。截图保存于仓库外 visualizations 目录的 `plantuml-natural-size.jpg`，临时验证页随后关闭。
+- 图形内容与共享外框回归 39 tests / 372 assertions / 0 fail；修改组件 ESLint、图标、架构、差异检查及生产编译 / TypeScript / 静态页面 8/8 通过。真实页面无应用错误，保留既有 callout 选区恢复警告；本轮聚焦桌面自然尺寸和刷新持久化，开发服务继续运行。

@@ -9,6 +9,7 @@ import { RichBlockFrame } from '../frame';
 import { richMessages } from '../frame/messages';
 import { useRichTheme } from '../frame/use-theme';
 import { GraphicToolButton } from '../frame/tool-button';
+import { svgGraphicSize } from '../graphic-preview/size';
 import { renderPlantUml } from './runtime';
 import { PLANTUML_SOURCE_LIMIT } from './source';
 import styles from '../frame/styles.module.css';
@@ -22,19 +23,19 @@ export function PlantUmlNodeView(props: NodeViewProps) {
   const [sourceOpen, setSourceOpen] = useState(!source);
   const editing = sourceOpen && editable;
   const [attempt, setAttempt] = useState(0);
-  const [result, setResult] = useState<{ source: string; dark: boolean; image: string; error: boolean } | null>(null);
+  const [result, setResult] = useState<{ source: string; dark: boolean; image: string; width?: number; error: boolean } | null>(null);
   useEffect(() => {
     if (!deferred.trim() || editing) return;
     const controller = new AbortController();
     const timer = setTimeout(() => {
       void renderPlantUml(deferred, dark, controller.signal).then(svg => {
-        if (!controller.signal.aborted) setResult({ source: deferred, dark, image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`, error: false });
+        if (!controller.signal.aborted) setResult({ source: deferred, dark, image: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`, width: svgGraphicSize(svg)?.width, error: false });
       }).catch(() => { if (!controller.signal.aborted) setResult({ source: deferred, dark, image: '', error: true }); });
     }, 180);
     return () => { clearTimeout(timer); controller.abort(); };
   }, [deferred, dark, editing, attempt]);
   const current = result?.source === source && result.dark === dark && !result.error ? result : null;
-  return <RichBlockFrame props={props} icon={ChartBar} title={t('plantuml')} appearance="canvas" preview={editing ? undefined : current?.image} intrinsicWidth={editing ? 560 : undefined} fillAvailableWidth={!editing} actions={editable && (editing
+  return <RichBlockFrame props={props} icon={ChartBar} title={t('plantuml')} appearance="canvas" preview={editing ? undefined : current?.image} intrinsicWidth={editing ? 560 : current?.width} actions={editable && (editing
     ? <GraphicToolButton label={t('preview')} onClick={() => setSourceOpen(false)}><ChartBar size={16} aria-hidden /></GraphicToolButton>
     : <GraphicToolButton label={t('editDiagram')} onClick={() => setSourceOpen(true)}><PencilSimple size={16} aria-hidden /></GraphicToolButton>)}>
     {editing ? <textarea className={styles.source} aria-label={t('plantumlSource')} placeholder={'@startuml\nAlice -> Bob : Hello\nBob --> Alice : OK\n@enduml'} value={source} maxLength={PLANTUML_SOURCE_LIMIT} spellCheck={false} onChange={event => { if (props.editor.isEditable) props.updateAttributes({ source: event.target.value }); }} />
