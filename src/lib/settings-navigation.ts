@@ -24,7 +24,7 @@ export function setSettingsSection(section: SettingsSection) {
 export function closeSettings() {
   const url = new URL(window.location.href);
   const target = url.searchParams.get('returnView');
-  if (target === 'members' || target === 'templates' || target === 'profile') url.searchParams.set('view', target);
+  if (target === 'members' || target === 'templates') url.searchParams.set('view', target);
   else url.searchParams.delete('view');
   url.searchParams.delete('returnView');
   url.searchParams.delete('section');

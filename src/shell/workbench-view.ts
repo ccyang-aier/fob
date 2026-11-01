@@ -3,8 +3,8 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import { getNavigationSnapshot, getServerNavigationSnapshot, goBack, goForward, pushWorkbenchLocation, replaceWorkbenchLocation, startNavigationHistory, subscribeNavigationHistory, WORKBENCH_VIEW_CHANGED } from '@/lib/navigation-history';
 
-export type WorkbenchView = 'knowledge' | 'members' | 'templates' | 'profile' | 'settings';
-const views: readonly WorkbenchView[] = ['knowledge', 'members', 'templates', 'profile', 'settings'];
+export type WorkbenchView = 'knowledge' | 'members' | 'templates' | 'settings';
+const views: readonly WorkbenchView[] = ['knowledge', 'members', 'templates', 'settings'];
 const viewChanged = WORKBENCH_VIEW_CHANGED;
 function resolveView(value: string | null): WorkbenchView {
   return views.includes(value as WorkbenchView) ? value as WorkbenchView : 'knowledge';
@@ -17,6 +17,13 @@ function subscribe(listener: () => void) {
 export function useWorkbenchView(scopeKey: string | null) {
   useEffect(() => startNavigationHistory(scopeKey), [scopeKey]);
   const search = useSyncExternalStore(subscribe, () => window.location.search, () => '');
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('view') !== 'profile') return;
+    url.searchParams.delete('view');
+    if (url.searchParams.get('tab') === 'profile') url.searchParams.delete('tab');
+    replaceWorkbenchLocation(url);
+  }, [search]);
   const navigation = useSyncExternalStore(subscribeNavigationHistory, getNavigationSnapshot, getServerNavigationSnapshot);
   const params = new URLSearchParams(search);
   const settingsOpen = params.get('view') === 'settings';

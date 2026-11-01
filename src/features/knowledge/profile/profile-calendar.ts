@@ -5,10 +5,15 @@ export const profileTimeZone = 'Asia/Shanghai';
 export const profileDay = (date: Date | string) => new Intl.DateTimeFormat('en-CA', { timeZone: profileTimeZone }).format(new Date(date));
 
 /** Calendar arithmetic uses UTC noon so host time zone and DST cannot shift a day. */
-export function calendarDays(today: string, counts: ReadonlyMap<string, number>) {
+export function calendarDays(today: string, counts: ReadonlyMap<string, number>, months: 6 | 12 = 12) {
   const end = new Date(`${today}T12:00:00Z`);
   const start = new Date(end);
-  start.setUTCDate(start.getUTCDate() - 364);
+  if (months === 6) {
+    start.setUTCDate(1);
+    start.setUTCMonth(start.getUTCMonth() - 6);
+    const lastDay = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + 1, 0)).getUTCDate();
+    start.setUTCDate(Math.min(end.getUTCDate(), lastDay) + 1);
+  } else start.setUTCDate(start.getUTCDate() - 364);
   const firstDate = start.toISOString().slice(0,10);
   start.setUTCDate(start.getUTCDate() - start.getUTCDay());
   const days: { date: string; count: number; future: boolean; outside: boolean }[] = [];

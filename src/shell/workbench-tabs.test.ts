@@ -79,6 +79,18 @@ test('retired coffee tabs cannot restore an empty page or leave a broken split',
   expect(restoreWorkbenchTabs('scope', { ...state, tabs: [coffee] })).toBeNull();
 });
 
+test('retired personal-page tabs are discarded while document tabs and their targets survive', () => {
+  const state = createWorkbenchTabs('scope', tabTarget('knowledge', '?knowledgeBase=base&source=server&document=doc'));
+  const profile = { key: 'profile', view: 'profile', instance: 1, search: '?view=profile' };
+  const restored = restoreWorkbenchTabs('scope', { ...state, tabs: [...state.tabs, profile], active: 'profile', split: { left: 'knowledge', right: 'profile', ratio: 50 } });
+  expect(restored?.tabs).toHaveLength(1);
+  expect(restored?.active).toBe('knowledge');
+  expect(restored?.tabs[0].search).toContain('document=doc');
+  expect(restored?.tabs[0].instance).toBe(state.tabs[0].instance);
+  expect(restored?.split).toBeUndefined();
+  expect(restoreWorkbenchTabs('scope', { ...state, tabs: [profile] })).toBeNull();
+});
+
 test('folder tab titles and route restore within their knowledge base without inventing a document target', () => {
   const state = createWorkbenchTabs('scope', tabTarget('knowledge', '?knowledgeBase=kb&source=server&folder=folder'));
   state.tabs[0].title = 'Research';

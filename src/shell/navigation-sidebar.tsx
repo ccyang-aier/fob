@@ -53,7 +53,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
         {row('members')}{row('templates')}
       </nav>
       <div className={styles.workspaceBar} data-compact={!open}>
-        {open && <div className={styles.workspaceSwitcher}><AccountItem /></div>}
+        <div className={styles.workspaceSwitcher}><AccountItem hidden={!open} /></div>
         {helpButton}{settingsButton}
       </div>
     </footer>

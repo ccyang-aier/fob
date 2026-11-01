@@ -17,6 +17,20 @@ function Fixture({ menu = false, virtual = false }: { menu?: boolean; virtual?: 
     </Popover>}
   </main>;
 }
+
+function NestedFixture() {
+  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [child, setChild] = useState<HTMLElement | null>(null);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
+  return <main><button id="trigger" onClick={event => setAnchor(event.currentTarget)}>Open</button>
+    {anchor && <Popover anchor={anchor} label="Members" onClose={reason => {
+      if (reason === 'escape' && child) setChild(null);
+      else { setChild(null); setAnchor(null); }
+    }}><div ref={setContainer}><button id="member-actions" onClick={event => setChild(event.currentTarget)}>Actions</button>
+      {child && container && <Popover anchor={child} container={container} label="Member actions" role="menu" onClose={() => setChild(null)}><button role="menuitem">Copy email</button></Popover>}
+    </div></Popover>}
+  </main>;
+}
 beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3000' });
   const globals = globalThis as Record<string, unknown>;
@@ -48,6 +62,22 @@ test('outside interaction dismisses without stealing the new input focus', async
   await act(async () => { outside.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true })); outside.focus(); });
   expect(document.querySelector('[role="dialog"]')).toBeNull();
   expect(document.activeElement).toBe(outside);
+});
+
+test('nested member menus keep their parent open and restore each trigger when dismissed', async () => {
+  await act(async () => root.render(<NestedFixture />));
+  await act(async () => document.querySelector<HTMLButtonElement>('#trigger')!.click());
+  await act(async () => document.querySelector<HTMLButtonElement>('#member-actions')!.click());
+  const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+  expect(document.querySelector('[role="dialog"]')?.contains(menu)).toBe(true);
+  expect(document.activeElement?.textContent).toBe('Copy email');
+  await act(async () => menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  expect(document.querySelector('[role="menu"]')).toBeNull();
+  expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+  expect(document.activeElement?.id).toBe('member-actions');
+  await act(async () => document.activeElement!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true })));
+  expect(document.querySelector('[role="dialog"]')).toBeNull();
+  expect(document.activeElement?.id).toBe('trigger');
 });
 test('context menus support keyboard traversal while skipping disabled actions', async () => {
   await open(true);

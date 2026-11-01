@@ -1,51 +1,46 @@
-.popover { padding:0; border-radius:14px; user-select:text; }
-.content { padding:18px 18px 0; font-size:13px; }
-.heading { margin-bottom:16px; }
-.heading > div { display:flex; align-items:center; gap:8px; }
-.heading h2,.notice h2 { margin:0; font-size:15px; font-weight:600; }
-.heading p { overflow:hidden; margin:4px 0 0; color:var(--muted-strong); text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
-.count { display:grid; min-width:20px; height:20px; padding:0 5px; place-items:center; border-radius:6px; background:var(--surface-subtle); color:var(--muted-strong); font-size:11px; font-variant-numeric:tabular-nums; }
+.popover { padding:0; border-radius:12px; user-select:text; }
+.content { padding:14px 14px 10px; font-size:12px; }
 .inviteForm { display:flex; align-items:center; gap:8px; }
-.emailInput { display:flex; flex:1; align-items:center; gap:9px; min-width:0; height:38px; padding:0 13px; border:1px solid var(--control-border); border-radius:999px; color:var(--muted); }
+.emailInput { display:flex; flex:1; align-items:center; min-width:0; height:32px; padding:0 12px; border:1px solid var(--control-border); border-radius:999px; }
 .emailInput:focus-within { border-color:var(--ink); }
 .emailInput[data-invalid=true] { border-color:var(--err-ink); }
 .emailInput input { width:100%; min-width:0; padding:0; border:0; border-radius:0; background:transparent; color:var(--ink); outline:none; box-shadow:none; font-size:12px; }
 .emailInput input::placeholder { color:var(--muted); }
-.emailInput > svg { flex:0 0 auto; }
-.inviteButton { flex:0 0 auto; height:38px; min-width:66px; padding-inline:17px; border-radius:999px; font-size:12px; }
-.fieldError { margin:7px 0 0; color:var(--err-ink); font-size:11px; }
-.fieldHint { margin:7px 0 0; color:var(--muted-strong); font-size:11px; }
-.content > [role=alert] { margin-top:10px; }
-.accessNote { display:flex; align-items:center; gap:10px; min-width:0; margin:14px 0 18px; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--surface-subtle); }
-.noteIcon { display:grid; flex:0 0 auto; width:34px; height:34px; place-items:center; border:1px solid var(--control-border); border-radius:50%; color:var(--muted-strong); background:var(--panel); }
-.accessNote > div { flex:1; min-width:0; }
-.accessNote strong { display:block; font-size:12px; font-weight:550; }
-.accessNote p { overflow:hidden; margin:3px 0 0; color:var(--muted-strong); text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
-.copyButton { flex:0 0 auto; height:28px; padding-inline:11px; border-radius:999px; font-size:11px; }
-.listHeading { display:flex; align-items:center; gap:6px; margin-bottom:6px; color:var(--muted-strong); font-size:11px; }
-.listHeading > span:last-child { color:var(--muted); font-variant-numeric:tabular-nums; }
+.inviteButton { flex:0 0 auto; height:32px; min-width:54px; padding-inline:13px; border-radius:999px; box-shadow:none; font-size:12px; }
+.fieldError { margin:6px 0 0; color:var(--err-ink); font-size:11px; }
+.fieldHint { margin:6px 0 0; color:var(--muted-strong); font-size:11px; }
+.content > [role=alert] { margin-top:8px; }
+.accessNote { display:flex; align-items:center; gap:7px; margin:11px 0 14px; color:var(--muted-strong); font-size:11px; }
+.linkCard { display:flex; align-items:center; gap:9px; margin:10px 0 14px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--surface-subtle); }
+.noteIcon { display:grid; flex:0 0 auto; width:30px; height:30px; place-items:center; border:1px solid var(--control-border); border-radius:50%; color:var(--muted-strong); background:var(--panel); }
+.linkCard > div { flex:1; min-width:0; }
+.linkCard strong { display:block; font-size:12px; font-weight:500; }
+.linkCard p { overflow:hidden; margin:3px 0 0; color:var(--muted-strong); text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.copyButton { flex:0 0 auto; height:26px; padding-inline:9px; border-radius:999px; box-shadow:none; font-size:11px; }
+.listHeading { display:flex; align-items:center; gap:5px; margin-bottom:4px; color:var(--muted); font-size:10px; }
+.scope { overflow:hidden; margin-left:auto; text-overflow:ellipsis; white-space:nowrap; }
 .members { margin:0; padding:0; list-style:none; }
-.member { display:flex; align-items:center; gap:11px; min-height:64px; padding-block:10px; }
-.avatar { flex:0 0 auto; width:34px; height:34px; font-size:13px; }
+.member { display:flex; align-items:center; gap:9px; min-height:52px; padding-block:9px; }
+.avatar { flex:0 0 auto; width:28px; height:28px; font-size:11px; }
 .memberIdentity { flex:1; min-width:0; }
-.memberIdentity > strong { display:block; overflow:hidden; color:var(--ink); text-overflow:ellipsis; white-space:nowrap; font-size:13px; font-weight:550; }
-.memberIdentity strong small { color:var(--muted-strong); font-size:11px; font-weight:400; }
-.memberIdentity > span { display:block; overflow:hidden; margin-top:3px; color:var(--muted); text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
-.memberStatus { display:flex; flex:0 0 auto; flex-direction:column; align-items:flex-end; gap:5px; color:var(--muted-strong); font-size:11px; }
-.memberStatus small { display:flex; align-items:center; gap:4px; white-space:nowrap; font-size:10px; }
-.memberStatus i { width:5px; height:5px; border-radius:50%; }
-.pending { margin-top:10px; padding-top:14px; border-top:1px solid var(--line); }
-.pendingRow { display:flex; align-items:center; gap:10px; min-width:0; padding-block:9px; }
-.pendingIcon { display:grid; flex:0 0 auto; width:34px; height:34px; place-items:center; border-radius:50%; color:var(--muted); background:var(--surface-subtle); }
+.memberIdentity > strong { display:block; overflow:hidden; color:var(--ink); text-overflow:ellipsis; white-space:nowrap; font-size:12px; font-weight:500; }
+.memberIdentity strong small { color:var(--muted-strong); font-size:10px; font-weight:400; }
+.memberIdentity > span { display:block; overflow:hidden; margin-top:3px; color:var(--muted); text-overflow:ellipsis; white-space:nowrap; font-size:10.5px; }
+.memberStatus { display:flex; flex:0 0 auto; flex-direction:column; align-items:flex-end; gap:3px; color:var(--muted-strong); font-size:10px; }
+.memberStatus small { display:flex; align-items:center; gap:4px; white-space:nowrap; font-size:9px; }
+.memberStatus i { width:4px; height:4px; border-radius:50%; }
+.memberMenuButton { flex:0 0 auto; width:28px; height:28px; border:1px solid var(--control-border); border-radius:50%; color:var(--muted-strong); }
+.menuItem { display:flex; align-items:center; gap:8px; width:100%; padding:6px 8px; border-radius:4px; text-align:left; font-size:12px; }
+.pending { margin-top:9px; padding-top:10px; border-top:1px solid var(--line); }
+.pendingRow { display:flex; align-items:center; gap:8px; min-width:0; padding-block:8px; }
+.pendingIcon { display:grid; flex:0 0 auto; width:28px; height:28px; place-items:center; border-radius:50%; color:var(--muted); background:var(--surface-subtle); }
 .pendingIdentity { flex:1; min-width:0; }
-.pendingRow strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; font-weight:500; }
+.pendingRow strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; font-weight:500; }
 .pendingRow small { display:block; margin-top:3px; color:var(--muted); font-size:10px; }
 .pendingActions { display:flex; flex:0 0 auto; gap:2px; }
-.pendingActions > button { height:28px; padding-inline:6px; color:var(--muted-strong); font-size:11px; }
+.pendingActions > button { height:26px; padding-inline:5px; color:var(--muted-strong); font-size:10px; }
 .pendingActions > button:last-child { color:var(--err-ink); }
-.footer { display:flex; justify-content:flex-end; margin-top:10px; padding:10px 0; border-top:1px solid var(--line); }
-.footer button { height:28px; padding-inline:8px; color:var(--muted-strong); font-size:11px; }
-.state { display:flex; flex-direction:column; align-items:flex-start; gap:10px; padding:18px 0; color:var(--muted-strong); font-size:12px; }
-.notice { display:flex; flex-direction:column; align-items:flex-start; gap:14px; padding:20px; }
+.state { display:flex; flex-direction:column; align-items:flex-start; gap:9px; padding:14px 0; color:var(--muted-strong); font-size:12px; }
+.notice { display:flex; flex-direction:column; align-items:flex-start; gap:12px; padding:18px; }
+.notice h2 { margin:0; font-size:14px; font-weight:600; }
 .notice p { margin:0; color:var(--muted-strong); font-size:12px; line-height:1.7; }
-@media (max-width:500px) { .content { padding:16px 14px 0; } .member { gap:9px; } .emailInput { padding-inline:10px; } }

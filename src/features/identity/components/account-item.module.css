@@ -16,6 +16,8 @@
   outline: none;
 }
 
+.trigger[hidden] { display:none; }
+
 .trigger:focus-visible {
   border-color: var(--control-border);
 }

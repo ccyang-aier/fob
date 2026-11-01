@@ -16,8 +16,11 @@
 }
 .dialog::backdrop { background: color-mix(in srgb, var(--modal-backdrop) 50%, transparent); backdrop-filter: blur(3px); }
 .dialog[open] { animation: appear .35s cubic-bezier(.2, .7, .1, 1) both; }
+.profileDialog { width:440px; }
+.profileDialog[open] { animation-name:profile-appear; }
 .close { position: absolute; z-index: 2; top: 14px; right: 14px; display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid transparent; border-radius: 10px; color: var(--muted-strong); outline: none; cursor: pointer; }
 .close:focus-visible { border-color: var(--control-border); }
+.profileDialog .close { background:var(--panel); border-color:var(--control-border); }
 .login { display: grid; grid-template-columns: 1.05fr 1fr; min-height: 480px; }
 .formPanel { display: flex; min-width: 0; flex-direction: column; padding: 40px 52px 28px; }
 .showcase { position: relative; min-width: 0; overflow: hidden; border-right: 1px solid var(--line); background: #060b26; color: #f6f8ff; }
@@ -34,6 +37,8 @@
 .pages i[data-active='true'] { background: #f6f8ff; }
 :global(html[data-theme='dark']) .dialog { --auth-paper: var(--surface-subtle); --auth-input-border: var(--control-border); --auth-ink: var(--ink); }
 @keyframes appear { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes profile-appear { from { opacity:0; } to { opacity:1; } }
 @keyframes content-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 820px) { .formPanel { padding: 40px 30px 28px; } .showcaseContent { padding: 24px; } .quote { font-size: 27px; } .brand > span { font-size: 8px; } }
 @media (max-width: 680px) { .dialog { width: 440px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); border-radius: 18px; } .login { display: block; min-height: 0; } .showcase { display: none; } .formPanel { padding: 44px 28px 28px; } }
+@media (prefers-reduced-motion:reduce) { .dialog[open] { animation:none; } }

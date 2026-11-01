@@ -30,14 +30,15 @@ import { useIdentity } from '../identity-context';
 import { presenceDisplay, getPresenceOptions } from '../presence';
 import { LogoutConfirmDialog } from './logout-confirm-dialog';
 import styles from './account-item.module.css';
-import { openPersonalProfile } from '../profile/navigation';
+import { AccountDialog } from './account-dialog';
 
-export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?: boolean; variant?: 'sidebar' | 'topbar' }) {
+export function AccountItem({ compact = false, variant = 'sidebar', hidden = false }: { compact?: boolean; variant?: 'sidebar' | 'topbar'; hidden?: boolean }) {
   const { t: uiText, locale } = useTranslation(messages);
   const presenceOptions = getPresenceOptions(locale);
   const { session, openSignIn, openSwitchAccount, presence, presencePreference, setPresence } =
     useIdentity();
   const [logoutOpen, setLogoutOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const openingDialog = useRef(false);
   const user = session.status === 'authenticated' ? session.user : null;
@@ -49,6 +50,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
   const button = (
     <button
       type="button"
+      hidden={hidden}
       data-account-trigger
       data-session-status={session.status}
       data-presence={user ? presence : undefined}
@@ -181,7 +183,8 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
           <DropdownMenuItem
             className={styles.menuItem}
             onSelect={() => {
-              openPersonalProfile();
+              openingDialog.current = true;
+              setProfileOpen(true);
             }}
           >
             <UserCircle />
@@ -212,6 +215,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
         </DropdownMenuContent>}
       </DropdownMenu>
       <LogoutConfirmDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} />
+      <AccountDialog open={profileOpen} profile onClose={() => setProfileOpen(false)} />
     </>
   );
 }

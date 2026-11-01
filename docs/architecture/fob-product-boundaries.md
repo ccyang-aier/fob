@@ -116,7 +116,7 @@ Fob（Fusion One Book）是面向个人与团队的 Web 知识工作空间，集
 
 ### 认证与资料背景
 
-登录模态框和 `/auth` 页面共用 `GradientASCII` 背景与登录表单；`AuthBackdrop` 使用 horizon 蓝白参数、字符、鼠标扰动和点击波纹，左栏呈现品牌、简洁文案和轮播线索。WebGL2 背景不可见时暂停，GPU 对象清理需兼容 StrictMode 的 context 复用。个人信息使用 `view=profile` 的独立工作台页签，资料在页内编辑，不再使用个人资料模态框或装饰封面；页面设计、真实活动与能力边界见[个人主页](../ui/personal-profile.md)。
+登录模态框和 `/auth` 页面共用 `GradientASCII` 背景与登录表单；`AuthBackdrop` 使用 horizon 蓝白参数、字符、鼠标扰动和点击波纹，左栏呈现品牌、简洁文案和轮播线索。WebGL2 背景不可见时暂停，GPU 对象清理需兼容 StrictMode 的 context 复用。个人信息按用户最新决定恢复早期原生弹窗与灰色丝带封面，增强六个月真实活动和已获得勋章；不创建工作台页签，旧个人页链接及恢复记录回落知识区。认证与个人资料内容由明确意图区分，避免跨知识库上下文装载。设计与能力边界见[个人资料弹窗](../ui/personal-profile.md)。
 
 ### 全局精灵
 

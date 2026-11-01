@@ -3,32 +3,40 @@
 import { useTranslation } from '@/lib/i18n/react';
 import { messages } from './i18n/account-dialog.messages';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { X } from '@/components/icons';
 import { useIdentity } from '../identity-context';
 import { AuthEntryContent } from './auth-entry-content';
 import { AuthShowcase } from './auth-showcase';
+import { AccountProfile } from './account-profile';
 import styles from './account-dialog.module.css';
 
 /** Native dialog keeps focus, Escape dismissal and focus restoration in one layer. */
 export function AccountDialog({
   open,
   switchingAccount = false,
+  profile = false,
   onClose,
 }: {
   open: boolean;
   switchingAccount?: boolean;
+  profile?: boolean;
   onClose: () => void;
 }) {
   const uiText = useTranslation(messages).t;
   const dialog = useRef<HTMLDialogElement>(null);
   const { session } = useIdentity();
+  const authenticated = profile && session.status === 'authenticated' && !switchingAccount;
+  const [profileBusy, setProfileBusy] = useState(false);
+  const pendingProfile = useRef(false);
+  const updateProfileBusy = (busy: boolean) => { pendingProfile.current = busy; setProfileBusy(busy); };
+  const requestClose = () => { if (!pendingProfile.current) onClose(); };
   const currentAccount =
     switchingAccount && session.status === 'authenticated' ? session.user.name : undefined;
   useEffect(() => {
     if (open && !dialog.current?.open) {
       dialog.current?.showModal();
-      dialog.current?.querySelector<HTMLInputElement>('input')?.focus();
+      if (!authenticated) dialog.current?.querySelector<HTMLInputElement>('input')?.focus();
     }
     if (!open && dialog.current?.open) {
       dialog.current?.close();
@@ -36,33 +44,34 @@ export function AccountDialog({
       if (document.activeElement === document.body)
         document.querySelector<HTMLButtonElement>('[data-account-trigger]')?.focus();
     }
-  }, [open]);
+  }, [open, authenticated]);
   return (
     <dialog
       ref={dialog}
-      onCancel={onClose}
+      onCancel={event => { event.preventDefault(); requestClose(); }}
       onClose={onClose}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) requestClose();
       }}
       aria-label={
-        switchingAccount
+        authenticated ? uiText('个人资料') : switchingAccount
             ? uiText('切换账户')
             : uiText('登录 Fob')
       }
-      className={styles.dialog}
+      className={`${styles.dialog} ${authenticated ? styles.profileDialog : ''}`}
     >
       {open ? (
         <>
           <button
             type="button"
             aria-label={uiText('关闭账户窗口')}
-            onClick={onClose}
+            disabled={profileBusy}
+            onClick={requestClose}
             className={`fob-action ${styles.close}`}
           >
             <X size={16} aria-hidden />
           </button>
-          <div className={styles.login}>
+          {authenticated ? <AccountProfile onClose={requestClose} onBusyChange={updateProfileBusy} /> : <div className={styles.login}>
               <AuthShowcase />
               <section className={styles.formPanel}>
                 <AuthEntryContent
@@ -73,7 +82,7 @@ export function AccountDialog({
                   onDismiss={onClose}
                 />
               </section>
-          </div>
+          </div>}
         </>
       ) : null}
     </dialog>

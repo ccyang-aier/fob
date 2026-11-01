@@ -1,0 +1,45 @@
+.calendarCard { container:activity-calendar / inline-size; --heat-gap:3px; --heat-0:color-mix(in srgb,var(--panel) 96%,var(--ink)); --heat-1:#c5efd6; --heat-2:#82dba6; --heat-3:#39c879; --heat-4:#079344; min-width:0; }
+.calendarLayout,.legend { --heat-cell:clamp(8px,calc((100cqw - 32px - (var(--activity-columns) - 1) * var(--heat-gap)) / var(--activity-columns)),12px); }
+.calendarHeading { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.calendarHeading h3 { display:flex; flex:0 0 auto; align-items:center; margin:0; font-size:12px; font-weight:550; }
+.calendarHeading h3 > span:last-child { font-weight:400; color:var(--muted-strong); }
+.middleDot { padding-inline:6px; color:var(--muted); }
+.scope { overflow:hidden; color:var(--muted); text-overflow:ellipsis; white-space:nowrap; font-size:10px; }
+.calendarScroll { overflow-x:auto; padding:2px; margin:-2px; scrollbar-width:thin; }
+.calendarLayout { display:grid; grid-template-columns:24px max-content; gap:8px; width:max-content; }
+.weekLabels { position:sticky; left:0; z-index:1; display:grid; grid-template-rows:repeat(7,var(--heat-cell)); gap:var(--heat-gap); padding-top:19px; color:var(--muted-strong); background:var(--panel); font-size:10px; line-height:var(--heat-cell); }
+.weekLabels > :nth-child(1) { grid-row:2; }
+.weekLabels > :nth-child(2) { grid-row:4; }
+.weekLabels > :nth-child(3) { grid-row:6; }
+.weeks { display:flex; gap:var(--heat-gap); width:max-content; }
+.week { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:16px repeat(7,var(--heat-cell)); gap:var(--heat-gap); width:var(--heat-cell); }
+.month { height:16px; color:var(--muted-strong); white-space:nowrap; font-size:10px; }
+.week:last-child .month { justify-self:end; }
+.dayCell { display:block; width:var(--heat-cell); height:var(--heat-cell); padding:0; border:1px solid color-mix(in srgb,var(--line) 85%,transparent); border-radius:2px; background:var(--heat-0); }
+button.dayCell { cursor:pointer; }
+.dayCell[data-level='1'] { background:var(--heat-1); border-color:var(--heat-1); }
+.dayCell[data-level='2'] { background:var(--heat-2); border-color:var(--heat-2); }
+.dayCell[data-level='3'] { background:var(--heat-3); border-color:var(--heat-3); }
+.dayCell[data-level='4'] { background:var(--heat-4); border-color:var(--heat-4); }
+.dayCell[data-future] { visibility:hidden; }
+button.dayCell:hover { outline:1px solid var(--ink-soft); outline-offset:1px; }
+button.dayCell:focus-visible,button.dayCell[aria-expanded='true'] { outline:1px solid var(--ink); outline-offset:2px; }
+button.dayCell[data-today='true'] { border-color:var(--ink-soft); }
+.legend { display:flex; align-items:center; justify-content:flex-end; gap:3px; max-width:100%; margin-top:8px; color:var(--muted); font-size:10px; }
+.legend .dayCell { width:8px; height:8px; }
+.legend > span:first-child { margin-right:3px; }
+.legend > span:last-child { margin-left:3px; }
+.dayDetails { --profile-green:#00ad78; --profile-blue:#348ce5; --profile-violet:#8562ce; --profile-rose:#cc557c; padding:7px; }
+.dayDetailsHeading { display:flex; flex-direction:column; gap:4px; padding-bottom:8px; border-bottom:1px solid var(--line); }
+.dayDetailsHeading strong { font-size:12px; font-weight:550; }
+.dayDetailsHeading > span { color:var(--muted-strong); font-size:11px; }
+.dayDetailsCounts { margin:6px 0 0; }
+.dayDetailsCounts > div { --activity-color:var(--profile-green); display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:30px; }
+.dayDetailsCounts > [data-kind='commented'] { --activity-color:var(--profile-blue); }
+.dayDetailsCounts > [data-kind='liked'] { --activity-color:var(--profile-rose); }
+.dayDetailsCounts > [data-kind='subscribed'] { --activity-color:var(--profile-violet); }
+.dayDetailsCounts dt { display:flex; align-items:center; gap:8px; color:var(--ink-soft); font-size:11px; }
+.dayDetailsCounts dd { margin:0; font-size:12px; font-weight:550; font-variant-numeric:tabular-nums; }
+.dayDetailsIcon { display:grid; width:22px; height:22px; place-items:center; border-radius:4px; color:var(--activity-color); background:color-mix(in srgb,var(--activity-color) 9%,var(--panel)); }
+:global(html[data-theme='dark']) .calendarCard { --heat-1:#174d37; --heat-2:#23764c; --heat-3:#2fa865; --heat-4:#4bce85; }
+:global(html[data-theme='dark']) .dayDetails { --profile-green:#36c994; --profile-blue:#70acf0; --profile-violet:#b79aef; --profile-rose:#ec8cac; }

@@ -6,6 +6,7 @@ export const messages = defineMessages({
   publicAccess: ['公开文档，默认只读', 'Public documents, read-only by default'], privateAccess: ['私有文档需单独授权', 'Private documents require separate access'],
   ready: ['邀请链接已生成', 'Invitation link is ready'], expires: ['{email} · 7 天内有效', '{email} · Valid for 7 days'],
   copy: ['复制链接', 'Copy link'], copied: ['邀请链接已复制', 'Invitation link copied'], copyFailed: ['复制失败，请重试', 'Could not copy. Try again.'],
+  copyEmail: ['复制邮箱', 'Copy email'], emailCopied: ['邮箱已复制', 'Email copied'], memberActions: ['{name}的操作', 'Actions for {name}'],
   joined: ['已加入', 'Joined'], pending: ['邀请中', 'Invited'], you: ['你', 'You'], retry: ['重试', 'Try again'],
   loading: ['正在加载成员…', 'Loading members…'], failed: ['暂时无法加载成员', 'Could not load members'],
   manage: ['管理成员与权限', 'Manage members and access'], revoke: ['撤销', 'Revoke'], revoked: ['邀请已撤销', 'Invitation revoked'],

@@ -27,7 +27,6 @@ beforeAll(async () => {
   mock.module('@/features/knowledge/knowledge-page', () => ({ KnowledgePage: () => <ExamplePage name="knowledge" /> }));
   mock.module('@/features/knowledge/organization/knowledge-members-page', () => ({ KnowledgeMembersPage: () => <ExamplePage name="members" /> }));
   mock.module('@/features/knowledge/templates/templates-page', () => ({ TemplatesPage: () => <ExamplePage name="templates" /> }));
-  mock.module('@/features/identity/profile/personal-profile-page', () => ({ PersonalProfilePage: ({ onOpenResource }: { onOpenResource: (resource: { id: string; kind: 'document' | 'folder' }) => void }) => <><button onClick={() => onOpenResource({ id: 'from-profile',kind: 'document' })}>Open profile document</button><button onClick={() => onOpenResource({ id: 'folder-from-profile',kind: 'folder' })}>Open profile folder</button></> }));
   const { WorkbenchPanels } = await import('./workbench-panels');
   renderPanels = state => <WorkbenchPanels tabs={state.tabs} active={state.active} split={state.split} navigationOwner={state.tabs.findLast(tab => tab.view === 'knowledge')?.key} onReportDocument={() => {}} onTogglePin={() => {}} onSplitDocument={() => {}} onResizeSplit={() => {}} />;
   host = document.createElement('div');
@@ -86,25 +85,4 @@ test('split panes preserve both editor hosts and do not add a second tab strip',
   await act(async () => root.render(renderPanels({ ...state, split: undefined })));
   expect(host.querySelectorAll('[role="tabpanel"]:not([hidden])')).toHaveLength(1);
   expect(host.querySelector('input')).toBe(original);
-});
-
-test('profile targets preserve the current knowledge owner and delegate folder mode to its adapter', async () => {
-  const { subscribeOpenFolderTarget } = await import('@/features/knowledge/navigation/open-folder-target');
-  const { subscribeOpenPageTarget } = await import('@/features/knowledge/editor/open-target');
-  const received: string[] = [];
-  const closeFolder = subscribeOpenFolderTarget(target => received.push(target.folderId));
-  const closePage = subscribeOpenPageTarget(target => received.push(target.pageId));
-  try {
-    let state = addWorkbenchTab(createWorkbenchTabs(scope,tabTarget('knowledge')),tabTarget('knowledge'));
-    state = openWorkbenchTab(state,tabTarget('profile'));
-    await act(async () => root.render(renderPanels(state)));
-    await act(async () => (host.querySelector('button') as HTMLButtonElement).click());
-    const document = new URL(browser.location.href);
-    expect(document.searchParams.get('document')).toBe('from-profile');
-    expect(document.searchParams.get('knowledgeBase')).toBe('base-a');
-    expect(document.searchParams.get('tab')).toBe('tab:1');
-    await act(async () => (host.querySelectorAll('button')[1] as HTMLButtonElement).click());
-    expect(new URL(browser.location.href).searchParams.get('folder')).toBe('folder-from-profile');
-    expect(received).toEqual(['from-profile','folder-from-profile']);
-  } finally { closeFolder(); closePage(); }
 });

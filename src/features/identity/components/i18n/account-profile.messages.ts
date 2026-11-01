@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n/messages';
 
 export const messages = defineMessages({
+  个人资料: ['个人资料', 'Profile'],
   编辑资料: ['编辑资料', 'Edit profile'],
   关闭资料窗口: ['关闭资料窗口', 'Close profile editor'],
   个人资料已更新: ['个人资料已更新', 'Profile updated'],

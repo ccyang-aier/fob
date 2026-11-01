@@ -6,12 +6,6 @@ import { TemplatesPage } from '@/features/knowledge/templates/templates-page';
 import { KnowledgePage } from '@/features/knowledge/knowledge-page';
 import { KnowledgeNavigationScope } from '@/features/knowledge/navigation/system-navigation';
 import { KnowledgeMembersPage } from '@/features/knowledge/organization/knowledge-members-page';
-import { PersonalProfilePage } from '@/features/identity/profile/personal-profile-page';
-import type { ProfileResource } from '@fob/shared/knowledge/contracts';
-import { pushWorkbenchLocation } from '@/lib/navigation-history';
-import { KNOWLEDGE_NAVIGATED } from '@/features/knowledge/navigation/document-navigation-location';
-import { requestOpenPageBlock } from '@/features/knowledge/editor/open-target';
-import { requestOpenFolder } from '@/features/knowledge/navigation/open-folder-target';
 import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
 import { PageVisibility } from '@/lib/page-visibility';
 import { PageSessionNamespace } from '@/lib/page-session-state';
@@ -32,20 +26,7 @@ export function WorkbenchPanels({ tabs, active, split, navigationOwner = active,
   onResizeSplit: (ratio: number) => void;
   onReportTitle?: (key: string, title: string | null) => void;
 }) {
-  const { scopeKey, selectedKnowledgeBase: base } = useKnowledgeBaseResources();
-  const openProfileResource = (resource: Pick<ProfileResource, 'id' | 'kind'>) => {
-    if (!base) return;
-    const url = new URL('/', window.location.href);
-    url.searchParams.set('knowledgeBase', base.id); url.searchParams.set('source', base.source);
-    url.searchParams.set(resource.kind === 'folder' ? 'folder' : 'document', resource.id);
-    const owner = tabs.find(tab => tab.key === navigationOwner);
-    const tabKey = new URLSearchParams(owner?.search).get('tab');
-    if (tabKey) url.searchParams.set('tab', tabKey);
-    pushWorkbenchLocation(url);
-    if (resource.kind === 'folder') requestOpenFolder({ knowledgeBaseId: base.id,folderId: resource.id });
-    else requestOpenPageBlock({ knowledgeBaseId: base.id,pageId: resource.id });
-    window.dispatchEvent(new Event(KNOWLEDGE_NAVIGATED));
-  };
+  const { scopeKey } = useKnowledgeBaseResources();
   const host = useRef<HTMLDivElement>(null);
   const [stacked, setStacked] = useState(false);
   useEffect(() => {
@@ -58,14 +39,13 @@ export function WorkbenchPanels({ tabs, active, split, navigationOwner = active,
     const pane = split?.left === tab.key ? 'left' : split?.right === tab.key ? 'right' : undefined;
     const visible = tab.key === active || Boolean(pane);
     // Keep actual DOM/editors mounted: hiding must not destroy collaboration or undo.
-    return <PageSessionNamespace key={`${scopeKey}:${tab.instance}:${tab.revision ?? 0}`} name={`page:${tab.instance}`}><KnowledgeNavigationScope selected={tab.key === navigationOwner} visible={visible} activate={() => onActivateNavigation?.(tab.key)}><DocumentTabPanel tab={tab} visible={visible} pane={pane} onActivate={onActivateNavigation} onReport={onReportDocument} onReportTitle={onReportTitle} onSplit={onSplitDocument} onPin={onTogglePin} onOpenProfileResource={openProfileResource} /></KnowledgeNavigationScope></PageSessionNamespace>;
+    return <PageSessionNamespace key={`${scopeKey}:${tab.instance}:${tab.revision ?? 0}`} name={`page:${tab.instance}`}><KnowledgeNavigationScope selected={tab.key === navigationOwner} visible={visible} activate={() => onActivateNavigation?.(tab.key)}><DocumentTabPanel tab={tab} visible={visible} pane={pane} onActivate={onActivateNavigation} onReport={onReportDocument} onReportTitle={onReportTitle} onSplit={onSplitDocument} onPin={onTogglePin} /></KnowledgeNavigationScope></PageSessionNamespace>;
   })}{split && <SplitHandle host={host} ratio={split.ratio} stacked={stacked} onResize={onResizeSplit} />}</div>;
 }
 
-function DocumentTabPanel({ tab, visible, pane, onActivate, onReport, onSplit, onPin, onReportTitle, onOpenProfileResource }: {
+function DocumentTabPanel({ tab, visible, pane, onActivate, onReport, onSplit, onPin, onReportTitle }: {
   tab: WorkbenchTab; visible: boolean; pane?: string;
   onReportTitle?: (key: string, title: string | null) => void;
-  onOpenProfileResource: (resource: Pick<ProfileResource, 'id' | 'kind'>) => void;
   onActivate?: (key: string) => void; onReport: (key: string, document: TabDocument | null) => void;
   onSplit: (key: string, document: TabDocument) => void; onPin: (key: string) => void;
 }) {
@@ -75,7 +55,7 @@ function DocumentTabPanel({ tab, visible, pane, onActivate, onReport, onSplit, o
   const reportTitle = useCallback((title: string | null) => onReportTitle?.(tab.key, title), [onReportTitle, tab.key]);
   const value = useMemo(() => ({ search: tab.search, document: tab.document, pinned: Boolean(tab.pinned), reportDocument, splitDocument, togglePin, reportTitle }), [tab.search, tab.document, tab.pinned, reportDocument, splitDocument, togglePin, reportTitle]);
   return <DocumentTabContext value={value}><WorkbenchPanel tab={tab} visible={visible} pane={pane} onActivate={() => onActivate?.(tab.key)}>
-    {tab.view === 'profile' ? <PersonalProfilePage onOpenResource={onOpenProfileResource} /> : tab.view === 'members' ? <KnowledgeMembersPage /> : tab.view === 'templates' ? <TemplatesPage /> : <KnowledgePage />}
+    {tab.view === 'members' ? <KnowledgeMembersPage /> : tab.view === 'templates' ? <TemplatesPage /> : <KnowledgePage />}
   </WorkbenchPanel></DocumentTabContext>;
 }
 

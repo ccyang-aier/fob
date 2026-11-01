@@ -55,3 +55,16 @@ test('knowledge is the entry, settings stay over the current page, and project h
   expect(current[3].canGoBack).toBe(false);
   expect(current[3].canGoForward).toBe(false);
 });
+
+test('old profile URLs fall back to knowledge without changing their document or knowledge-base scope', async () => {
+  await act(async () => {
+    browser.history.replaceState(null, '', '/?knowledgeBase=base&source=server&document=doc&view=profile&tab=profile');
+    browser.dispatchEvent(new browser.Event('popstate'));
+  });
+  expect(current[0]).toBe('knowledge');
+  const params = new URLSearchParams(browser.location.search);
+  expect(params.get('view')).toBeNull();
+  expect(params.get('tab')).toBeNull();
+  expect(params.get('knowledgeBase')).toBe('base');
+  expect(params.get('document')).toBe('doc');
+});

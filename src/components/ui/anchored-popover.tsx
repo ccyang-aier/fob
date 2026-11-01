@@ -10,10 +10,11 @@ import { popoverPosition, type PopoverSide } from './popover-position';
 export type PopoverAnchor = HTMLElement | { left: number; top: number; right: number; bottom: number; width?: number; height?: number };
 
 /** A non-modal surface for small, anchored forms and context menus. */
-export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', side = 'bottom', role = 'dialog', className, restoreFocusTo, autoFocus = true, onMouseEnter, onMouseLeave }: {
-  anchor: PopoverAnchor; onClose: () => void; label: string; children: ReactNode;
+export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', side = 'bottom', role = 'dialog', className, restoreFocusTo, autoFocus = true, container, onMouseEnter, onMouseLeave }: {
+  anchor: PopoverAnchor; onClose: (reason?: 'escape' | 'outside') => void; label: string; children: ReactNode;
   width?: number | 'max-content'; align?: 'start' | 'end'; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
   side?: PopoverSide;
+  container?: HTMLElement;
   autoFocus?: boolean; onMouseEnter?: () => void; onMouseLeave?: () => void;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -49,11 +50,11 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
       const target = event.target as Node;
       // Focus handoffs can pass through body; outside pointer presses still dismiss.
       if (event.type === 'focusin' && target === document.body) return;
-      if (!panelRef.current?.contains(target) && !(anchor instanceof HTMLElement && anchor.contains(target)) && !restoreFocusTo?.contains(target)) onClose();
+      if (!panelRef.current?.contains(target) && !(anchor instanceof HTMLElement && anchor.contains(target)) && !restoreFocusTo?.contains(target)) onClose('outside');
     }
     function keyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation(); onClose();
+        event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation(); onClose('escape');
       }
     }
     document.addEventListener('pointerdown', pointerDown, true);
@@ -71,5 +72,5 @@ export function AnchoredPopover({ anchor, onClose, label, children, width = 260,
       const index = items.indexOf(document.activeElement as HTMLElement);
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
       items[next].focus();
-    }}>{children}</div>, getOverlayRoot() ?? document.body);
+    }}>{children}</div>, container ?? getOverlayRoot() ?? document.body);
 }
