@@ -97,6 +97,40 @@ beforeAll(async () => {
 afterAll(async () => { if (server) await server.close(); }, 30_000);
 
 describe('Teamspace metadata and root defaults over real HTTP/PostgreSQL', () => {
+  test('moving a nonempty folder preserves descendants, document state and independent access, and can promote it to root', async () => {
+    const original = await create('Move original', 'view'), target = await create('Move target', 'full');
+    const child = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Moving child', parentId: original.id, defaultAccess: 'comment' }), 201);
+    const nested = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Moving grandchild', parentId: child.id }), 201);
+    const pageId = await insertPage(child);
+    const moved = await result<Teamspace>(request(`${path(child)}/move`, owner, 'POST', { parentId: target.id }));
+    expect(moved).toMatchObject({ id: child.id, parentId: target.id, defaultAccess: 'comment' });
+    expect((await result<Teamspace>(request(path(nested)))).parentId).toBe(child.id);
+    const saved = await server.database.admin.query('SELECT p.teamspace_id, d.state FROM resources.page p JOIN resources.doc_state d ON d.knowledge_base_id=p.knowledge_base_id AND d.page_id=p.id WHERE p.knowledge_base_id=$1 AND p.id=$2', [knowledgeBaseId, pageId]);
+    expect(saved.rows[0].teamspace_id).toBe(child.id); expect(Buffer.from(saved.rows[0].state)).toEqual(Buffer.from([0, 0]));
+    expect((await result<Teamspace>(request(`${path(child)}/move`, admin, 'POST', { parentId: null }))).parentId).toBeNull();
+    expect((await result<Teamspace>(request(path(child)))).parentId).toBeNull();
+  });
+
+  test('folder moves reject self, descendants, foreign or missing targets and unauthorized writers without changing location', async () => {
+    const moving = await create('Cycle original'), child = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Cycle child', parentId: moving.id }), 201);
+    for (const id of [moving.id, child.id]) expect((await result<{ code: string }>(request(`${path(moving)}/move`, owner, 'POST', { parentId: id }), 409)).code).toBe('TEAMSPACE_CYCLE');
+    const foreign = await create('Move foreign', null, outsider, otherId);
+    for (const id of [foreign.id, randomUUID()]) expect((await request(`${path(moving)}/move`, owner, 'POST', { parentId: id })).status).toBe(404);
+    for (const actor of [regular, guest]) expect((await request(`${path(moving)}/move`, actor, 'POST', { parentId: null })).status).toBe(403);
+    expect((await request(`${path(moving)}/move`, outsider, 'POST', { parentId: null })).status).toBe(404);
+    expect((await request(`${path(moving)}/move`, owner, 'POST', {})).status).toBe(400);
+    expect((await result<Teamspace>(request(path(moving)))).parentId).toBeNull();
+    expect((await result<Teamspace>(request(path(child)))).parentId).toBe(moving.id);
+  });
+
+  test('opposing concurrent folder moves serialize and cannot create a cycle', async () => {
+    const a = await create('Concurrent A'), b = await create('Concurrent B');
+    const results = await Promise.all([request(`${path(a)}/move`, owner, 'POST', { parentId: b.id }), request(`${path(b)}/move`, owner, 'POST', { parentId: a.id })]);
+    expect(results.map(response => response.status).sort()).toEqual([200, 409]);
+    const saved = await Promise.all([result<Teamspace>(request(path(a))), result<Teamspace>(request(path(b)))]);
+    expect(saved.filter(folder => folder.parentId === null)).toHaveLength(1);
+  });
+
   test('nested folders persist their parent and a nonempty parent cannot be removed', async () => {
     const parent = await create('Hierarchy parent', 'edit');
     const child = await result<Teamspace>(request(`/${knowledgeBaseId}/teamspaces`, owner, 'POST', { name: 'Child', parentId: parent.id, defaultAccess: 'edit' }), 201);
@@ -277,8 +311,9 @@ describe('Teamspace deletion and transactional permission invalidation', () => {
     } finally { await client.query('ROLLBACK'); if (outcome) await outcome; client.release(); }
   });
 
-  test('a session expiring while waiting for the Teamspace lock cannot mutate root defaults', async () => {
+  test.each(['defaults', 'move'] as const)('a session expiring while waiting for the Teamspace lock cannot mutate %s', async operation => {
     const record = await create('Session deadline', 'view');
+    const destination = await create('Session deadline destination', 'edit');
     const previous = await server.database.admin.query<{ expires_at: Date }>('SELECT expires_at FROM auth.session WHERE id = $1', [admin.identity.sessionId]);
     const client = await server.database.admin.connect();
     let outcome: Promise<unknown> | undefined;
@@ -286,12 +321,13 @@ describe('Teamspace deletion and transactional permission invalidation', () => {
       await client.query("UPDATE auth.session SET expires_at = clock_timestamp() + interval '400 milliseconds' WHERE id = $1", [admin.identity.sessionId]);
       await client.query('BEGIN');
       await client.query('SELECT id FROM resources.teamspace WHERE knowledge_base_id = $1 AND id = $2 FOR UPDATE', [knowledgeBaseId, record.id]);
-      outcome = service.updateTeamspace(admin.identity, { ...scope(record), defaultAccess: 'full' }).catch((error: unknown) => error);
+      outcome = (operation === 'move' ? service.moveTeamspace(admin.identity, { ...scope(record), parentId: destination.id }) : service.updateTeamspace(admin.identity, { ...scope(record), defaultAccess: 'full' })).catch((error: unknown) => error);
       await waitForTeamspaceLock(client);
       await client.query('SELECT pg_sleep(0.45)');
       await client.query('COMMIT');
       expect(await outcome).toMatchObject({ code: 'UNAUTHENTICATED' });
       expect((await result<Teamspace>(request(path(record)))).defaultAccess).toBe('view');
+      expect((await result<Teamspace>(request(path(record)))).parentId).toBeNull();
     } finally {
       await client.query('ROLLBACK'); if (outcome) await outcome;
       await client.query('UPDATE auth.session SET expires_at = $2 WHERE id = $1', [admin.identity.sessionId, previous.rows[0]!.expires_at]);

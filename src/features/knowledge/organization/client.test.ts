@@ -187,6 +187,17 @@ describe('route contract', () => {
     await client.updateTeamspace(ws, teamspaceId, { name: '文档库' });
     expect(lastCall(calls).body).toBe(JSON.stringify({ name: '文档库' }));
   });
+  test('folder moves use a dedicated scoped endpoint with an explicit null for the top level', async () => {
+    const { calls, impl } = recordingFetch(200, { knowledgeBaseId: ws, id: teamspaceId, parentId: null, name: 'Folder', defaultAccess: null });
+    const client = clientWith(impl as unknown as typeof fetch);
+    await client.moveTeamspace(ws, teamspaceId, groupId);
+    expect(lastCall(calls)).toMatchObject({ url: `${BASE}/${ws}/teamspaces/${teamspaceId}/move`, method: 'POST', body: JSON.stringify({ parentId: groupId }) });
+    await client.moveTeamspace(ws, teamspaceId, null);
+    expect(lastCall(calls).body).toBe(JSON.stringify({ parentId: null }));
+    const count = calls.length;
+    await expectInvalidInput(() => client.moveTeamspace(ws, teamspaceId, 'invalid-parent'));
+    expect(calls).toHaveLength(count);
+  });
 });
 
 describe('input validation fails before any request', () => {

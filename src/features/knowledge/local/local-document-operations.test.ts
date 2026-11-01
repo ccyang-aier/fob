@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { createLocalLibraryStore, newLocalDocument, type LocalLibrary } from './local-library';
-import { importLocalFolderDocuments, moveLocalDocument } from './local-document-operations';
+import { importLocalFolderDocuments, moveLocalDocument, moveLocalFolder } from './local-document-operations';
 import { parseTextDocument } from '@fob/shared/knowledge/text-import';
 
 function fixture() {
@@ -11,6 +11,26 @@ function fixture() {
   store.update(() => ({ bases: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }], folders: [{ id: 'first', knowledgeBaseId: 'a', name: 'First' }, { id: 'second', knowledgeBaseId: 'a', name: 'Second' }, { id: 'foreign', knowledgeBaseId: 'b', name: 'Foreign' }], documents: [source, other], tags: [{ id: 'tag', baseId: 'a', name: 'Keep tag', pageIds: [source.id] }] }));
   return { store, source, other, saved: () => saved, scope: { knowledgeBaseId: 'a', pageId: source.id } };
 }
+
+test('local folder moves preserve the complete subtree and documents, reject cycles and remain scoped', () => {
+  const { store, saved } = fixture(), errors = { missing: 'missing', cycle: 'cycle' };
+  store.update(current => ({ ...current, folders: [...current.folders, { id: 'child', parentId: 'first', knowledgeBaseId: 'a', name: 'Child' }, { id: 'grandchild', parentId: 'child', knowledgeBaseId: 'a', name: 'Grandchild' }] }));
+  const original = store.getSnapshot();
+  moveLocalFolder(store, { knowledgeBaseId: 'a', folderId: 'first' }, 'second', errors);
+  expect(store.getSnapshot().folders.find(folder => folder.id === 'first')?.parentId).toBe('second');
+  expect(store.getSnapshot().folders.find(folder => folder.id === 'grandchild')?.parentId).toBe('child');
+  expect(store.getSnapshot().documents).toEqual(original.documents);
+  expect(store.getSnapshot().folders.find(folder => folder.id === 'foreign')).toEqual(original.folders.find(folder => folder.id === 'foreign'));
+  for (const target of ['first', 'child', 'grandchild', 'foreign', 'removed']) {
+    const before = saved();
+    expect(() => moveLocalFolder(store, { knowledgeBaseId: 'a', folderId: 'first' }, target, errors)).toThrow(target === 'foreign' || target === 'removed' ? 'missing' : 'cycle');
+    expect(saved()).toBe(before);
+  }
+  moveLocalFolder(store, { knowledgeBaseId: 'a', folderId: 'first' }, null, errors);
+  expect((JSON.parse(saved()) as LocalLibrary).folders.find(folder => folder.id === 'first')?.parentId).toBeNull();
+  moveLocalDocument(store, { knowledgeBaseId: 'a', pageId: original.documents[0]!.id }, 'grandchild', 'missing');
+  expect(store.getSnapshot().documents[0]).toMatchObject({ folderId: 'grandchild', body: original.documents[0]!.body });
+});
 
 test('local moves persist the location while preserving body, identity, tags and other knowledge bases', () => {
   const { store, source, other, scope, saved } = fixture();

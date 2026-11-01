@@ -102,6 +102,10 @@ export function createKnowledgeCatalogClient(deps: OrganizationClientDeps) {
         body,
       });
     },
+    moveTeamspace(knowledgeBaseId: string, teamspaceId: string, parentId: string | null) {
+      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId'), target = requireUuid(teamspaceId, 'teamspaceId');
+      return request<Teamspace>({ method: 'POST', path: `/api/knowledge-bases/${scope}/teamspaces/${target}/move`, body: { parentId: parentId === null ? null : requireUuid(parentId, 'parentId') } });
+    },
     removeTeamspace(knowledgeBaseId: string, teamspaceId: string) {
       const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
       const target = requireUuid(teamspaceId, 'teamspaceId');

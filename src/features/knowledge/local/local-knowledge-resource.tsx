@@ -37,6 +37,8 @@ import { DocumentsPage } from '../documents/documents-page';
 import { LocalFolderOverview } from '../discovery/local-folder-overview';
 import { LocalDocumentImport } from '../documents/import/local-document-import';
 import { FolderImportDialog } from '../documents/import/folder-import-dialog';
+import { moveLocalDocument, moveLocalFolder } from './local-document-operations';
+import { messages as dragMessages } from '../navigation/tree/tree-drag.messages';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -65,6 +67,7 @@ export function LocalKnowledgeResource({
   onCreateKnowledgeBase,
 }: LocalKnowledgeResourceProps) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: dragT } = useTranslation(dragMessages);
   const { expand: expandSidebar } = useKnowledgeNavigation();
   const navigationActive = useKnowledgeNavigationActive();
 
@@ -203,6 +206,15 @@ export function LocalKnowledgeResource({
                 if (base) { setCreationParentId(parentId ?? null); setCreation('folder'); }
               }}
               onImportFolder={setImportFolderId}
+              onMoveNode={move => {
+                try {
+                  if (move.kind === 'folder') moveLocalFolder(store, { knowledgeBaseId, folderId: move.id }, move.parentId, { missing: dragT('missing'), cycle: dragT('cycle') });
+                  else moveLocalDocument(store, { knowledgeBaseId, pageId: move.id }, move.folderId, dragT('missing'));
+                } catch (error) {
+                  if (error instanceof Error && [dragT('missing'), dragT('cycle')].includes(error.message)) throw error;
+                  throw new Error(knowledgeT('localSaveFailedChangesWereNotSavedCheck'));
+                }
+              }}
               onCreateDocument={() => {
                 if (base) setCreation('document');
               }}

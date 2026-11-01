@@ -1,6 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 
 export const knowledgeMessages = defineMessages({
+  folderCycle: ['不能将文件夹移入自身或子文件夹。', 'A folder cannot be moved into itself or its descendants.'],
   requestTimedOutPleaseRetry: ['请求超时，请重试', 'Request timed out. Please retry.'],
   unableToResolveOrganizationServiceAddress: [
     '组织服务地址无法解析',

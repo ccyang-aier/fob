@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-library-navigation.messages';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   CaretRight,
   Clock,
@@ -32,6 +32,9 @@ import { useKnowledgeNavigationCompact } from '../navigation/system-navigation';
 import styles from '../dense-sidebar/sidebar-interactions.module.css';
 import { PageIcon } from '../navigation/page-icon';
 import type { LocalDocument, LocalLibrary, LocalTag } from './local-library';
+import { TreeDragProvider, TreeDragRow, TreeRootDropTarget } from '../navigation/tree/tree-drag';
+import type { TreeMove } from '../navigation/tree/tree-drop-policy';
+import { messages as dragMessages } from '../navigation/tree/tree-drag.messages';
 
 type MainView = 'all-documents' | 'starred' | 'drafts' | 'trash';
 const tagColors = ['#5582c4', '#cb805c', '#5d9d83', '#a87ac0', '#d6a24c', '#688aab'] as const;
@@ -56,6 +59,7 @@ export function LocalLibraryNavigation({
   onRenameFolder,
   onRemoveFolder,
   onImportFolder,
+  onMoveNode,
   onCreateDocumentInTag,
   onCreateTag,
   onRenameTag,
@@ -75,6 +79,7 @@ export function LocalLibraryNavigation({
   selectedFolderId?: string | null;
   onCreateFolder: (parentId?: string) => void;
   onImportFolder: (id: string) => void;
+  onMoveNode(move: TreeMove): void;
   onCreateDocument: () => void;
   onCreateDocumentInFolder: (id: string) => void;
   onRenameFolder: (id: string, name: string) => void;
@@ -85,6 +90,7 @@ export function LocalLibraryNavigation({
   onRemoveTag: (id: string) => void;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: dragT } = useTranslation(dragMessages);
 
   const compact = useKnowledgeNavigationCompact();
   const [foldersOpen, setFoldersOpen] = useState(true);
@@ -99,6 +105,7 @@ export function LocalLibraryNavigation({
   const revealKey = `${selectedId ?? selectedFolderId ?? ''}:${revealPath.join(',')}`;
   const [revealedKey, setRevealedKey] = useState(revealKey);
   const [expandedFolderIds, setExpandedFolderIds] = useState<string[]>(revealPath);
+  const expandFolder = useCallback((id: string) => setExpandedFolderIds(current => current.includes(id) ? current : [...current, id]), []);
   if (revealedKey !== revealKey) {
     setRevealedKey(revealKey);
     setExpandedFolderIds(current => [...new Set([...current, ...revealPath])]);
@@ -169,10 +176,12 @@ export function LocalLibraryNavigation({
   if (compact) return <KnowledgeMainNavigation compact activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />;
 
   return (
+    <TreeDragProvider folders={folders} documents={documents} canMoveFolders={hasKnowledgeBase} canMoveDocuments={hasKnowledgeBase} onMove={onMoveNode} onExpandFolder={expandFolder} errorText={error => error instanceof Error ? error.message : dragT('failed')}>
     <div className="min-h-0 flex-1 overflow-auto px-3 pb-3 pt-2">
       <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={id => onSelectMain(id as MainView)} />
 
       <section className="mt-5" aria-label={knowledgeT('folder')}>
+        <TreeRootDropTarget>
         <SidebarSectionHeader
           icon={Folder}
           label={knowledgeT('folder')}
@@ -197,6 +206,7 @@ export function LocalLibraryNavigation({
             ) : undefined
           }
         />
+        </TreeRootDropTarget>
         {foldersOpen ? (
           <div className="mt-0.5 space-y-0.5">
             {folderRows.map(({ folder, depth }) => {
@@ -204,7 +214,7 @@ export function LocalLibraryNavigation({
               const expanded = expandedFolderIds.includes(folder.id);
               return (
                 <div key={folder.id}>
-                  <div
+                  <TreeDragRow item={{ kind: 'folder', id: folder.id }}
                     style={{ paddingLeft: depth * 14 }}
                     data-selected={!selectedId && !activeTagId && selectedFolderId === folder.id ? 'true' : undefined}
                     className={cn(
@@ -262,7 +272,7 @@ export function LocalLibraryNavigation({
                         </span>
                       </button></>
                     )}
-                    <div className={cn(styles.actions, 'flex items-center gap-0.5')}>
+                    <div className={cn(styles.actions, 'flex items-center gap-0.5')} data-tree-drag-control>
                       <IconButton
                         label={knowledgeT('createDocumentInValue', { v0: folder.name })}
                         tooltip={knowledgeT('newDocument')}
@@ -309,12 +319,12 @@ export function LocalLibraryNavigation({
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                  </div>
+                  </TreeDragRow>
                   {expanded ? (
                     <div className="space-y-0.5">
                       {folderDocuments.map((doc) => (
+                        <TreeDragRow item={{ kind: 'document', id: doc.id }} key={doc.id}>
                         <SidebarRow
-                          key={doc.id}
                           depth={2 + depth}
                           leading={
                             <PageIcon value={doc.icon} size={15} className="mr-2 shrink-0" />
@@ -323,6 +333,7 @@ export function LocalLibraryNavigation({
                           selected={selectedId === doc.id}
                           onClick={() => onSelectDocument(doc.id)}
                         />
+                        </TreeDragRow>
                       ))}
                       {!folderDocuments.length ? (
                         <p className={cn(emptyHintTextClassName, 'pl-9')}>
@@ -337,14 +348,15 @@ export function LocalLibraryNavigation({
             {documents
               .filter((doc) => !doc.folderId)
               .map((doc) => (
+                <TreeDragRow item={{ kind: 'document', id: doc.id }} key={doc.id}>
                 <SidebarRow
-                  key={doc.id}
                   depth={1}
                   leading={<PageIcon value={doc.icon} size={15} className="mr-2 shrink-0" />}
                   label={doc.title || knowledgeT('untitledDocument')}
                   selected={selectedId === doc.id}
                   onClick={() => onSelectDocument(doc.id)}
                 />
+                </TreeDragRow>
               ))}
             {!folders.length && !documents.length ? (
               hasKnowledgeBase ? (
@@ -614,5 +626,6 @@ export function LocalLibraryNavigation({
         ) : null}
       </section>
     </div>
+    </TreeDragProvider>
   );
 }

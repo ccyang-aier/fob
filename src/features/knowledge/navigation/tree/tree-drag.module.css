@@ -1,0 +1,9 @@
+.row { position:relative; }
+.row[data-tree-draggable=true] { cursor:grab; }
+.row[data-tree-dragging=true] { opacity:.45; }
+.row[data-tree-drop=true] { background:var(--interaction-active-bg); }
+.row[data-tree-drop=true]::after,.root[data-tree-drop=true]::after { content:''; position:absolute; inset:0; border:var(--drag-indicator-width,1px) solid var(--drag-indicator-color); border-radius:5px; pointer-events:none; }
+.root { position:relative; }
+.root[data-tree-drag-active=true]>.header { pointer-events:none; visibility:hidden; }
+.hint { position:absolute; inset:0; display:flex; align-items:center; padding:0 6px; font-size:11px; line-height:15px; color:var(--muted-strong); pointer-events:none; }
+.hint[data-invalid=true] { color:var(--err-ink); }

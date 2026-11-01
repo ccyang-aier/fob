@@ -16,6 +16,8 @@ const reader = () => fixture.apiClient({ cookie: fixture.reader.cookie, origin: 
 
 test('cross-folder transfer preserves subtree identity, body and explicit ACL while applying destination inheritance', async () => {
   const source = await fixture.tree({ defaultAccess: 'view', breaks: [2] }), destination = await fixture.tree({ defaultAccess: null });
+  const parent = await fixture.organization.createTeamspace(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Destination parent', defaultAccess: 'view' });
+  await fixture.organization.moveTeamspace(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, teamspaceId: destination.teamspace.id, parentId: parent.id });
   const moving = source.pages[1]!, child = source.pages[2]!;
   const encoded = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node('paragraph', { blockId: 'stable-content' }, [knowledgeSchema.text('Keep this content')])]));
   try {

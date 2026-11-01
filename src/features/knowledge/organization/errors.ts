@@ -20,6 +20,7 @@ export type OrganizationErrorCode =
   | 'GROUP_NOT_FOUND'
   | 'TEAMSPACE_NOT_FOUND'
   | 'TEAMSPACE_NOT_EMPTY'
+  | 'TEAMSPACE_CYCLE'
   | 'LAST_OWNER'
   | 'CONFLICT'
   | 'INVITATION_INVALID'
@@ -44,6 +45,7 @@ export function organizationErrorText(locale?: Locale): Record<OrganizationError
     GROUP_NOT_FOUND: knowledgeT('groupNotFoundOrHasBeenDeleted'),
     TEAMSPACE_NOT_FOUND: knowledgeT('folderNotFoundOrHasBeenDeleted'),
     TEAMSPACE_NOT_EMPTY: knowledgeT('removeAllPagesBeforeDeletingThisFolder'),
+    TEAMSPACE_CYCLE: knowledgeT('folderCycle'),
     LAST_OWNER: knowledgeT('aKnowledgeBaseMustHaveAtLeastOne'),
     CONFLICT: knowledgeT('thisActionConflictsWithTheCurrentStateRefresh'),
     INVITATION_INVALID: knowledgeT('invitationIsNoLongerValid'),
@@ -66,6 +68,7 @@ const serverCodes = new Set<string>([
   'GROUP_NOT_FOUND',
   'TEAMSPACE_NOT_FOUND',
   'TEAMSPACE_NOT_EMPTY',
+  'TEAMSPACE_CYCLE',
   'LAST_OWNER',
   'CONFLICT',
   'INVITATION_INVALID',

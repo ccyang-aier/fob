@@ -42,6 +42,7 @@ export const updateTeamspaceInputSchema = teamspaceScopeSchema.extend({
   name: resourceNameSchema.optional(), defaultAccess: teamspaceSchema.shape.defaultAccess.optional(),
 }).refine((value) => value.name !== undefined || value.defaultAccess !== undefined, { message: 'At least one teamspace field is required' });
 export const removeTeamspaceInputSchema = teamspaceScopeSchema;
+export const moveTeamspaceInputSchema = teamspaceScopeSchema.extend({ parentId: entityIdSchema.nullable() });
 export const pageAclSchema = pageScopeSchema.extend({
   principal: principalSchema, level: permissionLevelSchema, inherited: z.boolean().default(false),
 });

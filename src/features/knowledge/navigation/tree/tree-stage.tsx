@@ -2,7 +2,7 @@
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './tree-stage.messages';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeAccess } from '../../data/hooks';
 import { useKnowledgePagesQuery } from '../../data/pages-queries';
@@ -22,6 +22,8 @@ import { useSidebarCollections } from '../sidebar-collections';
 import { useDocumentNavigationActions } from '../document-navigation-actions';
 import { canEditTree } from './tree-actions';
 import type { TreeNotifier } from '../page-operations';
+import { TreeDragProvider } from './tree-drag';
+import { useServerTreeMoves } from './use-server-tree-moves';
 
 export type TreeStageTeamspaceState = 'loading' | 'error' | 'forbidden' | 'empty' | 'ready';
 export type LibraryView =
@@ -84,6 +86,9 @@ export function KnowledgeTreeStage({
     recent: false,
   });
   const [expandedProjects, setExpandedProjects] = useState<Record<string, boolean>>({});
+  const expandFolder = useCallback((id: string) => setExpandedProjects(current => (current[id] ?? true) ? current : { ...current, [id]: true }), []);
+  const dragDocuments = useMemo(() => pages.filter(page => page.deletedAt === null).map(page => ({ id: page.id, folderId: page.teamspaceId, parentId: page.parentId })), [pages]);
+  const moves = useServerTreeMoves(knowledgeBaseId, pages);
   const [expandedTags, setExpandedTags] = useState<Record<string, boolean>>({});
   const [location, setLocation] = useState<'project' | 'recent' | 'tag'>('project');
   const [folderAction, setFolderAction] = useState<{
@@ -176,6 +181,7 @@ export function KnowledgeTreeStage({
       ) : teamspaceState === 'forbidden' ? (
         <TreeForbidden />
       ) : (
+        <TreeDragProvider folders={teamspaces} documents={dragDocuments} canMoveDocuments={canEditTree(access)} canMoveFolders={canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin')} onMove={moves.move} onExpandFolder={expandFolder} errorText={moves.errorText}>
         <ExpandedPrimarySidebar
           className="min-h-0 flex-1"
           activeItem={selectedPageId ? '' : view}
@@ -254,6 +260,7 @@ export function KnowledgeTreeStage({
           }
           onSelectRecent={(id) => openPage(id, 'recent')}
         />
+        </TreeDragProvider>
       )}
       {folderAction && knowledgeBaseId ? (
         <KnowledgeBaseActions

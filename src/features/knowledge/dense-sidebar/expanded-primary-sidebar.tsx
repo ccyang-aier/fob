@@ -31,6 +31,7 @@ import type { TagSummary } from '@/features/knowledge/dense-sidebar/sidebar-navi
 import type { SidebarDocumentSummary } from '@/features/knowledge/dense-sidebar/sidebar-navigation';
 import { useI18n } from '@/features/knowledge/dense-sidebar/use-i18n';
 import { cn } from '@/lib/utils';
+import { TreeRootDropTarget } from '../navigation/tree/tree-drag';
 
 export type SidebarSectionId = 'projects' | 'tags' | 'recent';
 
@@ -131,6 +132,7 @@ export function ExpandedPrimarySidebar({
           <KnowledgeMainNavigation activeItem={activeItem} counts={counts} onNavigate={onNavigateMain} />
 
           <section className="mt-[15px]">
+            <TreeRootDropTarget>
             <SidebarSectionHeader
               icon={Folder}
               label={t('sidebar.projects')}
@@ -150,6 +152,7 @@ export function ExpandedPrimarySidebar({
                 </>
               }
             />
+            </TreeRootDropTarget>
             <SidebarCollapsibleContent expanded={expandedSections.projects}>
               <div role="tree" aria-label={t('sidebar.projects')} className="space-y-0.5 pt-0.5">
                 {projects.map((node) => (

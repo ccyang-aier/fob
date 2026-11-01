@@ -36,6 +36,7 @@ import { IconButton } from './icon-button';
 import styles from './sidebar-interactions.module.css';
 import { FolderSubscriptionMenuItem } from '../subscriptions/subscription-menu-item';
 import { PageIcon } from '../navigation/page-icon';
+import { TreeDragRow } from '../navigation/tree/tree-drag';
 
 export type SidebarProjectAction = 'new-document' | 'new-folder' | 'import' | 'rename' | 'add-tag' | 'toggle-star' | 'delete';
 
@@ -77,10 +78,12 @@ export function SidebarProjectTreeNode({
   return (
     <div
       role="treeitem"
+      aria-label={label}
       aria-expanded={node.expandable ? isExpanded : undefined}
       aria-selected={selected}
     >
-      <div
+      <TreeDragRow
+        item={{ kind: isDocument ? 'document' : 'folder', id: node.id }}
         data-selected={selected ? 'true' : undefined}
         className={cn(
           styles.row,
@@ -91,6 +94,7 @@ export function SidebarProjectTreeNode({
       >
         {node.expandable ? (
           <IconButton
+            data-tree-drag-control
             type="button"
             label={t(isExpanded ? 'sidebar.collapseSection' : 'sidebar.expandSection', {
               section: label,
@@ -137,7 +141,7 @@ export function SidebarProjectTreeNode({
             onAction={onDocumentAction}
           />
         ) : (
-          <div className={styles.trailing}>
+          <div className={styles.trailing} data-tree-drag-control>
             <div className={cn(styles.actions, 'flex items-center gap-0.5')}>
               <IconButton
                 type="button"
@@ -193,7 +197,7 @@ export function SidebarProjectTreeNode({
             <span className={styles.count}>{node.count ?? 0}</span>
           </div>
         )}
-      </div>
+      </TreeDragRow>
 
       {node.children?.length && isExpanded ? (
         <div role="group" className="space-y-0.5 pt-0.5">

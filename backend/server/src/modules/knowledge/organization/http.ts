@@ -15,6 +15,7 @@ export function createKnowledgeCatalogRoutes(auth: FobAuth, service: KnowledgeCa
   app.post(`${base}/:knowledgeBaseId/teamspaces`, async (context) => context.json(await service.createTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param())), 201));
   app.get(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId`, async (context) => context.json(await service.getTeamspace(context.get('identity'), context.req.param())));
   app.patch(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId`, async (context) => context.json(await service.updateTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param()))));
+  app.post(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId/move`, async (context) => context.json(await service.moveTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   app.delete(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId`, async (context) => context.json(await service.removeTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   return app;
 }

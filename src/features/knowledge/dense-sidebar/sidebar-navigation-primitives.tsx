@@ -222,6 +222,7 @@ export function SidebarDocumentActions({
         'ml-auto flex shrink-0 items-center gap-0.5',
       )}
       data-starred={starred ? 'true' : undefined}
+      data-tree-drag-control
     >
       <IconButton
         className={styles.actionButton}

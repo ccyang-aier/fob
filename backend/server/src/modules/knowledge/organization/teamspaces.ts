@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { and, asc, eq, gt, sql } from 'drizzle-orm';
 import type { Pool } from 'pg';
-import { createTeamspaceInputSchema, listTeamspacesInputSchema, removeTeamspaceInputSchema, teamspaceScopeSchema, updateTeamspaceInputSchema } from '@fob/shared/knowledge/contracts';
+import { createTeamspaceInputSchema, listTeamspacesInputSchema, moveTeamspaceInputSchema, removeTeamspaceInputSchema, teamspaceScopeSchema, updateTeamspaceInputSchema } from '@fob/shared/knowledge/contracts';
 import type { Teamspace, TeamspaceScope } from '@fob/shared/knowledge/contracts';
 import { page, teamspace } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
@@ -95,6 +95,26 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
           await permissions.invalidate(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId });
         }
         if (parsed.name !== undefined && parsed.name !== existing.name) for (const event of await recordFolderSubscriptionChange(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId, actorId })) await appendKnowledgeOutbox(db, event);
+        return teamspaceView(updated!);
+      });
+    },
+    async moveTeamspace(identity: FobIdentity, input: unknown) {
+      const parsed = parseInput(moveTeamspaceInputSchema, input);
+      return mutate(identity, parsed, async (db, existing) => {
+        if (parsed.parentId === existing.parentId) return teamspaceView(existing);
+        if (parsed.parentId) {
+          await loadTeamspace(db, { ...parsed, teamspaceId: parsed.parentId }, true);
+          await currentIdentity(db, identity);
+          // The knowledge-base write lock serializes competing moves. UNION also
+          // bounds traversal if an administrator previously damaged the graph.
+          const cycle = await db.execute(sql`WITH RECURSIVE ancestors AS (
+            SELECT id, parent_id FROM resources.teamspace WHERE knowledge_base_id = ${parsed.knowledgeBaseId} AND id = ${parsed.parentId}
+            UNION
+            SELECT folder.id, folder.parent_id FROM resources.teamspace folder JOIN ancestors ON folder.id = ancestors.parent_id WHERE folder.knowledge_base_id = ${parsed.knowledgeBaseId}
+          ) SELECT id FROM ancestors WHERE id = ${parsed.teamspaceId} LIMIT 1`);
+          if (cycle.rows.length) throw new ResourceRequestError('TEAMSPACE_CYCLE', 'A folder cannot be moved into itself or its descendants.', 409);
+        }
+        const [updated] = await db.update(teamspace).set({ parentId: parsed.parentId, updatedAt: sql`clock_timestamp()` }).where(targetTeamspace(parsed)).returning();
         return teamspaceView(updated!);
       });
     },
