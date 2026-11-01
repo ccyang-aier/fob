@@ -109,26 +109,31 @@ button.dayCell[data-today='true'] { border-color: var(--ink-soft); }
 .resourceText > span { overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; font-size: 12px; }
 .resourceRow > button:last-child { flex: 0 0 auto; color: var(--muted-strong); }
 .timeline { margin-top: 20px; }
-.dayGroup + .dayGroup { margin-top: 2px; }
-.dayHeading { display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px; font-size: 16px; font-weight: 600; }
-.dayHeading > span { color: var(--muted-strong); font-size: 15px; }
-.dayHeading time { color: var(--muted-strong); font-size: 13px; font-weight: 400; }
-.events { position: relative; margin: 0; padding: 0; list-style: none; }
-.events::before { position: absolute; top: 10px; bottom: 10px; left: 7px; width: 2px; background: var(--line); content: ''; }
-.event { position: relative; display: grid; grid-template-columns: 18px 44px 22px 82px minmax(0,1fr) 26px; gap: 10px; align-items: start; padding-bottom: 20px; }
-.timelineDot { z-index: 1; width: 8px; height: 8px; margin-top: 8px; margin-left: 4px; border-radius: 50%; outline: 3px solid var(--panel); background: var(--muted); }
-.eventTime { padding-top: 2px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.eventIcon { display: flex; align-items: center; justify-content: center; height: 22px; color: var(--profile-green); }
-.eventVerb { padding-top: 2px; color: var(--muted-strong); font-size: 13px; white-space: nowrap; }
-.eventContent { min-width: 0; padding-top: 1px; }
-.eventTitle { display: block; max-width: 100%; overflow: hidden; padding: 1px 0; border-radius: 3px; color: var(--ink); text-align: left; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 550; }
-.documentAttachment { display: flex; align-items: center; gap: 10px; width: min(100%,360px); min-height: 64px; margin-top: 7px; padding: 8px 10px; border: 1px solid var(--resource-card-border); border-radius: 6px; background: var(--surface-subtle); text-align: left; }
-.attachmentIcon { display: grid; flex: 0 0 auto; width: 34px; height: 42px; place-items: center; border: 1px solid var(--line); border-radius: 5px; color: color-mix(in srgb,var(--profile-blue) 65%,var(--panel)); background: var(--panel); }
-.documentAttachment > span:last-child { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.documentAttachment strong { display: block; overflow: hidden; color: var(--ink-soft); text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 550; }
-.documentAttachment small { color: var(--muted); font-size: 11px; }
-.excerpt { display: -webkit-box; overflow: hidden; margin: 9px 0 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 7px; color: var(--muted-strong); background: var(--surface-subtle); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-.eventByline { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+.dayGroup + .dayGroup { margin-top: 6px; }
+.dayHeading { display: flex; align-items: baseline; gap: 10px; margin: 0 0 18px; font-size: 16px; font-weight: 600; }
+.dayHeading > span { color: var(--muted); font-size: 12px; font-weight: 400; }
+.dayHeading time { color: var(--muted-strong); font-size: 12px; font-weight: 400; }
+.events { margin: 0; padding: 0; list-style: none; }
+.event { position: relative; display: grid; grid-template-columns: 16px 44px minmax(0,1fr); gap: 12px; align-items: start; padding-bottom: 20px; }
+.event:not(:last-child)::before { position: absolute; top: 17px; bottom: -3px; left: 7px; width: 1px; background: var(--line); content: ''; }
+.timelineDot { z-index: 1; width: 7px; height: 7px; margin-top: 8px; margin-left: 4px; border: 1.5px solid var(--muted); border-radius: 50%; background: var(--panel); }
+.eventTime { padding-top: 2px; color: var(--muted); font-size: 12px; line-height: 20px; font-variant-numeric: tabular-nums; }
+.eventBody { width: min(100%,560px); min-width: 0; }
+.eventHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; min-height: 24px; margin-bottom: 7px; }
+.eventSummary { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 4px 7px; min-width: 0; min-height: 24px; }
+.eventIcon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 16px; color: var(--profile-green); }
+.eventVerb { color: var(--muted-strong); font-size: 12px; line-height: 20px; }
+.eventTitle { max-width: 100%; min-width: 0; padding: 0 2px; border-radius: 3px; color: var(--ink); text-align: left; overflow-wrap: anywhere; font-size: 13px; font-weight: 550; line-height: 20px; }
+.eventActions { flex: 0 0 auto; width: 24px; height: 24px; color: var(--muted-strong); opacity: 0; }
+.event:hover .eventActions, .event:focus-within .eventActions, .eventActions[aria-expanded='true'] { opacity: 1; }
+.documentAttachment { display: grid; grid-template-columns: 40px minmax(0,1fr) 16px; align-items: center; gap: 12px; width: 100%; min-height: 68px; padding: 11px 14px; text-align: left; }
+.attachmentIcon { display: grid; width: 40px; height: 40px; place-items: center; border-radius: 7px; color: var(--profile-blue); background: color-mix(in srgb,var(--profile-blue) 7%,var(--panel)); }
+.attachmentContent { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.attachmentContent strong { overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; line-height: 20px; }
+.attachmentContent > span { overflow: hidden; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; font-size: 12px; line-height: 18px; }
+.attachmentArrow { color: var(--muted); }
+.excerpt { display: -webkit-box; overflow: hidden; margin: 0; padding: 9px 12px; border-left: 2px solid var(--line); border-radius: 0 4px 4px 0; color: var(--ink-soft); background: var(--surface-subtle); font-size: 13px; line-height: 1.65; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+@media (hover: none) { .eventActions { opacity: 1; } }
 .selectedDay { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line); color: var(--muted-strong); font-size: 13px; }
 .timelineEmpty { min-height: 250px; }
 .resourceList { min-height: 400px; }
@@ -165,9 +170,6 @@ button.dayCell[data-today='true'] { border-color: var(--ink-soft); }
   .identityHeading h1 { font-size: 23px; }
   .badges { gap: 7px; }
   .badge { height: 31px; padding: 0 9px; gap: 5px; font-size: 11px; }
-  .event { grid-template-columns: 16px 42px 24px 78px minmax(0,1fr) 24px; gap: 8px; }
-  .eventVerb { font-size: 12px; }
-  .eventTime { font-size: 12px; }
   .sidebar { padding: 0 12px; }
   .sectionHeading h2 { font-size: 15px; }
   .resourceMain { gap: 10px; }
@@ -206,15 +208,14 @@ button.dayCell[data-today='true'] { border-color: var(--ink-soft); }
   .tabs > button { min-width: 0; padding: 8px 10px 10px; font-size: 14px; }
   .scope { display: none; }
   .calendarCard { padding: 12px 10px 10px; }
-  .event { grid-template-columns: 12px 38px 22px minmax(0,1fr) 24px; gap: 7px; padding-bottom: 24px; }
-  .eventVerb { grid-column: 4; grid-row: 1; padding-top: 1px; }
-  .eventContent { grid-column: 4 / 6; grid-row: 2; padding-top: 0; }
-  .event > button { grid-column: 5; grid-row: 1; }
+  .event { grid-template-columns: 12px 36px minmax(0,1fr); gap: 8px; padding-bottom: 18px; }
   .eventTime { font-size: 11px; }
-  .timelineDot { width: 8px; height: 8px; margin-left: 4px; }
-  .eventTitle { font-size: 13px; }
+  .eventHeader { gap: 6px; }
+  .eventActions { opacity: 1; }
+  .documentAttachment { grid-template-columns: 32px minmax(0,1fr) 12px; gap: 9px; padding: 10px; }
+  .attachmentIcon { width: 32px; height: 36px; }
   .dayHeading { gap: 10px; font-size: 16px; }
-  .dayHeading time { font-size: 13px; }
+  .dayHeading time { font-size: 12px; }
   .sidebar { display: block; }
   .sidebar > :nth-child(2) { border-top: 1px solid var(--line); }
   .listControls { flex: 1; flex-wrap: wrap; }

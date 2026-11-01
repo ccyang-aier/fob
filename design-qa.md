@@ -4,6 +4,19 @@ final result: passed
 
 2026-11-01 compact revision. The previous oversized layout and its visual acceptance are superseded. The user's latest direction is a compact product-scale page with a fixed twelve-month activity grid and less unused space.
 
+## Latest revision: activity timeline
+
+The user subsequently identified weak visual quality in the activity list. This revision refines that surface while retaining the compact page and annual calendar.
+
+- Replaced the scattered six-column activity row with a time rail and a coherent content body. The rail uses a 1px connector and 7px hollow nodes. More actions align with the preview's right edge.
+- Creation titles appear once, inside the preview. Removed the repeated date beneath every document; date headings and exact event times remain. Actual author names remain visible.
+- Previews use the shared resource-card material, a 40px semantic document-icon surface, restrained title/author hierarchy and an opening arrow. No extra shadow, scaling or floating motion was introduced.
+- Extracted `ActivityEvent` from date grouping and pagination. Comment/reaction/subscription targets remain actionable, with excerpts styled as quotations.
+- Actual browser verification: Tab focuses the preview, Enter opens the intended real document, Back restores the profile, and the more-actions menu opens and closes with Escape. A settled keyboard-focus observation measured neutral background `rgb(241,241,241)`, border `rgb(32,32,32)` and no box shadow.
+- Narrow layout measured approximately 410×888 CSS viewport, with 258px activity bodies and no content spill within them. More actions remain visible at that width. Dark theme and the normal desktop were inspected; light theme and the default viewport were restored. Fresh console window contains no warnings or errors.
+- Evidence in the directory below: `profile-timeline-desktop.png`, `profile-timeline-detail.png`, `profile-timeline-focus.png`, `profile-timeline-mobile.png`, `profile-timeline-dark.png`. These replace the earlier timeline appearance in compact-layout captures.
+- Frontend typecheck, scoped ESLint, icon policy and production build passed. This presentation-only revision does not change the activity API, annual date window or navigation owner. The live account contains creation events; other activity types were reviewed in code without adding fake live records.
+
 ## Visual target and evidence
 
 - Original UX: `C:/Users/17335/AppData/Local/Temp/codex-clipboard-687efbf7-77c9-4d36-b2b3-709e2047de9c.png` (1487×1058). Retains the profile header, four tabs, approximately 7:3 columns, calendar, timeline, daily summary and resource sections.
