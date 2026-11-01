@@ -1,13 +1,16 @@
 'use client';
 
-import { formatDate, createTranslator, useTranslation, type Locale } from '@/lib/i18n';
+import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './library-canvas.messages';
 import { useMemo } from 'react';
 import { usePageScrollKey } from '@/lib/page-session-state';
 import { DocumentsPage } from '../documents/documents-page';
 import { KnowledgeBaseDocumentImport } from '../documents/import/server-document-import';
-import { FilePlus, Folder, Plus } from '@/components/icons';
+import { ArrowCounterClockwise, Folder, Plus } from '@/components/icons';
+import { Button } from '@/components/ui/button';
+import { AppAlert } from '@/components/app-alert';
 import { EmptyState } from '@/components/empty-state';
+import { DocumentCollectionPage } from '../documents/collection-page';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeAccess } from '../data/hooks';
 import { useKnowledgePagesQuery } from '../data/pages-queries';
@@ -95,8 +98,9 @@ export function LibraryCanvas({
           : view === 'recent'
             ? documents.slice(0, 10)
             : documents;
-  if (query.isPending) return <CanvasSpinner label={knowledgeT('loadingDocuments')} />;
-  if (query.isError)
+  const isCollection = view !== 'all-documents' && view !== 'projects' && !(view === 'overview' && folder);
+  if (!isCollection && query.isPending) return <CanvasSpinner label={knowledgeT('loadingDocuments')} />;
+  if (!isCollection && query.isError)
     return (
       <CanvasError
         title={knowledgeT('unableToLoadDocuments')}
@@ -161,7 +165,35 @@ export function LibraryCanvas({
         {actions.dialogs}
       </>
     );
-  const isEmpty = view === 'projects' ? !teamspaces.length : view === 'trash' ? !recycled.length : !listed.length;
+  if (view !== 'projects') {
+    const recycledIds = new Set(recycled.map(page => page.id));
+    const entries = view === 'trash' ? pages.filter(page => recycledIds.has(page.id)) : listed;
+    return <>
+      <DocumentCollectionPage
+        key={`${knowledgeBaseId}:${view}`}
+        title={view === 'overview' ? name : titles(locale)[view]}
+        kind={view === 'overview' ? 'documents' : view}
+        entries={entries.map(page => ({
+          id: page.id,
+          title: pageDisplayTitle(page, locale),
+          icon: page.icon,
+          folderId: page.teamspaceId,
+          creator: typeof page.properties?.displayCreator === 'string' ? page.properties.displayCreator : page.createdBy === userId ? knowledgeT('me') : knowledgeT('members'),
+          date: view === 'trash' ? page.deletedAt : page.updatedAt,
+        }))}
+        folders={teamspaces}
+        dateKind={view === 'trash' ? 'deleted' : 'updated'}
+        onOpen={onOpenPage}
+        onCreate={view !== 'trash' && canEditTree(access) ? () => void actions.create() : undefined}
+        onRemove={view === 'starred' ? id => actions.act(id, 'toggle-star') : view === 'drafts' ? id => actions.act(id, 'toggle-draft') : undefined}
+        renderActions={id => view === 'trash' ? canEditTree(access) ? <Button size="sm" variant="ghost" aria-label={knowledgeT('restoreValue', { v0: entries.find(page => page.id === id)?.title ?? '' })} loading={actions.operations.hasPending(id)} onClick={() => void actions.operations.restorePage(id)}><ArrowCounterClockwise size={14} />{knowledgeT('restore')}</Button> : null : <SidebarDocumentMenu documentId={id} starred={collections.starred.includes(id)} onAction={actions.act} />}
+        loading={query.isPending}
+        error={query.isError ? <AppAlert tone="error" title={knowledgeT('unableToLoadDocuments')} action={<Button size="sm" variant="outline" onClick={() => void query.refetch()}>{knowledgeT('retry')}</Button>} /> : undefined}
+      />
+      {actions.dialogs}
+    </>;
+  }
+  const isEmpty = !teamspaces.length;
   return (
     <section
       aria-label={knowledgeT('knowledgeBaseDocuments')}
@@ -171,25 +203,12 @@ export function LibraryCanvas({
       <div className={styles.libraryView}>
         <header className={styles.viewHeader}>
           <div>
-            <p className={styles.eyebrow}>{name}</p>
-            <h1>{view === 'overview' ? (folder?.name ?? name) : titles(locale)[view]}</h1>
+            <h1>{titles(locale).projects}</h1>
           </div>
-          {view !== 'trash' ? (
-            <button
-              type="button"
-              className={styles.primaryAction}
-              onClick={() =>
-                view === 'projects' ? onCreateFolder() : void actions.create(folder?.id)
-              }
-            >
-              {view === 'projects' ? <Plus size={14} /> : <FilePlus size={14} />}
-              {view === 'projects' ? knowledgeT('newFolder') : knowledgeT('newDocument')}
-            </button>
-          ) : null}
+          {canEditTree(access) && <Button size="sm" variant="outline" onClick={() => onCreateFolder()}><Plus size={14} />{knowledgeT('newFolder')}</Button>}
         </header>
         <div className={isEmpty ? undefined : styles.documentList}>
-          {view === 'projects'
-            ? teamspaces.map((folder) => (
+          {teamspaces.map((folder) => (
                 <button
                   key={folder.id}
                   type="button"
@@ -199,41 +218,9 @@ export function LibraryCanvas({
                   <Folder size={16} />
                   <span>{folder.name}</span>
                 </button>
-              ))
-            : view === 'trash'
-              ? recycled.map((page) => (
-                  <div key={page.id} className={styles.documentCard}>
-                    <span className="min-w-0 flex-1 truncate px-4 py-3 text-[13px]">
-                      {page.title}
-                    </span>
-                    <button
-                      type="button"
-                      aria-label={knowledgeT('restoreValue', { v0: page.title })}
-                      disabled={actions.operations.hasPending(page.id)}
-                      onClick={() => void actions.operations.restorePage(page.id)}
-                      className="!w-auto px-4 text-[12px]"
-                    >
-                      {knowledgeT('restore')}
-                    </button>
-                  </div>
-                ))
-              : listed.map((page) => (
-                  <div key={page.id} className={styles.documentCard}>
-                    <button type="button" onClick={() => onOpenPage(page.id)}>
-                      <span>{pageDisplayTitle(page, locale)}</span>
-                      <small>
-                        {formatDate(page.updatedAt, { month: 'short', day: 'numeric' }, locale)}
-                      </small>
-                    </button>
-                    <SidebarDocumentMenu
-                      documentId={page.id}
-                      starred={collections.starred.includes(page.id)}
-                      onAction={actions.act}
-                    />
-                  </div>
-                ))}
+              ))}
           {isEmpty ? (
-            <EmptyState label={view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noContentHereYet')} />
+            <EmptyState label={knowledgeT('noContentHereYet')} />
           ) : null}
         </div>
       </div>

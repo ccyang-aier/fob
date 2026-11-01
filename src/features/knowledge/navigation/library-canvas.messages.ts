@@ -3,6 +3,7 @@ import { defineMessages } from '@/lib/i18n';
 export const knowledgeMessages = defineMessages({
   loadingDocuments: ['正在加载文档', 'Loading documents'],
   unableToLoadDocuments: ['文档加载失败', 'Unable to load documents'],
+  retry: ['重试', 'Retry'],
   me: ['我', 'Me'],
   members: ['成员', 'Members'],
   knowledgeBase: ['知识库', 'Knowledge base'],

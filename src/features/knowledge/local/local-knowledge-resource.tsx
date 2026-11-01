@@ -2,17 +2,16 @@
 
 import { useKnowledgeNavigation, useKnowledgeNavigationActive } from '../navigation/system-navigation';
 
-import { formatDate, useTranslation } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-knowledge-resource.messages';
 /** Local storage is a resource capability, independent of account identity. */
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { updateDocumentNavigation, updateFolderNavigation } from '../navigation/document-navigation-location';
 import { usePageSessionState } from '@/lib/page-session-state';
-import { FilePlus } from '@/components/icons';
+import { ArrowCounterClockwise } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
-import { EmptyState } from '@/components/empty-state';
 import { CanvasState } from '../canvas-states';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useIdentity } from '@/features/identity/identity-context';
@@ -34,6 +33,8 @@ import { subscribeOpenPageTarget } from '../editor/open-target';
 import { LocalLibraryNavigation } from './local-library-navigation';
 import { KnowledgeEmptyState } from '../knowledge-empty-state';
 import { DocumentsPage } from '../documents/documents-page';
+import { DocumentCollectionPage } from '../documents/collection-page';
+import { PermanentDeleteDocumentDialog } from '../documents/collection-page/permanent-delete-dialog';
 import { LocalFolderOverview } from '../discovery/local-folder-overview';
 import { LocalDocumentImport } from '../documents/import/local-document-import';
 import { FolderImportDialog } from '../documents/import/folder-import-dialog';
@@ -66,7 +67,7 @@ export function LocalKnowledgeResource({
   selectedKnowledgeBaseId,
   onCreateKnowledgeBase,
 }: LocalKnowledgeResourceProps) {
-  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: knowledgeT } = useTranslation(knowledgeMessages);
   const { t: dragT } = useTranslation(dragMessages);
   const { expand: expandSidebar } = useKnowledgeNavigation();
   const navigationActive = useKnowledgeNavigationActive();
@@ -90,6 +91,7 @@ export function LocalKnowledgeResource({
   const [creation, setCreation] = useState<'document' | 'folder' | null>(null);
   const [creationParentId, setCreationParentId] = useState<string | null>(null);
   const [importFolderId, setImportFolderId] = useState<string | null>(null);
+  const [permanentDeletion, setPermanentDeletion] = useState<{ id: string; title: string; knowledgeBaseId: string } | null>(null);
   const { notify } = useAppAlert();
   useEffect(() => {
     if (!navigationActive || !selectedId) return;
@@ -323,6 +325,13 @@ export function LocalKnowledgeResource({
           }}
         />
         {importFolderId && folders.some(folder => folder.id === importFolderId) && <FolderImportDialog knowledgeBaseId={knowledgeBaseId} source="local" folder={folders.find(folder => folder.id === importFolderId)!} onClose={() => setImportFolderId(null)} />}
+        {permanentDeletion?.knowledgeBaseId === knowledgeBaseId && <PermanentDeleteDocumentDialog
+          title={permanentDeletion.title}
+          onClose={() => setPermanentDeletion(null)}
+          onDelete={() => {
+            if (write(current => ({ ...current, documents: current.documents.filter(document => document.baseId !== permanentDeletion.knowledgeBaseId || document.id !== permanentDeletion.id || !document.deleted) }))) setPermanentDeletion(null);
+          }}
+        />}
         </>
       }
     >
@@ -497,89 +506,27 @@ export function LocalKnowledgeResource({
           )}
         />
       ) : (
-        <section className="h-full overflow-auto px-8 py-12 sm:px-14">
-          <div className="mx-auto max-w-[860px]">
-            <p className="mb-4 text-xs text-[var(--muted)]">
-              {base?.name}{' '}
-              <span className="ml-2 rounded-full bg-[var(--surface-subtle)] px-2 py-1 text-[10px]">
-                {knowledgeT('localPersonal')}
-              </span>
-            </p>
-            <div className="mb-7 flex items-center justify-between">
-              <h1 className="text-[26px] font-semibold tracking-tight">
-                {title ? t(title) : knowledgeT('document')}
-              </h1>
-              {view !== 'trash' ? (
-                <Button size="sm" variant="outline" onClick={() => setCreation('document')}>
-                  <FilePlus size={14} />
-                  {knowledgeT('newDocument')}
-                </Button>
-              ) : null}
-            </div>
-            <p className="mb-6 text-xs leading-6 text-[var(--muted)]">
-              {knowledgeT('localDocumentsAreStoredOnlyInThisBrowser')}
-            </p>
-            {session.status === 'error' ? (
-              <AppAlert
-                tone="error"
-                title={knowledgeT('accountServiceUnavailableLocalKnowledgeBasesRemainAvailable')}
-                className="mb-4"
-                action={
-                  <Button size="sm" onClick={openSignIn}>
-                    {knowledgeT('signInRetry')}
-                  </Button>
-                }
-              />
-            ) : null}
-            <div className={visible.length ? 'overflow-hidden rounded-xl border border-[var(--line)]' : undefined}>
-              {visible.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-3 border-b border-[var(--line)] px-4 py-3 last:border-0 hover:bg-[var(--surface-hover)]"
-                >
-                  <button
-                    type="button"
-                    disabled={item.deleted}
-                    onClick={() => openDocument(item.id)}
-                    className="min-w-0 flex-1 truncate text-left text-xs"
-                  >
-                    {item.title || knowledgeT('untitledDocument')}
-                  </button>
-                  {item.deleted ? (
-                    <>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => updateDocument(item.id, { deleted: false })}
-                      >
-                        {knowledgeT('restore')}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() =>
-                          write((current) => ({
-                            ...current,
-                            documents: current.documents.filter((doc) => doc.id !== item.id),
-                          }))
-                        }
-                      >
-                        {knowledgeT('deletePermanently')}
-                      </Button>
-                    </>
-                  ) : (
-                    <span className="text-[10px] text-[var(--muted)]">
-                      {formatDate(item.updatedAt, undefined, locale)}
-                    </span>
-                  )}
-                </div>
-              ))}
-              {!visible.length ? (
-                <EmptyState label={view === 'trash' ? knowledgeT('trashIsEmpty') : knowledgeT('noDocumentsYet')} />
-              ) : null}
-            </div>
-          </div>
-        </section>
+        <DocumentCollectionPage
+          key={`${base.id}:${view}`}
+          title={title ? t(title) : knowledgeT('document')}
+          kind={view}
+          entries={visible.map(item => ({ id: item.id, title: item.title || knowledgeT('untitledDocument'), icon: item.icon, folderId: item.folderId, creator: item.creator, date: item.updatedAt }))}
+          folders={folders}
+          onOpen={openDocument}
+          onCreate={view !== 'trash' ? () => setCreation('document') : undefined}
+          onRemove={view === 'starred' ? id => updateDocument(id, { starred: false }) : view === 'drafts' ? id => updateDocument(id, { draft: false }) : undefined}
+          renderActions={id => view === 'trash' ? <>
+            <Button size="sm" variant="ghost" aria-label={`${knowledgeT('restore')} ${visible.find(item => item.id === id)?.title ?? ''}`} onClick={() => updateDocument(id, { deleted: false })}><ArrowCounterClockwise size={14} />{knowledgeT('restore')}</Button>
+            <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem variant="destructive" onSelect={() => { const item = visible.find(document => document.id === id); if (item) setPermanentDeletion({ id, title: item.title, knowledgeBaseId }); }}>{knowledgeT('deletePermanently')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu>
+          </> : <DropdownMenu><DropdownMenuTrigger asChild><button type="button" className="fob-action rounded p-2" aria-label={knowledgeT('documentActions')}><DotsThree size={16} /></button></DropdownMenuTrigger><DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => openDocument(id)}>{knowledgeT('openEdit')}</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { starred: !item.starred }); }}>{knowledgeT('toggleStar')}</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => { const item = live.find(document => document.id === id); if (item) updateDocument(id, { draft: !item.draft }); }}>{knowledgeT('toggleDraft')}</DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onSelect={() => updateDocument(id, { deleted: true })}>{knowledgeT('moveToTrash')}</DropdownMenuItem>
+          </DropdownMenuContent></DropdownMenu>}
+          notice={session.status === 'error' ? <AppAlert tone="error" title={knowledgeT('accountServiceUnavailableLocalKnowledgeBasesRemainAvailable')} className="mb-4" action={<Button size="sm" onClick={openSignIn}>{knowledgeT('signInRetry')}</Button>} /> : undefined}
+          footer={knowledgeT('localDocumentsAreStoredOnlyInThisBrowser')}
+        />
       )}
     </KnowledgeWorkbench>
   );
