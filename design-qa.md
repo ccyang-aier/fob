@@ -1,72 +1,47 @@
-# 文件夹首页视觉与交互验收
+# Personal profile design QA
 
-Result: passed
+final result: passed
 
-验收日期：2026-10-25。范围是本轮文件夹首页的 Outline 原版视觉、纯编辑器概览和相关实际操作。截图与测试上传素材存放在仓库外，未纳入提交。
+## Evidence and normalization
 
-## 参考与比较方法
+- Source visual truth: `C:/Users/17335/AppData/Local/Temp/codex-clipboard-687efbf7-77c9-4d36-b2b3-709e2047de9c.png`, 1487×1058 pixels.
+- Implementation: `http://localhost:3001/?view=profile`, authenticated, current knowledge base, activity tab, light theme, collapsed system navigation.
+- Evidence directory: `C:/Users/17335/.codex/visualizations/2026/11/01/01a19754-a727-7542-8e55-1378292591bf/`.
+- Final desktop: `profile-desktop.png`. Measured CSS viewport is 1486×1058; the browser capture canvas is 1565×1114 and includes extra right/bottom surface padding. `profile-desktop-normalized.png` crops that padding to the 1487×1058 reference frame without scaling interface geometry. The one CSS pixel viewport difference is immaterial.
+- Full-view comparison: `profile-comparison.png`, source left and implementation right in the same image.
+- Focused comparisons: `profile-compare-header.png`, `profile-compare-calendar.png`, `profile-compare-sidebar.png`. Source and implementation regions share the same crop bounds.
+- Responsive evidence: `profile-mobile.png`, measured 391×844 CSS viewport; document/body width 391px. Heatmap overflow is contained in its own scroller. Default approximately 643px layout was also inspected.
+- Theme evidence: `profile-dark.png`; original light theme and default browser viewport restored after testing.
 
-- 用户指定文档页参考：`C:/Users/17335/AppData/Local/Temp/codex-clipboard-58853c4d-3478-43a2-a043-0e8e18e60edc.png`（1396 × 1149）。
-- 用户指定概览参考：`C:/Users/17335/AppData/Local/Temp/codex-clipboard-e3df9536-f036-4e1e-915e-3b4e222cf997.png`（1426 × 920）。
-- 同时读取本地 Outline 的实际集合页面 DOM 和样式，核对当前标题、元信息、页签、文档行、复选框与底部批量工具栏。
-- 已逐项检查完整页面并排图、标题/列表细节并排图、工具栏并排图及概览并排图。用户参考以内容宽度 832px 为依据进行缩放与裁剪；文档参考的缩放系数为 1 / 1.425。比较内容相对坐标，排除不同应用外壳与截图高度带来的绝对坐标差异。
+## Comparison and fixes
 
-| 项目 | Outline 与 Fob 的核对结果 |
-| --- | --- |
-| 内容宽度 | 832px；窄屏自适应 |
-| 标题 | 36px / 45px，600，正常字距 |
-| 标题图标 | 原版 collection 资源，40px；保留用户已选的内容图标 |
-| 文件夹元信息 | 14px / 21px，原版蓝灰色层级 |
-| 页签 | 14px / 21px，间距 24px，3px 下划线 |
-| 文档标题 | 18px，500；不再使用表格分隔线 |
-| 文档元信息 | 13px / 19.5px，真实作者、修改和个人阅读时间 |
-| 列表节奏 | 行间步长约 67.29px；首行复选框相对标题顶端约 154.67px，参考约 154.66px |
-| 选择与批量操作 | 18px 原版蓝色复选框；40px 工具栏固定在视口底部居中 |
-| 概览 | 只有编辑器正文，16px / 24px；没有置顶、最新、文档列表或单独编辑弹窗 |
+1. Initial P2: resource menu buttons followed short titles instead of aligning at the right edge. A direct-child flex rule overrode the content button. Restricted the rule to the menu button; subsequent desktop and dark captures show correct alignment.
+2. Initial P2: compact badge wrappers resized OpenMoji images unevenly and emitted Next Image warnings. Removed the wrapper size override and used the shared renderer's explicit size. A fresh browser verification window contains no warnings or errors.
+3. Initial P2: narrow layout placed the avatar on a separate line before the complete identity block. Changed the identity flex basis to zero; the 391px capture shows a compact side-by-side portrait/name arrangement with wrapped badges and accessible actions.
+4. Initial P2: main inset and small supporting typography drifted from the reference. Adjusted the left/top insets, calendar height, sidebar headings and resource typography. Measured portrait: approximately x=101, y=86, 106×106px. Measured calendar: approximately x=101, y=265, 934×253px. Reference is approximately x=101, y=263, 934×253px.
+5. Post-typography P2: folder row content and heading line height made the final saved resource extend below the reference's first viewport. Reduced folder-row vertical padding and set sidebar heading line height to 1.25 to preserve the reference's roughly 50px row rhythm. The final sidebar comparison includes all resource sections at the intended density.
+6. Functional P1 found during verification: opening a folder from the profile could retain the knowledge page's old starred filter. Added a scoped folder-target bridge and delegated document/folder activation to the current knowledge owner. Browser verification now opens the actual folder view and document editor on the first click; Back returns to the preserved profile. Added a navigation-owner regression test.
 
-## 已修复的问题
+## Required fidelity surfaces
 
-- P1：原先的文件夹标题、表格式文档行、图标和间距偏离用户指定参考。改用原版内容几何与带来源、许可和摘要的官方图标。
-- P1：概览重复实现编辑器，且混入置顶/最新内容。删除独立编辑器，文档与概览共用装配、块模块、正文渲染、斜杠菜单和选区工具栏。
-- P1：Fob 没有发布生命周期。按用户最新要求删除最近发布，契约拒绝旧值，旧浏览状态回退至文档。
-- P2：批量工具栏受内容容器定位影响。改为 portal 到页面根部，固定视口居中，并限制仅当前导航所有者显示。
-- P2：确认弹窗期间后台列表变化会改变目标。弹窗持有已选择 ID 快照。
-- P2：手机宽度下桌宠可能遮住清除选择。小于 600px 的视口将工具栏距底部调整为 80px；实际 379 × 779 验证工具栏位于 y=659–699，关闭按钮完整可见，无整页水平溢出。两行工具区不再覆盖页签。
+- Fonts/typography: shared system font remains authoritative. Matched 32px identity, 16px tab/calendar heading, 19px sidebar heading, 15px resource/action text, and 13px resource metadata. Long real names/titles wrap or truncate without obscuring controls.
+- Spacing/layout: 106px portrait, approximately 7:3 columns, 16px column gap, 934×253px calendar at the source-sized viewport, thin single panel borders, 5–8px panel/control corners. Header and card geometry were compared both in full view and focused crops.
+- Colors/tokens: neutral product foreground, shared borders/hover/active states, semantic green activity cells and blue resource icons. Dark colors preserve contrast. No extra theme or custom notification surface was introduced.
+- Image/assets: actual account portrait or the shared initial avatar; official local OpenMoji badges; cataloged FA7/Lucide icons; existing user-defined document/folder icons are retained.
+- Copy/content: current account and knowledge resources replace the reference's example person, titles, and counts. Dates and daily calculations use Asia/Shanghai. No fictional biography, followers, awards, reactions or gifts are shown as real product data.
 
-## 功能与状态验证
+## Expected differences and limits
 
-- 六个页签可切换；没有最近发布。概览只显示正文，零文档文件夹也不出现文档列表或创建提示。
-- 服务端通过共享斜杠菜单插入标题、正文、任务和真实图片；图片上传后完成渲染，离开页签提交并在整页刷新后保留。
-- 本机知识库直接编辑概览，离开/返回与整页刷新后内容仍然保留。
-- 自动保存串行处理 revision，合并保存期间的编辑；失败保留恢复草稿与重试入口。远端 revision 不覆盖未提交编辑。
-- 独立验收文档完成收藏往返、草稿往返、置顶往返、跨文件夹移动及进入可恢复回收站。
-- 权限集成验证包含源 full / 目标 edit、继承变化、显式 ACL 和子树正文保留、跨库拒绝、只读令牌拒绝、锁等待时凭据失效。
-- 桌面浅色、稳定深色、约 505px 窄屏及 379px 手机宽度已检查；结束时恢复桌面尺寸、浅色和展开侧栏。
-- 27 项前端专项、15 项后端专项通过。相关类型检查、源码适配、国际化、图标验证、修改文件 ESLint、Next.js 生产导出与服务端构建通过。全量 lint 被其他任务目录 `pl_works/guizang` 的 242 条 warning 阻断，未将全量 lint 记为通过。
+- The reference's example avatar, identity, filled heatmap and example social counts are not production data. Current account data and actual activity determine this page's contents.
+- The reference's six-month drawing contains more week columns than a six-month calendar. Implementation uses 183 real days, aligned into 27 weeks, rather than assigning fictional dates to reproduce that density.
+- Existing shell chrome, approved icon families, user content icons, and shared interaction tokens are retained. Locked achievements disclose their conditions and actual progress.
+- People following/followers and coffee gifting have no existing service. Following/follower counters use an explicit unavailable state, while document/folder subscriptions remain functional. Avatar upload and biography editing are outside existing identity API capabilities.
+- Activity is a projection of current business records, not an append-only audit ledger. Removing a reaction/comment/subscription removes its corresponding projected event.
 
-## 产品约束与保留差异
+## Verification
 
-用户要求删除最近发布，因此保留六个页签。真实文件夹名、权限、用户图标、文档数量及内容按 Fob 数据展示。系统外壳与共享编辑器控件沿用 Fob；概览没有另一套菜单或编辑器。批量操作连接 Fob 的实际移动、草稿、收藏、置顶与回收站语义。整张应用截图不作逐像素相同声明。
-
-本轮请求范围内无待修复 P0 / P1 / P2 项。
-
-## 后续交互反馈验收（2026-10-26）
-
-Result: passed。按用户的 8 条后续反馈调整交互，不重新设计文件夹视觉。页签查询保留现有页头和页签；图标同步至侧栏并支持取消，选中尺寸改为 32px；收藏使用侧栏黄色；置顶有独立按下状态且在文档分页前排序；新建为加号，导入为上传图标与描边按钮；权限改用现有自定义菜单；排序独立放到页签旁，更多仅保留操作。
-
-桌面 CSS 1347 × 758 与手机 CSS 410 × 842 完成截图检查。手机没有整页水平溢出，置顶状态及排序入口可见；结束时重置尺寸并展开侧栏。实际保存与取消、图标选择与取消、置顶往返、页签切换、排序持久化及刷新均完成。28 项前端与 25 项后端专项通过；最终前后端构建通过。控制台无 error/warn、无框架错误遮罩。全库源码适配校验仍受其他在途编辑器改动阻断，本轮文件的 hash 已单独登记；完整记录见 `.spec/tasks/knowledge-discovery.md`。
-
-新增截图 `folder-controls-final.png`、`folder-controls-sort.png`、`folder-controls-permissions.png`、`folder-controls-mobile.png` 均在下述仓库外目录，已检查最终静止画面；没有把 HMR 加载态当作视觉证据。
-
-## 截图证据
-
-目录：`C:/Users/17335/.codex/visualizations/2026/10/25/01a171f1-5f67-71f0-b92c-fd0d0fe22018/`。
-
-- `outline-folder-documents-comparison.png`：完整文档内容归一化对照。
-- `outline-folder-details-comparison.png`：标题、页签及文档行细节。
-- `outline-folder-toolbar-comparison.png`：原版选择工具栏对照。
-- `outline-folder-overview-comparison.png`：纯正文概览对照。
-- `fob-folder-documents.png`、`fob-folder-overview.png`：桌面实际页面。
-- `fob-overview-slash.png`、`fob-overview-saved.png`：共用菜单与刷新后的标题/任务/图片。
-- `fob-overview-local.png`：本机概览刷新保留。
-- `fob-folder-dark.png`、`fob-folder-narrow.png`、`fob-folder-phone.png`：深色与窄屏，手机截图已包含工具栏避让修正。
+- Browser: IAB through CUA; route/title, populated render, no framework overlay, final console error/warn check, visual captures and interaction proof all passed.
+- Interactions: account menu → full profile; inline editor validation/cancel; heatmap click/keyboard and exact daily counts; document search; save/un-save and saved filters; unavailable people-following state; document/folder activation and Back; settings open/close returns to profile; light/dark and narrow layout.
+- Automated: 18 frontend/calendar/shell tests and 4 real PostgreSQL/HTTP profile tests passed. Integration tests include ACL filtering, actor isolation, invalid input, complete daily counts across pagination, search before pagination, and stale-ACL fail-closed behavior.
+- TypeScript frontend/server/shared, icons, lint, i18n, architecture boundaries and production build passed. Temporary test databases were removed by the fixture.
+- No actionable P0/P1/P2 findings remain within the implemented feature scope. A second browser engine and real multi-person social/gift services were not exercised.

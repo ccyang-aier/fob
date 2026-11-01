@@ -7,6 +7,7 @@ import { knowledgeAccessErrorResponse, requireKnowledgeRequest } from '../access
 import type { KnowledgeRequestAuthenticator, KnowledgeRequestContext } from '../access';
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
 import { DiscoveryError, discoveryFacets, folderOverview, searchDocuments, updateFolder } from './service';
+import { personalProfile } from './personal-profile';
 
 export function createKnowledgeDiscoveryRoutes(deps: { pool: Pool; authenticator: KnowledgeRequestAuthenticator; trustedOrigins: readonly string[] }) {
   const app = new Hono<{ Variables: { knowledge: KnowledgeRequestContext } }>(), base = '/api/knowledge/:knowledgeBaseId/discovery';
@@ -24,6 +25,7 @@ export function createKnowledgeDiscoveryRoutes(deps: { pool: Pool; authenticator
   };
   const folderId = (value: string) => { if (!entityIdSchema.safeParse(value).success) throw new DiscoveryError(400, 'INVALID_INPUT'); return value; };
   app.get(`${base}/facets`, async context => context.json(await run(context.get('knowledge'), false, discoveryFacets)));
+  app.get(`${base}/profile`, async context => context.json(await run(context.get('knowledge'), false, (db, actor) => personalProfile(db, actor, context.req.query()))));
   app.post(`${base}/search`, async context => {
     const input = await context.req.json().catch(() => { throw new DiscoveryError(400, 'INVALID_INPUT'); });
     return context.json(await run(context.get('knowledge'), false, (db, actor) => searchDocuments(db, actor, input)));

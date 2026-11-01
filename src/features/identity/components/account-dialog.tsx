@@ -8,7 +8,6 @@ import { X } from '@/components/icons';
 import { useIdentity } from '../identity-context';
 import { AuthEntryContent } from './auth-entry-content';
 import { AuthShowcase } from './auth-showcase';
-import { AccountProfile } from './account-profile';
 import styles from './account-dialog.module.css';
 
 /** Native dialog keeps focus, Escape dismissal and focus restoration in one layer. */
@@ -24,13 +23,12 @@ export function AccountDialog({
   const uiText = useTranslation(messages).t;
   const dialog = useRef<HTMLDialogElement>(null);
   const { session } = useIdentity();
-  const authenticated = session.status === 'authenticated' && !switchingAccount;
   const currentAccount =
     switchingAccount && session.status === 'authenticated' ? session.user.name : undefined;
   useEffect(() => {
     if (open && !dialog.current?.open) {
       dialog.current?.showModal();
-      if (!authenticated) dialog.current?.querySelector<HTMLInputElement>('input')?.focus();
+      dialog.current?.querySelector<HTMLInputElement>('input')?.focus();
     }
     if (!open && dialog.current?.open) {
       dialog.current?.close();
@@ -38,7 +36,7 @@ export function AccountDialog({
       if (document.activeElement === document.body)
         document.querySelector<HTMLButtonElement>('[data-account-trigger]')?.focus();
     }
-  }, [open, authenticated]);
+  }, [open]);
   return (
     <dialog
       ref={dialog}
@@ -48,13 +46,11 @@ export function AccountDialog({
         if (event.target === event.currentTarget) onClose();
       }}
       aria-label={
-        authenticated
-          ? uiText('个人资料')
-          : switchingAccount
+        switchingAccount
             ? uiText('切换账户')
             : uiText('登录 Fob')
       }
-      className={`${styles.dialog} ${authenticated ? styles.profileDialog : ''}`}
+      className={styles.dialog}
     >
       {open ? (
         <>
@@ -66,10 +62,7 @@ export function AccountDialog({
           >
             <X size={16} aria-hidden />
           </button>
-          {authenticated ? (
-            <AccountProfile onClose={onClose} />
-          ) : (
-            <div className={styles.login}>
+          <div className={styles.login}>
               <AuthShowcase />
               <section className={styles.formPanel}>
                 <AuthEntryContent
@@ -80,8 +73,7 @@ export function AccountDialog({
                   onDismiss={onClose}
                 />
               </section>
-            </div>
-          )}
+          </div>
         </>
       ) : null}
     </dialog>

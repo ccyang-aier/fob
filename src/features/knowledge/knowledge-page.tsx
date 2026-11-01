@@ -22,6 +22,7 @@ import { flattenKnowledgeBaseList, useKnowledgeTeamspacesQuery } from './data/ca
 import { deriveKnowledgeEntryPhase, knowledgeErrorCodeOf, type KnowledgeQuerySlice } from './entry-state';
 import { useKnowledgeNotificationsBridge } from './notifications/notifications-queries';
 import { subscribeOpenPageTarget } from './editor/open-target';
+import { subscribeOpenFolderTarget } from './navigation/open-folder-target';
 import { KnowledgeTreeStage, type TreeStageTeamspaceState, type LibraryView } from './navigation/tree/tree-stage';
 import { CreateTeamspaceDialog } from './navigation/create-teamspace-dialog';
 import { FolderImportDialog } from './documents/import/folder-import-dialog';
@@ -183,6 +184,9 @@ function ServerKnowledgeResource({
     setSelectedTeamspaceId(id); setSelectedPageId(null); setLibraryView('overview');
     if (navigationActive && activeId) updateFolderNavigation({ knowledgeBaseId: activeId, folderId: id, source: 'server' }, tabSearch);
   }, [setSelectedTeamspaceId, setSelectedPageId, setLibraryView, navigationActive, activeId, tabSearch]);
+  useEffect(() => navigationActive ? subscribeOpenFolderTarget(target => {
+    if (target.knowledgeBaseId === activeId) openFolder(target.folderId);
+  }) : undefined, [navigationActive, activeId, openFolder]);
   useKnowledgeNotificationsBridge({ active: stageActive, knowledgeBaseId: activeId,
     openPage: id => { openPage(id); if (activeId) void queryClient.invalidateQueries({ queryKey: knowledgeQueryKeys.pages(activeId) }); void teamspacesQuery.refetch(); },
     openFolder: id => { openFolder(id); void teamspacesQuery.refetch(); },

@@ -8,6 +8,7 @@ import { knowledgeMessages } from './local-knowledge-resource.messages';
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { updateDocumentNavigation, updateFolderNavigation } from '../navigation/document-navigation-location';
+import { subscribeOpenFolderTarget } from '../navigation/open-folder-target';
 import { usePageSessionState } from '@/lib/page-session-state';
 import { ArrowCounterClockwise } from '@/components/icons';
 import { Button } from '@/components/ui/button';
@@ -161,10 +162,13 @@ export function LocalKnowledgeResource({
   function openDocument(id: string) {
     setSelectedId(id);
   }
-  function openFolder(id: string) {
+  const openFolder = useCallback((id: string) => {
     setFolderId(id); setActiveTagId(null); setSelectedId(null); setView('all-documents');
     if (navigationActive) updateFolderNavigation({ knowledgeBaseId, folderId: id, source: 'local' }, tabSearch);
-  }
+  }, [setFolderId, setActiveTagId, setSelectedId, setView, navigationActive, knowledgeBaseId, tabSearch]);
+  useEffect(() => navigationActive ? subscribeOpenFolderTarget(target => {
+    if (target.knowledgeBaseId === knowledgeBaseId) openFolder(target.folderId);
+  }) : undefined, [navigationActive, knowledgeBaseId, openFolder]);
   function openLibrary(next: View = 'all-documents') {
     setView(next); setSelectedId(null); setFolderId(null); setActiveTagId(null);
     if (navigationActive) updateFolderNavigation({ knowledgeBaseId, folderId: null, source: 'local' }, tabSearch);

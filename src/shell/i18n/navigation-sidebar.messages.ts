@@ -1,5 +1,6 @@
 import { defineMessages } from '@/lib/i18n';
 export const messages = defineMessages({
+  个人主页: ['个人主页', 'Profile'],
   成员: ['成员', 'Members'], 知识库: ['知识库', 'Knowledge'],
   模板: ['模板', 'Templates'], 咖啡: ['咖啡', 'Coffee'], 帮助: ['帮助', 'Help'],
   拆分视图: ['拆分视图', 'Split view'], 调整拆分视图: ['调整拆分视图', 'Resize split view'],

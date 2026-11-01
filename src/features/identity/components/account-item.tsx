@@ -30,6 +30,7 @@ import { useIdentity } from '../identity-context';
 import { presenceDisplay, getPresenceOptions } from '../presence';
 import { LogoutConfirmDialog } from './logout-confirm-dialog';
 import styles from './account-item.module.css';
+import { openPersonalProfile } from '../profile/navigation';
 
 export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?: boolean; variant?: 'sidebar' | 'topbar' }) {
   const { t: uiText, locale } = useTranslation(messages);
@@ -180,8 +181,7 @@ export function AccountItem({ compact = false, variant = 'sidebar' }: { compact?
           <DropdownMenuItem
             className={styles.menuItem}
             onSelect={() => {
-              openingDialog.current = true;
-              openSignIn();
+              openPersonalProfile();
             }}
           >
             <UserCircle />

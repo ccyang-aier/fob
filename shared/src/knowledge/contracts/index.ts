@@ -14,5 +14,6 @@ export * from './agent-tools';
 export * from './pat';
 export * from './document-collaboration';
 export * from './discovery';
+export * from './profile';
 export { linkPreviewInputSchema, linkPreviewSchema } from './rich-content';
 export type { LinkPreview } from './rich-content';

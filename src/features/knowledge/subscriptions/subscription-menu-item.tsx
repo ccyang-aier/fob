@@ -25,7 +25,7 @@ function ServerSubscriptionMenuItem({ target, source, className }: { target: Kno
   const queryKey = ['knowledge', knowledgeBaseId, 'subscription', principal, resource];
   const params = new URLSearchParams(resource);
   const query = useQuery({ queryKey, enabled: source === 'server' && principal !== 'guest', queryFn: ({ signal }) => knowledgeResourceRequest(knowledgeBaseId, `subscriptions?${params}`, knowledgeSubscriptionResultSchema, { signal }) });
-  const mutation = useMutation({ mutationFn: () => knowledgeResourceRequest(knowledgeBaseId, 'subscriptions', knowledgeSubscriptionResultSchema, { method: query.data?.subscribed ? 'DELETE' : 'POST', body: JSON.stringify(resource) }), onSuccess: result => { client.setQueryData(queryKey, result); notify('success', t(result.subscribed ? 'subscribed' : 'unsubscribed')); }, onError: error => notify('error', error instanceof Error ? error.message : t('failed')) });
+  const mutation = useMutation({ mutationFn: () => knowledgeResourceRequest(knowledgeBaseId, 'subscriptions', knowledgeSubscriptionResultSchema, { method: query.data?.subscribed ? 'DELETE' : 'POST', body: JSON.stringify(resource) }), onSuccess: result => { client.setQueryData(queryKey, result); void client.invalidateQueries({ queryKey: ['knowledge', knowledgeBaseId, 'personal-profile', principal] }); notify('success', t(result.subscribed ? 'subscribed' : 'unsubscribed')); }, onError: error => notify('error', error instanceof Error ? error.message : t('failed')) });
   const subscribed = query.data?.subscribed ?? false;
   const Icon = subscribed ? BellOff : Bell;
   const available = source === 'server' && principal !== 'guest';
