@@ -21,6 +21,13 @@ export interface SidebarNavigationItem {
   tone?: 'teal' | 'amber' | 'indigo' | 'rose';
   count?: number;
 }
+// Dense's functional palette is shared by navigation and matching collection titles.
+export const sidebarIconToneClasses = {
+  teal: 'text-[#3f8990]',
+  amber: 'text-[#e9ad16]',
+  indigo: 'text-[#667dc4]',
+  rose: 'text-[#d76d68]',
+} satisfies Record<NonNullable<SidebarNavigationItem['tone']>, string>;
 import type { ProjectIconId } from './project-icons';
 export interface SidebarProjectNode {
   id: string;

@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { DocumentModal } from '../sharing/document-modal';
 import { PageIcon } from '../navigation/page-icon';
+import { DocumentListIcon } from '../documents/document-list-icon';
 import { useDocumentTab } from '../editor/document-tab-context';
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
 import { PageIconPicker } from '../navigation/page-icon-picker';
@@ -87,7 +88,7 @@ export function FolderView({ data, documents, tab, onTab, q, onSearch, onOpen, o
     const pinned = pinnedIds.includes(document.id), starred = actions?.starredIds.includes(document.id) ?? false;
     return <div key={`${prefix}${document.id}`} className={`fob-action ${styles.documentRow}`} data-selected={selected.includes(document.id)}>
       <div className={styles.documentGlyph}>
-        <span className={styles.documentIcon}>{document.icon ? <PageIcon value={document.icon} size={26} /> : <OutlineCollectionIcon name="document" />}</span>
+        <span className={styles.documentIcon}><DocumentListIcon value={document.icon} /></span>
         <button type="button" className={styles.selectDocument} role="checkbox" aria-checked={selected.includes(document.id)} aria-label={t('selectDocument', { title: document.title || t('unknown') })} onClick={() => select(document.id, !selected.includes(document.id))}>{selected.includes(document.id) && <OutlineCollectionIcon name="checkmark" size={16} />}</button>
       </div>
       <div className={styles.documentText}>

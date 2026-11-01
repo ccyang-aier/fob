@@ -27,7 +27,7 @@ import {
 import { ProjectIcon } from '@/features/knowledge/dense-sidebar/project-icon';
 import type { ProjectIconId } from '@/features/knowledge/dense-sidebar/project-icons';
 import type { DocumentAction } from '@/features/knowledge/dense-sidebar/document-action-menu-content';
-import type { SidebarIconName, SidebarNavigationItem } from '@/features/knowledge/dense-sidebar/sidebar-navigation';
+import { sidebarIconToneClasses, type SidebarIconName, type SidebarNavigationItem } from '@/features/knowledge/dense-sidebar/sidebar-navigation';
 import { cn } from '@/lib/utils';
 import { IconButton } from './icon-button';
 import { SidebarDocumentMenu } from '@/features/knowledge/dense-sidebar/sidebar-document-menu';
@@ -47,14 +47,6 @@ export const sidebarIconMap: Record<SidebarIconName, IconComponent> = {
   tasks: CheckSquareOffset,
   blocks: SquaresFour,
 };
-
-// Copied from Dense's sidebar functional palette and filled icon treatment.
-export const sidebarIconToneClasses = {
-  teal: 'text-[#3f8990]',
-  amber: 'text-[#e9ad16]',
-  indigo: 'text-[#667dc4]',
-  rose: 'text-[#d76d68]',
-} satisfies Record<NonNullable<SidebarNavigationItem['tone']>, string>;
 
 export function SidebarCreateIcon() {
   return <Plus aria-hidden="true" size={14} />;

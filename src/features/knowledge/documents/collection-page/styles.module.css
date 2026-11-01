@@ -1,5 +1,4 @@
 .page { isolation:isolate; }
-.headingIcon[data-kind="starred"] { color:var(--knowledge-star-color); }
 .location { max-width:180px; overflow:hidden; text-overflow:ellipsis; }
 .location[aria-pressed="true"] { color:var(--collection-secondary); }
 .clearSearch { display:grid; place-items:center; flex:none; width:22px; height:22px; margin-right:-5px; border-radius:4px; cursor:pointer; }

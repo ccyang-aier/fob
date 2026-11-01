@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTranslation } from '@/lib/i18n';
 import { usePageScrollKey, usePageSessionState } from '@/lib/page-session-state';
-import { PageIcon } from '../../navigation/page-icon';
+import { SIDEBAR_MAIN_ITEMS, sidebarIconToneClasses } from '../../dense-sidebar/sidebar-navigation';
+import { DocumentListIcon } from '../document-list-icon';
 import { documentRelativeTime } from '../document-relative-time';
 import { collectionFolderPath, collectionRows, type CollectionEntry, type CollectionFolder, type CollectionKind, type CollectionSort } from './model';
 import { messages } from './messages';
@@ -44,6 +45,7 @@ export function DocumentCollectionPage({ title, kind, entries, folders, onOpen, 
   const rows = useMemo(() => collectionRows(entries, folders, search, sort, locale, t('unfiled')).filter(entry => activeLocation === 'all' || (activeLocation === 'unfiled' ? !entry.folderId : entry.folderId === activeLocation)), [entries, folders, search, sort, locale, t, activeLocation]);
   const shown = rows.slice(0, limit);
   const HeaderIcon = kind === 'starred' ? Star : kind === 'drafts' ? FileDashed : kind === 'trash' ? Trash : FileText;
+  const headerTone = SIDEBAR_MAIN_ITEMS.find(item => item.id === kind)?.tone;
   const emptyLabel = kind === 'starred' ? t('emptyStarred') : kind === 'drafts' ? t('emptyDrafts') : kind === 'trash' ? t('emptyTrash') : t('emptyDocuments');
   const emptyHint = kind === 'starred' ? t('starredHint') : kind === 'drafts' ? t('draftsHint') : kind === 'trash' ? t('trashHint') : undefined;
   const filtered = Boolean(search.trim() || activeLocation !== 'all');
@@ -58,7 +60,7 @@ export function DocumentCollectionPage({ title, kind, entries, folders, onOpen, 
     </div>
     <div className={folderStyles.folderFrame}><div className={folderStyles.folderContent}>
       <header className={folderStyles.folderHeader}>
-        <div className={folderStyles.folderTitle}><span className={`${folderStyles.folderGlyph} ${styles.headingIcon}`} data-kind={kind} aria-hidden="true"><HeaderIcon size={40} /></span><h1>{title}</h1></div>
+        <div className={folderStyles.folderTitle}><span className={folderStyles.folderGlyph} aria-hidden="true"><HeaderIcon size={36} className={headerTone ? sidebarIconToneClasses[headerTone] : undefined} /></span><h1>{title}</h1></div>
         <p className={folderStyles.meta}>{loading ? t('loading') : !error && t('documentCount', { count: entries.length })}</p>
       </header>
       <div className={folderStyles.tabBar}>
@@ -78,7 +80,7 @@ export function DocumentCollectionPage({ title, kind, entries, folders, onOpen, 
           {shown.map(entry => {
             const meta = <span className={`${folderStyles.documentMeta} ${styles.documentMeta}`}><span title={entry.folder}>{entry.folder}</span>{entry.creator && <span> · {entry.creator}</span>}{entry.date && Number.isFinite(Date.parse(entry.date)) && <span><span className={folderStyles.metaSeparator}>•</span>{t(dateKind)} <time dateTime={entry.date} title={new Date(entry.date).toLocaleString(locale)}>{documentRelativeTime(entry.date, now, locale, t('lessThanMinute'))}</time></span>}</span>;
             return <li key={entry.id} className={`fob-action ${folderStyles.documentRow} ${styles.row}`} data-document-id={entry.id}>
-              <span className={`${folderStyles.documentGlyph} ${styles.glyph}`}><PageIcon value={entry.icon} size={26} /></span>
+              <span className={`${folderStyles.documentGlyph} ${styles.glyph}`}><DocumentListIcon value={entry.icon} /></span>
               <div className={folderStyles.documentText}>
                 <div className={folderStyles.documentHeading}>
                   {kind === 'trash' ? <span className={`${folderStyles.openDocument} ${styles.deletedTitle}`}>{entry.title}</span> : <button type="button" className={folderStyles.openDocument} aria-label={entry.title} onClick={() => onOpen(entry.id)}>{entry.title}</button>}

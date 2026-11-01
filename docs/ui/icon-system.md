@@ -60,7 +60,7 @@ Fob 文档类页面统一使用 `src/components/empty-state.tsx` 的 `EmptyState
 
 ### 用户指定的 Outline 文件夹首页参考
 
-用户后续明确要求文件夹首页外观与 Outline 一致，因此仅此页面允许使用 `OutlineCollectionIcon` 中登记的原版资源。11 个官方 glyph 保存在 `public/icons/outline-collection`，来源与 SHA-256 记录在同目录 `sources.json`；[官方来源](https://github.com/outline/outline-icons) 的 BSD-3-Clause 许可保留在 `public/licenses/outline-icons.txt`。资源通过统一目录按原始 viewBox 渲染，不重绘路径、不引入图标包、不扩散到其他产品区域。验证脚本检查固定资源清单、来源和摘要。
+用户后续明确要求文件夹首页外观与 Outline 一致，因此该页面允许使用 `OutlineCollectionIcon` 中登记的原版资源；按用户进一步要求，星标、草稿、回收站等共用列表的默认文档图标也通过 `DocumentListIcon` 复用同一原版资源与尺寸。11 个官方 glyph 保存在 `public/icons/outline-collection`，来源与 SHA-256 记录在同目录 `sources.json`；[官方来源](https://github.com/outline/outline-icons) 的 BSD-3-Clause 许可保留在 `public/licenses/outline-icons.txt`。资源通过统一目录按原始 viewBox 渲染，不重绘路径、不引入图标包、不扩散到其他产品区域。验证脚本检查固定资源清单、来源和摘要。
 
 该例外用于标题、文档勾选和批量工具栏。普通系统导航、菜单和用户已有内容图标继续遵守上文规则。通用尺寸缩放不应用于这些明确按参考图测量的原版资源。
 

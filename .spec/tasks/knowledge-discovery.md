@@ -131,3 +131,10 @@
 - 后台浏览器对照真实文件夹首页检查三种集合页面；验证位置筛选、路径搜索、标题排序和原文档菜单。窄屏实测 410 CSS px，页面与集合均无横向溢出，元信息换行；深浅主题检查通过，结束恢复默认桌面宽度、浅色和展开侧栏。浏览器 error/warn 为 0。
 - `pnpm check`（前后端/共享类型、架构/来源、国际化、图标、ESLint、8 路由静态生产构建）、`pnpm server:build` 和 `git diff --check` 通过。仅更新本轮两个受保护源条目的适配记录。Web 3001 与 API 8721 健康检查均为 200，热更新服务持续运行。
 - 最终截图位于仓库外当前聊天 visualizations 目录：`collection-list-starred-final.png`、`collection-list-drafts-final.png`、`collection-list-mobile-dark-final.png`；不提交临时截图或运行时数据。上节卡片方案及其验证仅为已被本轮替代的历史记录。
+
+## 集合图标尺寸与侧栏配色对齐（2026-11-01）
+
+- 文件夹与集合共用 `DocumentListIcon`：默认文档统一使用同一 24px Outline 原版资源，自定义内容图标统一保持 26px 请求尺寸，移除集合默认图标较粗大的另一种造型。标题图标请求由 40px 减至 36px，实际从 38px 减至 34px；星标、草稿、回收站从侧栏同一导航模型读取原有功能色，不重复定义颜色。
+- 真实浏览器对照文件夹与星标默认文档图标，均为同一资源 URL 和 24px 画布。三种标题图标实测均为 34px，颜色分别与侧栏一致：rgb(233,173,22)、rgb(102,125,196)、rgb(215,109,104)。原列表筛选、菜单与恢复入口保留；浏览器 error/warn 为 0，结束保留原星标页面。
+- 既有集合交互 7 项、37 断言通过，前端/服务端/共享类型、国际化、图标和完整 ESLint、8 路由生产构建通过。`pnpm check` 的来源门槛先被并行资料页修改的 `shared/src/knowledge/contracts/index.ts` 拦截，后续单独重跑架构门槛时被该项工作继续修改的 `src/features/knowledge/knowledge-page.tsx` 拦截；不把完整管线记录为通过，不修改或提交并行工作的来源记录。6 项架构边界单测均通过，本轮两个保护源条目的摘要已更新。Web/API 健康检查均为 200。
+- 截图位于仓库外当前聊天 visualizations 目录：`collection-icons-starred.png`、`collection-icons-drafts.png`、`collection-icons-trash.png`。浏览器会话的旧绑定失效后重置控制运行时恢复，未重启服务或更改真实文档。
