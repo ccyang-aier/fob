@@ -1,7 +1,7 @@
 'use client';
 
 import type { ProfileActivity } from '@fob/shared/knowledge/contracts';
-import { ArrowRight, DotsThree, FileText, Folder } from '@/components/icons';
+import { DotsThree, FileText, Folder } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import resourceCard from '@/components/ui/resource-card.module.css';
@@ -32,11 +32,6 @@ export function ActivityEvent({ event, author, time, onOpen }: ActivityEventProp
         <div className={styles.eventHeader}>
           <div className={styles.eventSummary}>
             <span className={styles.eventKind}><span className={styles.eventIcon}><Icon size={16} aria-hidden /></span><span className={styles.eventVerb}>{t(event.kind)}</span></span>
-            {event.kind !== 'created' ? (
-              <button type="button" className={`fob-action ${styles.eventTitle}`} data-variant="text" onClick={open}>
-                {event.title}
-              </button>
-            ) : null}
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -56,11 +51,11 @@ export function ActivityEvent({ event, author, time, onOpen }: ActivityEventProp
               <strong>{event.title}</strong>
               <span>{author}</span>
             </span>
-            <ArrowRight className={styles.attachmentArrow} size={16} aria-hidden />
           </button>
-        ) : event.excerpt ? (
-          <blockquote className={styles.excerpt}>{event.excerpt}</blockquote>
-        ) : null}
+        ) : <div className={styles.eventContent}>
+          <button type="button" className={`fob-action ${styles.eventTitle}`} data-variant="text" onClick={open}>{event.title}</button>
+          {event.excerpt ? <blockquote className={styles.excerpt}>{event.excerpt}</blockquote> : null}
+        </div>}
       </article>
     </li>
   );

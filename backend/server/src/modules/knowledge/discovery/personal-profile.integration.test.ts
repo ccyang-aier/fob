@@ -88,6 +88,9 @@ test('document and event pagination keep full-day counts, and search runs before
   expect(new Set([...first.documents,...last.documents].map(doc => doc.id)).size).toBe(first.documentTotal);
   expect(last.dayCounts).toEqual(first.dayCounts);
   expect(last.calendar).toEqual(first.calendar);
+  const documentPage = await withKnowledgeBase(fixture.pool,fixture.alpha.id,db => personalProfile(db,authority,{ documentOffset: 40 }));
+  expect(documentPage.documents.map(item => item.id)).toEqual(last.documents.map(item => item.id));
+  expect(documentPage.activities.map(item => item.id)).toEqual(first.activities.map(item => item.id));
   expect(first.calendar.every(day => Object.values(day.counts).reduce((sum,count) => sum+count,0) === day.count)).toBe(true);
   const matching = await withKnowledgeBase(fixture.pool,fixture.alpha.id,db => personalProfile(db,authority,{ q: 'Unique last-page result' }));
   expect(matching.documents.map(doc => doc.id)).toEqual([tree.pages.at(-1)!.pageId]);

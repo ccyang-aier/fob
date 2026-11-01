@@ -45,4 +45,12 @@ test('local profile preserves knowledge-base boundaries, truthful timestamps and
   expect(data.activities.every(event => event.targetId.startsWith('own-'))).toBe(true);
   expect(localPersonalProfile(library,'own','2026-10-31',80,80,'2026-11-01').activities).toEqual([]);
   expect(localPersonalProfile(library,'own',undefined,80,80,'2026-11-01').nextDocumentOffset).toBeNull();
+  const moreDocuments = localPersonalProfile(library,'own',undefined,80,40,'2026-11-01');
+  expect(moreDocuments.documents).toHaveLength(46);
+  expect(moreDocuments.activities).toHaveLength(40);
+  expect(moreDocuments.nextActivityOffset).toBe(40);
+  const moreActivity = localPersonalProfile(library,'own',undefined,40,80,'2026-11-01');
+  expect(moreActivity.documents).toHaveLength(40);
+  expect(moreActivity.activities).toHaveLength(45);
+  expect(moreActivity.nextDocumentOffset).toBe(40);
 });
