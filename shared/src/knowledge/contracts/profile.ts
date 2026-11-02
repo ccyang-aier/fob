@@ -18,6 +18,16 @@ export const profileActivityCountsSchema = z.object({
   liked: z.number().int().nonnegative(), subscribed: z.number().int().nonnegative(),
 });
 export type ProfileActivityCounts = z.infer<typeof profileActivityCountsSchema>;
+export const profileMedalIdSchema = z.enum(['gardener', 'creator', 'sharing']);
+export type ProfileMedalId = z.infer<typeof profileMedalIdSchema>;
+export const profileMedalAwardSchema = z.object({ id: profileMedalIdSchema, earnedAt: timestampSchema });
+export type ProfileMedalAward = z.infer<typeof profileMedalAwardSchema>;
+export const profileMedalRecipientsSchema = z.object({
+  recipients: z.array(z.object({ userId: entityIdSchema, name: z.string(), image: z.string().nullable(), earnedAt: timestampSchema })),
+  nextOffset: z.number().int().nullable(),
+});
+export const profileLearningInputSchema = z.object({ pageId: entityIdSchema, seconds: z.number().int().min(0).max(15) });
+export const profileLearningReplySchema = z.object({ seconds: z.number().int().nonnegative() });
 export const personalProfileSchema = z.object({
   documentTotal: z.number().int().nonnegative(), nextDocumentOffset: z.number().int().nullable(),
   documents: z.array(profileResourceSchema), folders: z.array(profileResourceSchema), saved: z.array(profileResourceSchema),
@@ -26,6 +36,8 @@ export const personalProfileSchema = z.object({
   /** Coffee gifted by others only; check-in rewards and account balance are excluded. */
   receivedCoffeeTotal: z.number().int().nonnegative().default(0),
   receivedLikes: z.number().int().nonnegative(), receivedLikesTotal: z.number().int().nonnegative().default(0), sharedDocuments: z.number().int().nonnegative(),
+  learningMinutes: z.number().int().nonnegative().default(0),
+  medals: z.array(profileMedalAwardSchema).default([]),
   dayCounts: z.object({ created: z.number().int().nonnegative(), commented: z.number().int().nonnegative() }),
 });
 export type PersonalProfile = z.infer<typeof personalProfileSchema>;

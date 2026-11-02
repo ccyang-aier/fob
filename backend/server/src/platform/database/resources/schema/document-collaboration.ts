@@ -11,10 +11,12 @@ export const documentVisit = resourcesNamespace.table('document_visit', {
   knowledgeBaseId: uuid('knowledge_base_id').notNull(), pageId: uuid('page_id').notNull(),
   userId: uuid('user_id').notNull().references(() => authUser.id, { onDelete: 'cascade' }),
   views: integer('views').notNull().default(1), lastViewedAt: instant('last_viewed_at').notNull().defaultNow(),
+  studySeconds: integer('study_seconds').notNull().default(0), studyHeartbeatAt: instant('study_heartbeat_at'),
 }, table => [
   primaryKey({ columns: [table.knowledgeBaseId, table.pageId, table.userId] }),
   foreignKey({ name: 'document_visit_page_fk', columns: [table.knowledgeBaseId, table.pageId], foreignColumns: [page.knowledgeBaseId, page.id] }).onDelete('cascade'),
   check('document_visit_views_positive', sql`${table.views} > 0`),
+  check('document_visit_study_nonnegative', sql`${table.studySeconds} >= 0`),
 ]);
 
 export const documentInvitation = resourcesNamespace.table('document_invitation', {

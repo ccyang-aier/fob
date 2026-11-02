@@ -10,10 +10,9 @@ import styles from './activity-calendar.module.css';
 
 const emptyCounts: ProfileActivityCounts = { created: 0, commented: 0, liked: 0, subscribed: 0 };
 
-export function ActivityDayDetails({ anchor, date, total, counts = emptyCounts, onClose }: {
+export function ActivityDayDetails({ anchor, date, counts = emptyCounts, onClose }: {
   anchor: HTMLElement;
   date: string;
-  total: number;
   counts?: ProfileActivityCounts;
   onClose: () => void;
 }) {
@@ -23,7 +22,7 @@ export function ActivityDayDetails({ anchor, date, total, counts = emptyCounts, 
   return (
     <AnchoredPopover anchor={anchor} onClose={onClose} align="end" width={244} label={t('activityDetails', { date: dateLabel })}>
       <div className={styles.dayDetails}>
-        <div className={styles.dayDetailsHeading}><strong>{dateLabel}</strong><span>{t('activities', { count: total })}</span></div>
+        <div className={styles.dayDetailsHeading}><strong>{dateLabel}</strong></div>
         <dl className={styles.dayDetailsCounts}>
           {(['created','commented','liked','subscribed'] as const).map(kind => {
             const { Icon, label } = activityKinds[kind];

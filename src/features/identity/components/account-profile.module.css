@@ -11,9 +11,9 @@
 .presenceDot { position:absolute; right:2px; bottom:2px; width:16px; height:16px; border:3px solid var(--panel); border-radius:50%; pointer-events:none; }
 .summary { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-top:12px; }
 .identity { flex:1; min-width:0; }
-.name,.signature { display:block; width:100%; min-width:0; padding:0; border:0; border-bottom:1px solid transparent; border-radius:0; outline:none; color:var(--muted-strong); background:transparent; box-shadow:none; }
+.name,.signature { display:block; field-sizing:content; width:fit-content; min-width:6ch; max-width:100%; padding:0 2px 0 0; border:0; border-bottom:1px solid transparent; border-radius:0; outline:none; color:var(--muted-strong); background:transparent; box-shadow:none; }
 .name { height:32px; font-size:22px; font-weight:600; line-height:30px; letter-spacing:-.02em; text-overflow:ellipsis; }
-.name:read-only,.signature:read-only { cursor:default; }
+.name:read-only,.signature:read-only { cursor:pointer; }
 .name:read-write,.signature:read-write { color:var(--ink); cursor:text; }
 .name:read-write:hover,.signature:read-write:hover { border-bottom-color:var(--control-border); }
 .name:read-write:focus,.signature:read-write:focus { border-bottom-color:var(--ink); }
@@ -27,23 +27,31 @@
 .editActions { display:flex; align-items:center; gap:4px; padding-top:1px; }
 .editActions button { width:30px; height:30px; color:var(--muted-strong); }
 .editActions button[type=submit] { color:var(--accent-foreground); }
-.signature { height:29px; margin-top:10px; font-size:13px; line-height:28px; text-overflow:ellipsis; }
+.signature { min-width:12ch; height:29px; margin-top:10px; font-size:13px; line-height:28px; text-overflow:ellipsis; }
 .signature::placeholder { color:var(--muted); }
-.editHint { margin:5px 0 0; color:var(--muted); font-size:10px; }
 .error { margin:6px 0 0; color:var(--err-ink); font-size:11px; }
 .body > [role=alert] { margin-top:10px; }
 .activity { margin-top:22px; }
-.statistics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:0 0 22px; padding:0 0 20px; border-bottom:1px solid var(--line); }
-.statistic { display:flex; flex-direction:column; gap:5px; min-width:0; outline:none; }
-.statistic:focus-visible { outline:1px solid var(--control-border); outline-offset:4px; border-radius:3px; }
-.statistic dd { order:-1; margin:0; font-size:24px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; letter-spacing:-.025em; }
-.statistic dt { color:var(--muted-strong); font-size:11px; }
+.statistics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; margin:0 0 24px; padding:16px 0; border:1px solid var(--resource-card-border); border-radius:12px; background:var(--surface-subtle); }
+.statistic { display:flex; flex-direction:column; gap:9px; min-width:0; padding:0 15px; border:1px solid transparent; outline:none; }
+.statistic + .statistic { border-left-color:var(--line); }
+.statistic:focus-visible { border-color:var(--control-border); border-radius:3px; }
+.statistic dd { order:-1; display:flex; align-items:baseline; gap:4px; margin:0; font-size:23px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; letter-spacing:-.025em; }
+.statistic dd > span { color:var(--muted-strong); font-size:10px; font-weight:400; letter-spacing:0; }
+.statistic dt { display:flex; align-items:center; gap:5px; color:var(--muted-strong); font-size:11px; white-space:nowrap; }
+.statistic[data-stat=documents] dt > svg { color:#3e9a82; }
+.statistic[data-stat=coffee] dt > svg { color:#b2874a; }
+.statistic[data-stat=likes] dt > svg { color:#bd7290; }
+.statistic[data-stat=learning] dt > svg { color:#8680bd; }
 .medals { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); }
 .medals h3 { margin:0; color:var(--ink-soft); font-size:12px; font-weight:550; }
-.medalList { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
-.medal { display:inline-flex; align-items:center; gap:6px; padding:5px 8px; border:1px solid var(--resource-card-border); border-radius:8px; color:var(--ink-soft); background:var(--surface-subtle); outline:none; font-size:11px; }
+.medalHeading { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.medalHeading > button { height:24px; gap:3px; padding-inline:6px; color:var(--muted-strong); font-size:11px; }
+.medalList { display:flex; flex-wrap:wrap; gap:14px; margin-top:8px; }
+.medal { display:inline-flex; min-width:76px; flex-direction:column; align-items:center; gap:4px; padding:6px 8px 8px; border:1px solid transparent; border-radius:9px; color:var(--ink-soft); outline:none; font-size:11px; cursor:pointer; }
 .medal:focus-visible { border-color:var(--control-border); }
 .emptyMedals { margin:7px 0 0; color:var(--muted); font-size:11px; }
 .loadState { display:flex; flex-direction:column; align-items:flex-start; gap:10px; min-height:100px; color:var(--muted-strong); font-size:12px; }
 @media (hover:none) { .avatarOverlay { inset:auto 0 0; height:22px; opacity:1; } .avatarOverlay > svg { width:12px; height:12px; } }
-@media (max-width:540px) { .body { padding-inline:22px; } .name { font-size:20px; } .email { flex-wrap:wrap; } .statistics { gap:12px; } }
+@media (max-width:540px) { .body { padding-inline:22px; } .name { font-size:20px; } .email { flex-wrap:wrap; } .statistic { padding-inline:8px; } .statistic dt { gap:4px; font-size:10px; } .statistic dd { font-size:21px; } }
+@media (max-width:360px) { .statistics { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:18px; } .statistic:nth-child(3) { border-left-color:transparent; } }

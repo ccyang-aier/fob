@@ -49,6 +49,6 @@ export function ActivityCalendar({ calendar, scope }: { calendar: PersonalProfil
       </div>
     </div></div>
     <div className={styles.legend} aria-hidden><span>{t('less')}</span>{[0,1,2,3,4].map(level => <span key={level} className={styles.dayCell} data-level={level} />)}<span>{t('moreActivity')}</span></div>
-    {detail ? <ActivityDayDetails anchor={detail.anchor} date={detail.date} total={records.get(detail.date)?.count ?? 0} counts={records.get(detail.date)?.counts} onClose={() => setDetail(null)} /> : null}
+    {detail ? <ActivityDayDetails anchor={detail.anchor} date={detail.date} counts={records.get(detail.date)?.counts} onClose={() => setDetail(null)} /> : null}
   </section>;
 }

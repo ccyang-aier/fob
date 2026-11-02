@@ -285,8 +285,11 @@ CREATE TABLE "resources"."document_visit" (
 	"user_id" uuid NOT NULL,
 	"views" integer DEFAULT 1 NOT NULL,
 	"last_viewed_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"study_seconds" integer DEFAULT 0 NOT NULL,
+	"study_heartbeat_at" timestamp with time zone,
 	CONSTRAINT "document_visit_knowledge_base_id_page_id_user_id_pk" PRIMARY KEY("knowledge_base_id","page_id","user_id"),
-	CONSTRAINT "document_visit_views_positive" CHECK ("resources"."document_visit"."views" > 0)
+	CONSTRAINT "document_visit_views_positive" CHECK ("resources"."document_visit"."views" > 0),
+	CONSTRAINT "document_visit_study_nonnegative" CHECK ("resources"."document_visit"."study_seconds" >= 0)
 );
 
 CREATE TABLE "resources"."group" (

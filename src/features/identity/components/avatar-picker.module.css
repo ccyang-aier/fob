@@ -10,7 +10,6 @@
 .upload button { height:30px; padding-inline:12px; gap:7px; font-size:12px; }
 .upload p { margin:7px 0 0; color:var(--muted-strong); font-size:11px; }
 .family + .family { margin-top:20px; }
-.family h3 { margin:0 0 9px; color:var(--muted-strong); font-size:11px; font-weight:500; }
 .grid { display:grid; grid-template-columns:repeat(8,minmax(0,1fr)); gap:8px; }
 .choice { position:relative; display:grid; width:100%; padding:2px; aspect-ratio:1; border:1px solid transparent; border-radius:50%; cursor:pointer; }
 .choice[aria-pressed=true],.choice:focus-visible { border-color:var(--ink); outline:none; }

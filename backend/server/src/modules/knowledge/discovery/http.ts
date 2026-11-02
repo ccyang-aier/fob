@@ -8,6 +8,8 @@ import type { KnowledgeRequestAuthenticator, KnowledgeRequestContext } from '../
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
 import { DiscoveryError, discoveryFacets, folderOverview, searchDocuments, updateFolder } from './service';
 import { personalProfile } from './personal-profile';
+import { profileMedalRecipients } from './profile-medals';
+import { recordProfileLearning } from './profile-learning';
 
 export function createKnowledgeDiscoveryRoutes(deps: { pool: Pool; authenticator: KnowledgeRequestAuthenticator; trustedOrigins: readonly string[] }) {
   const app = new Hono<{ Variables: { knowledge: KnowledgeRequestContext } }>(), base = '/api/knowledge/:knowledgeBaseId/discovery';
@@ -26,6 +28,13 @@ export function createKnowledgeDiscoveryRoutes(deps: { pool: Pool; authenticator
   const folderId = (value: string) => { if (!entityIdSchema.safeParse(value).success) throw new DiscoveryError(400, 'INVALID_INPUT'); return value; };
   app.get(`${base}/facets`, async context => context.json(await run(context.get('knowledge'), false, discoveryFacets)));
   app.get(`${base}/profile`, async context => context.json(await run(context.get('knowledge'), false, (db, actor) => personalProfile(db, actor, context.req.query()))));
+  app.get(`${base}/profile/medals/:medalId`, async context => context.json(await run(context.get('knowledge'), false, (db, actor) => profileMedalRecipients(db, actor, context.req.param('medalId'), context.req.query()))));
+  app.post(`${base}/profile/learning`, async context => {
+    const origin = context.req.header('origin');
+    if (!origin || !deps.trustedOrigins.includes(origin)) return context.json({ code: 'UNTRUSTED_ORIGIN' }, 403);
+    const input = await context.req.json().catch(() => { throw new DiscoveryError(400, 'INVALID_INPUT'); });
+    return context.json(await run(context.get('knowledge'), false, (db, actor) => recordProfileLearning(db, actor, input)));
+  });
   app.post(`${base}/search`, async context => {
     const input = await context.req.json().catch(() => { throw new DiscoveryError(400, 'INVALID_INPUT'); });
     return context.json(await run(context.get('knowledge'), false, (db, actor) => searchDocuments(db, actor, input)));

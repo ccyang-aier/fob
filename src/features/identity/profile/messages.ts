@@ -2,6 +2,8 @@ import { defineMessages } from '@/lib/i18n';
 
 export const messages = defineMessages({
   documents: ['文档','Documents'], coffee: ['收获咖啡','Coffee received'], likes: ['收获点赞','Likes received'],
+  learning: ['累计学习','Learning'], minutes: ['分钟','min'],
+  learningHint: ['当前知识库内，前台阅读与编辑文档的累计活跃分钟；后台与长时间无操作不计入','Active minutes reading and editing documents in this knowledge base; background and idle time are excluded'],
   documentsHint: ['当前知识库中你创建且仍可访问的文档','Your accessible documents in this knowledge base'],
   coffeeHint: ['他人赠送给你的咖啡累计数量','Total coffee gifted to you by others'],
   likesHint: ['当前知识库中，你的评论累计收到的他人点赞','All likes from others on your comments in this knowledge base'],
@@ -11,6 +13,12 @@ export const messages = defineMessages({
   activityOnDay: ['{date} · {count} 次活动', '{date} · {count} activities'], activityDetails: ['{date}的活动明细', 'Activity details for {date}'],
   activityCreated: ['发布文档', 'Documents created'], activityCommented: ['发表评论', 'Comments posted'], activityLiked: ['点赞评论', 'Comments liked'], activitySubscribed: ['订阅内容', 'Content subscribed'],
   earnedMedals: ['获得的勋章', 'Earned medals'], noMedals: ['尚未获得勋章', 'No medals earned yet'],
+  more: ['更多','More'], medalWall: ['勋章墙','Medal collection'], closeMedals: ['关闭勋章墙','Close medal collection'],
+  collectionProgress: ['已获得 {earned} / {total} 枚','{earned} of {total} earned'], earned: ['已获得','Earned'], locked: ['未获得','Not earned'],
+  gardenerRule: ['创建第一篇文档','Create your first document'], creatorRule: ['连续 7 天记录或参与知识活动','Contribute to knowledge for 7 consecutive days'], sharingRule: ['公开分享一篇自己创作的文档','Publicly share a document you created'],
+  recipients: ['获奖记录','Award recipients'], awardedAt: ['获得时间','Earned on'], recipientsScope: ['仅显示当前知识库可见的获奖成员','Recipients visible in this knowledge base'],
+  noRecipients: ['还没有可见的获奖记录','No visible recipients yet'], recipientsFailed: ['获奖记录暂时无法加载','Could not load award recipients'],
+  loadMore: ['加载更多','Load more'], you: ['你','You'], localOwner: ['本机知识库所有者','Local knowledge base owner'],
   gardener: ['知识园丁', 'Knowledge gardener'], creator: ['持续创作', 'Consistent creator'], sharing: ['乐于分享', 'Happy to share'],
   gardenerHint: ['已创建 {count} 篇文档', '{count} documents created'], creatorHint: ['连续活跃 {count} 天', 'Active for {count} consecutive days'], sharingHint: ['已公开分享 {count} 篇文档', '{count} documents shared publicly'],
   chooseBase: ['选择知识库后可查看活动与勋章', 'Select a knowledge base to see activity and medals'],

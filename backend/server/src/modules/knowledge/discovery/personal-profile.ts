@@ -6,6 +6,7 @@ import type { KnowledgeRequestContext } from '../access';
 import { expandRequestPrincipals } from '../permissions';
 import { effectivePageAccessCondition } from '../permissions/queries';
 import { DiscoveryError } from './service';
+import { personalProfileMedals } from './profile-medals';
 
 const querySchema = z.object({
   day: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
@@ -113,10 +114,15 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
     JOIN visible_pages p ON p.id=t.page_id
     WHERE l.knowledge_base_id=${kb}::uuid AND c.author_id=${user}::uuid AND l.user_id<>${user}::uuid
       `)).rows;
+  const [learning] = (await db.execute<{ minutes: number }>(sql`WITH ${visible}
+    SELECT floor(coalesce(sum(v.study_seconds),0)/60)::int AS minutes FROM resources.document_visit v
+    JOIN visible_pages p ON p.id=v.page_id WHERE v.knowledge_base_id=${kb}::uuid AND v.user_id=${user}::uuid`)).rows;
+  const medals = await personalProfileMedals(db, authority);
   return {
     documentTotal: totals?.count ?? 0, sharedDocuments: totals?.shared ?? 0,
     // No gifting records exist yet. Check-in awards are not received gifts.
     receivedCoffeeTotal: 0,
+    learningMinutes: learning?.minutes ?? 0, medals,
     documents: docs.rows.slice(0,40).map(resource), nextDocumentOffset: docs.rows.length>40 ? documentOffset+40 : null,
     folders: folders.rows.map(resource), saved: saved.rows.map(resource), calendar: calendar.rows,
     activities: activities.rows.slice(0,40).map(row => ({ ...row, at: instant(row.at) })),

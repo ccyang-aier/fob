@@ -29,7 +29,7 @@ export function AccountProfile({ onBusyChange }: { onBusyChange: (busy: boolean)
   const [name, setName] = useState(''), [signature, setSignature] = useState('');
   const [editing, setEditing] = useState(false), [avatarOpen, setAvatarOpen] = useState(false);
   const [saving, setSaving] = useState(false), [nameError, setNameError] = useState<string | null>(null), [error, setError] = useState<unknown>(null);
-  const pending = useRef(false), nameInput = useRef<HTMLInputElement>(null), nameId = useId(), signatureId = useId();
+  const pending = useRef(false), nameInput = useRef<HTMLInputElement>(null), signatureInput = useRef<HTMLInputElement>(null), nameId = useId(), signatureId = useId();
   if (session.status !== 'authenticated') return null;
   const { user } = session;
   const status = presenceDisplay(presence, locale);
@@ -39,9 +39,10 @@ export function AccountProfile({ onBusyChange }: { onBusyChange: (busy: boolean)
     if (pending.current) return;
     setEditing(false); setNameError(null); setError(null);
   }
-  function edit() {
+  function edit(field: 'name' | 'signature' = 'name') {
+    if (editing || pending.current) return;
     setName(user.name); setSignature(user.signature ?? ''); setNameError(null); setError(null); setEditing(true);
-    window.requestAnimationFrame(() => nameInput.current?.focus());
+    window.requestAnimationFrame(() => (field==='signature' ? signatureInput : nameInput).current?.focus());
   }
   async function persist(changes: ProfileChanges) {
     if (pending.current) throw new Error('PROFILE_BUSY');
@@ -81,22 +82,21 @@ export function AccountProfile({ onBusyChange }: { onBusyChange: (busy: boolean)
         <div className={styles.summary}>
           <div className={styles.identity}>
             <input ref={nameInput} id={nameId} className={styles.name} name="name" aria-label={t('显示名称')} autoComplete="name"
-              required maxLength={authNameMaxLength} readOnly={!editing || saving} tabIndex={editing ? 0 : -1}
+              required maxLength={authNameMaxLength} readOnly={!editing || saving} onClick={() => edit('name')}
               aria-invalid={Boolean(nameError)} aria-describedby={nameError ? nameId + '-error' : undefined}
               value={editing ? name : user.name} onBlur={() => { if (editing) setNameError(validateAuthName(name, locale)); }}
               onChange={event => { setName(event.target.value); setNameError(null); setError(null); }} />
             <p className={styles.email}><span>{user.email}</span>{user.emailVerified ? <CheckCircle size={13} className={styles.verified} aria-label={t('已验证')} /> : <small>{t('未验证')}</small>}<span className={styles.status}><i style={{ backgroundColor: status.color }} aria-hidden />{status.label}</span></p>
           </div>
           <div className={styles.editActions}>
-            {editing ? <><Button type="button" variant="ghost" size="icon-sm" disabled={saving} onClick={cancelEdit} aria-label={t('取消编辑')}><X size={16} aria-hidden /></Button><Button type="submit" size="icon-sm" loading={saving} disabled={!dirty || !name.trim()} aria-label={t('保存更改')}><Check size={16} aria-hidden /></Button></> : <Tooltip><TooltipTrigger asChild><Button type="button" variant="ghost" size="icon-sm" onClick={edit} aria-label={t('编辑资料')}><PencilSimple size={16} aria-hidden /></Button></TooltipTrigger><TooltipContent>{t('编辑资料')}</TooltipContent></Tooltip>}
+            {editing ? <><Button type="button" variant="ghost" size="icon-sm" disabled={saving} onClick={cancelEdit} aria-label={t('取消编辑')}><X size={16} aria-hidden /></Button><Button type="submit" size="icon-sm" loading={saving} disabled={!dirty || !name.trim()} aria-label={t('保存更改')}><Check size={16} aria-hidden /></Button></> : <Tooltip><TooltipTrigger asChild><Button type="button" variant="ghost" size="icon-sm" onClick={() => edit()} aria-label={t('编辑资料')}><PencilSimple size={16} aria-hidden /></Button></TooltipTrigger><TooltipContent>{t('编辑资料')}</TooltipContent></Tooltip>}
           </div>
         </div>
         {nameError ? <p id={nameId + '-error'} className={styles.error} role="alert">{nameError}</p> : null}
-        <input id={signatureId} className={styles.signature} name="signature" aria-label={t('签名')} maxLength={160}
-          value={editing ? signature : user.signature ?? ''} readOnly={!editing || saving} tabIndex={editing ? 0 : -1}
+        <input ref={signatureInput} id={signatureId} className={styles.signature} name="signature" aria-label={t('签名')} maxLength={160}
+          value={editing ? signature : user.signature ?? ''} readOnly={!editing || saving} onClick={() => edit('signature')}
           placeholder={t(editing ? '写一句介绍自己的话' : '还没有签名')}
           onChange={event => { setSignature(event.target.value); setError(null); }} />
-        {editing ? <p className={styles.editHint}>{t('点击昵称或签名即可编辑')}</p> : null}
         {error ? <AppAlert tone="error" title={authErrorCopyFor(error, locale).description} /> : null}
         <KnowledgeQueryProvider><AccountProfileActivity /></KnowledgeQueryProvider>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+import { useProfileLearning } from '../profile/use-profile-learning';
 
 import { useTranslation } from '@/lib/i18n';
 import { formatRelativeTime } from '@/lib/relative-time';
@@ -150,6 +151,7 @@ export function PageEditorSurface({
   }, [editor, view.editable]);
 
   const navigationActive = useKnowledgeNavigationActive();
+  useProfileLearning(scope,navigationActive && Boolean(user));
   // L02: a block-reference click that lands on this page reveals the block —
   // a pre-mount navigation consumes its staged highlight, later targets ride
   // the open-target channel (both selection-free).

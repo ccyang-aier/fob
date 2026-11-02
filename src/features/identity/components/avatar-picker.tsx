@@ -53,7 +53,7 @@ export function AvatarPicker({ name, image, onSave, onClose }: {
       <div className={styles.upload}><span aria-label={t('selected')}><UserAvatar name={name} image={draft} className={styles.preview} /></span><div><Button variant="outline" disabled={saving || processing} onClick={() => fileInput.current?.click()}><UploadSimple size={16} aria-hidden />{t('upload')}</Button><p role={processing ? 'status' : undefined}>{t(processing ? 'processing' : 'uploadHint')}</p></div></div>
       <input ref={fileInput} hidden aria-hidden type="file" accept="image/png,image/jpeg,image/webp" tabIndex={-1} onChange={event => void upload(event)} />
       {error ? <AppAlert tone="error" title={error} /> : null}
-      {avatarFamilies.map(family => <section key={family} className={styles.family} aria-label={t(family)}><h3>{t(family)}</h3><div className={styles.grid}>{avatarPresets.filter(preset => preset.family === family).map(preset => {
+      {avatarFamilies.map(family => <section key={family} className={styles.family} aria-label={t(family)}><div className={styles.grid}>{avatarPresets.filter(preset => preset.family === family).map(preset => {
         const image = new URL(preset.image,window.location.origin).href;
         return <button type="button" key={preset.id} className={`fob-action ${styles.choice}`} data-surface="plain" aria-label={t('preset',{ family: t(family),number: preset.number })} aria-pressed={draft === image} disabled={saving || processing} onClick={() => { setDraft(image); setError(''); }}>
           <UserAvatar image={preset.image} className={styles.portrait} />{draft === image ? <span className={styles.check}><SelectionCheck /></span> : null}

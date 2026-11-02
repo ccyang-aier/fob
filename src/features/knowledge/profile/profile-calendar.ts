@@ -1,8 +1,9 @@
 import type { PersonalProfile, ProfileActivity, ProfileResource } from '@fob/shared/knowledge/contracts';
 import type { LocalLibrary } from '../local/local-library';
+import { localProfileMedals } from './profile-medals';
+import { profileDay } from './profile-time';
+export { profileDay, profileTimeZone } from './profile-time';
 
-export const profileTimeZone = 'Asia/Shanghai';
-export const profileDay = (date: Date | string) => new Intl.DateTimeFormat('en-CA', { timeZone: profileTimeZone }).format(new Date(date));
 
 /** Calendar arithmetic uses UTC noon so host time zone and DST cannot shift a day. */
 export function calendarDays(today: string, counts: ReadonlyMap<string, number>, months: 6 | 12 = 12) {
@@ -47,5 +48,5 @@ export function localPersonalProfile(library: LocalLibrary, knowledgeBaseId: str
   for (const event of events) { const date = profileDay(event.at); if (date >= firstDay && date <= today) counts.set(date, (counts.get(date) ?? 0) + 1); }
   const filtered = day ? events.filter(event => profileDay(event.at) === day) : events;
   const matchingDocuments = documents.filter(doc => doc.title.toLocaleLowerCase().includes(filter?.q.trim().toLocaleLowerCase() ?? '')).toSorted((a,b) => filter?.sort === 'name' ? a.title.localeCompare(b.title) : b.updatedAt.localeCompare(a.updatedAt));
-  return { documents: matchingDocuments.slice(0, documentLimit), documentTotal: documents.length, nextDocumentOffset: documentLimit<matchingDocuments.length ? documentLimit : null, folders, saved: documents.filter(doc => doc.starred), calendar: [...counts].map(([date,count]) => ({ date, count, counts: { created: count, commented: 0, liked: 0, subscribed: 0 } })), activities: filtered.slice(0, activityLimit), nextActivityOffset: activityLimit<filtered.length ? activityLimit : null, receivedCoffeeTotal: 0, receivedLikes: 0, receivedLikesTotal: 0, sharedDocuments: 0, dayCounts: { created: events.filter(event => profileDay(event.at) === (day ?? today)).length, commented: 0 } };
+  return { documents: matchingDocuments.slice(0, documentLimit), documentTotal: documents.length, nextDocumentOffset: documentLimit<matchingDocuments.length ? documentLimit : null, folders, saved: documents.filter(doc => doc.starred), calendar: [...counts].map(([date,count]) => ({ date, count, counts: { created: count, commented: 0, liked: 0, subscribed: 0 } })), activities: filtered.slice(0, activityLimit), nextActivityOffset: activityLimit<filtered.length ? activityLimit : null, receivedCoffeeTotal: 0, receivedLikes: 0, receivedLikesTotal: 0, sharedDocuments: 0, learningMinutes: 0, medals: localProfileMedals(events), dayCounts: { created: events.filter(event => profileDay(event.at) === (day ?? today)).length, commented: 0 } };
 }

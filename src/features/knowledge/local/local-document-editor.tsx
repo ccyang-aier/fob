@@ -1,6 +1,8 @@
 'use client';
 
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+import { useActiveLearning } from '../profile/use-active-learning';
+import { recordLocalLearning } from '../profile/local-learning';
 
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-document-editor.messages';
@@ -39,6 +41,7 @@ export function LocalDocumentEditor({
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
   const navigationActive = useKnowledgeNavigationActive();
+  useActiveLearning(`local:${knowledgeBaseId}:${document.id}`,navigationActive,seconds => recordLocalLearning(knowledgeBaseId,seconds));
 
   const context = useMemo(
     () => ({
