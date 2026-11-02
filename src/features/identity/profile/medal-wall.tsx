@@ -39,7 +39,6 @@ export function MedalWall({ awards,progress,initialMedal,onClose }:{awards:reado
           const medals=profileMedalCatalog.filter(item => item.family===family && (!onlyEarned || earned.has(item.id)));
           if (!medals.length) return null;
           return <section key={family} className={styles.series} aria-label={t(medalFamilyLabels[family])}>
-            <div className={styles.seriesHeading}><h3>{t(medalFamilyLabels[family])}</h3><span>{profileMedalCatalog.filter(item => item.family===family && earned.has(item.id)).length} / 3</span></div>
             <div className={styles.collection}>{medals.map(item => <button type="button" key={item.id} className={`fob-action ${styles.medalCard}`} data-surface="plain" aria-pressed={selected===item.id} aria-label={`${t(item.id)} · ${t(earned.has(item.id) ? 'earned' : 'locked')}`} onClick={() => setSelected(item.id)}>
               <span className={styles.artWrap}><MedalArt id={item.id} locked={!earned.has(item.id)} />{earned.has(item.id) ? <span className={styles.ownedMark}><Check size={12} /></span> : null}</span>
               <span className={styles.medalName}>{t(item.id)}</span><span className={styles.tierDots} aria-label={t(tierLabels[item.tier])}>{[1,2,3].map(tier => <i key={tier} data-on={tier<=item.tier} />)}</span>

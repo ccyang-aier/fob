@@ -35,15 +35,13 @@ export function MedalRecipients({ medal,awards }:{medal:ProfileMedalId;awards:re
     <div className={styles.listHeading}><h4>{t('recipients')}</h4>{total!==undefined ? <span>{t('recipientsCount',{ count:total })}</span> : null}</div>
     {pending ? <div className={styles.loading} role="status"><span className={styles.srOnly}>{t('loadingRecipients')}</span>{[0,1].map(index => <div className={styles.personSkeleton} key={index} aria-hidden><i /><span><b /><b /></span></div>)}</div>
       : query.isError && base?.source==='server' ? <div className={styles.loadError}><AppAlert tone="error" title={t('recipientsFailed')} /><Button type="button" variant="outline" size="sm" onClick={() => void query.refetch()}>{t('retry')}</Button></div>
-      : recipients.length ? <ol className={styles.people}>{recipients.map((person,index) => <li key={person.userId}>
+      : recipients.length ? <div className={styles.recipientScroll} role="region" aria-label={t('recipientsList')} tabIndex={0}><ol className={styles.people}>{recipients.map((person,index) => <li key={person.userId}>
         <UserAvatar name={person.name} image={person.image} className={styles.avatar} />
         <div className={styles.personInfo}><div className={styles.personName}><strong title={person.name}>{person.name}</strong>{person.userId===principal ? <small>{t('you')}</small> : null}</div>
           <time dateTime={person.earnedAt}>{dates.format(new Date(person.earnedAt))}</time>
         </div>
         {index===0 ? <span className={styles.firstStamp} title={t('firstRecipient')}><Trophy size={12} aria-hidden /><span>{t('firstRecipientShort')}</span></span> : null}
-      </li>)}</ol>
+      </li>)}</ol>{query.hasNextPage ? <Button type="button" variant="ghost" size="sm" loading={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>{t('loadMore')}</Button> : null}</div>
       : <div className={styles.empty}><Users size={26} aria-hidden /><p>{t('noRecipients')}</p></div>}
-    {query.hasNextPage ? <Button type="button" variant="ghost" size="sm" loading={query.isFetchingNextPage} onClick={() => void query.fetchNextPage()}>{t('loadMore')}</Button> : null}
-    <p className={styles.scope}>{t(base?.source==='local' ? 'localOwner' : 'recipientsScope')}</p>
   </section>;
 }

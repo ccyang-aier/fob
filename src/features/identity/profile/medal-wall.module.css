@@ -14,9 +14,6 @@
 .filters button > span { color:var(--muted-strong); font-size:10px; font-variant-numeric:tabular-nums; }
 .seriesGrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 22px; }
 .series { min-width:0; }
-.seriesHeading { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 4px 7px; }
-.seriesHeading h3 { margin:0; font-size:11px; font-weight:550; color:var(--ink-soft); }
-.seriesHeading > span { color:var(--muted-strong); font-size:10px; font-variant-numeric:tabular-nums; }
 .collection { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:4px; }
 .medalCard { display:flex; min-width:0; width:100%; flex-direction:column; align-items:center; gap:5px; padding:8px 2px 9px; border:1px solid transparent; border-radius:9px; cursor:pointer; }
 .medalCard[aria-pressed=true] { border-color:var(--resource-card-border); }
@@ -38,61 +35,63 @@
 .art::before { left:22%; transform:rotate(19deg); }
 .art::after { right:22%; transform:rotate(-19deg); }
 .coin { position:relative; display:grid; width:var(--coin-size); height:var(--coin-size); overflow:hidden; place-items:center; border:1px solid var(--medal-metal); border-radius:50%; color:var(--medal-deep); background:conic-gradient(from -30deg,var(--medal-light),var(--medal-metal) 19%,var(--medal-light) 32%,var(--medal-metal) 52%,var(--medal-light) 69%,var(--medal-metal) 86%,var(--medal-light)); box-shadow:inset 0 0 0 2px var(--medal-light),inset 0 0 0 3px color-mix(in srgb,var(--medal-deep) 32%,transparent),0 2px 4px color-mix(in srgb,var(--medal-deep) 12%,transparent); }
-.art[data-tier='2'] .coin { border-radius:9px; }
-.art[data-tier='3'] .coin { border-radius:7px 7px 14px 14px; }
 .coin::after { position:absolute; inset:-30% -60%; content:''; pointer-events:none; background:linear-gradient(110deg,transparent 40%,rgb(255 255 255 / .75) 49%,transparent 58%); transform:translateX(-70%); animation:foil-sheen 9s ease-in-out infinite; }
 .art[data-tier='2'] .coin::after { animation-delay:1.2s; }
 .art[data-tier='3'] .coin::after { animation-delay:2.4s; }
-.art[data-locked] { --medal-deep:var(--muted-strong); opacity:.7; }
-.art[data-locked] .coin { background:color-mix(in srgb,var(--medal-light) 32%,var(--panel)); border-color:color-mix(in srgb,var(--medal-metal) 38%,var(--line)); box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px color-mix(in srgb,var(--medal-metal) 25%,var(--line)); }
+.art[data-locked] { opacity:.75; }
+.art[data-locked] .coin { color:color-mix(in srgb,var(--medal-deep) 45%,var(--muted-strong)); background:color-mix(in srgb,var(--medal-light) 45%,var(--panel)); border-color:color-mix(in srgb,var(--medal-metal) 45%,var(--line)); box-shadow:inset 0 0 0 2px var(--panel),inset 0 0 0 3px color-mix(in srgb,var(--medal-metal) 35%,var(--line)); }
+:global(html[data-theme=dark]) .art[data-locked] .coin { color:color-mix(in srgb,var(--medal-light) 75%,var(--ink)); background:color-mix(in srgb,var(--medal-metal) 12%,var(--panel)); }
 .art[data-locked]::before,.art[data-locked]::after { background:color-mix(in srgb,var(--medal-metal) 30%,var(--muted)); }
 .art[data-locked] .coin::after { animation:none; display:none; }
 .art[data-size=compact] { --coin-size:36px; }
-.art[data-size=hero] { --coin-size:54px; }
+.art[data-size=hero] { --coin-size:44px; }
 .art[data-size=hero] .coin { border-width:2px; box-shadow:inset 0 0 0 3px var(--medal-light),inset 0 0 0 4px color-mix(in srgb,var(--medal-deep) 32%,transparent),0 3px 5px color-mix(in srgb,var(--medal-deep) 14%,transparent); }
-.detailPanel { min-width:0; padding:17px 20px 14px; border-radius:12px; background:var(--surface-subtle); }
+.detailPanel { min-width:0; min-height:520px; padding:17px 20px 14px; border-radius:12px; background:var(--surface-subtle); }
 .detailTopline { display:flex; align-items:center; justify-content:space-between; color:var(--muted-strong); font-size:10px; }
 .detailTopline > span:last-child { padding:2px 6px; border:1px solid var(--line); border-radius:5px; }
-.medalHero { display:flex; align-items:center; flex-direction:column; padding:8px 0 0; text-align:center; }
-.medalHero h3 { margin:9px 0 0; font-size:17px; font-weight:600; letter-spacing:-.02em; }
-.medalHero p { min-height:34px; margin:7px 0 0; color:var(--muted-strong); font-size:11px; line-height:1.6; text-wrap:balance; }
-.unlockState { display:inline-flex; align-items:center; gap:4px; margin-top:8px; color:var(--muted-strong); font-size:10px; }
+.medalHero { display:grid; grid-template-columns:52px minmax(0,1fr); align-items:center; column-gap:10px; row-gap:3px; padding:12px 0 0; }
+.medalHero > .art { grid-column:1; grid-row:1 / 4; }
+.medalHero h3 { grid-column:2; margin:0; font-size:15px; font-weight:600; line-height:20px; letter-spacing:-.02em; }
+.medalHero p { grid-column:2; min-width:0; margin:0; color:var(--muted-strong); font-size:11px; line-height:1.6; text-wrap:balance; }
+.unlockState { grid-column:2; display:inline-flex; align-items:center; gap:4px; color:var(--muted-strong); font-size:10px; }
 .unlockState[data-earned=true] { color:var(--ok-ink); }
-.goal { margin-top:20px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+.goal { margin-top:14px; padding-bottom:12px; border-bottom:1px solid var(--line); }
 .goal > div:first-child { display:flex; align-items:baseline; justify-content:space-between; gap:10px; font-size:10px; color:var(--muted-strong); }
 .goal strong { color:var(--ink-soft); font-size:11px; font-weight:500; font-variant-numeric:tabular-nums; }
 .goalTrack { height:4px; overflow:hidden; margin-top:8px; border-radius:4px; background:var(--line); }
 .goalTrack i { display:block; height:100%; background:#b29659; border-radius:inherit; }
 .goal p { margin:8px 0 0; color:var(--muted-strong); font-size:10px; }
-.recipients { min-width:0; margin-top:17px; }
+.recipients { min-width:0; margin-top:14px; }
 .listHeading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .listHeading h4 { margin:0; color:var(--ink-soft); font-size:12px; font-weight:550; }
 .listHeading > span { color:var(--muted-strong); font-size:10px; }
-.people { margin:9px 0 0; padding:0; list-style:none; }
-.people li { display:flex; position:relative; align-items:center; gap:9px; padding:10px 0; }
-.people li:not(:last-child)::before { position:absolute; top:43px; bottom:-9px; left:15px; width:1px; background:var(--line); content:''; }
-.avatar { position:relative; width:30px; height:30px; font-size:11px; flex:0 0 auto; }
-.personInfo { display:flex; min-width:0; flex:1; flex-direction:column; gap:5px; }
+.recipientScroll { height:202px; margin-top:8px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; border:1px solid transparent; border-radius:4px; outline:none; }
+.recipientScroll:focus-visible { border-color:var(--control-border); }
+.people { margin:0; padding:0; list-style:none; }
+.people li { display:flex; position:relative; align-items:center; gap:9px; height:40px; box-sizing:border-box; padding:4px 0; }
+.people li:not(:last-child)::before { position:absolute; top:33px; bottom:-7px; left:12px; width:1px; background:var(--line); content:''; }
+.avatar { position:relative; width:26px; height:26px; font-size:10px; flex:0 0 auto; }
+.personInfo { display:flex; min-width:0; flex:1; flex-direction:column; gap:2px; }
 .personName { display:flex; min-width:0; align-items:center; gap:5px; font-size:11px; color:var(--ink-soft); }
 .personName strong { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:500; }
 .personName small { flex-shrink:0; color:var(--muted-strong); font-size:9px; }
 .people time { color:var(--muted-strong); font-size:9px; font-variant-numeric:tabular-nums; }
-.firstStamp { display:flex; flex:0 0 auto; align-items:center; gap:3px; align-self:flex-start; margin-top:3px; color:#96753c; font-size:9px; }
+.firstStamp { display:flex; flex:0 0 auto; align-items:center; gap:3px; color:#96753c; font-size:9px; }
 .firstStamp > span { white-space:nowrap; line-height:1.4; }
-.scope { margin:13px 0 0; padding-top:11px; border-top:1px solid var(--line); color:var(--muted-strong); font-size:9px; line-height:1.6; }
-.empty { display:flex; min-height:112px; align-items:center; justify-content:center; flex-direction:column; gap:8px; color:var(--muted-strong); }
+.empty { display:flex; min-height:202px; margin-top:8px; align-items:center; justify-content:center; flex-direction:column; gap:8px; color:var(--muted-strong); }
 .empty > svg { opacity:.65; }
 .empty p { margin:0; color:var(--muted-strong); font-size:10px; text-align:center; }
 .emptyCollection { display:flex; min-height:250px; align-items:center; justify-content:center; flex-direction:column; gap:14px; color:var(--muted-strong); font-size:12px; }
 .emptyCollection p { margin:0; }
-.loadError { display:flex; flex-direction:column; align-items:flex-start; gap:10px; margin-top:12px; }
-.personSkeleton { display:flex; gap:9px; align-items:center; padding:12px 0; }
-.personSkeleton > i { width:30px; height:30px; border-radius:50%; background:var(--line); }
+.loadError { display:flex; min-height:202px; flex-direction:column; align-items:flex-start; gap:10px; margin-top:8px; }
+.loading { min-height:202px; margin-top:8px; }
+.personSkeleton { display:flex; gap:9px; height:40px; align-items:center; padding:4px 0; }
+.personSkeleton > i { width:26px; height:26px; border-radius:50%; background:var(--line); }
 .personSkeleton > span { display:grid; gap:7px; }
 .personSkeleton b { display:block; width:100px; height:6px; border-radius:3px; background:var(--line); }
 .personSkeleton b:last-child { width:72px; }
 .srOnly { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 @keyframes foil-sheen { 0%,72% { transform:translateX(-70%); } 92%,100% { transform:translateX(70%); } }
-@media (max-width:720px) { .header { padding:18px 16px 17px 20px; } .body { padding:0 18px 18px; } .wallLayout { grid-template-columns:minmax(0,1fr); gap:22px; } .seriesGrid { gap:18px 14px; } .detailPanel { padding:17px 20px; } .title > span { margin-left:0; font-size:10px; } .medalHero p { min-height:0; } .people { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:4px 18px; } .people li::before { display:none; } .firstStamp > span { display:none; } }
-@media (max-width:390px) { .title { gap:7px; } .title > span { flex-basis:100%; margin-left:23px; } .seriesGrid { column-gap:10px; } .medalName { font-size:9px; } .people { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:720px) { .header { padding:18px 16px 17px 20px; } .body { padding:0 18px 18px; } .wallLayout { grid-template-columns:minmax(0,1fr); gap:22px; } .seriesGrid { gap:18px 14px; } .detailPanel { min-height:0; padding:17px 20px; } .title > span { margin-left:0; font-size:10px; } }
+@media (max-width:390px) { .title { gap:7px; } .title > span { flex-basis:100%; margin-left:23px; } .seriesGrid { column-gap:10px; } .medalName { font-size:9px; } }
 @media (prefers-reduced-motion:reduce) { .coin::after { animation:none; transform:translateX(0); opacity:.25; } }

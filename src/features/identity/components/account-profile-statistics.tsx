@@ -15,5 +15,5 @@ export function AccountProfileStatistics({ data }: { data?: PersonalProfile }) {
     { key: 'likes', Icon: ThumbsUp, label: t('likes'), value: data?.receivedLikesTotal, hint: t('likesHint') },
     { key: 'learning', Icon: Clock, label: t('learning'), value: data?.learningMinutes, unit: t('minutes'), hint: t('learningHint') },
   ];
-  return <dl className={styles.statistics}>{stats.map(({ Icon, ...stat }) => <Tooltip key={stat.key}><TooltipTrigger asChild><div className={styles.statistic} data-stat={stat.key} tabIndex={0}><dt><Icon size={16} aria-hidden />{stat.label}</dt><dd>{stat.value?.toLocaleString() ?? '—'}{stat.unit ? <span>{stat.unit}</span> : null}</dd></div></TooltipTrigger><TooltipContent>{stat.hint}</TooltipContent></Tooltip>)}</dl>;
+  return <dl className={styles.statistics}>{stats.map(({ Icon, ...stat }) => <Tooltip key={stat.key}><TooltipTrigger asChild><div className={styles.statistic} data-stat={stat.key} tabIndex={0}><dt><Icon size={22} aria-hidden /><span>{stat.label}</span></dt><dd>{stat.value?.toLocaleString() ?? '—'}{stat.unit ? <span>{stat.unit}</span> : null}</dd></div></TooltipTrigger><TooltipContent>{stat.hint}</TooltipContent></Tooltip>)}</dl>;
 }
