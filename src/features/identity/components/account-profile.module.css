@@ -14,10 +14,12 @@
 .name,.signature { display:block; field-sizing:content; width:fit-content; min-width:6ch; max-width:100%; padding:0 2px 0 0; border:0; border-bottom:1px solid transparent; border-radius:0; outline:none; color:var(--muted-strong); background:transparent; box-shadow:none; }
 .name { height:32px; font-size:22px; font-weight:600; line-height:30px; letter-spacing:-.02em; text-overflow:ellipsis; }
 .name:read-only,.signature:read-only { cursor:pointer; }
-.name:read-write,.signature:read-write { color:var(--ink); cursor:text; }
+.name:read-write,.signature:read-write { field-sizing:fixed; width:260px; min-width:0; color:var(--ink); cursor:text; }
 .name:read-write:hover,.signature:read-write:hover { border-bottom-color:var(--control-border); }
-.name:read-write:focus,.signature:read-write:focus { border-bottom-color:var(--ink); }
-.name[aria-invalid=true] { border-bottom-color:var(--err-ink); }
+/* Override the shared important focus border for these inline profile fields only. */
+.name:read-write:focus,.signature:read-write:focus { border-bottom-color:var(--control-border) !important; }
+.name:read-only:focus,.signature:read-only:focus { border-bottom-color:transparent !important; }
+.name[aria-invalid=true],.name[aria-invalid=true]:focus { border-bottom-color:var(--err-ink) !important; }
 .email { display:flex; align-items:center; gap:6px; min-width:0; margin:3px 0 0; color:var(--muted-strong); font-size:11px; }
 .email > span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .email small { color:var(--warn-ink); font-size:10px; }
@@ -32,9 +34,8 @@
 .error { margin:6px 0 0; color:var(--err-ink); font-size:11px; }
 .body > [role=alert] { margin-top:10px; }
 .activity { margin-top:22px; }
-.statistics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:0; margin:0 0 24px; padding:16px 0; border:1px solid var(--resource-card-border); border-radius:12px; background:var(--surface-subtle); }
-.statistic { display:flex; flex-direction:column; gap:9px; min-width:0; padding:0 15px; border:1px solid transparent; outline:none; }
-.statistic + .statistic { border-left-color:var(--line); }
+.statistics { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px; margin:0 0 24px; padding:6px 0 22px; border-bottom:1px solid var(--line); }
+.statistic { display:flex; flex-direction:column; gap:9px; min-width:0; padding:0; border:1px solid transparent; outline:none; }
 .statistic:focus-visible { border-color:var(--control-border); border-radius:3px; }
 .statistic dd { order:-1; display:flex; align-items:baseline; gap:4px; margin:0; font-size:23px; font-weight:600; line-height:1.2; font-variant-numeric:tabular-nums; letter-spacing:-.025em; }
 .statistic dd > span { color:var(--muted-strong); font-size:10px; font-weight:400; letter-spacing:0; }
@@ -53,5 +54,5 @@
 .emptyMedals { margin:7px 0 0; color:var(--muted); font-size:11px; }
 .loadState { display:flex; flex-direction:column; align-items:flex-start; gap:10px; min-height:100px; color:var(--muted-strong); font-size:12px; }
 @media (hover:none) { .avatarOverlay { inset:auto 0 0; height:22px; opacity:1; } .avatarOverlay > svg { width:12px; height:12px; } }
-@media (max-width:540px) { .body { padding-inline:22px; } .name { font-size:20px; } .email { flex-wrap:wrap; } .statistic { padding-inline:8px; } .statistic dt { gap:4px; font-size:10px; } .statistic dd { font-size:21px; } }
-@media (max-width:360px) { .statistics { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:18px; } .statistic:nth-child(3) { border-left-color:transparent; } }
+@media (max-width:540px) { .body { padding-inline:22px; } .name { font-size:20px; } .email { flex-wrap:wrap; } .statistics { column-gap:12px; } .statistic dt { gap:4px; font-size:10px; } .statistic dd { font-size:21px; } }
+@media (max-width:360px) { .statistics { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:18px; } }
