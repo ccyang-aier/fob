@@ -11,27 +11,26 @@ test('medal times come from actual first document and seventh consecutive Shangh
   expect(localProfileMedals([])).toEqual([]);
 });
 
-test('the canonical collection has eighteen unique stable medals in six ascending three-tier families',() => {
-  expect(profileMedalCatalog).toHaveLength(18);
-  expect(new Set(profileMedalCatalog.map(medal => medal.id)).size).toBe(18);
+test('the canonical collection has thirty unique stable medals in six ascending five-tier families',() => {
+  expect(profileMedalCatalog).toHaveLength(30);
+  expect(new Set(profileMedalCatalog.map(medal => medal.id)).size).toBe(30);
   for (const family of profileMedalFamilies) {
     const medals=profileMedalCatalog.filter(medal => medal.family===family);
-    expect(medals.map(medal => medal.tier)).toEqual([1,2,3]);
-    expect(medals[0].target).toBeLessThan(medals[1].target);
-    expect(medals[1].target).toBeLessThan(medals[2].target);
+    expect(medals.map(medal => medal.tier)).toEqual([1,2,3,4,5]);
+    for (let index=1;index<medals.length;index++) expect(medals[index-1].target).toBeLessThan(medals[index].target);
     for (const medal of medals) expect(profileMedalIdSchema.parse(medal.id)).toBe(medal.id);
   }
 });
 
 test('local tier thresholds use actual chronological events and never manufacture social progress',() => {
-  const events=Array.from({ length:100 },(_,index) => event(new Date(Date.UTC(2022,0,index+1,1)).toISOString()));
+  const events=Array.from({ length:365 },(_,index) => event(new Date(Date.UTC(2022,0,index+1,1)).toISOString()));
   const awards=localProfileMedals(events.toReversed());
   for (const medal of profileMedalCatalog.filter(medal => medal.family==='creation' || medal.family==='streak')) expect(awards.find(award => award.id===medal.id)?.earnedAt).toBe(events[medal.target-1].at);
-  expect(awards).toHaveLength(6);
+  expect(awards).toHaveLength(10);
   expect(awards.map(award => award.earnedAt)).toEqual(awards.map(award => award.earnedAt).toSorted());
   const progress=localMedalProgress(events);
-  expect(progress).toHaveLength(18);
-  expect(progress.filter(item => profileMedalCatalog.find(medal => medal.id===item.id)?.family==='creation').every(item => item.value===100)).toBe(true);
-  expect(progress.filter(item => profileMedalCatalog.find(medal => medal.id===item.id)?.family==='streak').every(item => item.value===100)).toBe(true);
+  expect(progress).toHaveLength(30);
+  expect(progress.filter(item => profileMedalCatalog.find(medal => medal.id===item.id)?.family==='creation').every(item => item.value===365)).toBe(true);
+  expect(progress.filter(item => profileMedalCatalog.find(medal => medal.id===item.id)?.family==='streak').every(item => item.value===365)).toBe(true);
   expect(progress.filter(item => !['creation','streak'].includes(profileMedalCatalog.find(medal => medal.id===item.id)!.family)).every(item => item.value===0)).toBe(true);
 });

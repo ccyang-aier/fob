@@ -20,6 +20,18 @@ export const profileMedalCatalog = [
   { id:'explorer',family:'discovery',target:1,tier:1 },
   { id:'curator',family:'discovery',target:10,tier:2 },
   { id:'navigator',family:'discovery',target:30,tier:3 },
+  { id:'author',family:'creation',target:100,tier:4 },
+  { id:'sage',family:'creation',target:300,tier:5 },
+  { id:'evergreen',family:'streak',target:180,tier:4 },
+  { id:'yearkeeper',family:'streak',target:365,tier:5 },
+  { id:'pathfinder',family:'sharing',target:50,tier:4 },
+  { id:'ambassador',family:'sharing',target:100,tier:5 },
+  { id:'catalyst',family:'discussion',target:100,tier:4 },
+  { id:'dialogist',family:'discussion',target:300,tier:5 },
+  { id:'luminary',family:'appreciation',target:100,tier:4 },
+  { id:'legend',family:'appreciation',target:300,tier:5 },
+  { id:'scholar',family:'discovery',target:60,tier:4 },
+  { id:'polymath',family:'discovery',target:120,tier:5 },
 ] as const;
 export const profileMedalIds = profileMedalCatalog.map(medal => medal.id);
 export const profileMedalIdSchema = z.enum(profileMedalIds);

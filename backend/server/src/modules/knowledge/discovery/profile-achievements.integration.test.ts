@@ -86,12 +86,12 @@ test('sharing uses the actual live publication timestamp and removes revoked awa
   expect(personalProfileSchema.parse(await (await request('')).json()).medals.some(award => award.id==='sharing')).toBe(false);
 });
 
-test('all eighteen milestones use exact event thresholds, de-duplicate publications and exclude self appreciation',async () => {
-  const tree=await fixture.tree({ defaultAccess:'view',parents:[null,...Array.from({ length:99 },() => 0)] });
+test('all thirty milestones use exact event thresholds, de-duplicate publications and exclude self appreciation',async () => {
+  const tree=await fixture.tree({ defaultAccess:'view',parents:[null,...Array.from({ length:364 },() => 0)] });
   await fixture.drain();
   const kb=fixture.alpha.id,user=fixture.owner.identity.userId,thread=randomUUID();
   const dates=(year:number,index:number) => new Date(Date.UTC(year,0,1,2,0,index));
-  const comments=Array.from({ length:50 },(_,index) => ({ knowledgeBaseId:kb,id:randomUUID(),threadId:thread,authorId:user,bodyMd:`Contribution ${index}`,createdAt:dates(2019,index) }));
+  const comments=Array.from({ length:300 },(_,index) => ({ knowledgeBaseId:kb,id:randomUUID(),threadId:thread,authorId:user,bodyMd:`Contribution ${index}`,createdAt:dates(2019,index) }));
   await withKnowledgeBase(fixture.pool,kb,async db => {
     for (const [index,scope] of tree.pages.entries()) await db.update(page).set({ createdBy:user,createdAt:new Date(Date.UTC(2018,0,index+1,1)) }).where(and(eq(page.knowledgeBaseId,kb),eq(page.id,scope.pageId)));
     await db.insert(commentThread).values({ knowledgeBaseId:kb,id:thread,pageId:tree.root.pageId });
@@ -100,23 +100,23 @@ test('all eighteen milestones use exact event thresholds, de-duplicate publicati
       ...comments.map((item,index) => ({ knowledgeBaseId:kb,commentId:item.id,userId:fixture.reader.identity.userId,createdAt:dates(2020,index) })),
       { knowledgeBaseId:kb,commentId:comments[0].id,userId:user,createdAt:dates(2019,0) },
     ]);
-    await db.insert(knowledgeSubscription).values(tree.pages.slice(0,30).map((scope,index) => ({ knowledgeBaseId:kb,id:randomUUID(),userId:user,pageId:scope.pageId,createdAt:dates(2021,index) })));
+    await db.insert(knowledgeSubscription).values(tree.pages.slice(0,120).map((scope,index) => ({ knowledgeBaseId:kb,id:randomUUID(),userId:user,pageId:scope.pageId,createdAt:dates(2021,index) })));
     await db.insert(shareLink).values([
-      ...tree.pages.slice(0,20).map((scope,index) => ({ knowledgeBaseId:kb,id:randomUUID(),pageId:scope.pageId,tokenHash:'b'.repeat(64),createdBy:user,createdAt:dates(2022,index) })),
+      ...tree.pages.slice(0,100).map((scope,index) => ({ knowledgeBaseId:kb,id:randomUUID(),pageId:scope.pageId,tokenHash:'b'.repeat(64),createdBy:user,createdAt:dates(2022,index) })),
       { knowledgeBaseId:kb,id:randomUUID(),pageId:tree.root.pageId,tokenHash:'c'.repeat(64),createdBy:user,createdAt:new Date(dates(2022,0).getTime()+500) },
     ]);
   });
   const response=await request('',undefined,fixture.owner);expect(response.status).toBe(200);
   const data=personalProfileSchema.parse(await response.json());
   expect(data.medals.map(award => award.id).sort()).toEqual([...profileMedalIds].sort());
-  expect(data.medalProgress).toHaveLength(18);
+  expect(data.medalProgress).toHaveLength(30);
   for (const medal of profileMedalCatalog) {
     const at=medal.family==='creation' || medal.family==='streak' ? new Date(Date.UTC(2018,0,medal.target,1)) : dates({ discussion:2019,appreciation:2020,discovery:2021,sharing:2022 }[medal.family],medal.target-1);
     expect(data.medals.find(award => award.id===medal.id)?.earnedAt).toBe(at.toISOString());
   }
-  expect(data.medalProgress.find(item => item.id==='influencer')?.value).toBe(50);
-  expect(data.medalProgress.find(item => item.id==='beacon')?.value).toBe(20);
-  for (const id of ['architect','centurion','beacon','mentor','influencer','navigator']) {
+  expect(data.medalProgress.find(item => item.id==='legend')?.value).toBe(300);
+  expect(data.medalProgress.find(item => item.id==='ambassador')?.value).toBe(100);
+  for (const id of ['sage','yearkeeper','ambassador','dialogist','legend','polymath']) {
     const response=await request(`/medals/${id}`,undefined,fixture.owner);expect(response.status).toBe(200);
     const list=profileMedalRecipientsSchema.parse(await response.json());
     expect(list.total).toBe(1);expect(list.recipients[0]?.userId).toBe(user);

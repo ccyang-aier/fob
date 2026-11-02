@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect,useId,useRef,useState } from 'react';
-import { profileMedalCatalog,profileMedalFamilies,type ProfileMedalAward,type ProfileMedalId,type ProfileMedalProgress } from '@fob/shared/knowledge/contracts';
+import { profileMedalCatalog,type ProfileMedalAward,type ProfileMedalId,type ProfileMedalProgress } from '@fob/shared/knowledge/contracts';
 import { Check,LockSimple,Trophy,X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
@@ -11,7 +11,7 @@ import { MedalRecipients } from './medal-recipients';
 import { messages } from './messages';
 import styles from './medal-wall.module.css';
 
-const tierLabels={ 1:'tierOne',2:'tierTwo',3:'tierThree' } as const;
+const tierLabels={ 1:'tierOne',2:'tierTwo',3:'tierThree',4:'tierFour',5:'tierFive' } as const;
 
 export function MedalWall({ awards,progress,initialMedal,onClose }:{awards:readonly ProfileMedalAward[];progress:readonly ProfileMedalProgress[];initialMedal?:ProfileMedalId;onClose:() => void}) {
   const { t,locale }=useTranslation(messages);
@@ -24,6 +24,7 @@ export function MedalWall({ awards,progress,initialMedal,onClose }:{awards:reado
     window.requestAnimationFrame(() => { if (trigger?.isConnected) trigger.focus({ preventScroll:true }); });
   }
   const earned=new Map(awards.map(award => [award.id,award.earnedAt]));
+  const visibleMedals=profileMedalCatalog.filter(item => !onlyEarned || earned.has(item.id));
   const medal=medalById[selected],selectedDate=earned.get(selected),currentProgress=progress.find(item => item.id===selected);
   const dates=new Intl.DateTimeFormat(locale,{ timeZone:profileTimeZone,year:'numeric',month:'long',day:'numeric' });
   return <dialog ref={dialog} className={styles.dialog} aria-labelledby={titleId}
@@ -35,16 +36,10 @@ export function MedalWall({ awards,progress,initialMedal,onClose }:{awards:reado
           <Button type="button" variant="ghost" size="sm" aria-pressed={!onlyEarned} onClick={() => setOnlyEarned(false)}>{t('allMedals')}<span>{profileMedalCatalog.length}</span></Button>
           <Button type="button" variant="ghost" size="sm" aria-pressed={onlyEarned} onClick={() => { setOnlyEarned(true);if (!earned.has(selected) && awards[0]) setSelected(awards[0].id); }}>{t('myMedals')}<span>{earned.size}</span></Button>
         </div></div>
-        <div className={styles.seriesGrid}>{profileMedalFamilies.map(family => {
-          const medals=profileMedalCatalog.filter(item => item.family===family && (!onlyEarned || earned.has(item.id)));
-          if (!medals.length) return null;
-          return <section key={family} className={styles.series} aria-label={t(medalFamilyLabels[family])}>
-            <div className={styles.collection}>{medals.map(item => <button type="button" key={item.id} className={`fob-action ${styles.medalCard}`} data-surface="plain" aria-pressed={selected===item.id} aria-label={`${t(item.id)} · ${t(earned.has(item.id) ? 'earned' : 'locked')}`} onClick={() => setSelected(item.id)}>
-              <span className={styles.artWrap}><MedalArt id={item.id} locked={!earned.has(item.id)} />{earned.has(item.id) ? <span className={styles.ownedMark}><Check size={12} /></span> : null}</span>
-              <span className={styles.medalName}>{t(item.id)}</span><span className={styles.tierDots} aria-label={t(tierLabels[item.tier])}>{[1,2,3].map(tier => <i key={tier} data-on={tier<=item.tier} />)}</span>
-            </button>)}</div>
-          </section>;
-        })}</div>
+        <ul className={styles.collection}>{visibleMedals.map(item => <li key={item.id}><button type="button" className={`fob-action ${styles.medalCard}`} data-surface="plain" aria-pressed={selected===item.id} aria-label={`${t(item.id)} · ${t(earned.has(item.id) ? 'earned' : 'locked')}`} onClick={() => setSelected(item.id)}>
+          <span className={styles.artWrap}><MedalArt id={item.id} locked={!earned.has(item.id)} />{earned.has(item.id) ? <span className={styles.ownedMark}><Check size={12} aria-hidden /></span> : null}</span>
+          <span className={styles.medalName}>{t(item.id)}</span>
+        </button></li>)}</ul>
         {onlyEarned && !earned.size ? <div className={styles.emptyCollection}><Trophy size={28} aria-hidden /><p>{t('noEarnedMedals')}</p><Button type="button" variant="outline" size="sm" onClick={() => setOnlyEarned(false)}>{t('viewAllMedals')}</Button></div> : null}
       </section>
       <aside className={styles.detailPanel} aria-label={t(selected)}>

@@ -1,0 +1,309 @@
+{
+  "version": 2,
+  "generatedAt": "2026-11-03",
+  "origin": "OpenAI built-in image_gen",
+  "assetType": "User-requested collectible medal artwork; not system UI icons",
+  "processing": "Alpha-preserving crop and registration to 256px WebP. Every medal normalized to a 232px art box with equal 12px padding.",
+  "assets": {
+    "gardener": {
+      "file": "gardener.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 19120,
+      "sha256": "f4548519a6150bfadf36e568bb43696f1992e3164616871efc0ca25c8f3bcec1",
+      "sourceFile": "exec-d7913763-de07-463d-9d3e-ffe857a73ad6.png",
+      "sourceSha256": "af616d7dca80d36dd22022f37d6e9791a3aa4910d136424980246a1a76c4b723",
+      "prompt": "Use case: stylized-concept.\nAsset type: production achievement medal artwork for Fob, a knowledge workspace.\nCreate ONE exquisite circular collectible achievement medallion, front view, centered on a genuinely transparent background. This is the master design for a coherent collection of 18 medals. Premium 3D sculpted enamel and metal, elegant high-end game achievement, refined collectible pin. Perfectly round silhouette, no ribbons, no text, no letters, no numerals, no stars or separate floating elements outside the disc. A substantial champagne-gold double rim with delicate concentric milled detailing; a deep emerald enamel face with gentle domed depth; a beautifully modeled gold sprout with two glossy jade leaves rising from a tiny gold seed, representing the first creation of knowledge. Centerpiece should be large, legible, iconic at 48 pixels, with tactile rounded relief and clean edges. Controlled studio reflections, upper-left key light, restrained glossy highlights, no excessive sparkle or flare. Straight-on orthographic view, no perspective tilt, no cast shadow outside the medallion. Exact square canvas, medallion occupying 82 percent of both width and height, equal transparent padding on all sides. Rich emerald and champagne-gold color harmony. High production quality, crisp anti-aliased alpha edges. Avoid flat generic vector icon, cheap plastic, cartoon outlines, busy background, pedestal, shield shapes, polygon shapes, watermark."
+    },
+    "writer": {
+      "file": "writer.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 19588,
+      "sha256": "a29051626f3c41fe2ad1681e2bbe21a10000f882d15bbfe0732cfa3452ec76e3",
+      "sourceFile": "exec-7305a887-b682-417d-92ef-f76430f46d40.png",
+      "sourceSha256": "9116ebd7b29c1c76769f1a8ec74d273a671ce4e34a2ff459ebf1645fb33172f4",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Writing medal: a graceful sculpted champagne-gold fountain-pen nib crossed with a single flowing ivory quill, over a rich warm ivory enamel face. A tiny emerald ink jewel in the nib. Beautiful calligraphic craftsmanship without any written characters."
+    },
+    "architect": {
+      "file": "architect.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21410,
+      "sha256": "705dcde39d595a3703c443483c80b58c1a0607b6ee474d828e87561eeafcf683",
+      "sourceFile": "exec-4d3e8c11-d6ca-46c3-82ed-7ec0512cc7f0.png",
+      "sourceSha256": "a6e7ccbee45d495453468bbb073662dbe225397034145e89b405a90cc83c2844",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Knowledge maker medal: an open miniature ivory-and-gold book with visibly layered pages and a small luminous emerald faceted gem resting above its central fold; rich midnight-teal enamel face. Substantial gold relief and precise symmetric structure."
+    },
+    "creator": {
+      "file": "creator.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20676,
+      "sha256": "f0faaf0e7f9a17ed21c5adaa27c4072e03230b889d6350b77310c804d8781bed",
+      "sourceFile": "exec-0dea72f0-b863-40c7-9b2e-ae8a69ebbae6.png",
+      "sourceSha256": "63330948e0a18f0ca44ef09ca4040e44009393ac8a2b68974279187729219299",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Consistency medal: a bold sculpted champagne-gold lightning bolt with luminous pale amethyst inlay, over a deep royal-violet enamel face. Dynamic stepped thickness and rounded bevels, readable as one elegant electricity motif."
+    },
+    "steadfast": {
+      "file": "steadfast.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22866,
+      "sha256": "de9b3aa1234028019eb704e4da1acb008c289c720ad06e8f0ed660f28503bfb2",
+      "sourceFile": "exec-32b87129-3b4e-4e07-b067-ed2650976927.png",
+      "sourceSha256": "3b7fec9edb268465ad4a0f0883acc14693446b4dab147e91e5ba2f43baed824e",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Day-by-day consistency medal: a sculpted champagne-gold rising sun with a luminous opal center, half-emerging above three small concentric gold ripples, rich plum-violet enamel face. Perfectly round sun, quiet geometric rays kept inside the disc, refined radiant relief."
+    },
+    "centurion": {
+      "file": "centurion.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22914,
+      "sha256": "00ae3a77e0aa97af53ff5709512b5b7061f6d34d1793b3a2c4dff6119e2993ab",
+      "sourceFile": "exec-262d3f1d-0f26-41b4-a30d-42492e8b61f6.png",
+      "sourceSha256": "0a27f77cf40626650063e621b3eeee70e99aeb56a85618055fe045ac2d887799",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: A hundred days medal: a beautifully sculpted small champagne-gold trophy cup, one elegant laurel leaf curling up each side of the cup, pale amethyst jewel at its base, deep aubergine enamel face. Symmetric, celebratory and minimal, no numerals or letters."
+    },
+    "sharing": {
+      "file": "sharing.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20290,
+      "sha256": "fa9d00e4c86c6390875492ca4c56992b0b1f1c89f1019952a398bce4cb73d4ab",
+      "sourceFile": "exec-f49792f3-27ea-4e3f-819c-d9e545ecaabf.png",
+      "sourceSha256": "599c5f2bb702c759f297921d97c3b7bb29446832d1a6c55f83d019d031e0d82b",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Sharing knowledge medal: three glossy turquoise enamel pearls connected by two gently curved champagne-gold sculpted arms, forming an elegant branching sharing network; luminous deep ocean-blue enamel face. A graceful substantial dimensional centerpiece, all within the circular rim."
+    },
+    "connector": {
+      "file": "connector.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20354,
+      "sha256": "4cf1a3ba37b214f4ae72dd8c373bd44d4d8b646a7f1445e57f7e862999ae4d7d",
+      "sourceFile": "exec-00648478-7221-476c-8602-8522d8ea9169.png",
+      "sourceSha256": "f3ac0428110b53fff4caf9750f98c076a9cc178befd8d1844618c59809d9cce4",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Idea messenger medal: an elegant miniature champagne-gold paper airplane with layered pearl-white enamel wings, tracing one short turquoise sculpted swoosh kept inside the disc; deep sapphire-blue enamel face. A sense of shared ideas in flight, sculptural and precise, no cartoon lines."
+    },
+    "beacon": {
+      "file": "beacon.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20220,
+      "sha256": "b9a4ff7af72a08fd4c4b39aa525578e121c7a43e156df6bcba01d3d1b38688e0",
+      "sourceFile": "exec-1f552761-95e9-44b9-a2b9-c0c0f87c97e4.png",
+      "sourceSha256": "a1ec396db5604e0734666eb1d5a5ee89a243bba62f7bfbfa344b474eefa4572c",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Knowledge beacon medal: a sculpted champagne-gold lighthouse with an opalescent white tower, a tiny turquoise glowing lantern and two restrained gold light beams, deep midnight-ocean enamel face. Simplified substantial rounded sculpture that reads clearly at small size."
+    },
+    "conversationalist": {
+      "file": "conversationalist.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 19128,
+      "sha256": "943eb4d3c84c278b28e342e7406d73aae01582991e2c9afef61dda626f36ae94",
+      "sourceFile": "exec-05ae8ae8-a3df-40e8-85c6-57d6ad82a452.png",
+      "sourceSha256": "5963b5f58f57b5fefa48a8c26212bf1de288a168b1e1f7fd92361e3de0bd2f4b",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: First conversation medal: one beautifully sculpted champagne-gold speech bubble, its face filled with luminous ivory enamel and three small jade cabochon dots; a rich forest-teal enamel background inside the round rim. Friendly round sculpture, clear conversational identity."
+    },
+    "collaborator": {
+      "file": "collaborator.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20056,
+      "sha256": "19498dd46f66ba9fe225297271988dd87e15c3e45dced767ea0938d661ba584b",
+      "sourceFile": "exec-ea90aeac-8860-4c12-8471-aaee0c3650a4.png",
+      "sourceSha256": "3d8167e3f5d19a229c42f33017a0993f26d791547e08e36d5e57f20a46e04bbb",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Idea exchange medal: two overlapping sculpted speech bubbles, one pearl-ivory and one jade-green enamel with champagne-gold edges, a small bright gold spark where they meet; deep jade-teal enamel face. Elegant balanced interlocking relief, clean and readable."
+    },
+    "mentor": {
+      "file": "mentor.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 23080,
+      "sha256": "2c41943e0c383fac1c0b55a9a6ffed544573bd85ce2606832235fe571b44f79d",
+      "sourceFile": "exec-f3712139-1e8a-45be-8923-41d7bd7388bf.png",
+      "sourceSha256": "32d69c1e685723ae0ca0b1b393778fab0380a334ae160d36216b8275a3792bf5",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Thought mentor medal: a large luminous pearl-white sculpted light bulb with gold contour, cradled by two gently curved champagne-gold laurel leaves; deep emerald-teal enamel face. A tiny emerald jewel in the bulb base, wise and elegant, no human silhouettes."
+    },
+    "appreciated": {
+      "file": "appreciated.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20960,
+      "sha256": "2957b5ad0605f1b84161171ad2010b140ac5f2e58a7707b09944bb903c0846bd",
+      "sourceFile": "exec-8de5ed48-8de0-49b6-9098-7b995c70d8f0.png",
+      "sourceSha256": "f7861b57b097c06157635085c3cfd4608e7dc029da4e0451166950ed5463fdce",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: First appreciation medal: a substantial sculpted rose-quartz heart with champagne-gold outline and a small warm ivory glint inset near its shoulder; rich burgundy-rose enamel face. Smooth precious gemstone facets, warm and elegant, not a flat heart icon."
+    },
+    "resonant": {
+      "file": "resonant.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20326,
+      "sha256": "e8643e2ed57bab74adac79f2c6d8ed3b2184a31d4791aeb9743f15dcca692eab",
+      "sourceFile": "exec-bfa625f4-2877-45f6-8ad7-c837169071b8.png",
+      "sourceSha256": "9e493196c0677a1a3816a84cd86a83c0a557e8bde285c25f9c62b82fc0cb6cd2",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Well-appreciated medal: one large sculpted five-point champagne-gold star with pearl-white enamel facets and a small rose-quartz cabochon at its center, over rich dusty ruby enamel face. Precious dimensional relief, balanced points, refined radiance."
+    },
+    "influencer": {
+      "file": "influencer.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21440,
+      "sha256": "7de086219e1f05c045a3ba28c328c5750156904d7f043342bd71909a666289d1",
+      "sourceFile": "exec-2f81512a-5746-4a1c-a889-311a8c352f93.png",
+      "sourceSha256": "36368a89a6c53a1fdabc951bd4c8420bfcaa44fcbdac4a5a72d778312da5f13a",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Community star medal: an elegant sculpted champagne-gold crown with three smooth pearl-white enamel tips and one deep rose-quartz jewel, a tiny engraved gold ray fan behind it within the disc; deep wine-red enamel face. Royal but restrained, no lettering or numerals."
+    },
+    "explorer": {
+      "file": "explorer.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21742,
+      "sha256": "f6dd1f1990b73fd5d301b453464c229ea7f8db9e6ba66375148a50facd4bc1a0",
+      "sourceFile": "exec-c4f61763-4c4f-471f-8187-4f0e172111ef.png",
+      "sourceSha256": "391cf9ade98b91756d6f75650db0483098bd50cfe315cf34dd1afdc148098b39",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: First discovery medal: a finely sculpted champagne-gold compass rose with a pearl-white north-point needle and a small sapphire center jewel, over deep midnight-blue enamel face. Four strong principal directions, no alphabet or numbers, a confident navigational collectible."
+    },
+    "curator": {
+      "file": "curator.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20760,
+      "sha256": "70880bbe762e780ecfa9d303a3b99496da64a290072fe17a3152cb9a29abf5e6",
+      "sourceFile": "exec-e56583d8-dcbc-4c9e-830e-961488fd46fe.png",
+      "sourceSha256": "49f0846aa0e951afb9b2cec691e9ed6b7514977775cfd81f6e0d62ef48c150eb",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Idea curator medal: a champagne-gold bookmark with luminous ivory enamel face layered over a closed miniature navy-blue book with gold page edges; one small sapphire jewel near the top of the bookmark. Deep ink-blue enamel face, precise dimensional relief."
+    },
+    "navigator": {
+      "file": "navigator.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22268,
+      "sha256": "d63ba42c4767e80bd54aeff2ea5e2797a14f460ad67cd2e045cc9c2638b40762",
+      "sourceFile": "exec-de760839-da92-4b94-91b7-2bc2fd4df87a.png",
+      "sourceSha256": "86a7d63751f697b39bc8feafa06f67e24e508306269f58a38d29419863641984",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Knowledge guide medal: an elegant sculpted champagne-gold graduation cap with pearl-white enamel top, a tiny sapphire in its central button and a graceful gold tassel, floating above a short gold laurel arc entirely inside the disc; deep royal-navy enamel face. Clear academic achievement, refined high-end relief."
+    },
+    "author": {
+      "file": "author.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 20878,
+      "sha256": "d42a77525cc573a3e60f5c66e6f1176763db577733e8e9cf168e12d4d47d15ec",
+      "sourceFile": "exec-dbad7900-dcf0-490b-a143-e74a624040b0.png",
+      "sourceSha256": "a2081e4f7d40938307aa2ef00167f57b004f3cc808e259d3da495a20769ae91c",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Accomplished author medal: a sculpted rolled ivory parchment scroll with two graceful champagne-gold curls and a small emerald seal, a short gold quill resting across it; rich forest-green enamel face. Unwritten scroll, no letters or glyphs, substantial elegant relief."
+    },
+    "sage": {
+      "file": "sage.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22368,
+      "sha256": "91ae766a4edcd0d17d2e0503a195dab71d9d29333fb08d30a4168968e4de9008",
+      "sourceFile": "exec-a270df57-2e41-4ea0-95b4-d5bd0c31f7b0.png",
+      "sourceSha256": "c5ee69315353677227455856f8f7adc56083120684b569cdc6df9446068251d0",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Master of knowledge medal: a magnificent miniature champagne-gold tree of knowledge with seven rounded jade leaves growing above a small open pearl-white book, a deep emerald enamel face. A balanced wise sculptural motif with large simple elements readable at 48 pixels."
+    },
+    "evergreen": {
+      "file": "evergreen.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22684,
+      "sha256": "884950756fcb3a1ec082d6ebfd0a2088840961ca00280a0870ea7971781092a3",
+      "sourceFile": "exec-91cf4233-1833-4edd-8f39-790e8837532f.png",
+      "sourceSha256": "612d1612ce2c9e46bee232ad187b131f77152b5146bfabbdf89e6c2ecf725b0e",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Enduring dedication medal: a beautifully sculpted champagne-gold hourglass with luminous opal glass chambers and pale amethyst sand, deep plum-purple enamel face. An elegant sculptural object, no numbers, discreet delicate milled metal detailing."
+    },
+    "yearkeeper": {
+      "file": "yearkeeper.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 23642,
+      "sha256": "331365438b2990017febc8d57ed985841ea2f0c7e20dab25e606c09a86d402ee",
+      "sourceFile": "exec-60afa86f-4d20-4aac-8970-39e3aec66b9d.png",
+      "sourceSha256": "243326a7e07567f8b04b68f4091808b435d9b5a686a97cf98a05daddf1bf5118",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: A year of dedication medal: a golden sculpted sun and a pearly crescent moon forming a perfectly balanced circular cycle around one small amethyst gem, deep midnight-violet enamel face. Rounded jewelry-like relief, all inside the gold medallion rim, no zodiac or lettering."
+    },
+    "pathfinder": {
+      "file": "pathfinder.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22228,
+      "sha256": "083f6e277c9885efd58e9c10d4fc38b238d595833718ab01804e10d2b67e32f7",
+      "sourceFile": "exec-2f013a46-ae1f-4e37-971b-b52faff63f6e.png",
+      "sourceSha256": "f6be81a53b30e7911f74750a009da52bded1948c12eb057839927edba423f24c",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Open knowledge bridge medal: an elegant champagne-gold arched bridge with pearl-white enamel deck crossing a turquoise enamel ripple, deep ocean-blue enamel face. A graceful substantial dimensional bridge connecting knowledge, simplified legible relief."
+    },
+    "ambassador": {
+      "file": "ambassador.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22782,
+      "sha256": "564d300c6e4babbe0e187380f32d3950ed3e9f7b8ac1ffe1d3a1843b461f9793",
+      "sourceFile": "exec-24dcc15a-5a43-4346-8206-2398d6927682.png",
+      "sourceSha256": "6a33dc72b5449a4646572afb2d73e2dce30c7513db04248d865cc15f1b049072",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Global sharing ambassador medal: a sculpted turquoise gemstone globe wrapped by two thin champagne-gold meridian arcs, one short elegant pearl-white wing on each side, deep sapphire enamel face. All wings remain inside the perfectly round gold rim, precious and refined."
+    },
+    "catalyst": {
+      "file": "catalyst.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21228,
+      "sha256": "dfbf6f535b23f9235c1ffe7d24f4449e1fa545009ed9c24e81e44fa0cf0a8857",
+      "sourceFile": "exec-f504d339-1faa-4ec4-ac72-5fc5f8af566f.png",
+      "sourceSha256": "f059b555c11a1ddb068f30049fe271b243cbdb4221bb7834b65dd8374d2420e0",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Catalyst of thought medal: two elegant champagne-gold fountain pen nibs angled toward each other around a small bright opal four-point spark, deep jade-teal enamel face. Pearl-white and jade-green details on the nibs, a clear expressive conversational sculpture, no written text."
+    },
+    "dialogist": {
+      "file": "dialogist.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21040,
+      "sha256": "95673a5140bf3686719391b4ecbfae9023b4d8526f95dbff69c49245eb84d98b",
+      "sourceFile": "exec-844ce11f-ae35-4263-92aa-3a40de8802b7.png",
+      "sourceSha256": "6618c2dc4d8558b450a95aa64f02a43dcbf1034b72aa4dbd648ae3ebcdf8b5f2",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Resonance of ideas medal: three softly rounded sculpted interlocking loops, one champagne-gold, one pearl-ivory enamel and one jade-green enamel, meeting at a small emerald central gem; deep forest-teal enamel face. A balanced triquetra of collaboration, clear and jewelry-like."
+    },
+    "luminary": {
+      "file": "luminary.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 24510,
+      "sha256": "95fb299467ba8f3305837c7842f0662d51d7a2cc811652173a69011d9ea460a2",
+      "sourceFile": "exec-076432de-17e8-4c39-bd97-f069793c345c.png",
+      "sourceSha256": "9bd275fc291a9380c2f40148f796d6f71152879ef6e80e6a50bb5cc795327eda",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Community luminary medal: a large faceted ruby gemstone cradled by a symmetric champagne-gold laurel wreath, a small pearl-white four-point glint above the gemstone, deep burgundy-rose enamel face. Precious high-end collectible, strong readable relief."
+    },
+    "legend": {
+      "file": "legend.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22336,
+      "sha256": "2df48baf5df9d193ae05501d643079917bd8b7d41adfcd5d1b90403bd97825ec",
+      "sourceFile": "exec-f0cea2bd-e1c2-4ad0-acc3-3e7230465cad.png",
+      "sourceSha256": "c0e0e0a55751ccae347331ee0c0f157e628629378c336ffb1f700faf6df93786",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Beloved community legend medal: an exquisitely sculpted champagne-gold phoenix with calmly uplifted symmetric wings and a tiny ruby heart gemstone in its chest, deep wine-red enamel face. Simplified elegant feather masses, no sprawling feathers outside the round rim, regal dimensional relief."
+    },
+    "scholar": {
+      "file": "scholar.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 21656,
+      "sha256": "273044569de91acebbb62dff1a7c3f10636fffb8a3cdd22b4277bffb0bbc0d9c",
+      "sourceFile": "exec-fd6998eb-adfd-44ab-b8eb-78eb9a1cf2fc.png",
+      "sourceSha256": "13477bef685e8be3fbaca9aa44fff45858fdcc0a3e3b395dd7ce22495a80fc82",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Widely read scholar medal: three small sculpted ivory-and-navy enamel books stacked with visible champagne-gold page edges, a small open gold scroll above them with a sapphire seal; rich royal-navy enamel face. Refined dimensional academic collectible, no letters or writing."
+    },
+    "polymath": {
+      "file": "polymath.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 22510,
+      "sha256": "598a1317f27dfda4e1b8fd6d2840e66d6aaca516181d01f52db4b1c380d5d612",
+      "sourceFile": "exec-5ac7cbb1-a4e1-4557-a058-8df3b9795760.png",
+      "sourceSha256": "b10cfaf42e0a6d7a007669ccf8bd202014791f7be150dabac4adc2684704719d",
+      "prompt": "Use case: stylized-concept. Create ONE production achievement medallion for the Fob collection. Image 1 is a STYLE AND REGISTRATION REFERENCE: match its perfectly circular champagne-gold double rim, fine milled concentric metal detailing, front-facing orthographic view, softly domed glossy enamel, polished sculpted relief, studio light from upper left, level of craft and exact disc diameter/position. Create a NEW center design described below, not another sprout. No tilt, ribbons, pedestal, external ornaments, external shadow, text, letters, numerals, watermark, flat UI symbols, cheap plastic or flat vector look. One round medal, centered and 82% of square canvas width/height, equal truly transparent padding. All parts stay within the round gold rim. Large readable centerpiece, recognizable at 48px. Premium physically rendered collectible enamel pin, restrained elegant reflections.\nCENTER DESIGN: Boundless learning medal: an elegant miniature champagne-gold astronomical telescope with pearl-white enamel barrel and a sapphire lens, angled upward on a simple sculpted gold tripod, one small opal star high in the disc; deep midnight-blue enamel face. Clean substantial sculpture, all elements inside the circular rim."
+    }
+  }
+}
