@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useTranslation } from '@/lib/i18n';
 import { usePersonalProfileSummary } from '@/features/knowledge/profile/use-personal-profile';
 import { ActivityCalendar } from '../profile/activity-calendar';
-import { MedalArt, medalRules } from '../profile/medal-art';
+import { MedalArt,medalById,medalRules } from '../profile/medal-art';
 import { MedalWall } from '../profile/medal-wall';
 import { AccountProfileStatistics } from './account-profile-statistics';
 import { messages } from '../profile/messages';
@@ -28,8 +28,8 @@ export function AccountProfileActivity() {
     <ActivityCalendar calendar={data.calendar} scope={profile.base.name} />
     <section className={styles.medals} aria-labelledby={heading}>
       <div className={styles.medalHeading}><h3 id={heading}>{t('earnedMedals')}</h3><Button type="button" variant="ghost" size="sm" onClick={() => setWall({})}>{t('more')}<CaretRight size={12} aria-hidden /></Button></div>
-      {data.medals.length ? <div className={styles.medalList}>{data.medals.map(award => <Tooltip key={award.id}><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.medal}`} data-surface="plain" onClick={() => setWall({ medal: award.id })}><MedalArt id={award.id} small /><span>{t(award.id)}</span></button></TooltipTrigger><TooltipContent>{t(medalRules[award.id])}</TooltipContent></Tooltip>)}</div> : <p className={styles.emptyMedals}>{t('noMedals')}</p>}
+      {data.medals.length ? <div className={styles.medalList}>{data.medals.slice(-6).reverse().map(award => <Tooltip key={award.id}><TooltipTrigger asChild><button type="button" className={`fob-action ${styles.medal}`} data-surface="plain" onClick={() => setWall({ medal: award.id })}><MedalArt id={award.id} small /><span>{t(award.id)}</span></button></TooltipTrigger><TooltipContent>{t(medalRules[medalById[award.id].family],{ count:medalById[award.id].target })}</TooltipContent></Tooltip>)}</div> : <p className={styles.emptyMedals}>{t('noMedals')}</p>}
     </section>
-    {wall ? <MedalWall awards={data.medals} initialMedal={wall.medal} onClose={() => setWall(null)} /> : null}
+    {wall ? <MedalWall awards={data.medals} progress={data.medalProgress} initialMedal={wall.medal} onClose={() => setWall(null)} /> : null}
   </div>;
 }

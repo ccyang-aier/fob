@@ -1,5 +1,7 @@
 import { z } from 'zod';
 import { entityIdSchema, timestampSchema } from './primitives';
+import { profileMedalIdSchema,profileMedalProgressSchema } from './profile-medals';
+export * from './profile-medals';
 
 export const profileResourceSchema = z.object({
   id: entityIdSchema, kind: z.enum(['document', 'folder']), title: z.string(), icon: z.string().nullable(),
@@ -18,13 +20,12 @@ export const profileActivityCountsSchema = z.object({
   liked: z.number().int().nonnegative(), subscribed: z.number().int().nonnegative(),
 });
 export type ProfileActivityCounts = z.infer<typeof profileActivityCountsSchema>;
-export const profileMedalIdSchema = z.enum(['gardener', 'creator', 'sharing']);
-export type ProfileMedalId = z.infer<typeof profileMedalIdSchema>;
 export const profileMedalAwardSchema = z.object({ id: profileMedalIdSchema, earnedAt: timestampSchema });
 export type ProfileMedalAward = z.infer<typeof profileMedalAwardSchema>;
 export const profileMedalRecipientsSchema = z.object({
   recipients: z.array(z.object({ userId: entityIdSchema, name: z.string(), image: z.string().nullable(), earnedAt: timestampSchema })),
   nextOffset: z.number().int().nullable(),
+  total: z.number().int().nonnegative().default(0),
 });
 export const profileLearningInputSchema = z.object({ pageId: entityIdSchema, seconds: z.number().int().min(0).max(15) });
 export const profileLearningReplySchema = z.object({ seconds: z.number().int().nonnegative() });
@@ -38,6 +39,7 @@ export const personalProfileSchema = z.object({
   receivedLikes: z.number().int().nonnegative(), receivedLikesTotal: z.number().int().nonnegative().default(0), sharedDocuments: z.number().int().nonnegative(),
   learningMinutes: z.number().int().nonnegative().default(0),
   medals: z.array(profileMedalAwardSchema).default([]),
+  medalProgress: z.array(profileMedalProgressSchema).default([]),
   dayCounts: z.object({ created: z.number().int().nonnegative(), commented: z.number().int().nonnegative() }),
 });
 export type PersonalProfile = z.infer<typeof personalProfileSchema>;
