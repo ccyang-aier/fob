@@ -29,16 +29,16 @@ button.dayCell[data-today='true'] { border-color:var(--ink-soft); }
 .legend .dayCell { width:8px; height:8px; }
 .legend > span:first-child { margin-right:3px; }
 .legend > span:last-child { margin-left:3px; }
-.dayDetails { --profile-green:#00ad78; --profile-blue:#348ce5; --profile-violet:#8562ce; --profile-rose:#cc557c; padding:7px; }
+.dayDetails { --profile-green:#00ad78; --profile-blue:#348ce5; --profile-amber:#bd8528; --profile-rose:#cc557c; padding:7px; }
 .dayDetailsHeading { display:flex; flex-direction:column; gap:4px; padding-bottom:8px; border-bottom:1px solid var(--line); }
 .dayDetailsHeading strong { font-size:12px; font-weight:550; }
 .dayDetailsCounts { margin:6px 0 0; }
 .dayDetailsCounts > div { --activity-color:var(--profile-green); display:flex; align-items:center; justify-content:space-between; gap:14px; min-height:30px; }
 .dayDetailsCounts > [data-kind='commented'] { --activity-color:var(--profile-blue); }
 .dayDetailsCounts > [data-kind='liked'] { --activity-color:var(--profile-rose); }
-.dayDetailsCounts > [data-kind='subscribed'] { --activity-color:var(--profile-violet); }
+.dayDetailsCounts > [data-kind='subscribed'] { --activity-color:var(--profile-amber); }
 .dayDetailsCounts dt { display:flex; align-items:center; gap:8px; color:var(--ink-soft); font-size:11px; }
 .dayDetailsCounts dd { margin:0; font-size:12px; font-weight:550; font-variant-numeric:tabular-nums; }
 .dayDetailsIcon { display:grid; width:18px; height:22px; place-items:center; color:var(--activity-color); }
 :global(html[data-theme='dark']) .calendarCard { --heat-1:#174d37; --heat-2:#23764c; --heat-3:#2fa865; --heat-4:#4bce85; }
-:global(html[data-theme='dark']) .dayDetails { --profile-green:#36c994; --profile-blue:#70acf0; --profile-violet:#b79aef; --profile-rose:#ec8cac; }
+:global(html[data-theme='dark']) .dayDetails { --profile-green:#36c994; --profile-blue:#70acf0; --profile-amber:#e9b75c; --profile-rose:#ec8cac; }

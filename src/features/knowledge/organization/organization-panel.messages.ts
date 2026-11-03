@@ -19,4 +19,7 @@ export const knowledgeMessages = defineMessages({
   folder: ['文件夹', 'Folder'],
   groups: ['群组', 'Groups'],
   members: ['成员', 'Members'],
+  membersAndPermissions: ['成员与权限', 'Members & permissions'],
+  folderPermissions: ['文件夹权限', 'Folder access'],
+  inviteMembers: ['邀请成员', 'Invite members'],
 });

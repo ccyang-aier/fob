@@ -29,6 +29,7 @@
 .editActions { display:flex; align-items:center; gap:4px; padding-top:1px; }
 .editActions button { width:30px; height:30px; color:var(--muted-strong); }
 .editActions button[type=submit] { color:var(--accent-foreground); }
+.signature,.signature:read-write { color:var(--muted); }
 .signature { min-width:12ch; height:29px; margin-top:10px; font-size:13px; line-height:28px; text-overflow:ellipsis; }
 .signature::placeholder { color:var(--muted); }
 .error { margin:6px 0 0; color:var(--err-ink); font-size:11px; }

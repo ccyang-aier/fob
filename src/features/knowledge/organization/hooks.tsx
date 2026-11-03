@@ -16,6 +16,7 @@ import { organizationClient } from '@/features/knowledge/organization/client';
 import type { MemberRole, OrganizationPage } from '@/features/knowledge/organization/client';
 import { knowledgeCatalogClient, type TeamspaceAccess } from '../data/knowledge-catalog-client';
 import { applyOptimisticList, restoreOptimisticList } from './cache';
+import { allOrganizationPages } from './member-directory';
 import type { OptimisticSnapshot } from './cache';
 import { isRetryableOrganizationError } from '@/features/knowledge/organization/errors';
 import { organizationQueryKeys } from './keys';
@@ -58,7 +59,8 @@ function useKnowledgeBaseListQuery<T>(
 export function useMembersQuery(knowledgeBaseId: string | null) {
   return useKnowledgeBaseListQuery(
     organizationQueryKeys.members(knowledgeBaseId ?? 'none'),
-    (cursor, signal) => organizationClient.listMembers(knowledgeBaseId!, { cursor, signal }),
+    // Directory counts and filters must cover the full membership, including later API pages.
+    async (_cursor, signal) => ({ items: await allOrganizationPages(options => organizationClient.listMembers(knowledgeBaseId!, options), signal), nextCursor: null }),
     knowledgeBaseId !== null,
   );
 }

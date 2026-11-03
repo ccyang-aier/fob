@@ -12,9 +12,12 @@ import { GroupsSection } from './groups-section';
 import { OrganizationQueryProvider } from './hooks';
 import { MembersSection } from './members-section';
 import { TeamspacesSection } from './teamspaces-section';
-import { ListStateShell, RoleBadge, flattenPages, queryListState } from './ui';
+import { ListStateShell, flattenPages, queryListState } from './ui';
+import { KnowledgeMembersButton } from './knowledge-members-menu';
+import { memberRoleLabels } from './view-model';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useKnowledgeBaseResources } from '../data/knowledge-base-resources';
+import styles from './organization-panel.module.css';
 
 type SectionId = 'members' | 'groups' | 'teamspaces';
 function sections(locale?: Locale): readonly { id: SectionId; label: string }[] {
@@ -22,7 +25,7 @@ function sections(locale?: Locale): readonly { id: SectionId; label: string }[] 
   return [
     { id: 'members', label: knowledgeT('members') },
     { id: 'groups', label: knowledgeT('groups') },
-    { id: 'teamspaces', label: knowledgeT('folder') },
+    { id: 'teamspaces', label: knowledgeT('folderPermissions') },
   ];
 }
 
@@ -50,41 +53,38 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
   return (
     <section
       aria-label={knowledgeT('knowledgeBaseMembersAndDirectory')}
-      className="relative flex h-full min-h-0 flex-col overflow-hidden bg-panel"
+      className={styles.page}
     >
       {session.status === 'authenticated' && activeBase ? (
-        <>
-          <div className="flex h-[46px] shrink-0 items-center justify-between gap-4 border-b border-[var(--line)] px-[18px]">
-            <span className="flex min-w-0 items-center gap-2"><strong className="truncate text-[13px] font-medium">{activeBase.name}</strong>{role ? <RoleBadge role={role} /> : null}</span>
+        <div className={styles.content}>
+          <header className={styles.header}>
+            <div>
+              <h1 className={styles.title}>{knowledgeT('membersAndPermissions')}</h1>
+              <p className={styles.scope}>
+                <strong>{activeBase.name}</strong>
+                {role ? <><span className={styles.scopeDivider} aria-hidden>·</span><span>{knowledgeT('myRole')}<span aria-hidden>： </span>{memberRoleLabels(locale)[role]}</span></> : null}
+              </p>
+            </div>
+            {role === 'owner' ? <KnowledgeMembersButton className={styles.invite} label={knowledgeT('inviteMembers')} onManage={() => setSection('members')} /> : null}
+          </header>
             <nav
               aria-label={knowledgeT('managementSections')}
-              className="flex h-full items-center gap-1"
+              className={styles.tabs}
             >
               {sections(locale).map((item) => (
                 <button
                   key={item.id}
                   type="button"
                   aria-current={section === item.id ? 'page' : undefined}
+                  data-variant="text"
                   onClick={() => setSection(item.id)}
-                  className={cn(
-                    'fob-action relative h-full px-3 text-[11.5px] font-medium',
-                    section === item.id ? 'text-[var(--ink)]' : 'text-[var(--muted-strong)]',
-                  )}
+                  className={cn('fob-action', styles.tab)}
                 >
                   {item.label}
-                  <span
-                    aria-hidden
-                    className={cn(
-                      'absolute inset-x-2 bottom-0 h-[2px] rounded-full',
-                      section === item.id ? 'bg-[var(--accent)]' : 'bg-transparent',
-                    )}
-                  />
                 </button>
               ))}
             </nav>
-          </div>
-          <div className="min-h-0 flex-1 overflow-y-auto">
-            <div className="mx-auto w-full max-w-[900px] px-6 py-5">
+            <div className={styles.section}>
               {role ? (
                 section === 'members' ? (
                   <MembersSection
@@ -111,9 +111,8 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
                   {null}
                 </ListStateShell>
               )}
-            </div>
           </div>
-        </>
+        </div>
       ) : (
         <ListStateShell
           state={selectedKnowledgeBase?.source !== 'server' ? 'empty' : session.status === 'anonymous' ? 'unauthenticated' : queryListState(basesQuery)}

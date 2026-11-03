@@ -1,215 +1,133 @@
 'use client';
 
-import { useTranslation } from '@/lib/i18n';
-import { knowledgeMessages } from './members-section.messages';
-/**
- * Member directory (O02): the knowledgeBase member list with role changes and
- * removal. Management controls render only within the actor's authority
- * (`assignableRoles` / `canManageMember`); every mutation is optimistic with a
- * rollback toast on failure.
- */
-
 import { useState } from 'react';
-import { CaretDown, Trash, UsersThree } from '@/components/icons';
+import { CaretDown, DotsThree, Funnel, MagnifyingGlass, Trash, UsersThree, X } from '@/components/icons';
+import { UserAvatar } from '@/components/user-avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useIdentity } from '@/features/identity/identity-context';
+import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import type { MemberRole } from '@/features/knowledge/organization/client';
+import type { MemberRole } from './client';
 import { useChangeMemberRoleMutation, useMembersQuery, useRemoveMemberMutation } from './hooks';
 import type { MemberRow } from './list-mutations';
 import { assignableRoles, canManageMember, memberRoleLabels } from './view-model';
-import {
-  ConfirmDialog,
-  ListStateShell,
-  LoadMoreButton,
-  RoleBadge,
-  SectionHeader,
-  flattenPages,
-  mutationErrorText,
-  queryListState,
-} from './ui';
+import { ConfirmDialog, ListStateShell, flattenPages, mutationErrorText, queryListState } from './ui';
+import { knowledgeMessages } from './members-section.messages';
+import styles from './members-section.module.css';
 
-function initialsOf(name: string): string {
-  const trimmed = name.trim();
-  return trimmed.length > 0 ? [...trimmed][0]!.toUpperCase() : '?';
-}
+const roleOrder: MemberRole[] = ['owner', 'admin', 'member', 'guest'];
 
-export function MembersSection({
-  knowledgeBaseId,
-  actorRole,
-  notify,
-}: {
+/** Full, knowledge-base-scoped directory. Mutations retain authority checks and rollback. */
+export function MembersSection({ knowledgeBaseId, actorRole, notify }: {
   knowledgeBaseId: string;
   actorRole: MemberRole;
   notify: (kind: 'success' | 'error', text: string) => void;
 }) {
-  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
-
+  const { locale, t } = useTranslation(knowledgeMessages);
+  const { session } = useIdentity();
   const membersQuery = useMembersQuery(knowledgeBaseId);
   const changeRoleMutation = useChangeMemberRoleMutation(knowledgeBaseId);
   const removeMutation = useRemoveMemberMutation(knowledgeBaseId);
   const [removingMember, setRemovingMember] = useState<MemberRow | null>(null);
+  const [search, setSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState<MemberRole | 'all'>('all');
   const members = flattenPages<MemberRow>(membersQuery.data);
   const state = queryListState(membersQuery);
+  const labels = memberRoleLabels(locale);
+  const query = search.trim().toLocaleLowerCase(locale);
+  const filtered = members.filter(member =>
+    (roleFilter === 'all' || member.role === roleFilter)
+    && (!query || `${member.name}\n${member.email}`.toLocaleLowerCase(locale).includes(query)),
+  ).sort((a, b) => roleOrder.indexOf(a.role) - roleOrder.indexOf(b.role) || a.name.localeCompare(b.name, locale));
+  const roles = assignableRoles(actorRole);
+  const busy = changeRoleMutation.isPending || removeMutation.isPending;
 
   async function changeRole(member: MemberRow, role: MemberRole) {
-    if (member.role === role) return;
+    if (member.role === role || busy) return;
     try {
       await changeRoleMutation.mutateAsync({ userId: member.userId, role });
-      notify(
-        'success',
-        knowledgeT('changedValueSRoleToValue', {
-          v0: member.name,
-          v1: memberRoleLabels(locale)[role],
-        }),
-      );
-    } catch (error) {
-      notify('error', mutationErrorText(knowledgeT('changeRole'), error));
-    }
+      notify('success', t('changedValueSRoleToValue', { v0: member.name, v1: labels[role] }));
+    } catch (error) { notify('error', mutationErrorText(t('changeRole'), error)); }
   }
 
   async function removeMember() {
     const member = removingMember;
-    if (!member) return;
+    if (!member || busy) return;
     try {
       await removeMutation.mutateAsync(member.userId);
-      notify('success', knowledgeT('removedValueFromKnowledgeBase', { v0: member.name }));
+      notify('success', t('removedValueFromKnowledgeBase', { v0: member.name }));
       setRemovingMember(null);
-    } catch (error) {
-      notify('error', mutationErrorText(knowledgeT('removeMember'), error));
-    }
+    } catch (error) { notify('error', mutationErrorText(t('removeMember'), error)); }
   }
 
-  return (
-    <div className="flex flex-col gap-3">
-      <SectionHeader
-        title={knowledgeT('members')}
-        hint={knowledgeT('allKnowledgeBaseMembersAppearHereRolesDetermine')}
-      />
-      <ListStateShell
-        state={state}
-        error={membersQuery.error}
-        onRetry={() => void membersQuery.refetch()}
-        emptyIcon={<UsersThree className="size-6" aria-hidden />}
-        emptyTitle={knowledgeT('noMembersInThisKnowledgeBase')}
-        emptyHint={knowledgeT('theKnowledgeBaseOwnerAppearsHereNewMembers')}
-      >
-        <div className="overflow-hidden rounded-[10px] border border-[var(--line)] bg-panel">
-          <div className="grid grid-cols-[minmax(200px,1fr)_150px_64px] items-center gap-3 border-b border-[var(--line)] bg-[var(--surface-subtle)] px-4 py-2 text-[10px] font-medium text-[var(--muted)]">
-            <span>{knowledgeT('members')}</span>
-            <span>{knowledgeT('role')}</span>
-            <span className="text-right">{knowledgeT('actions')}</span>
-          </div>
-          {members.map((member) => {
-            const manageable = canManageMember(actorRole, member.role);
-            const roles = assignableRoles(actorRole);
-            const busy = changeRoleMutation.isPending || removeMutation.isPending;
-            return (
-              <div
-                key={member.userId}
-                className="grid grid-cols-[minmax(200px,1fr)_150px_64px] items-center gap-3 border-b border-[var(--line)] px-4 py-2.5 transition-colors last:border-b-0 hover:bg-[var(--surface-subtle)]"
-              >
-                <div className="flex min-w-0 items-center gap-2.5">
-                  <span
-                    aria-hidden
-                    className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[var(--accent-soft)] text-[11px] font-semibold text-[var(--accent-ink)]"
-                  >
-                    {initialsOf(member.name)}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[12px] font-medium text-[var(--ink)]">
-                      {member.name}
-                    </span>
-                    <span className="block truncate text-[10.5px] text-[var(--muted)]">
-                      {member.email}
-                    </span>
-                  </span>
-                </div>
-                {manageable && roles.length > 0 ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        type="button"
-                        aria-label={knowledgeT('changeValueSRole', { v0: member.name })}
-                        className="flex h-[26px] items-center gap-1 rounded-[6px] border border-transparent px-1.5 outline-none transition-colors hover:border-[var(--line)] hover:bg-panel focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-                      >
-                        <RoleBadge role={member.role} />
-                        <CaretDown className="size-2.5 text-[var(--muted)]" />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="w-[150px]">
-                      <DropdownMenuLabel>{knowledgeT('changeTo')}</DropdownMenuLabel>
-                      {roles.map((role) => (
-                        <DropdownMenuItem
-                          key={role}
-                          disabled={busy}
-                          onSelect={() => void changeRole(member, role)}
-                          className="justify-between text-[11.5px]"
-                        >
-                          {memberRoleLabels(locale)[role]}
-                          {member.role === role ? (
-                            <span className="text-[9.5px] text-[var(--muted)]">
-                              {knowledgeT('current')}
-                            </span>
-                          ) : null}
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  <div>
-                    <RoleBadge role={member.role} />
-                  </div>
-                )}
-                <div className="flex justify-end">
-                  {manageable ? (
-                    <button
-                      type="button"
-                      aria-label={knowledgeT('removeValue', { v0: member.name })}
-                      title={knowledgeT('removeMember')}
-                      disabled={busy}
-                      onClick={() => setRemovingMember(member)}
-                      className={cn(
-                        'flex size-7 items-center justify-center rounded-[6px] text-[var(--muted)] outline-none transition-colors hover:bg-[color-mix(in_srgb,var(--err-ink)_9%,transparent)] hover:text-[var(--err-ink)] focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] disabled:opacity-45',
-                      )}
-                    >
-                      <Trash className="size-[14px]" />
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            );
-          })}
-          <LoadMoreButton
-            visible={membersQuery.hasNextPage}
-            loading={membersQuery.isFetchingNextPage}
-            onClick={() => void membersQuery.fetchNextPage()}
-          />
-        </div>
-      </ListStateShell>
-      <ConfirmDialog
-        open={removingMember !== null}
-        onClose={() => setRemovingMember(null)}
-        onConfirm={() => void removeMember()}
-        busy={removeMutation.isPending}
-        title={knowledgeT('removeMember')}
-        confirmLabel={knowledgeT('remove')}
-        body={
-          removingMember ? (
-            <>
-              {knowledgeT('remove2')}
-              <strong className="font-semibold text-[var(--ink)]">{removingMember.name}</strong>（
-              {removingMember.email}
-              {knowledgeT('fromThisKnowledgeBaseAccessWillBeRevoked')}
-            </>
-          ) : null
-        }
-      />
+  return <div className={styles.directory}>
+    <div className={styles.toolbar}>
+      <h2 className={styles.heading}>{t('allMembers')}{state === 'ready' || state === 'empty' ? <span className={styles.count}>{members.length}</span> : null}</h2>
+      <div className={styles.filters}>
+        <label className={styles.search}>
+          <MagnifyingGlass size={15} aria-hidden />
+          <input type="text" aria-label={t('searchMembers')} placeholder={t('searchPlaceholder')} value={search} onChange={event => setSearch(event.target.value)} />
+          {search ? <button type="button" className="fob-action" data-surface="plain" aria-label={t('clearSearch')} onClick={() => setSearch('')}><X size={12} aria-hidden /></button> : null}
+        </label>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button type="button" className={cn('fob-action', styles.filter)} data-surface="plain" data-filter-active={roleFilter !== 'all' ? true : undefined} aria-label={t('filterByRole')}>
+              <Funnel size={14} aria-hidden />{roleFilter === 'all' ? t('allRoles') : labels[roleFilter]}<CaretDown size={12} aria-hidden />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuRadioGroup value={roleFilter} onValueChange={value => setRoleFilter(value as MemberRole | 'all')}>
+              <DropdownMenuRadioItem value="all">{t('allRoles')}</DropdownMenuRadioItem>
+              {roleOrder.map(role => <DropdownMenuRadioItem key={role} value={role}>{labels[role]}</DropdownMenuRadioItem>)}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
-  );
+    <ListStateShell state={state} error={membersQuery.error} onRetry={() => void membersQuery.refetch()}
+      emptyIcon={<UsersThree size={28} aria-hidden />} emptyTitle={t('noMembersInThisKnowledgeBase')} emptyHint={t('theKnowledgeBaseOwnerAppearsHereNewMembers')}>
+      <table className={styles.table} aria-label={t('members')}>
+        <thead><tr><th scope="col">{t('members')}</th><th scope="col">{t('email')}</th><th scope="col">{t('role')}</th><th scope="col"><span className="sr-only">{t('actions')}</span></th></tr></thead>
+        <tbody>
+          {filtered.map(member => {
+            const manageable = canManageMember(actorRole, member.role);
+            return <tr key={member.userId}>
+              <td><div className={styles.person}>
+                <UserAvatar name={member.name} image={member.image} className={styles.avatar} />
+                <div className={styles.identity}>
+                  <div className={styles.name}><span title={member.name}>{member.name}</span>{session.status === 'authenticated' && member.userId === session.user.id ? <span className={styles.self}>{t('you')}</span> : null}</div>
+                  <span className={styles.mobileEmail} title={member.email}>{member.email}</span>
+                </div>
+              </div></td>
+              <td className={styles.email} title={member.email}>{member.email}</td>
+              <td>{manageable && roles.length > 0 ? <DropdownMenu>
+                <DropdownMenuTrigger asChild><button type="button" disabled={busy} aria-label={t('changeValueSRole', { v0: member.name })} className={cn('fob-action', styles.role)} data-surface="plain">{labels[member.role]}<CaretDown size={12} aria-hidden /></button></DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-40">
+                  <DropdownMenuRadioGroup value={member.role} onValueChange={value => void changeRole(member, value as MemberRole)}>
+                    {roles.map(role => <DropdownMenuRadioItem key={role} value={role} disabled={busy}>{labels[role]}</DropdownMenuRadioItem>)}
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu> : <span className={styles.role}>{labels[member.role]}</span>}</td>
+              <td className={styles.actions}>{manageable ? <DropdownMenu>
+                <DropdownMenuTrigger asChild><button type="button" disabled={busy} className={cn('fob-action', styles.action)} data-surface="plain" aria-label={t('memberActions', { name: member.name })}><DotsThree size={16} aria-hidden /></button></DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40"><DropdownMenuItem variant="destructive" onSelect={() => setRemovingMember(member)}><Trash size={14} aria-hidden />{t('removeMember')}</DropdownMenuItem></DropdownMenuContent>
+              </DropdownMenu> : null}</td>
+            </tr>;
+          })}
+        </tbody>
+      </table>
+      {filtered.length === 0 ? <div className={styles.noResults} role="status"><h3>{t('noResults')}</h3><p>{t('tryAnotherSearch')}</p><Button variant="outline" size="sm" onClick={() => { setSearch(''); setRoleFilter('all'); }}>{t('clearFilters')}</Button></div> : null}
+      <p className={styles.footer} role="status">{t('showingMembers', { visible: filtered.length, total: members.length })}</p>
+    </ListStateShell>
+    <ConfirmDialog open={removingMember !== null} onClose={() => { if (!removeMutation.isPending) setRemovingMember(null); }} onConfirm={() => void removeMember()} busy={removeMutation.isPending} title={t('removeMember')} confirmLabel={t('remove')}
+      body={removingMember ? <>{t('remove2')}<strong className="font-semibold text-[var(--ink)]">{removingMember.name}</strong>（{removingMember.email}{t('fromThisKnowledgeBaseAccessWillBeRevoked')}</> : null} />
+  </div>;
 }

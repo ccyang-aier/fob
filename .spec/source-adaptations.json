@@ -129,8 +129,8 @@
     "deleted": true
   },
   "src/features/knowledge/organization/organization-panel.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consume the independent identity context to remove the provider/account-view initialization cycle.",
-    "sha256": "6efbf05307e309f9b220da7968100178eacb8f90e51df864d2acf4c11a1c6895"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consume the independent identity context to remove the provider/account-view initialization cycle. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
+    "sha256": "e70e547369d8a3df768a0a31b065212e38261ca29429583786a84f4163633d79"
   },
   "src/features/knowledge/use-knowledge-base-selection.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -672,8 +672,8 @@
     "sha256": "7e57e980d38bbe48132d6154412cb932fa62abdb3c3d6d5694a03c1c0580082b"
   },
   "src/features/knowledge/organization/members-section.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "ae949df4c5a9548157b37973c9bc5287f992ddd51460010a8a67bd0c743830dd"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
+    "sha256": "2b1b5a15e88f5464239c87aab2e559a1ca64646a668f5433c915c416844d7585"
   },
   "src/features/knowledge/organization/permission-select.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Dropdown selection refinement (docs/ui/icon-system.md): Use the shared 18px selected-option indicator and matching empty slot without changing permission values, authorization or persistence.",
@@ -1336,8 +1336,8 @@
     "sha256": "1ed58507d7c74744010d8b6515fc5a8bf206a922861a84fc24a94704a2c9efa7"
   },
   "src/features/knowledge/organization/hooks.tsx": {
-    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
-    "sha256": "7ac6ecd191cd28cd1051668dbc3effc95d8cd9c5049f5e35adc01223400ac0ff"
+    "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
+    "sha256": "32561541699a64367a470c3a72c480220fadbc21d16805265a7907f7f1f7fb79"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.integration.test.ts": {
     "reason": "Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
@@ -1362,5 +1362,13 @@
   "backend/server/src/modules/knowledge/organization/members.ts": {
     "reason": "Return real account avatars in the knowledge-base-scoped member directory without changing membership or guest directory authorization. See docs/ui/knowledge-base-members.md.",
     "sha256": "68c795e36e80bc63656ac4d2ee5679eed2ea3e950862247bd13cc6210f626edb"
+  },
+  "src/features/knowledge/organization/members-section.messages.ts": {
+    "reason": "Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
+    "sha256": "3e69fc678b0c5307ff66f919d3330d1edab7718af11d260c3ffbca96dce846a8"
+  },
+  "src/features/knowledge/organization/organization-panel.messages.ts": {
+    "reason": "Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
+    "sha256": "f19f22949474ace9ee28e8117fbf9549eeae158ccb60fda3393b3d48f7e221e0"
   }
 }

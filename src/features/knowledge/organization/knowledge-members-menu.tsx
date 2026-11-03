@@ -25,12 +25,12 @@ import styles from './knowledge-members-menu.module.css';
 
 type MemberMenu = { userId: string; anchor: HTMLButtonElement } | null;
 
-export function KnowledgeMembersButton({ className, onManage }: { className?: string; onManage: () => void }) {
+export function KnowledgeMembersButton({ className, label, onManage }: { className?: string; label?: string; onManage: () => void }) {
   const resources = useKnowledgeBaseResources();
-  return <MembersTrigger key={resources.scopeKey ?? resources.principal} className={className} onManage={onManage} />;
+  return <MembersTrigger key={resources.scopeKey ?? resources.principal} className={className} label={label} onManage={onManage} />;
 }
 
-function MembersTrigger({ className, onManage }: { className?: string; onManage: () => void }) {
+function MembersTrigger({ className, label, onManage }: { className?: string; label?: string; onManage: () => void }) {
   const { t } = useTranslation(messages);
   const { session, openSignIn } = useIdentity();
   const resources = useKnowledgeBaseResources();
@@ -43,11 +43,12 @@ function MembersTrigger({ className, onManage }: { className?: string; onManage:
   const base = resources.selectedKnowledgeBase;
   return <>
     <Tooltip><TooltipTrigger asChild>
-      <button type="button" className={`fob-action ${className ?? ''}`} data-surface="plain" aria-label={t('title')} aria-haspopup="dialog" aria-expanded={Boolean(anchor)}
+      <button type="button" className={`fob-action ${className ?? ''}`} data-surface="plain" aria-label={label ?? t('title')} aria-haspopup="dialog" aria-expanded={Boolean(anchor)}
         disabled={session.status === 'checking' || resources.status === 'loading'}
         onClick={event => { const trigger = event.currentTarget; setAnchor(current => current ? null : trigger); }}
         onKeyDown={event => { if (event.key === 'ArrowDown') { event.preventDefault(); setAnchor(event.currentTarget); } }}>
         <UsersThree size={16} aria-hidden />
+        {label}
       </button>
     </TooltipTrigger><TooltipContent side="bottom">{t('title')}</TooltipContent></Tooltip>
     {anchor ? <AnchoredPopover anchor={anchor} onClose={close} label={t('title')} width={352} align="end" className={styles.popover}>

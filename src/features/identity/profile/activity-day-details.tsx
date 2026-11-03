@@ -20,7 +20,7 @@ export function ActivityDayDetails({ anchor, date, counts = emptyCounts, onClose
   const dateLabel = new Intl.DateTimeFormat(locale, { timeZone: profileTimeZone, year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }).format(new Date(`${date}T12:00:00Z`));
 
   return (
-    <AnchoredPopover anchor={anchor} onClose={onClose} align="end" width={244} label={t('activityDetails', { date: dateLabel })}>
+    <AnchoredPopover anchor={anchor} onClose={onClose} align="end" width={208} label={t('activityDetails', { date: dateLabel })}>
       <div className={styles.dayDetails}>
         <div className={styles.dayDetailsHeading}><strong>{dateLabel}</strong></div>
         <dl className={styles.dayDetailsCounts}>
