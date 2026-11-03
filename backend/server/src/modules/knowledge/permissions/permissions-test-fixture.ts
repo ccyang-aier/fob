@@ -162,7 +162,21 @@ export async function createPermissionsFixture(options: { mount?: PermissionsFix
       return (await client.query<{ waiting: boolean }>(`SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND usename=$1 AND wait_event_type='Lock' AND query LIKE '%knowledge_base%for update%') AS waiting`, [server.database.role.name])).rows[0]!.waiting;
     });
   }
-  return { server, admin, pool, authenticator, owner, foreign, reader, alpha, beta, alphaKnowledgeBase, betaKnowledgeBase, organization, errors,
+  // Legacy persisted grants remain readable, while public group management is retired.
+  const legacyGroups = {
+    async create(_identity: FobIdentity, input: { knowledgeBaseId: string; name: string }) {
+      const id = randomUUID();
+      await admin.query('INSERT INTO resources."group" (knowledge_base_id, id, name) VALUES ($1,$2,$3)', [input.knowledgeBaseId, id, input.name]);
+      return { ...input, id };
+    },
+    async add(_identity: FobIdentity, input: { knowledgeBaseId: string; groupId: string; userId: string }) {
+      await admin.query('INSERT INTO resources.group_member (knowledge_base_id, group_id, user_id) VALUES ($1,$2,$3)', [input.knowledgeBaseId, input.groupId, input.userId]);
+    },
+    async remove(_identity: FobIdentity, input: { knowledgeBaseId: string; groupId: string; userId: string }) {
+      await admin.query('DELETE FROM resources.group_member WHERE knowledge_base_id=$1 AND group_id=$2 AND user_id=$3', [input.knowledgeBaseId, input.groupId, input.userId]);
+    },
+  };
+  return { server, admin, pool, authenticator, owner, foreign, reader, alpha, beta, alphaKnowledgeBase, betaKnowledgeBase, organization, legacyGroups, errors,
     async createToken(actor: PermissionTestActor, scopes: KnowledgeTokenScope[], knowledgeBaseId = alpha.id) {
       const created = await tokens.create(new Request(`${server.origin}/test-token-setup`, { method: 'POST', headers: { origin: server.webOrigin, cookie: actor.cookie } }),
         { knowledgeBaseId, name: 'Collaboration test', scopes, expiresAt: null });

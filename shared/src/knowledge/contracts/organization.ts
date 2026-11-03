@@ -7,16 +7,13 @@ export const createKnowledgeBaseInputSchema = knowledgeBaseSchema.pick({ name: t
 export const renameKnowledgeBaseInputSchema = knowledgeBaseScopeSchema.extend({ name: resourceNameSchema });
 export const listKnowledgeBasesInputSchema = paginationSchema;
 export const memberSchema = knowledgeBaseScopeSchema.extend({ userId: entityIdSchema, role: memberRoleSchema });
-export const groupSchema = knowledgeBaseScopeSchema.extend({ id: entityIdSchema, name: resourceNameSchema });
-export const groupMemberSchema = knowledgeBaseScopeSchema.extend({ groupId: entityIdSchema, userId: entityIdSchema });
 export const listOrganizationInputSchema = paginationSchema.extend({ knowledgeBaseId: entityIdSchema });
-export const listGroupMembersInputSchema = listOrganizationInputSchema.extend({ groupId: entityIdSchema });
 export const changeMemberRoleInputSchema = memberSchema;
+export const changeMemberRolesInputSchema = knowledgeBaseScopeSchema.extend({
+  userIds: z.array(entityIdSchema).min(1).max(100).refine((ids) => new Set(ids).size === ids.length, 'Duplicate members'),
+  role: memberRoleSchema,
+});
 export const removeMemberInputSchema = knowledgeBaseScopeSchema.extend({ userId: entityIdSchema });
-export const createGroupInputSchema = groupSchema.omit({ id: true });
-export const renameGroupInputSchema = groupSchema;
-export const removeGroupInputSchema = knowledgeBaseScopeSchema.extend({ groupId: entityIdSchema });
-export const groupMemberInputSchema = groupMemberSchema;
 export const createKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema.extend({
   email: z.email().max(254).transform((value) => value.toLowerCase()), role: invitationRoleSchema.default('member'),
 });
@@ -29,7 +26,7 @@ export const acceptKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema
   invitationId: entityIdSchema, token: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
 });
 export const revokeKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema.extend({ invitationId: entityIdSchema });
-export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email(), image: z.string().nullable().optional() });
+export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email(), image: z.string().nullable().optional(), joinedAt: timestampSchema.optional() });
 export const teamspaceSchema = knowledgeBaseScopeSchema.extend({
   id: entityIdSchema, name: resourceNameSchema, defaultAccess: permissionLevelSchema.nullable(),
   parentId: entityIdSchema.nullable().optional(),
@@ -60,8 +57,6 @@ export const sessionSummarySchema = z.strictObject({
 export type KnowledgeBase = z.infer<typeof knowledgeBaseSchema>;
 export type KnowledgeBaseMember = z.infer<typeof memberSchema>;
 export type KnowledgeBaseMemberSummary = z.infer<typeof knowledgeBaseMemberSummarySchema>;
-export type Group = z.infer<typeof groupSchema>;
-export type KnowledgeBaseGroup = Group;
 export type KnowledgeBaseInvitation = z.infer<typeof knowledgeBaseInvitationSchema>;
 export type Teamspace = z.infer<typeof teamspaceSchema>;
 export type TeamspaceScope = z.infer<typeof teamspaceScopeSchema>;

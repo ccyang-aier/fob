@@ -34,6 +34,7 @@ export function canGrant(
   knowledgeBaseId: string,
 ): boolean {
   if (!grantorLevel) return false;
+  if (principalKind(grant.principal) === 'group') return false;
   if (levelRank(grantorLevel) < levelRank(grant.level)) return false;
   if (principalKind(grant.principal) === 'knowledgeBase')
     return grant.principal === `knowledgeBase:${knowledgeBaseId}`;

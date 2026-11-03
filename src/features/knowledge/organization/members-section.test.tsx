@@ -27,6 +27,7 @@ beforeAll(async () => {
         : { items: [{ knowledgeBaseId: base, userId: 'later', name: 'Later member', email: 'later@example.test', image: null, role: 'member' }], nextCursor: null };
     },
   } }));
+  mock.module('./invitation-client', () => ({ invitationClient: { list: async () => ({ items: [], nextCursor: null }) }, knowledgeBaseInvitationLink: () => '' }));
   Members = (await import('./members-section')).MembersSection;
   Provider = (await import('./hooks')).OrganizationQueryProvider;
   const { createRoot } = await import('react-dom/client');
@@ -45,8 +46,8 @@ async function render(role: MemberRole) {
 test('directory counts and name/email search include members beyond the first API page', async () => {
   await render('owner');
   expect(calls).toEqual([null, cursor]);
-  expect(host.textContent).toContain('显示 2 / 2 位成员');
-  const input = host.querySelector<HTMLInputElement>('input[aria-label="搜索成员"]')!;
+  expect(host.textContent).toContain('共 2 位成员');
+  const input = host.querySelector<HTMLInputElement>('input[aria-label="搜索姓名或邮箱"]')!;
   await act(async () => {
     Object.getOwnPropertyDescriptor(browser.HTMLInputElement.prototype, 'value')!.set!.call(input, 'LATER@');
     input.dispatchEvent(new browser.Event('input', { bubbles: true }) as unknown as Event);
@@ -59,6 +60,30 @@ test('directory counts and name/email search include members beyond the first AP
 test('read-only members can search the directory without receiving role or removal controls', async () => {
   await render('member');
   expect(host.querySelectorAll('tbody tr')).toHaveLength(2);
-  expect(host.querySelector('input[aria-label="搜索成员"]')).not.toBeNull();
-  expect(host.querySelector('tbody button')).toBeNull();
+  expect(host.querySelector('input[aria-label="搜索姓名或邮箱"]')).not.toBeNull();
+  expect(host.querySelectorAll('tbody button[role="checkbox"][disabled]')).toHaveLength(2);
+  expect(host.querySelector('tbody [aria-haspopup="menu"]')).toBeNull();
+});
+
+
+test('selection exposes only role changes and protects the final owner', async () => {
+  await render('owner');
+  expect(host.querySelector<HTMLButtonElement>('button[aria-label="选择 Owner"]')?.disabled).toBe(true);
+  const checkbox = host.querySelector<HTMLButtonElement>('button[aria-label="选择 Later member"]')!;
+  await act(async () => checkbox.click());
+  expect(host.querySelector('[role="region"]')?.textContent).toContain('已选择 1 人');
+  expect(host.querySelector('[role="region"]')?.textContent).toContain('变更角色');
+  expect(host.textContent).not.toContain('群组');
+  const clear = [...host.querySelectorAll('button')].find(button => button.textContent === '取消选择')!;
+  await act(async () => clear.click());
+  expect(host.querySelector('[role="region"]')).toBeNull();
+});
+
+test('pending invitations have a real empty state and can return to joined members', async () => {
+  await render('owner');
+  await act(async () => host.querySelector<HTMLButtonElement>('#members-pending-tab')!.click());
+  expect(host.querySelector('#members-pending-tab')?.getAttribute('aria-selected')).toBe('true');
+  expect(host.textContent).toContain('暂无待接受的邀请');
+  await act(async () => host.querySelector<HTMLButtonElement>('#members-joined-tab')!.click());
+  expect(host.querySelector('tbody')?.textContent).toContain('Later member');
 });

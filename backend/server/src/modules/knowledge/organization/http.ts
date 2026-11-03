@@ -12,6 +12,8 @@ export function createKnowledgeCatalogRoutes(auth: FobAuth, service: KnowledgeCa
   app.patch(`${base}/:knowledgeBaseId`, async (context) => context.json(await service.renameKnowledgeBase(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   app.delete(`${base}/:knowledgeBaseId`, async (context) => context.json(await service.removeKnowledgeBase(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   app.get(`${base}/:knowledgeBaseId/teamspaces`, async (context) => context.json(await service.listTeamspaces(context.get('identity'), { ...pagination(context), ...context.req.param() })));
+  app.get(`${base}/:knowledgeBaseId/folder-access`, async (context) => context.json(await service.listFolderAccess(context.get('identity'), context.req.param())));
+  app.patch(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId/access`, async (context) => context.json(await service.updateFolderAccess(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   app.post(`${base}/:knowledgeBaseId/teamspaces`, async (context) => context.json(await service.createTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param())), 201));
   app.get(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId`, async (context) => context.json(await service.getTeamspace(context.get('identity'), context.req.param())));
   app.patch(`${base}/:knowledgeBaseId/teamspaces/:teamspaceId`, async (context) => context.json(await service.updateTeamspace(context.get('identity'), await bodyWithPath(context, context.req.param()))));

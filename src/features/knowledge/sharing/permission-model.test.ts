@@ -29,6 +29,7 @@ describe('permission model', () => {
     expect(canGrant(null, { principal: 'user:u1', level: 'view' }, 'w1')).toBe(false);
     expect(canGrant('full', { principal: 'knowledgeBase:w1', level: 'view' }, 'w1')).toBe(true);
     expect(canGrant('full', { principal: 'knowledgeBase:w2', level: 'view' }, 'w1')).toBe(false);
+    expect(canGrant('full', { principal: 'group:g1', level: 'view' }, 'w1')).toBe(false);
     expect(canGrant('full', { principal: 'bogus', level: 'view' }, 'w1')).toBe(false);
     expect(canRevoke('edit', { principal: 'user:u1', level: 'full' })).toBe(false);
     expect(canRevoke('full', { principal: 'user:u1', level: 'edit' })).toBe(true);

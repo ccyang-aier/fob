@@ -45,11 +45,13 @@ export function computeEffectivePermissions(input: {
   knowledgeBaseId: string;
   teamspaceId: string;
   defaultAccess: PermissionLevel | null;
+  folderGrants?: readonly { principal: Principal; level: PermissionLevel }[];
   lineage: readonly PermissionNode[];
 }): EffectivePermissions {
   if (input.lineage.length === 0) throw new Error('A page lineage is required');
   const grants = new Map<Principal, PermissionLevel>();
   if (input.defaultAccess) grants.set(principal('knowledgeBase', input.knowledgeBaseId), input.defaultAccess);
+  for (const grant of input.folderGrants ?? []) grants.set(grant.principal, grant.level);
   const seen = new Set<string>();
   for (const [index, node] of input.lineage.entries()) {
     if (node.knowledgeBaseId !== input.knowledgeBaseId || node.teamspaceId !== input.teamspaceId) throw new Error('Permission lineage crosses a knowledgeBase or teamspace');

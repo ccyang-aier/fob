@@ -80,15 +80,15 @@ describe('optimistic cache rollback', () => {
 
   test('a failed create rolls its optimistic row back out of the cache', () => {
     const queryClient = new QueryClient();
-    const key = organizationQueryKeys.groups(ws);
+    const key = organizationQueryKeys.teamspaces(ws);
     queryClient.setQueryData(key, { pages: [{ items: [], nextCursor: null }], pageParams: [null] });
-    const tempRow = { knowledgeBaseId: ws, id: 'pending-create', name: '设计组' };
+    const tempRow = { knowledgeBaseId: ws, id: 'pending-create', name: '设计文档' };
 
     const snapshot = applyOptimisticList(queryClient, key, (items: typeof tempRow[]) => [...items, tempRow]);
     expect(readListItems<typeof tempRow>(queryClient.getQueryData(key))).toHaveLength(1);
 
     // The server row replaces the temp id on success…
-    const serverRow = { knowledgeBaseId: ws, id: '50000000-0000-4000-8000-000000000005', name: '设计组' };
+    const serverRow = { knowledgeBaseId: ws, id: '50000000-0000-4000-8000-000000000005', name: '设计文档' };
     applyOptimisticList(queryClient, key, (items: typeof tempRow[]) => upsertByKey(removeByKey(items, (row) => row.id, tempRow.id), (row) => row.id, serverRow));
     expect(readListItems<typeof tempRow>(queryClient.getQueryData(key))[0]?.id).toBe(serverRow.id);
 

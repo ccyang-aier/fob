@@ -11,6 +11,7 @@ import { currentIdentity, pageOf, requireManager } from '../../../platform/resou
 import { ResourceRequestError, parseInput } from '../../../platform/resources/errors';
 import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
+import { readFolderAccess } from './folder-access';
 
 const targetTeamspace = (scope: TeamspaceScope) => and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, scope.teamspaceId));
 const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, parentId: row.parentId, name: row.name, defaultAccess: row.defaultAccess, icon: row.metadata.icon ?? null });
@@ -36,8 +37,9 @@ async function containsContent(db: ResourceTransaction, scope: TeamspaceScope) {
  */
 export async function readTeamspacePermissionRoot(db: ResourceTransaction, input: TeamspaceScope) {
   const scope = parseInput(teamspaceScopeSchema, input);
-  const record = await loadTeamspace(db, scope);
-  return { ...scope, defaultAccess: record.defaultAccess };
+  const policy = (await readFolderAccess(db, scope.knowledgeBaseId)).find((folder) => folder.teamspaceId === scope.teamspaceId);
+  if (!policy) throw new ResourceRequestError('TEAMSPACE_NOT_FOUND', 'Folder was not found.', 404);
+  return { ...scope, defaultAccess: policy.effectiveDefaultAccess, folderGrants: policy.grants.map((grant) => ({ principal: `user:${grant.userId}` as const, level: grant.level })) };
 }
 
 /** Required server dependency, invoked after a root change in its SAME TX. */
@@ -114,7 +116,11 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
           ) SELECT id FROM ancestors WHERE id = ${parsed.teamspaceId} LIMIT 1`);
           if (cycle.rows.length) throw new ResourceRequestError('TEAMSPACE_CYCLE', 'A folder cannot be moved into itself or its descendants.', 409);
         }
-        const [updated] = await db.update(teamspace).set({ parentId: parsed.parentId, updatedAt: sql`clock_timestamp()` }).where(targetTeamspace(parsed)).returning();
+        const [updated] = await db.update(teamspace).set({ parentId: parsed.parentId, metadata: { ...existing.metadata, revision: (existing.metadata.revision ?? 0) + 1 }, updatedAt: sql`clock_timestamp()` }).where(targetTeamspace(parsed)).returning();
+        if (existing.inheritsAccess) {
+          if (!parsed.parentId) await db.update(teamspace).set({ inheritsAccess: false }).where(targetTeamspace(parsed));
+          await permissions.invalidate(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId });
+        }
         return teamspaceView(updated!);
       });
     },

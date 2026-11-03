@@ -310,36 +310,35 @@ describe('email-bound, expiring one-time invitations', () => {
   });
 });
 
-describe('group and membership invariants', () => {
-  test('groups are resource-scoped, manager-only and cannot attach users from another knowledgeBase', async () => {
-    const created = await result<{ id: string }>(request(`/${main.id}/groups`, admin, 'POST', { name: 'Editors' }), 201);
-    expect((await request(`/${main.id}/groups`, regular, 'POST', { name: 'Forbidden' })).status).toBe(403);
-    expect((await request(`/${main.id}/groups`, owner, 'POST', { name: 'Editors' })).status).toBe(409);
-    expect((await request(`/${other.id}/groups/${created.id}`, outsider, 'PATCH', { name: 'Cross resource' })).status).toBe(404);
-    expect((await request(`/${main.id}/groups/${created.id}/members`, admin, 'POST', { userId: outsider.identity.userId })).status).toBe(404);
-    await result(request(`/${main.id}/groups/${created.id}/members`, admin, 'POST', { userId: regular.identity.userId }));
-    await result(request(`/${main.id}/groups/${created.id}/members`, admin, 'POST', { userId: regular.identity.userId }));
-    const memberships = await result<{ items: { userId: string }[] }>(request(`/${main.id}/groups/${created.id}/members`, regular));
-    expect(memberships.items).toHaveLength(1);
-    expect(memberships.items[0]!.userId).toBe(regular.identity.userId);
-    expect((await request(`/${main.id}/groups`, guest)).status).toBe(403);
-    expect((await request(`/${main.id}/groups/${created.id}/members/${regular.identity.userId}`, regular, 'DELETE', {})).status).toBe(403);
-    await result(request(`/${main.id}/groups/${created.id}`, owner, 'PATCH', { name: 'Authors' }));
-    await result(request(`/${main.id}/groups/${created.id}/members/${regular.identity.userId}`, admin, 'DELETE', {}));
-    await result(request(`/${main.id}/groups/${created.id}/members`, admin, 'POST', { userId: regular.identity.userId }));
-    await result(request(`/${main.id}/groups/${created.id}`, admin, 'DELETE', {}));
-    expect((await server.database.admin.query('SELECT * FROM resources.group_member WHERE knowledge_base_id = $1 AND group_id = $2', [main.id, created.id])).rowCount).toBe(0);
+describe('membership invariants and retired groups', () => {
+  test('group management endpoints are retired', async () => {
+    for (const method of ['GET', 'POST']) expect((await request(`/${main.id}/groups`, owner, method, method === 'POST' ? { name: 'Retired' } : undefined)).status).toBe(404);
   });
 
-  test('removing membership cascades group membership and revokes knowledgeBase access immediately', async () => {
+  test('removing membership cascades legacy relationships and revokes knowledgeBase access immediately', async () => {
     const space = await create(owner, 'Leave knowledgeBase');
     await accept(space, await invite(space, regular), regular);
-    const created = await result<{ id: string }>(request(`/${space.id}/groups`, owner, 'POST', { name: 'Temporary' }), 201);
-    await result(request(`/${space.id}/groups/${created.id}/members`, owner, 'POST', { userId: regular.identity.userId }));
+    const legacyId = randomUUID();
+    await server.database.admin.query('INSERT INTO resources."group" (knowledge_base_id,id,name) VALUES ($1,$2,$3)', [space.id, legacyId, 'Legacy']);
+    await server.database.admin.query('INSERT INTO resources.group_member (knowledge_base_id,group_id,user_id) VALUES ($1,$2,$3)', [space.id, legacyId, regular.identity.userId]);
     await result(request(`/${space.id}/members/${regular.identity.userId}`, regular, 'DELETE', {}));
     expect((await request(`/${space.id}`, regular)).status).toBe(404);
     expect((await server.database.admin.query('SELECT * FROM resources.group_member WHERE knowledge_base_id = $1', [space.id])).rowCount).toBe(0);
     expect((await result<{ items: Space[] }>(request('', regular))).items.some((row) => row.id === space.id)).toBe(false);
+  });
+
+  test('bulk role changes are atomic, enforce authority and retain an owner', async () => {
+    const space = await create(owner, 'Bulk membership');
+    await accept(space, await invite(space, regular), regular);
+    await accept(space, await invite(space, coOwner), coOwner);
+    const ids = [regular.identity.userId, coOwner.identity.userId];
+    expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: ids, role: 'admin' })).status).toBe(200);
+    expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [regular.identity.userId, outsider.identity.userId], role: 'guest' })).status).toBe(404);
+    const rows = await server.database.admin.query<{role: string}>('SELECT role FROM resources.knowledge_base_member WHERE knowledge_base_id=$1 AND user_id=ANY($2::uuid[])', [space.id, ids]);
+    expect(rows.rows.every(row => row.role === 'admin')).toBe(true);
+    expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [owner.identity.userId, ...ids], role: 'member' })).status).toBe(409);
+    expect((await request(`/${space.id}/members`, regular, 'PATCH', { userIds: [coOwner.identity.userId], role: 'member' })).status).toBe(403);
+    expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [regular.identity.userId, regular.identity.userId], role: 'member' })).status).toBe(400);
   });
 
   test('last owner cannot be demoted or removed; another owner can be promoted explicitly', async () => {

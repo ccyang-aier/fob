@@ -28,7 +28,7 @@ beforeEach(async () => { await act(async () => root.render(null)); mounted.lengt
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 const render = () => act(async () => root.render(<Page />));
 
-test('members and groups manage exactly the current knowledge base and follow selection changes', async () => {
+test('members and permissions manage exactly the current knowledge base and follow selection changes', async () => {
   await render();
   expect(host.querySelector('[data-managed-knowledge-base]')?.getAttribute('data-managed-knowledge-base')).toBe('alpha');
   selected = { id: 'beta', name: 'Beta', source: 'server' }; await render();

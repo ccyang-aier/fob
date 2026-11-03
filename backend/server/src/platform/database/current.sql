@@ -508,12 +508,21 @@ CREATE TABLE "resources"."teamspace" (
 	"parent_id" uuid,
 	"name" varchar(120) NOT NULL,
 	"default_access" "resources"."permission_level",
+	"inherits_access" boolean DEFAULT false NOT NULL,
 	"metadata" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "teamspace_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
 	CONSTRAINT "teamspace_parent_not_self" CHECK ("resources"."teamspace"."parent_id" IS NULL OR "resources"."teamspace"."parent_id" <> "resources"."teamspace"."id"),
 	CONSTRAINT "teamspace_name_not_empty" CHECK (length(btrim("resources"."teamspace"."name")) > 0)
+);
+
+CREATE TABLE "resources"."teamspace_member_access" (
+	"knowledge_base_id" uuid NOT NULL,
+	"teamspace_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"level" "resources"."permission_level" NOT NULL,
+	CONSTRAINT "teamspace_member_access_pk" PRIMARY KEY("knowledge_base_id","teamspace_id","user_id")
 );
 
 CREATE TABLE "catalog"."model" (
@@ -594,6 +603,8 @@ ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_created_by_user_
 ALTER TABLE "resources"."share_link" ADD CONSTRAINT "share_link_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."teamspace" ADD CONSTRAINT "teamspace_parent_fk" FOREIGN KEY ("knowledge_base_id","parent_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."teamspace_member_access" ADD CONSTRAINT "teamspace_member_access_folder_fk" FOREIGN KEY ("knowledge_base_id","teamspace_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."teamspace_member_access" ADD CONSTRAINT "teamspace_member_access_member_fk" FOREIGN KEY ("knowledge_base_id","user_id") REFERENCES "resources"."knowledge_base_member"("knowledge_base_id","user_id") ON DELETE cascade ON UPDATE no action;
 CREATE INDEX "account_user_idx" ON "auth"."account" USING btree ("user_id");
 CREATE INDEX "session_user_idx" ON "auth"."session" USING btree ("user_id");
 CREATE INDEX "session_expiry_idx" ON "auth"."session" USING btree ("expires_at");

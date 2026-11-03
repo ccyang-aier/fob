@@ -35,7 +35,6 @@ export const knowledgeMessages = defineMessages({
     '该团队空间不存在或已删除',
     'Folder not found or has been deleted',
   ],
-  groupNotFoundOrHasBeenDeleted: ['该群组不存在或已删除', 'Group not found or has been deleted'],
   memberNotFoundOrHasLeftTheKnowledge: [
     '该成员不存在或已离开知识库',
     'Member not found or has left the knowledge base',

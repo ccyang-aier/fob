@@ -15,7 +15,8 @@ import { knowledgeMessages } from './client.messages';
 
 import { authenticatedFetch } from '@/lib/authenticated-fetch';
 import type { MemberRole } from '@fob/shared/resources';
-import type { Group, KnowledgeBaseMemberSummary } from '@fob/shared/knowledge/contracts';
+import type { KnowledgeBaseMemberSummary } from '@fob/shared/knowledge/contracts';
+import { changeMemberRolesInputSchema } from '@fob/shared/knowledge/contracts';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import {
   OrganizationDataError,
@@ -25,14 +26,11 @@ import {
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
-export type { Group, MemberRole, KnowledgeBaseMemberSummary };
-/** Backend row of `group_member`: identity only; names resolve against the member directory. */
-export type GroupMemberRow = { knowledgeBaseId: string; groupId: string; userId: string };
+export type { MemberRole, KnowledgeBaseMemberSummary };
 
 export type MemberRecord = Pick<KnowledgeBaseMemberSummary, 'knowledgeBaseId' | 'userId' | 'role'>;
 export type OrganizationPage<T> = { items: T[]; nextCursor: string | null };
 export type RemovedResult = { removed: true };
-export type GroupMember = GroupMemberRow;
 
 export const memberRoles: readonly MemberRole[] = ['owner', 'admin', 'member', 'guest'];
 
@@ -184,6 +182,10 @@ export function createOrganizationClient(deps: OrganizationClientDeps) {
         body: { role: requireRole(input.role) },
       });
     },
+    changeMemberRoles(knowledgeBaseId: string, input: { userIds: string[]; role: MemberRole }) {
+      const parsed = changeMemberRolesInputSchema.parse({ ...input, knowledgeBaseId });
+      return request<MemberRecord[]>({ method: 'PATCH', path: `${organizationPathPrefix}/${parsed.knowledgeBaseId}/members`, body: { userIds: parsed.userIds, role: parsed.role } });
+    },
     removeMember(knowledgeBaseId: string, userId: string) {
       const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
       const target = requireUuid(userId, 'userId');
@@ -193,75 +195,7 @@ export function createOrganizationClient(deps: OrganizationClientDeps) {
         body: {},
       });
     },
-    listGroups(knowledgeBaseId: string, options: OrganizationListOptions = {}) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      return request<OrganizationPage<Group>>({
-        method: 'GET',
-        path: `${organizationPathPrefix}/${scope}/groups`,
-        query: listQuery(options),
-        signal: options.signal,
-      });
-    },
-    createGroup(knowledgeBaseId: string, input: { name: string }) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      return request<Group>({
-        method: 'POST',
-        path: `${organizationPathPrefix}/${scope}/groups`,
-        body: { name: requireName(input.name) },
-      });
-    },
-    renameGroup(knowledgeBaseId: string, input: { id: string; name: string }) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      const id = requireUuid(input.id, 'groupId');
-      return request<Group>({
-        method: 'PATCH',
-        path: `${organizationPathPrefix}/${scope}/groups/${id}`,
-        body: { name: requireName(input.name) },
-      });
-    },
-    removeGroup(knowledgeBaseId: string, groupId: string) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      const target = requireUuid(groupId, 'groupId');
-      return request<RemovedResult>({
-        method: 'DELETE',
-        path: `${organizationPathPrefix}/${scope}/groups/${target}`,
-        body: {},
-      });
-    },
-    listGroupMembers(
-      knowledgeBaseId: string,
-      groupId: string,
-      options: OrganizationListOptions = {},
-    ) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      const target = requireUuid(groupId, 'groupId');
-      return request<OrganizationPage<GroupMember>>({
-        method: 'GET',
-        path: `${organizationPathPrefix}/${scope}/groups/${target}/members`,
-        query: listQuery(options),
-        signal: options.signal,
-      });
-    },
-    addGroupMember(knowledgeBaseId: string, groupId: string, userId: string) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      const group = requireUuid(groupId, 'groupId');
-      const member = requireUuid(userId, 'userId');
-      return request<GroupMember>({
-        method: 'POST',
-        path: `${organizationPathPrefix}/${scope}/groups/${group}/members`,
-        body: { userId: member },
-      });
-    },
-    removeGroupMember(knowledgeBaseId: string, groupId: string, userId: string) {
-      const scope = requireUuid(knowledgeBaseId, 'knowledgeBaseId');
-      const group = requireUuid(groupId, 'groupId');
-      const member = requireUuid(userId, 'userId');
-      return request<RemovedResult>({
-        method: 'DELETE',
-        path: `${organizationPathPrefix}/${scope}/groups/${group}/members/${member}`,
-        body: {},
-      });
-    },
+
   };
 }
 

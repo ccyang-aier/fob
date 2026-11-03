@@ -20,7 +20,7 @@ import { allOrganizationPages } from './member-directory';
 import type { OptimisticSnapshot } from './cache';
 import { isRetryableOrganizationError } from '@/features/knowledge/organization/errors';
 import { organizationQueryKeys } from './keys';
-import type { GroupRow, MemberRow, TeamspaceRow } from './list-mutations';
+import type { MemberRow, TeamspaceRow } from './list-mutations';
 import { applyMemberRole, applyTeamspacePatch, patchByKey, removeByKey, upsertByKey } from './list-mutations';
 
 export function createOrganizationQueryClient(): QueryClient {
@@ -40,7 +40,6 @@ export function OrganizationQueryProvider({ children }: { children: ReactNode })
 const firstPageParam = null as string | null;
 const getNextCursor = (page: { nextCursor: string | null }) => page.nextCursor;
 
-type GroupMemberRow = { knowledgeBaseId: string; groupId: string; userId: string };
 
 function useKnowledgeBaseListQuery<T>(
   key: readonly unknown[],
@@ -62,22 +61,6 @@ export function useMembersQuery(knowledgeBaseId: string | null) {
     // Directory counts and filters must cover the full membership, including later API pages.
     async (_cursor, signal) => ({ items: await allOrganizationPages(options => organizationClient.listMembers(knowledgeBaseId!, options), signal), nextCursor: null }),
     knowledgeBaseId !== null,
-  );
-}
-
-export function useGroupsQuery(knowledgeBaseId: string | null) {
-  return useKnowledgeBaseListQuery(
-    organizationQueryKeys.groups(knowledgeBaseId ?? 'none'),
-    (cursor, signal) => organizationClient.listGroups(knowledgeBaseId!, { cursor, signal }),
-    knowledgeBaseId !== null,
-  );
-}
-
-export function useGroupMembersQuery(knowledgeBaseId: string | null, groupId: string | null) {
-  return useKnowledgeBaseListQuery(
-    organizationQueryKeys.groupMembers(knowledgeBaseId ?? 'none', groupId ?? 'none'),
-    (cursor, signal) => organizationClient.listGroupMembers(knowledgeBaseId!, groupId!, { cursor, signal }),
-    knowledgeBaseId !== null && groupId !== null,
   );
 }
 
@@ -125,58 +108,6 @@ export function useRemoveMemberMutation(knowledgeBaseId: string) {
     organizationQueryKeys.members(knowledgeBaseId),
     (userId: string) => organizationClient.removeMember(knowledgeBaseId, userId),
     (userId) => (items: MemberRow[]) => removeByKey(items, (row) => row.userId, userId),
-  );
-}
-
-export function useCreateGroupMutation(knowledgeBaseId: string) {
-  const queryClient = useQueryClient();
-  const key = organizationQueryKeys.groups(knowledgeBaseId);
-  return useMutation({
-    mutationFn: (name: string) => organizationClient.createGroup(knowledgeBaseId, { name }),
-    onMutate: (name) => {
-      const optimistic: GroupRow = { knowledgeBaseId, id: pendingId(), name: name.trim() };
-      return { tempId: optimistic.id, snapshot: applyOptimisticList<GroupRow>(queryClient, key, (items) => [...items, optimistic]) };
-    },
-    onSuccess: (created, _name, context) => {
-      applyOptimisticList<GroupRow>(queryClient, key, (items) => upsertByKey(removeByKey(items, (row) => row.id, context.tempId), (row) => row.id, created));
-    },
-    onError: (_error, _name, context) => restoreOptimisticList(queryClient, (context as { snapshot: OptimisticSnapshot } | undefined)?.snapshot ?? null),
-    onSettled: () => void queryClient.invalidateQueries({ queryKey: key }),
-  });
-}
-
-export function useRenameGroupMutation(knowledgeBaseId: string) {
-  return useOptimisticListMutation(
-    organizationQueryKeys.groups(knowledgeBaseId),
-    (input: { id: string; name: string }) => organizationClient.renameGroup(knowledgeBaseId, input),
-    ({ id, name }) => (items: GroupRow[]) => patchByKey(items, (row) => row.id, id, { name: name.trim() }),
-    (group, queryClient) => {
-      applyOptimisticList<GroupRow>(queryClient, organizationQueryKeys.groups(knowledgeBaseId), (items) => patchByKey(items, (row) => row.id, group.id, { name: group.name }));
-    },
-  );
-}
-
-export function useRemoveGroupMutation(knowledgeBaseId: string) {
-  return useOptimisticListMutation(
-    organizationQueryKeys.groups(knowledgeBaseId),
-    (groupId: string) => organizationClient.removeGroup(knowledgeBaseId, groupId),
-    (groupId) => (items: GroupRow[]) => removeByKey(items, (row) => row.id, groupId),
-  );
-}
-
-export function useAddGroupMemberMutation(knowledgeBaseId: string, groupId: string) {
-  return useOptimisticListMutation(
-    organizationQueryKeys.groupMembers(knowledgeBaseId, groupId),
-    (userId: string) => organizationClient.addGroupMember(knowledgeBaseId, groupId, userId),
-    (userId) => (items: GroupMemberRow[]) => upsertByKey(items, (row) => row.userId, { knowledgeBaseId, groupId, userId }),
-  );
-}
-
-export function useRemoveGroupMemberMutation(knowledgeBaseId: string, groupId: string) {
-  return useOptimisticListMutation(
-    organizationQueryKeys.groupMembers(knowledgeBaseId, groupId),
-    (userId: string) => organizationClient.removeGroupMember(knowledgeBaseId, groupId, userId),
-    (userId) => (items: GroupMemberRow[]) => removeByKey(items, (row) => row.userId, userId),
   );
 }
 

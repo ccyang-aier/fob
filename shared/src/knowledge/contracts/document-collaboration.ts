@@ -19,11 +19,11 @@ export const documentSharingSchema = z.object({
   invitations: z.array(z.object({ id: entityIdSchema, email: z.string(), level: permissionLevelSchema, expiresAt: timestampSchema })),
 });
 export type DocumentSharing = z.infer<typeof documentSharingSchema>;
-export const documentDirectorySchema = z.object({ users: z.array(documentPersonSchema.extend({ email: z.string() })), groups: z.array(z.object({ id: entityIdSchema, name: z.string() })) });
+export const documentDirectorySchema = z.object({ users: z.array(documentPersonSchema.extend({ email: z.string() })) });
 export const documentInvitationReplySchema = pageScopeSchema.extend({ invitationId: entityIdSchema, token: z.string() });
 export const documentMutationReplySchema = z.object({}).passthrough();
 export const documentPermissionInputSchema = z.object({
-  principal: z.string().regex(/^(user|group|knowledgeBase):[a-f0-9-]{36}$/i),
+  principal: z.string().regex(/^(user|knowledgeBase):[a-f0-9-]{36}$/i),
   level: permissionLevelSchema.nullable(),
 });
 export const documentPublicationInputSchema = z.object({

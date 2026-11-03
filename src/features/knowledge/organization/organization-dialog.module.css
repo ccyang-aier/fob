@@ -1,0 +1,2 @@
+.dialog { margin:auto; max-width:calc(100vw - 32px); max-height:calc(100dvh - 48px); padding:0; overflow:auto; border:1px solid var(--control-border); border-radius:10px; outline:none; color:var(--ink); background:var(--panel); box-shadow:0 16px 56px #00000020; }
+.dialog::backdrop { background:#00000030; backdrop-filter:blur(3px); }

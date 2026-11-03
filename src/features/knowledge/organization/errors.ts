@@ -17,7 +17,6 @@ export type OrganizationErrorCode =
   | 'KNOWLEDGE_BASE_NOT_FOUND'
   | 'FORBIDDEN'
   | 'MEMBER_NOT_FOUND'
-  | 'GROUP_NOT_FOUND'
   | 'TEAMSPACE_NOT_FOUND'
   | 'TEAMSPACE_NOT_EMPTY'
   | 'TEAMSPACE_CYCLE'
@@ -42,7 +41,6 @@ export function organizationErrorText(locale?: Locale): Record<OrganizationError
     KNOWLEDGE_BASE_NOT_FOUND: knowledgeT('knowledgeBaseNotFoundOrInaccessible'),
     FORBIDDEN: knowledgeT('yourRoleCannotPerformThisAction'),
     MEMBER_NOT_FOUND: knowledgeT('memberNotFoundOrHasLeftTheKnowledge'),
-    GROUP_NOT_FOUND: knowledgeT('groupNotFoundOrHasBeenDeleted'),
     TEAMSPACE_NOT_FOUND: knowledgeT('folderNotFoundOrHasBeenDeleted'),
     TEAMSPACE_NOT_EMPTY: knowledgeT('removeAllPagesBeforeDeletingThisFolder'),
     TEAMSPACE_CYCLE: knowledgeT('folderCycle'),
@@ -65,7 +63,6 @@ const serverCodes = new Set<string>([
   'KNOWLEDGE_BASE_NOT_FOUND',
   'FORBIDDEN',
   'MEMBER_NOT_FOUND',
-  'GROUP_NOT_FOUND',
   'TEAMSPACE_NOT_FOUND',
   'TEAMSPACE_NOT_EMPTY',
   'TEAMSPACE_CYCLE',

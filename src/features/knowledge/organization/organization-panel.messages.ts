@@ -17,7 +17,6 @@ export const knowledgeMessages = defineMessages({
   ],
   noKnowledgeBasesToManage: ['还没有可管理的知识库', 'No knowledge bases to manage'],
   folder: ['文件夹', 'Folder'],
-  groups: ['群组', 'Groups'],
   members: ['成员', 'Members'],
   membersAndPermissions: ['成员与权限', 'Members & permissions'],
   folderPermissions: ['文件夹权限', 'Folder access'],

@@ -12,6 +12,7 @@ import type { KnowledgeRequestContext } from '../access';
 import { authorizePageAccess } from '../permissions/authorization';
 import { canAccess, computeEffectivePermissions, expandPrincipals } from '../permissions/effective';
 import { readMaterializedPagePermissions } from '../permissions/queries';
+import { readFolderAccess } from '../organization/folder-access';
 import { KnowledgeSubscriptionError } from './errors';
 
 type NoticeEvent = Extract<OutboxEvent, { topic: 'knowledgeBase.event' }>;
@@ -48,10 +49,11 @@ export async function setKnowledgeSubscription(db: ResourceTransaction, authorit
 /** Creation may precede its materialized ACL in the same transaction. Only that path uses authoritative lineage. */
 async function creationPermissions(db: ResourceTransaction, scope: PageScope, node: typeof page.$inferSelect): Promise<EffectivePermissions | null> {
   const rows = await db.select().from(page).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.teamspaceId, node.teamspaceId), sql`${page.path} @> ${node.path}::ltree`)).orderBy(page.path);
-  const [folder] = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, node.teamspaceId)));
-  if (!folder || !rows.length || rows.some((row) => row.deletedAt !== null)) return null;
+  if (!rows.length || rows.some((row) => row.deletedAt !== null)) return null;
+  const folder = (await readFolderAccess(db, scope.knowledgeBaseId)).find((item) => item.teamspaceId === node.teamspaceId);
+  if (!folder) return null;
   const grants = await db.select().from(pageAcl).where(and(eq(pageAcl.knowledgeBaseId, scope.knowledgeBaseId), inArray(pageAcl.pageId, rows.map((row) => row.id))));
-  return computeEffectivePermissions({ knowledgeBaseId: scope.knowledgeBaseId, teamspaceId: node.teamspaceId, defaultAccess: folder.defaultAccess,
+  return computeEffectivePermissions({ knowledgeBaseId: scope.knowledgeBaseId, teamspaceId: node.teamspaceId, defaultAccess: folder.effectiveDefaultAccess, folderGrants: folder.grants.map((grant) => ({ principal: `user:${grant.userId}`, level: grant.level })),
     lineage: rows.map((row) => ({ ...row, grants: grants.filter((grant) => grant.pageId === row.id) as PageAcl[] })) });
 }
 

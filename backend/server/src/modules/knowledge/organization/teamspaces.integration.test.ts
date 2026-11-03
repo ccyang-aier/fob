@@ -220,7 +220,7 @@ describe('Teamspace metadata and root defaults over real HTTP/PostgreSQL', () =>
       const updated = await result<Teamspace>(request(path(record), owner, 'PATCH', { defaultAccess }));
       expect(updated.defaultAccess).toBe(defaultAccess);
       const root = await withKnowledgeBase(server.database.pool, knowledgeBaseId, (db) => readTeamspacePermissionRoot(db, scope(record)));
-      expect(root).toEqual({ ...scope(record), defaultAccess });
+      expect(root).toEqual({ ...scope(record), defaultAccess, folderGrants: [] });
       const permissions = computeEffectivePermissions({ ...root, lineage: [{ id: pageId, parentId: null, knowledgeBaseId, teamspaceId: record.id, inheritsPermissions: true, grants: [] }] });
       expect(permissionFor([principal('knowledgeBase', knowledgeBaseId)], permissions)).toBe(defaultAccess);
     }

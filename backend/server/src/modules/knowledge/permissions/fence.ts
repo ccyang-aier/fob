@@ -47,7 +47,14 @@ async function invalidateTeamspace(db: ResourceTransaction, input: TeamspaceScop
   const scope = parsed.data;
   await lockPermissionKnowledgeBase(db, scope.knowledgeBaseId);
   await lockPermissionTeamspace(db, scope);
-  const predicate = and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.teamspaceId, scope.teamspaceId))!;
+  const predicate = and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), sql`${page.teamspaceId} IN (
+    WITH RECURSIVE affected AS (
+      SELECT id FROM resources.teamspace WHERE knowledge_base_id = ${scope.knowledgeBaseId} AND id = ${scope.teamspaceId}
+      UNION
+      SELECT child.id FROM resources.teamspace child JOIN affected ON child.parent_id = affected.id
+        WHERE child.knowledge_base_id = ${scope.knowledgeBaseId} AND child.inherits_access = true
+    ) SELECT id FROM affected
+  )`)!;
   const changed = await fencePages(db, scope.knowledgeBaseId, predicate);
   if (!changed.length) return;
   const roots = await db.select({ id: page.id, revision: page.aclRevision }).from(page).where(and(predicate, isNull(page.parentId)));

@@ -8,23 +8,19 @@ import { useIdentity } from '@/features/identity/identity-context';
 import { cn } from '@/lib/utils';
 import { useKnowledgeAccessQuery } from '../data/hooks';
 import { useKnowledgeBasesQuery } from '../data/catalog-queries';
-import { GroupsSection } from './groups-section';
 import { OrganizationQueryProvider } from './hooks';
 import { MembersSection } from './members-section';
 import { TeamspacesSection } from './teamspaces-section';
 import { ListStateShell, flattenPages, queryListState } from './ui';
-import { KnowledgeMembersButton } from './knowledge-members-menu';
-import { memberRoleLabels } from './view-model';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useKnowledgeBaseResources } from '../data/knowledge-base-resources';
 import styles from './organization-panel.module.css';
 
-type SectionId = 'members' | 'groups' | 'teamspaces';
+type SectionId = 'members' | 'teamspaces';
 function sections(locale?: Locale): readonly { id: SectionId; label: string }[] {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
   return [
     { id: 'members', label: knowledgeT('members') },
-    { id: 'groups', label: knowledgeT('groups') },
     { id: 'teamspaces', label: knowledgeT('folderPermissions') },
   ];
 }
@@ -57,16 +53,6 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
     >
       {session.status === 'authenticated' && activeBase ? (
         <div className={styles.content}>
-          <header className={styles.header}>
-            <div>
-              <h1 className={styles.title}>{knowledgeT('membersAndPermissions')}</h1>
-              <p className={styles.scope}>
-                <strong>{activeBase.name}</strong>
-                {role ? <><span className={styles.scopeDivider} aria-hidden>·</span><span>{knowledgeT('myRole')}<span aria-hidden>： </span>{memberRoleLabels(locale)[role]}</span></> : null}
-              </p>
-            </div>
-            {role === 'owner' ? <KnowledgeMembersButton className={styles.invite} label={knowledgeT('inviteMembers')} onManage={() => setSection('members')} /> : null}
-          </header>
             <nav
               aria-label={knowledgeT('managementSections')}
               className={styles.tabs}
@@ -88,14 +74,15 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
               {role ? (
                 section === 'members' ? (
                   <MembersSection
+                    key={`${activeBase.id}:${role}`}
                     knowledgeBaseId={activeBase.id}
                     actorRole={role}
                     notify={notify}
+                    onMembershipChange={() => { void access.refetch(); }}
                   />
-                ) : section === 'groups' ? (
-                  <GroupsSection knowledgeBaseId={activeBase.id} actorRole={role} notify={notify} />
                 ) : (
                   <TeamspacesSection
+                    key={`${activeBase.id}:${role}`}
                     knowledgeBaseId={activeBase.id}
                     actorRole={role}
                     notify={notify}

@@ -155,8 +155,8 @@ describe('permission materialization, fences and index sync', () => {
 
   test('group membership changes take effect without any page rebuild', async () => {
     const { pages } = await fixture.tree({ defaultAccess: null });
-    const group = await fixture.organization.createGroup(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Reviewers' });
-    await fixture.organization.addGroupMember(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
+    const group = await fixture.legacyGroups.create(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Reviewers' });
+    await fixture.legacyGroups.add(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
     await grant(pages[0], [{ principal: principal('group', group.id), level: 'view' }]);
     await fixture.drain();
 
@@ -167,7 +167,7 @@ describe('permission materialization, fences and index sync', () => {
     ).then((result) => result.rows[0]!);
     const revisionsBefore = await withKnowledgeBase(fixture.pool, fixture.alpha.id, (db) => db.select({ id: page.id, revision: page.aclRevision }).from(page).where(eq(page.knowledgeBaseId, fixture.alpha.id)));
 
-    await fixture.organization.removeGroupMember(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
+    await fixture.legacyGroups.remove(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
     // Immediate effect through principal expansion alone: no fence, no jobs.
     expect((await fixture.access(pages[3], await readerSubjects(), 'view')).pages).toBe(0);
     const after = await fixture.server.database.admin.query<{ events: string; outbox: string }>(

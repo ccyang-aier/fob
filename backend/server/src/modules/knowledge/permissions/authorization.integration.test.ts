@@ -106,8 +106,8 @@ describe('page authorization entry for api, collaboration and ai callers', () =>
 
   test('group principals authorize live and stop at expansion time', async () => {
     const { pages } = await fixture.tree({ defaultAccess: null });
-    const group = await fixture.organization.createGroup(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Gatekeepers' });
-    await fixture.organization.addGroupMember(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
+    const group = await fixture.legacyGroups.create(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Gatekeepers' });
+    await fixture.legacyGroups.add(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
     await grant(pages[0], [{ principal: principal('group', group.id), level: 'edit' }]);
     await fixture.drain();
 
@@ -116,7 +116,7 @@ describe('page authorization entry for api, collaboration and ai callers', () =>
     }));
     expect(allowed.decision).toBe('allow');
 
-    await fixture.organization.removeGroupMember(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
+    await fixture.legacyGroups.remove(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, groupId: group.id, userId: fixture.reader.identity.userId });
     const revoked = await withKnowledgeBase(fixture.pool, fixture.alpha.id, (db) => authorizePageAccess(db, {
       userId: fixture.reader.identity.userId, scope: scopeOf(pages[2]), required: 'edit',
     }));

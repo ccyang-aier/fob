@@ -1,6 +1,6 @@
-import { and, asc, count, eq, gt } from 'drizzle-orm';
+import { and, asc, count, eq, gt, inArray } from 'drizzle-orm';
 import type { Pool } from 'pg';
-import { changeMemberRoleInputSchema, listOrganizationInputSchema, removeMemberInputSchema } from '@fob/shared/knowledge/contracts';
+import { changeMemberRoleInputSchema, changeMemberRolesInputSchema, listOrganizationInputSchema, removeMemberInputSchema } from '@fob/shared/knowledge/contracts';
 import { member } from '../../../platform/database/resources/schema';
 import { authUser } from '../../../platform/database/identity/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
@@ -21,11 +21,11 @@ export function memberOperations(pool: Pool) {
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role }) => {
         requireDirectory(role);
         // Only identities attached to this authorized resource can be discovered.
-        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image })
+        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image, joinedAt: member.createdAt })
           .from(member).innerJoin(authUser, eq(authUser.id, member.userId))
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), parsed.cursor ? gt(member.userId, parsed.cursor) : undefined))
           .orderBy(asc(member.userId)).limit(parsed.limit + 1);
-        return pageOf(rows, parsed.limit, (row) => row.userId);
+        return pageOf(rows.map((row) => ({ ...row, joinedAt: row.joinedAt.toISOString() })), parsed.limit, (row) => row.userId);
       });
     },
     async changeMemberRole(identity: FobIdentity, input: unknown) {
@@ -39,6 +39,21 @@ export function memberOperations(pool: Pool) {
         if (existing.role === 'owner' && parsed.role !== 'owner') await protectLastOwner(db, parsed.knowledgeBaseId);
         const [updated] = await db.update(member).set({ role: parsed.role }).where(target).returning();
         return { knowledgeBaseId: updated!.knowledgeBaseId, userId: updated!.userId, role: updated!.role };
+      });
+    },
+    async changeMemberRoles(identity: FobIdentity, input: unknown) {
+      const parsed = parseInput(changeMemberRolesInputSchema, input);
+      return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, role }) => {
+        requireRoleAuthority(role, parsed.role);
+        const target = and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), inArray(member.userId, parsed.userIds));
+        const rows = await db.select().from(member).where(target);
+        if (rows.length !== parsed.userIds.length) throw new ResourceRequestError('MEMBER_NOT_FOUND', 'A selected member no longer belongs to this knowledge base.', 404);
+        for (const row of rows) requireRoleAuthority(role, row.role);
+        if (parsed.role !== 'owner') {
+          const [owners] = await db.select({ total: count() }).from(member).where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.role, 'owner')));
+          if (owners!.total - rows.filter((row) => row.role === 'owner').length < 1) throw new ResourceRequestError('LAST_OWNER', 'The knowledge base must retain at least one owner.', 409);
+        }
+        return db.update(member).set({ role: parsed.role }).where(target).returning({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role });
       });
     },
     async removeMember(identity: FobIdentity, input: unknown) {

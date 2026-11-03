@@ -42,12 +42,12 @@ export function memberRoleLabels(locale?: Locale): Record<MemberRole, string> {
   };
 }
 
-/** Directory (members, groups, teamspaces) is closed to guests. */
+/** Directory (members and folders) is closed to guests. */
 export function canBrowseDirectory(role: MemberRole): boolean {
   return role !== 'guest';
 }
 
-/** KnowledgeBase management: creating groups/teamspaces, renames, defaults. */
+/** KnowledgeBase management: creating folders, renames, defaults. */
 export function canManageOrganization(role: MemberRole): boolean {
   return role === 'owner' || role === 'admin';
 }

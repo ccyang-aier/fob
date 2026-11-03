@@ -27,8 +27,8 @@ export const knowledgeMessages = defineMessages({
   ],
   canView: ['可查看', 'Can view'],
   rootPagesHaveNoDefaultAccessOnlyExplicitly: [
-    '根页面不设默认权限，只有被单独授权的成员与群组可访问',
-    'Root pages have no default access. Only explicitly granted members and groups can access them.',
+    '根页面不设默认权限，只有被单独授权的成员可访问',
+    'Root pages have no default access. Only explicitly granted members can access them.',
   ],
   changingDefaultAccessImmediatelyInvalidatesExistingPermissionsFor: [
     '修改根默认权限后，该团队空间内所有页面的现有授权会立即失效，系统将按新的默认权限重新计算；重算完成前，依赖旧授权的访问会暂时中断。',

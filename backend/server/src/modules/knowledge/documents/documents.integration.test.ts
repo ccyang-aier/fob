@@ -70,21 +70,21 @@ describe('document sharing, permissions, history and statistics over real HTTP a
     expect((await request(`${base(root)}/permissions`, fixture.reader, { principal: principal('user', fixture.reader.identity.userId), level: 'full' })).status).toBe(403);
     expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.owner.identity.userId), level: 'view' })).status).toBe(409);
     const directory = await (await request(`${base(root)}/directory?q=reader`, fixture.owner)).json() as { users: { id: string }[] };
+    expect(directory).not.toHaveProperty('groups');
+    expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('group', '10000000-0000-4000-8000-000000000001'), level: 'view' })).status).toBe(400);
     expect(directory.users.map(person => person.id)).toEqual([fixture.reader.identity.userId]);
     expect((await fetch(`${fixture.server.origin}${base(root)}/permissions`, { method: 'POST', headers: { origin: 'https://untrusted.test', cookie: fixture.owner.cookie, 'content-type': 'application/json' }, body: '{}' })).status).toBe(403);
   });
-  test('inheritance breaks, group grants and revocations rebuild the full subtree before replying', async () => {
+  test('inheritance breaks, member grants and revocations rebuild the full subtree before replying', async () => {
     const { root, pages } = await tree();
-    const group = await fixture.organization.createGroup(fixture.owner.identity, { knowledgeBaseId: root.knowledgeBaseId, name: 'Reviewers' });
-    await fixture.organization.addGroupMember(fixture.owner.identity, { knowledgeBaseId: root.knowledgeBaseId, groupId: group.id, userId: fixture.reader.identity.userId });
-    expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('group', group.id), level: 'comment' })).status).toBe(200);
+    expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.reader.identity.userId), level: 'comment' })).status).toBe(200);
     expect((await sharing(pages[2], fixture.reader)).level).toBe('comment');
     expect((await request(`${base(pages[1])}/inheritance`, fixture.owner, { inheritsPermissions: false })).status).toBe(200);
     expect((await request(base(pages[2]), fixture.reader)).status).toBe(403);
     expect((await sharing(pages[1])).level).toBe('full');
     expect((await request(`${base(pages[1])}/inheritance`, fixture.owner, { inheritsPermissions: true })).status).toBe(200);
     expect((await sharing(pages[2], fixture.reader)).level).toBe('comment');
-    await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('group', group.id), level: null });
+    await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.reader.identity.userId), level: null });
     expect((await request(base(pages[2]), fixture.reader)).status).toBe(403);
   });
   test('publications survive reopening, encrypt tokens at rest, rotate, expire and revoke', async () => {

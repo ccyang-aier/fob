@@ -73,7 +73,7 @@ function SharingContents({ scope, settings = false }: { scope: PageScope; settin
   }
   if (sharing.isPending) return <div className={styles.state} role="status">{t('loading')}</div>;
   if (!data) return <div className={styles.state}><AppAlert tone="error" title={sharing.error instanceof Error ? sharing.error.message : t('failed')} /><Button variant="outline" onClick={() => void sharing.refetch()}>{t('retry')}</Button></div>;
-  const availableUsers = directory.data?.users ?? [], availableGroups = directory.data?.groups ?? [];
+  const availableUsers = directory.data?.users ?? [];
   const validEmail = documentInvitationInputSchema.safeParse({ email: query.trim(), level });
   return <>
     <div className={styles.search}>
@@ -86,8 +86,7 @@ function SharingContents({ scope, settings = false }: { scope: PageScope; settin
         {directory.isPending ? <p>{t('loading')}</p> : directory.isError ? <AppAlert tone="error" title={t('failed')} /> : <>
           {availableUsers.map(person => <Candidate key={person.id} name={person.name} image={<DocumentAvatar name={person.name} image={person.image} />} detail={person.email}
             selected={selection?.principal === `user:${person.id}`} onClick={() => setSelection({ principal: `user:${person.id}`, name: person.name })} />)}
-          {availableGroups.map(group => <Candidate key={group.id} name={group.name} image={<Users size={22} />} selected={selection?.principal === `group:${group.id}`} onClick={() => setSelection({ principal: `group:${group.id}`, name: group.name })} />)}
-          {!availableUsers.length && !availableGroups.length && !(validEmail.success && data.canInvite) && <p>{t('noMatches')}</p>}
+          {!availableUsers.length && !(validEmail.success && data.canInvite) && <p>{t('noMatches')}</p>}
           {validEmail.success && data.canInvite && !availableUsers.some(person => person.email.toLowerCase() === query.toLowerCase().trim()) && <Candidate name={t('inviteEmail', { email: query })} image={<Users size={22} />} selected={selection?.email === query.trim()} onClick={() => setSelection({ email: query.trim(), name: query.trim() })} />}
         </>}
       </div>
@@ -95,8 +94,8 @@ function SharingContents({ scope, settings = false }: { scope: PageScope; settin
     </> : <div className={styles.content}>
       {data.grants.map(grant => <div className={styles.row} key={grant.principal}>
         {grant.principal.startsWith('user:') ? <DocumentAvatar name={grant.name} image={grant.image} /> : <Users size={24} className="shrink-0" />}
-        <div className={styles.rowText}><strong>{grant.name}</strong>{grant.inherited && <small>{t('inherited', { source: grant.source })}</small>}</div>
-        <div className={styles.level}><select aria-label={`${grant.name} · ${t('settings')}`} value={grant.level} disabled={!data.canManage || grant.inherited || busy}
+        <div className={styles.rowText}><strong>{grant.principal.startsWith('group:') ? t('legacyAccess') : grant.name}</strong>{grant.principal.startsWith('group:') ? <small>{t('legacyAccessHint')}</small> : grant.inherited && <small>{t('inherited', { source: grant.source })}</small>}</div>
+        <div className={styles.level}><select aria-label={`${grant.name} · ${t('settings')}`} value={grant.level} disabled={!data.canManage || grant.inherited || grant.principal.startsWith('group:') || busy}
           onChange={event => void mutate('/permissions', { principal: grant.principal, level: event.target.value === 'remove' ? null : event.target.value })}><PermissionOptions remove /></select>
           <Tooltip><TooltipTrigger asChild><span tabIndex={0} aria-label={t('permissionHelp')}><Question size={14} /></span></TooltipTrigger><TooltipContent>{grant.inherited ? t('inherited', { source: grant.source }) : t('permissionHelp')}</TooltipContent></Tooltip>
         </div>

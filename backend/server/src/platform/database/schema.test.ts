@@ -46,7 +46,7 @@ describe('knowledgeBase-owned current Drizzle schema', () => {
   test('covers resource tables and keeps identity separate', () => {
     const names = resourceTables.map((table) => getTableConfig(table).name);
     for (const name of [
-      'knowledge_base', 'knowledge_base_member', 'knowledge_base_invitation', 'group', 'group_member', 'teamspace', 'page',
+      'knowledge_base', 'knowledge_base_member', 'knowledge_base_invitation', 'group', 'group_member', 'teamspace', 'teamspace_member_access', 'page',
       'database_definition', 'doc_state', 'doc_checkpoint', 'page_acl', 'page_effective_acl', 'block_index', 'backlink', 'asset', 'comment_thread',
       'comment', 'comment_like', 'outbox', 'ai_task', 'ai_usage', 'notification', 'personal_access_token', 'share_link', 'model_credential', 'block_embedding_staging',
     ]) expect(names).toContain(name);

@@ -12,7 +12,10 @@ import { knowledgeMessages } from './ui.messages';
  * existing knowledge and connector surfaces do.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { Button } from '@/components/ui/button';
+import dialogStyles from './organization-dialog.module.css';
 import type { ReactNode } from 'react';
 import { Warning, WarningCircle, XCircle } from '@/components/icons';
 import { cn } from '@/lib/utils';
@@ -201,29 +204,34 @@ export function ModalDialog({
   width?: string;
 }) {
   const visible = usePageVisible();
+  const dialogRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     if (!open || !visible) return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+    const dialog = dialogRef.current;
+    const previousFocus = document.activeElement;
+    if (dialog && !dialog.open) {
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+      else dialog.setAttribute('open', '');
+    }
+    return () => {
+      if (dialog?.open && typeof dialog.close === 'function') dialog.close();
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus({ preventScroll: true });
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [open, onClose, visible]);
-  if (!open) return null;
-  return (
-    <div
-      className="modal-backdrop absolute inset-0 z-50 flex items-start justify-center overflow-auto pt-[12vh]"
-      role="presentation"
-      onMouseDown={onClose}
+  }, [open, visible]);
+  if (!open || typeof document === 'undefined') return null;
+  return createPortal(
+    <dialog ref={dialogRef} aria-label={title} aria-modal="true"
+      className={cn(dialogStyles.dialog, width)}
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
+      onMouseDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        const box = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) onClose();
+      }}
     >
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onMouseDown={(event) => event.stopPropagation()}
         className={cn(
-          'modal-surface flex flex-col gap-4 rounded-[10px] px-5 pt-4 outline-none',
-          width,
+          'flex flex-col gap-4 px-5 pt-4',
         )}
       >
         <div className="flex flex-col gap-1">
@@ -239,24 +247,22 @@ export function ModalDialog({
         {children}
         <div className="fob-dialog-footer [--dialog-footer-inset:0px]">{footer}</div>
       </div>
-    </div>
+    </dialog>, document.body,
   );
 }
 
 export function DialogButton({
   variant = 'outline',
   ...props
-}: { variant?: 'primary' | 'outline' | 'danger' } & React.ComponentProps<'button'>) {
+}: { variant?: 'primary' | 'outline' | 'danger'; loading?: boolean } & React.ComponentProps<'button'>) {
   return (
-    <button
+    <Button
       type="button"
+      size="sm"
+      variant={variant === 'primary' || variant === 'danger' ? 'default' : 'outline'}
       {...props}
       className={cn(
-        'inline-flex h-8 items-center justify-center gap-1.5 rounded-[6px] px-3 text-[11.5px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] disabled:pointer-events-none disabled:opacity-45',
-        variant === 'primary' &&
-          'bg-[var(--accent)] text-[var(--accent-foreground)] shadow-[0_4px_12px_color-mix(in_srgb,var(--accent)_22%,transparent)] hover:bg-[var(--accent-strong)]',
-        variant === 'outline' &&
-          'border border-[var(--line)] bg-panel text-[var(--ink-soft)] hover:border-[var(--line-strong)] hover:bg-[var(--surface-subtle)]',
+        'h-[30px] rounded-[6px] px-3 text-[11.5px] shadow-none',
         variant === 'danger' && 'bg-[var(--err-ink)] text-white hover:opacity-90',
         props.className,
       )}
@@ -292,7 +298,7 @@ export function ConfirmDialog({
       footer={
         <>
           <DialogButton onClick={onClose}>{knowledgeT('cancel')}</DialogButton>
-          <DialogButton variant="danger" disabled={busy} onClick={onConfirm} autoFocus>
+          <DialogButton variant="danger" loading={busy} onClick={onConfirm} autoFocus>
             {confirmLabel}
           </DialogButton>
         </>

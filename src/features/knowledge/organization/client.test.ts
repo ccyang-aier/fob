@@ -15,10 +15,10 @@ import {
  */
 
 const ORIGIN = 'http://127.0.0.1:8710';
+const parentFolderId = '50000000-0000-4000-8000-000000000005';
 const BASE = `${ORIGIN}/api/knowledge-bases`;
 const ws = '10000000-0000-4000-8000-000000000001';
 const otherUser = '20000000-0000-4000-8000-000000000002';
-const groupId = '30000000-0000-4000-8000-000000000003';
 const teamspaceId = '40000000-0000-4000-8000-000000000004';
 const cursor = '50000000-0000-4000-8000-000000000005';
 
@@ -83,10 +83,6 @@ describe('route contract', () => {
 
     await client.listMembers(ws, {});
     expect(lastCall(calls).url).toBe(`${BASE}/${ws}/members`);
-    await client.listGroups(ws, {});
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups`);
-    await client.listGroupMembers(ws, groupId, {});
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups/${groupId}/members`);
     await client.listTeamspaces(ws, {});
     expect(lastCall(calls).url).toBe(`${BASE}/${ws}/teamspaces`);
   });
@@ -139,10 +135,6 @@ describe('route contract', () => {
     const client = clientWith(impl as unknown as typeof fetch);
     await client.removeMember(ws, otherUser);
     expect(lastCall(calls).url).toBe(`${BASE}/${ws}/members/${otherUser}`);
-    await client.removeGroup(ws, groupId);
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups/${groupId}`);
-    await client.removeGroupMember(ws, groupId, otherUser);
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups/${groupId}/members/${otherUser}`);
     await client.removeTeamspace(ws, teamspaceId);
     expect(lastCall(calls).url).toBe(`${BASE}/${ws}/teamspaces/${teamspaceId}`);
     for (const call of calls) {
@@ -152,24 +144,11 @@ describe('route contract', () => {
     }
   });
 
-  test('group writes: create POSTs name, rename PATCHes, membership POSTs the userId', async () => {
-    const { calls, impl } = recordingFetch(201, {
-      knowledgeBaseId: ws,
-      id: groupId,
-      name: '设计组',
-    });
+  test('retired group management is absent from the client', () => {
+    const { impl } = recordingFetch(200, {});
     const client = clientWith(impl as unknown as typeof fetch);
-    await client.createGroup(ws, { name: '设计组' });
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups`);
-    expect(lastCall(calls).body).toBe(JSON.stringify({ name: '设计组' }));
-    await client.renameGroup(ws, { id: groupId, name: '产品组' });
-    expect(lastCall(calls).method).toBe('PATCH');
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups/${groupId}`);
-    expect(lastCall(calls).body).toBe(JSON.stringify({ name: '产品组' }));
-    await client.addGroupMember(ws, groupId, otherUser);
-    expect(lastCall(calls).method).toBe('POST');
-    expect(lastCall(calls).url).toBe(`${BASE}/${ws}/groups/${groupId}/members`);
-    expect(lastCall(calls).body).toBe(JSON.stringify({ userId: otherUser }));
+    expect('listGroups' in client).toBe(false);
+    expect('createGroup' in client).toBe(false);
   });
 
   test('teamspace creation sends defaultAccess including null; updates send only provided fields', async () => {
@@ -190,8 +169,8 @@ describe('route contract', () => {
   test('folder moves use a dedicated scoped endpoint with an explicit null for the top level', async () => {
     const { calls, impl } = recordingFetch(200, { knowledgeBaseId: ws, id: teamspaceId, parentId: null, name: 'Folder', defaultAccess: null });
     const client = clientWith(impl as unknown as typeof fetch);
-    await client.moveTeamspace(ws, teamspaceId, groupId);
-    expect(lastCall(calls)).toMatchObject({ url: `${BASE}/${ws}/teamspaces/${teamspaceId}/move`, method: 'POST', body: JSON.stringify({ parentId: groupId }) });
+    await client.moveTeamspace(ws, teamspaceId, parentFolderId);
+    expect(lastCall(calls)).toMatchObject({ url: `${BASE}/${ws}/teamspaces/${teamspaceId}/move`, method: 'POST', body: JSON.stringify({ parentId: parentFolderId }) });
     await client.moveTeamspace(ws, teamspaceId, null);
     expect(lastCall(calls).body).toBe(JSON.stringify({ parentId: null }));
     const count = calls.length;
@@ -205,8 +184,6 @@ describe('input validation fails before any request', () => {
     const { calls, impl } = recordingFetch(201, {});
     const client = clientWith(impl as unknown as typeof fetch);
     await expectInvalidInput(() => client.createKnowledgeBase({ name: '   ' }));
-    await expectInvalidInput(() => client.createGroup(ws, { name: 'x'.repeat(121) }));
-    await expectInvalidInput(() => client.renameGroup(ws, { id: groupId, name: '' }));
     await expectInvalidInput(() => client.createTeamspace(ws, { name: '  ', defaultAccess: null }));
     expect(calls).toHaveLength(0);
   });

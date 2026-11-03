@@ -1,5 +1,7 @@
 import { defineMessages } from '@/lib/i18n';
 export const messages = defineMessages({
+  legacyAccess: ['历史授权', 'Legacy access'],
+  legacyAccessHint: ['原权限策略，只读保留', 'Original access policy, retained read-only'],
   share: ['分享', 'Share'], shareDocument: ['共享文档', 'Share document'], addOrInvite: ['添加或邀请…', 'Add or invite…'],
   copyLink: ['复制链接', 'Copy link'], copied: ['链接已复制', 'Link copied'], copyFailed: ['无法复制，请选择链接后手动复制', 'Unable to copy. Select and copy the link.'],
   loading: ['正在加载…', 'Loading…'], retry: ['重试', 'Retry'], failed: ['暂时无法加载，请重试', 'Unable to load. Please retry.'],

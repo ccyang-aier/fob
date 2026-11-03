@@ -1,5 +1,6 @@
 export * from './primitives';
 export * from './organization';
+export * from './folder-access';
 export * from './pages';
 export * from './pages-tree';
 export * from './databases';

@@ -8,8 +8,8 @@ export const knowledgeMessages = defineMessages({
   ],
   viewingPermissionDenied: ['没有查看权限', 'Viewing permission denied'],
   guestsCannotBrowseKnowledgeBaseMembersGroupsOr: [
-    '访客角色无法浏览知识库的成员、群组与团队空间目录。',
-    'Guests cannot browse knowledge base members, groups or folders.',
+    '访客角色无法浏览知识库的成员与文件夹目录。',
+    'Guests cannot browse knowledge base members or folders.',
   ],
   unableToLoad: ['加载失败', 'Unable to load'],
   retry: ['重试', 'Retry'],

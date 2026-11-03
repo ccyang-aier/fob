@@ -2,11 +2,12 @@ import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import type { PageScope, PermissionLevel, DocumentGrant, DocumentSharing } from '@fob/shared/knowledge/contracts';
 import { documentPermissionInputSchema } from '@fob/shared/knowledge/contracts';
 import { authUser } from '../../../platform/database/identity/schema';
-import { documentInvitation, group, groupMember, knowledgeBase, member, page, pageAcl, shareLink, teamspace } from '../../../platform/database/resources/schema';
+import { documentInvitation, groupMember, knowledgeBase, member, page, pageAcl, shareLink } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { authorizePageAccess, computeEffectivePermissions, expandPrincipals, lockPermissionKnowledgeBase, permissionFor, replaceAuthorizedPageAcl, setAuthorizedPageInheritance } from '../permissions';
 import { refreshPagePermissions } from '../api/page-route-guards';
 import { decryptPublicationToken } from './token-cipher';
+import { readFolderAccess } from '../organization/folder-access';
 
 export class DocumentServiceError extends Error {
   constructor(readonly status: 400 | 403 | 404 | 409 | 503, readonly code = 'DOCUMENT_UNAVAILABLE') { super(code); }
@@ -24,25 +25,25 @@ export async function documentDirectory(db: ResourceTransaction, scope: PageScop
   const users = await db.select({ id: authUser.id, name: authUser.name, image: authUser.image, role: member.role, email: authUser.email })
     .from(member).innerJoin(authUser, eq(authUser.id, member.userId)).where(and(eq(member.knowledgeBaseId, scope.knowledgeBaseId),
       q ? sql`position(${q} in lower(${authUser.name} || ' ' || ${authUser.email})) > 0` : undefined)).orderBy(asc(authUser.name)).limit(50);
-  const groups = await db.select({ id: group.id, name: group.name }).from(group).where(and(eq(group.knowledgeBaseId, scope.knowledgeBaseId),
-    q ? sql`position(${q} in lower(${group.name})) > 0` : undefined)).orderBy(asc(group.name)).limit(50);
-  return { users, groups };
+  return { users };
 }
 
 export async function readDocumentSharing(db: ResourceTransaction, scope: PageScope, userId: string, secret: string): Promise<DocumentSharing> {
   const { record, access } = await requireDocument(db, scope, userId);
   const memberships = await db.select({ id: authUser.id, name: authUser.name, image: authUser.image, role: member.role }).from(member)
     .innerJoin(authUser, eq(authUser.id, member.userId)).where(eq(member.knowledgeBaseId, scope.knowledgeBaseId));
-  const groups = await db.select().from(group).where(eq(group.knowledgeBaseId, scope.knowledgeBaseId));
   const groupMemberships = await db.select().from(groupMember).where(eq(groupMember.knowledgeBaseId, scope.knowledgeBaseId));
   const ancestors = await db.select().from(page).where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.teamspaceId, record.teamspaceId), sql`${page.path} @> ${record.path}::ltree`)).orderBy(page.path);
   const grants = await db.select().from(pageAcl).where(and(eq(pageAcl.knowledgeBaseId, scope.knowledgeBaseId), inArray(pageAcl.pageId, ancestors.map(row => row.id))));
-  const [folder] = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, record.teamspaceId)));
+  const folderPolicies = await readFolderAccess(db, scope.knowledgeBaseId);
+  const folder = folderPolicies.find((item) => item.teamspaceId === record.teamspaceId)!;
   const [base] = await db.select().from(knowledgeBase).where(eq(knowledgeBase.id, scope.knowledgeBaseId));
-  const permissions = computeEffectivePermissions({ knowledgeBaseId: scope.knowledgeBaseId, teamspaceId: record.teamspaceId, defaultAccess: folder!.defaultAccess,
+  const permissions = computeEffectivePermissions({ knowledgeBaseId: scope.knowledgeBaseId, teamspaceId: record.teamspaceId, defaultAccess: folder.effectiveDefaultAccess,
+    folderGrants: folder.grants.map((grant) => ({ principal: `user:${grant.userId}`, level: grant.level })),
     lineage: ancestors.map(row => ({ ...row, grants: grants.filter(grant => grant.pageId === row.id) })) });
   const effective = new Map<string, { level: PermissionLevel; inherited: boolean; source: string }>();
-  if (folder!.defaultAccess) effective.set(`knowledgeBase:${scope.knowledgeBaseId}`, { level: folder!.defaultAccess, inherited: true, source: folder!.name });
+  if (folder.effectiveDefaultAccess) effective.set(`knowledgeBase:${scope.knowledgeBaseId}`, { level: folder.effectiveDefaultAccess, inherited: true, source: folderPolicies.find((item) => item.teamspaceId === folder.defaultSourceId)?.name ?? folder.name });
+  for (const grant of folder.grants) effective.set(`user:${grant.userId}`, { level: grant.level, inherited: true, source: folderPolicies.find((item) => item.teamspaceId === grant.sourceId)?.name ?? folder.name });
   const ranks = ['view', 'comment', 'edit', 'full'];
   for (const node of ancestors) {
     if (!node.inheritsPermissions) effective.clear();
@@ -54,7 +55,7 @@ export async function readDocumentSharing(db: ResourceTransaction, scope: PageSc
   const visibleGrants: DocumentGrant[] = [...effective].filter(([principal]) => !principal.startsWith('link:')).map(([principal, grant]) => {
     const [kind, id] = principal.split(':');
     const user = memberships.find(row => row.id === id);
-    return { principal, ...grant, name: kind === 'knowledgeBase' ? base!.name : kind === 'group' ? groups.find(row => row.id === id)?.name ?? 'Group' : user?.name ?? 'Former member', image: user?.image ?? null };
+    return { principal, ...grant, name: kind === 'knowledgeBase' ? base!.name : kind === 'group' ? 'Legacy access' : user?.name ?? 'Former member', image: user?.image ?? null };
   });
   const people = memberships.filter(person => permissionFor(expandPrincipals({ knowledgeBaseId: scope.knowledgeBaseId, userId: person.id,
     member: { knowledgeBaseId: scope.knowledgeBaseId, userId: person.id, role: person.role }, groups: groupMemberships.filter(row => row.userId === person.id) }), permissions));

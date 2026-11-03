@@ -6,12 +6,10 @@
  * apply/rollback semantics directly testable without React.
  */
 
-import type { MemberRole, Group, GroupMember, KnowledgeBaseMemberSummary } from '@/features/knowledge/organization/client';
+import type { MemberRole, KnowledgeBaseMemberSummary } from '@/features/knowledge/organization/client';
 import type { Teamspace } from '@fob/shared/knowledge/contracts';
 
 export type MemberRow = KnowledgeBaseMemberSummary;
-export type GroupRow = Group;
-export type GroupMemberRow = GroupMember;
 export type TeamspaceRow = Teamspace;
 
 export function upsertByKey<T>(items: readonly T[], keyOf: (item: T) => string, next: T): T[] {
@@ -33,11 +31,6 @@ export function patchByKey<T>(items: readonly T[], keyOf: (item: T) => string, t
 
 export function removeByKey<T>(items: readonly T[], keyOf: (item: T) => string, target: string): T[] {
   return items.filter((item) => keyOf(item) !== target);
-}
-
-/** Renaming a group also renames it inside any expanded member-management rows. */
-export function renameGroupRow(items: readonly GroupRow[], id: string, name: string): GroupRow[] {
-  return patchByKey(items, (group) => group.id, id, { name });
 }
 
 export function applyMemberRole(items: readonly MemberRow[], userId: string, role: MemberRole): MemberRow[] {
