@@ -12,7 +12,8 @@
 .item { position:relative; display:flex; align-items:center; flex-shrink:0; height:32px; border:0; border-radius:8px; color:var(--muted-strong); background:transparent; overflow:hidden; }
 .item[data-dragging="true"] { background:var(--shell-tab-active-bg); }
 .item[data-dragging="true"] .select { cursor:grabbing; }
-.active { position:absolute; inset:0; border:1px solid var(--shell-tab-active-border); border-radius:inherit; background:var(--shell-tab-active-bg); pointer-events:none; }
+.active { position:absolute; inset:0; border-radius:inherit; background:var(--shell-tab-active-bg); pointer-events:none; }
+.item[data-selected="true"]::after { content:''; position:absolute; inset:0; border:1px solid var(--shell-tab-active-border); border-radius:inherit; pointer-events:none; }
 .select { position:relative; display:flex; align-items:center; gap:7px; min-width:0; height:100%; flex:1; padding:0 6px 0 10px; color:inherit; cursor:pointer; border-radius:inherit; outline:none; user-select:none; touch-action:none; }
 .select[aria-selected="true"] { color:var(--ink); font-weight:500; }
 .select svg { flex-shrink:0; color:var(--sidebar-icon); }
