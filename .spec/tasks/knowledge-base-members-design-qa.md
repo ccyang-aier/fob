@@ -30,3 +30,14 @@
 日志包含开发期间共享模块变更产生的 Fast Refresh 整页刷新提示、既有隐藏编辑器 `TextSelection ... callout` 警告及 `chrome-extension` sandbox/localStorage 错误；最终成员及权限流程无运行错误遮罩。最终恢复浅色、默认视口及展开导航，关闭临时 QA 页。
 
 P0／P1／P2 无未处理项。
+
+## 2026-11-05 边框、切换按钮与图标细化
+
+- 成员、待接受邀请、文件夹权限共用的表格外框改为仅有上下 1px 边线，左右 0px、无外框圆角；行分隔线保留。
+- 管理分区改为两个 30px 按钮，以 `aria-pressed` 表达切换，激活背景实测 `rgb(239, 239, 239)`；`::after` 为 `none`，没有下划线或通栏分隔线。桌面上留白 24px，窄屏 20px。
+- “邀请成员”“查看有效权限”“添加授权”分别使用 FA7 `user-plus`、`eye`、`shield-halved`，按统一目录和尺寸渲染，图标不重复进入可访问名称。
+- 继续用独立 Playwright Chromium（Browser 插件未列出，当前内置浏览器连接此前超时），1016×917 与 390×844、浅深主题复核。实际库来自两个临时测试账户，未修改用户当前库的成员或权限。
+- 实测成员表和权限表左右边框均为 `0px`，成员表上下 `1px`；键盘 Enter 可切换分区，只有当前按钮为按下状态。邀请、有效权限和添加授权三个原生弹窗均正常打开及 Escape 关闭。
+- 窄屏等待侧栏收起动画完成后，权限表 670px 内容在 305px 容器中横向滚动，整页不横向溢出；截图不使用动画中间帧。页面有真实内容，无框架错误遮罩，控制台 error/warning 均为 0。
+- 现有成员页、成员列表及成员面板专项 12 项测试通过（54 个断言）；Web 类型、图标、lint、架构边界及迁移摘要检查均通过。
+- 本轮截图保存在仓库外的 `C:/Users/17335/.codex/visualizations/2026/11/04/01a1a75b-5632-7aa0-a2e2-e14e6bf24d97/`：`fob-members-polished.png`、`fob-permissions-polished.png`、`fob-permissions-polished-dark.png`、`fob-permissions-polished-mobile.png`，以及两张紧凑 detail 截图，不提交截图或运行快照。

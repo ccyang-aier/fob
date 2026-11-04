@@ -3,7 +3,7 @@
 import { useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import type { KnowledgeBaseInvitation } from '@fob/shared/knowledge/contracts';
-import { CaretDown, DotsThree, Trash, UsersThree } from '@/components/icons';
+import { CaretDown, DotsThree, Trash, UserPlus, UsersThree } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -94,7 +94,7 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
 
   return <div className={styles.page}>
     <header className={styles.header}><h1 className={styles.title}>{t('members')}{membersQuery.isSuccess ? <span className={styles.count}>{t('memberCount', { count: members.length })}</span> : null}</h1>
-      {actorRole === 'owner' ? <Button size="sm" className={styles.button} onClick={() => setInvite({ email: '', reissue: false })}>{t('invite')}</Button> : null}
+      {actorRole === 'owner' ? <Button size="sm" className={styles.button} onClick={() => setInvite({ email: '', reissue: false })}><UserPlus size={16} aria-hidden />{t('invite')}</Button> : null}
     </header>
     <div className={styles.toolbar}>
       <div className={styles.subtabs} role="tablist" aria-label={t('members')} onKeyDown={(event) => {

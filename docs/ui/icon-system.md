@@ -18,6 +18,7 @@
 | --- | --- |
 | 文件夹/文档/标签 | FA7 `folder` / `file-lines` / `tag` |
 | 成员/模板/设置/帮助 | FA7 `user-group` / `table-cells-large` / `gear` / `circle-question` |
+| 邀请成员/查看有效权限/添加授权 | FA7 `user-plus` / `eye` / `shield-halved`，统一经 `UserPlus` / `Eye` / `ShieldCheck` 引用 |
 | 咖啡/通知/分享 | FA7 `mug-saucer` / `bell` / `share-nodes`；咖啡不另加底色容器 |
 | 咖啡券 | FA7 `ticket`，经统一 `Ticket` 入口展示券类内容 |
 | 前进后退/对外打开/更多 | Lucide 细线箭头、`ExternalLink`、`Ellipsis`；更多是独立三点 |

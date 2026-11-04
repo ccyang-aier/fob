@@ -61,8 +61,8 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
                 <button
                   key={item.id}
                   type="button"
-                  aria-current={section === item.id ? 'page' : undefined}
-                  data-variant="text"
+                  aria-pressed={section === item.id}
+                  data-surface="plain"
                   onClick={() => setSection(item.id)}
                   className={cn('fob-action', styles.tab)}
                 >

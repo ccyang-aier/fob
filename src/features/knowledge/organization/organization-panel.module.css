@@ -1,9 +1,8 @@
 .page { position:relative; height:100%; min-height:0; overflow-y:auto; background:var(--panel); color:var(--ink); }
-.content { width:100%; margin:0 auto; padding:0 28px 48px; }
-.tabs { display:flex; gap:24px; border-bottom:var(--separator-width) solid var(--separator-color); }
-.tab { position:relative; display:inline-flex; align-items:center; height:43px; padding:0; border:0; border-radius:0; background:transparent; color:var(--muted); font-size:11.5px; font-weight:500; cursor:pointer; }
-.tab[aria-current='page'] { color:var(--ink); }
-.tab[aria-current='page']::after { content:''; position:absolute; right:0; bottom:-1px; left:0; height:2px; border-radius:2px; background:var(--ink); }
+.content { width:100%; margin:0 auto; padding:24px 28px 48px; }
+.tabs { display:flex; align-items:center; gap:4px; }
+.tab { display:inline-flex; align-items:center; justify-content:center; height:30px; padding:0 12px; border:0; border-radius:6px; background:transparent; color:var(--muted-strong); font-size:12px; font-weight:500; cursor:pointer; }
+.tab[aria-pressed='true'] { color:var(--ink); }
 .tab:focus-visible { outline:1px solid var(--control-border); outline-offset:3px; }
 .section { padding-top:24px; }
-@media(max-width:700px) { .content { padding:0 16px 32px; } .section { padding-top:20px; } }
+@media(max-width:700px) { .content { padding:20px 16px 32px; } .section { padding-top:20px; } }

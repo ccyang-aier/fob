@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type CSSProperties } from 'react';
-import { CaretDown, CaretRight, FolderOutline } from '@/components/icons';
+import { CaretDown, CaretRight, Eye, FolderOutline, ShieldCheck } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -40,8 +40,8 @@ export function TeamspacesSection({ knowledgeBaseId, actorRole, notify }: {
     <div className={styles.toolbar}>
       <DirectorySearch value={search} onChange={setSearch} label={t('searchFolders')} clearLabel={t('clearSearch')} />
       <div className={styles.toolbarActions}>
-        <Button variant="outline" size="sm" className={styles.button} disabled={!ready || !members.length} onClick={() => setDialog({ kind: 'effective' })}>{t('effectivePermissions')}</Button>
-        {canManage ? <Button size="sm" className={styles.button} disabled={!ready || !members.length} onClick={() => setDialog({ kind: 'add' })}>{t('addGrant')}</Button> : null}
+        <Button variant="outline" size="sm" className={styles.button} disabled={!ready || !members.length} onClick={() => setDialog({ kind: 'effective' })}><Eye size={16} aria-hidden />{t('effectivePermissions')}</Button>
+        {canManage ? <Button size="sm" className={styles.button} disabled={!ready || !members.length} onClick={() => setDialog({ kind: 'add' })}><ShieldCheck size={16} aria-hidden />{t('addGrant')}</Button> : null}
       </div>
     </div>
     <ListStateShell state={state} error={error} onRetry={() => { void query.refetch(); void membersQuery.refetch(); }} emptyTitle={t('noFolders')}>
