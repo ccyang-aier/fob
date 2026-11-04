@@ -5,6 +5,7 @@ import { GearSix } from '@/components/icons';
 import { AccountItem } from '@/features/identity/components/account-item';
 import { RewardsCard } from '@/features/rewards';
 import { KnowledgeBaseSwitcher } from '@/features/knowledge/knowledge-base-switcher';
+import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
 import { KnowledgeNavigationOutlet } from '@/features/knowledge/navigation/system-navigation';
 import { NavButton, type SidebarRowItem } from '@/components/nav-button';
 import { SidebarResizeHandle, useSidebarWidth } from '@/components/sidebar-resize';
@@ -24,6 +25,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
   onKnowledgeBaseChange: () => void;
 }) {
   const { t } = useTranslation(messages);
+  const { selectedKnowledgeBase } = useKnowledgeBaseResources();
   const { width, dragging, startResize } = useSidebarWidth(272);
   function row(id: WorkbenchPage) {
     const page = workbenchPages[id];
@@ -50,7 +52,7 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
     <footer className={cn(styles.footer, open ? 'px-3' : 'px-1')}>
       {open && <RewardsCard />}
       <nav aria-label={t('知识库导航')} className={styles.utilityNavigation}>
-        {row('members')}{row('templates')}
+        {selectedKnowledgeBase?.source === 'server' && row('members')}{row('templates')}
       </nav>
       <div className={styles.workspaceBar} data-compact={!open}>
         <div className={styles.workspaceSwitcher}><AccountItem hidden={!open} /></div>

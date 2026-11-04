@@ -1,26 +1,27 @@
-import { presenceIdleMs, readPresencePreference, resolvePresence, type PresencePreference, type PresenceStatus } from './presence';
+import { presenceIdleMs, readPresenceState, resolvePresence, type CustomPresenceStatus, type PresencePreference, type PresenceStatus } from './presence';
 
 /** Device activity is local UI state; it never grants permissions or changes the session. */
 export function createPresenceStore(userId: string | null) {
   const key = `fob.identity.presence.${userId ?? 'guest'}`;
   let preference: PresencePreference = 'online';
+  let customStatus: CustomPresenceStatus | null = null;
   let connected = true;
   let idle = false;
-  let snapshot: { preference: PresencePreference; status: PresenceStatus } = { preference, status: resolvePresence(preference, connected, idle) };
+  let snapshot: { preference: PresencePreference; status: PresenceStatus; customStatus: CustomPresenceStatus | null } = { preference, customStatus, status: resolvePresence(preference, connected, idle) };
   const initial = snapshot;
   const listeners = new Set<() => void>();
   let cleanup: (() => void) | undefined;
   const publish = () => {
     const status = resolvePresence(preference, connected, idle);
-    if (snapshot.preference === preference && snapshot.status === status) return;
-    snapshot = { preference, status };
+    if (snapshot.preference === preference && snapshot.status === status && snapshot.customStatus?.emoji === customStatus?.emoji && snapshot.customStatus?.text === customStatus?.text) return;
+    snapshot = { preference, status, customStatus };
     listeners.forEach((listener) => listener());
   };
   function start() {
     let timer: ReturnType<typeof setTimeout>;
     const read = () => {
-      try { preference = readPresencePreference(userId ? window.localStorage.getItem(key) : null); }
-      catch { preference = 'online'; }
+      try { ({ preference, customStatus } = readPresenceState(userId ? window.localStorage.getItem(key) : null)); }
+      catch { preference = 'online'; customStatus = null; }
       publish();
     };
     const activity = () => {
@@ -58,9 +59,10 @@ export function createPresenceStore(userId: string | null) {
       if (listeners.size === 1) start();
       return () => { listeners.delete(listener); if (!listeners.size) cleanup?.(); };
     },
-    setPreference(value: PresencePreference) {
+    setPreference(value: PresencePreference, custom: CustomPresenceStatus | null = customStatus) {
       preference = value;
-      if (userId) { try { window.localStorage.setItem(key, value); } catch { /* Current-window selection still works without storage. */ } }
+      customStatus = custom;
+      if (userId) { try { window.localStorage.setItem(key, JSON.stringify({ preference, customStatus })); } catch { /* Current-window selection still works without storage. */ } }
       publish();
     },
   };

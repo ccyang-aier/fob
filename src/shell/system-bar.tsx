@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { KnowledgeNotificationBell } from '@/features/knowledge/notifications/components/notification-bell';
 import { CoffeeBalanceButton } from '@/features/rewards';
 import { KnowledgeMembersButton } from '@/features/knowledge/organization/knowledge-members-menu';
+import { useKnowledgeBaseResources } from '@/features/knowledge/data/knowledge-base-resources';
 import { useTranslation } from '@/lib/i18n';
 import { GlobalSearch } from './global-search';
 import { ThemeSwitch } from './theme-switch';
@@ -21,6 +22,8 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
   splitRatio?: number;
 }) {
   const { t } = useTranslation(messages);
+  const { selectedKnowledgeBase } = useKnowledgeBaseResources();
+  const team = selectedKnowledgeBase?.source === 'server';
   const header = useRef<HTMLElement>(null), split = Boolean(secondary), [twoRows, setTwoRows] = useState(false);
   useLayoutEffect(() => {
     const node = header.current; if (!node) return;
@@ -39,9 +42,9 @@ export function SystemBar({ onNavigate, navigation, children, secondary, splitRa
     {secondary}
     <div className={`${styles.actions} ${styles.trailing}`}>
       <GlobalSearch className={styles.button} onNavigate={onNavigate} />
-      <KnowledgeMembersButton className={styles.button} onManage={() => onNavigate('members')} />
+      {team && <KnowledgeMembersButton className={styles.button} onManage={() => onNavigate('members')} />}
       <ThemeSwitch className={styles.button} />
-      <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />
+      {team && <KnowledgeNotificationBell onOpenWorkbench={() => onNavigate('knowledge')} />}
       <CoffeeBalanceButton />
     </div>
     </div>

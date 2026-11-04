@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { BookOpenText, CaretUpDown, SelectionCheck, MagnifyingGlass, Palette, PencilSimple, Plus, Trash } from '@/components/icons';
-import { useAppAlert } from '@/components/app-alert-provider';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger } from '@/components/ui/dropdown-menu';
+import { BookOpenText, CaretUpDown, SelectionCheck, GearSix, MagnifyingGlass, Plus, Trash } from '@/components/icons';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
@@ -11,25 +10,20 @@ import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
 import type { KnowledgeBaseResource } from './knowledge-base';
 import { KnowledgeBaseDialog, type KnowledgeBaseAction } from './knowledge-base-dialog';
 import { messages } from './knowledge-base-switcher.messages';
-import { KnowledgeBaseAvatar, KNOWLEDGE_BASE_AVATAR_PALETTES, resolveKnowledgeBaseAvatarPalette, type KnowledgeBaseAvatarPalette } from './knowledge-base-avatar';
-import { useKnowledgeBaseAvatarPalette, saveKnowledgeBaseAvatarPalette } from './knowledge-base-avatar-preferences';
+import { KnowledgeBaseAvatar } from './knowledge-base-avatar';
+import { useKnowledgeBaseAvatarPalette } from './knowledge-base-avatar-preferences';
+import { KnowledgeBaseSettings } from './knowledge-base-settings';
 import styles from './knowledge-base-switcher.module.css';
 
 export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: { compact?: boolean; onSwitch?: () => void }) {
   const { t } = useTranslation(messages);
   const resources = useKnowledgeBaseResources();
-  const { knowledgeBases, selectedKnowledgeBase, selectedKnowledgeBaseRole, principal, scopeKey, selectKnowledgeBase, status, error, refreshKnowledgeBases, openCreateKnowledgeBase } = resources;
-  const selectedPalette = useKnowledgeBaseAvatarPalette(scopeKey);
-  const activePalette = selectedKnowledgeBase ? resolveKnowledgeBaseAvatarPalette(selectedKnowledgeBase.id, selectedPalette).id : undefined;
-  const { notify } = useAppAlert();
+  const { knowledgeBases, selectedKnowledgeBase, selectedKnowledgeBaseRole, principal, selectKnowledgeBase, status, error, refreshKnowledgeBases, openCreateKnowledgeBase } = resources;
   const [query, setQuery] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [action, setAction] = useState<KnowledgeBaseAction | null>(null);
+  const [settings, setSettings] = useState<KnowledgeBaseResource | null>(null);
   const filtered = knowledgeBases.filter(base => base.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
-  function choosePalette(palette: KnowledgeBaseAvatarPalette) {
-    if (!scopeKey) return;
-    try { saveKnowledgeBaseAvatarPalette(scopeKey, palette); } catch { notify('error', t('paletteFailed')); }
-  }
   return <>
     <DropdownMenu open={menuOpen} onOpenChange={open => { setMenuOpen(open); if (open) setQuery(''); }}>
       <Tooltip>
@@ -58,15 +52,13 @@ export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: 
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={openCreateKnowledgeBase}><Plus size={16} />{t('create')}</DropdownMenuItem>
         {selectedKnowledgeBase && <>
-          {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem onSelect={() => setAction({ kind: 'rename', knowledgeBase: selectedKnowledgeBase })}><PencilSimple size={16} />{t('rename')}</DropdownMenuItem>}
-          <DropdownMenuSub><DropdownMenuSubTrigger><Palette size={16} />{t('palette')}</DropdownMenuSubTrigger><DropdownMenuSubContent>
-            {KNOWLEDGE_BASE_AVATAR_PALETTES.map(palette => <DropdownMenuItem key={palette.id} role="menuitemradio" aria-checked={activePalette === palette.id} onSelect={() => choosePalette(palette.id)}><KnowledgeBaseAvatar seed={selectedKnowledgeBase.id} palette={palette.id} preview className={styles.palettePreview} /><span>{t(palette.id)}</span>{activePalette === palette.id && <SelectionCheck className="ml-auto" />}</DropdownMenuItem>)}
-          </DropdownMenuSubContent></DropdownMenuSub>
+          <DropdownMenuItem onSelect={() => setSettings(selectedKnowledgeBase)}><GearSix size={16} />{t('settings')}</DropdownMenuItem>
           {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: 'remove', knowledgeBase: selectedKnowledgeBase })}><Trash size={16} />{t('remove')}</DropdownMenuItem>}
         </>}
       </DropdownMenuContent>}
     </DropdownMenu>
     {action && <KnowledgeBaseDialog action={action} resources={resources} onClose={() => setAction(null)} onChanged={onSwitch} />}
+    {settings && <KnowledgeBaseSettings base={settings} resources={resources} onClose={() => setSettings(null)} />}
   </>;
 }
 

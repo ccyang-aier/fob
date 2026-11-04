@@ -13,7 +13,7 @@ const subscribeHydration = () => () => {};
 const clientReady = () => true;
 const serverReady = () => false;
 
-export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, search: string, restorationReady = true, startup?: ReturnType<typeof createWorkbenchStartup>) {
+export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, search: string, restorationReady = true, startup?: ReturnType<typeof createWorkbenchStartup>, allowMembers = true) {
   const session = useContext(KnowledgeUiSessionContext);
   const ready = useSyncExternalStore(subscribeHydration, clientReady, serverReady);
   const boot = ready && restorationReady;
@@ -38,6 +38,10 @@ export function useWorkbenchTabs(scope: string | null, view: WorkbenchPage, sear
     } else if (current.location !== search) {
       const next = openWorkbenchTab(current.state, target);
       if (next !== current.state || current.location !== search) current = { ...current, state: next, location: search };
+    }
+    if (!allowMembers && current.state.tabs.some(tab => tab.view === 'members')) {
+      const state = current.state.tabs.filter(tab => tab.view === 'members').reduce((state, tab) => closeWorkbenchTab(state, tab.key), current.state);
+      current = { ...current, state, restoreSearch: knowledgeScopedSearch(state.tabs.find(tab => tab.key === state.active)!.search, search) };
     }
   }
   if (current !== memory) setMemory(current);

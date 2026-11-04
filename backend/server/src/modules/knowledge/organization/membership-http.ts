@@ -5,7 +5,7 @@ import type { KnowledgeOrganizationService } from './membership-service';
 
 /** Knowledge-base membership and invitation routes. */
 export function createKnowledgeOrganizationRoutes(auth: FobAuth, service: KnowledgeOrganizationService) {
-  const app = createResourceApi(auth, base);
+  const app = createResourceApi(auth, base, { path: /^\/api\/knowledge-bases\/[^/]+\/(?:members|invitations)(?:\/|$)/ });
   app.get(`${base}/:knowledgeBaseId/members`, async (context) => context.json(await service.listMembers(context.get('identity'), { ...pagination(context), ...context.req.param() })));
   app.patch(`${base}/:knowledgeBaseId/members`, async (context) => context.json(await service.changeMemberRoles(context.get('identity'), await bodyWithPath(context, context.req.param()))));
   app.patch(`${base}/:knowledgeBaseId/members/:userId`, async (context) => context.json(await service.changeMemberRole(context.get('identity'), await bodyWithPath(context, context.req.param()))));

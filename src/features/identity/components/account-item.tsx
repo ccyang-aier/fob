@@ -5,11 +5,10 @@ import { messages } from './i18n/account-item.messages';
 
 import {
   Users,
-  SelectionCheck,
+  Emoji,
   CircleNotch,
   DoorOpen,
   User,
-  UserCircle,
   CaretDown,
 } from '@/components/icons';
 import { useRef, useState } from 'react';
@@ -17,28 +16,25 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserAvatar } from '@/components/user-avatar';
 import { useIdentity } from '../identity-context';
-import { presenceDisplay, getPresenceOptions } from '../presence';
+import { presenceDisplay } from '../presence';
+import { PresenceDialog } from './presence-dialog';
 import { LogoutConfirmDialog } from './logout-confirm-dialog';
 import styles from './account-item.module.css';
 import { AccountDialog } from './account-dialog';
 
 export function AccountItem({ compact = false, variant = 'sidebar', hidden = false }: { compact?: boolean; variant?: 'sidebar' | 'topbar'; hidden?: boolean }) {
   const { t: uiText, locale } = useTranslation(messages);
-  const presenceOptions = getPresenceOptions(locale);
-  const { session, openSignIn, openSwitchAccount, presence, presencePreference, setPresence } =
+  const { session, openSignIn, openSwitchAccount, presence, customStatus } =
     useIdentity();
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [statusFor, setStatusFor] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const openingDialog = useRef(false);
   const user = session.status === 'authenticated' ? session.user : null;
@@ -57,7 +53,7 @@ export function AccountItem({ compact = false, variant = 'sidebar', hidden = fal
       aria-busy={session.status === 'checking'}
       aria-label={
         user
-          ? uiText('Fob 账户：{0} · {1}', { '0': user.name, '1': status.label })
+          ? uiText('Fob 账户：{0} · {1}', { '0': user.name, '1': customStatus?.text ?? status.label })
           : session.status === 'error'
             ? uiText('登录服务暂不可用，点击重试登录')
             : uiText('登录 Fob 账户')
@@ -108,7 +104,7 @@ export function AccountItem({ compact = false, variant = 'sidebar', hidden = fal
               <DropdownMenuTrigger asChild>{button}</DropdownMenuTrigger>
             </TooltipTrigger>
             <TooltipContent side={tooltipSide}>
-              {label} · {status.label}
+              {label} · {customStatus?.text ?? status.label}
             </TooltipContent>
           </Tooltip>
         ) : (
@@ -145,41 +141,15 @@ export function AccountItem({ compact = false, variant = 'sidebar', hidden = fal
             </div>
           </div>
           <DropdownMenuSeparator className={styles.separator} />
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger className={`${styles.menuItem} ${styles.statusTrigger}`}>
-              <span
+          <DropdownMenuItem className={styles.menuItem} aria-haspopup="dialog" onSelect={() => { openingDialog.current = true; setStatusFor(user.id); }}>
+              {customStatus ? <Emoji value={customStatus.emoji} size={16} /> : <span
                 aria-hidden
                 className={styles.statusDot}
                 style={{ backgroundColor: status.color }}
-              />
-              {status.label}
+              />}
+              <span className={styles.statusLabel}>{customStatus?.text ?? status.label}</span>
               <span className={styles.menuHint}>{uiText('设置状态')}</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent className={styles.statusMenu}>
-              <DropdownMenuLabel>{uiText('当前设备状态')}</DropdownMenuLabel>
-              {presenceOptions.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  role="menuitemradio"
-                  aria-checked={presencePreference === option.value}
-                  className={styles.statusItem}
-                  onSelect={() => setPresence(option.value)}
-                >
-                  <span
-                    aria-hidden
-                    className={styles.statusDot}
-                    style={{ backgroundColor: option.color }}
-                  />
-                  <span className={styles.statusText}>
-                    <span>{option.label}</span>
-                    <span className={styles.statusDescription}>{option.description}</span>
-                  </span>
-                  {presencePreference === option.value ? <SelectionCheck /> : null}
-                </DropdownMenuItem>
-              ))}
-              <p className={styles.statusNote}>{uiText('在线时，5 分钟无操作自动显示离开。')}</p>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className={styles.menuItem}
             onSelect={() => {
@@ -187,7 +157,7 @@ export function AccountItem({ compact = false, variant = 'sidebar', hidden = fal
               setProfileOpen(true);
             }}
           >
-            <UserCircle />
+            <User />
             {uiText('个人信息')}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -215,6 +185,7 @@ export function AccountItem({ compact = false, variant = 'sidebar', hidden = fal
         </DropdownMenuContent>}
       </DropdownMenu>
       <LogoutConfirmDialog open={logoutOpen} onClose={() => setLogoutOpen(false)} />
+      {statusFor === user.id && <PresenceDialog onClose={() => setStatusFor(null)} />}
       <AccountDialog open={profileOpen} profile onClose={() => setProfileOpen(false)} />
     </>
   );

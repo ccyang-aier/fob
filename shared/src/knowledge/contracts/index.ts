@@ -18,3 +18,5 @@ export * from './discovery';
 export * from './profile';
 export { linkPreviewInputSchema, linkPreviewSchema } from './rich-content';
 export type { LinkPreview } from './rich-content';
+export { localKnowledgeBaseImportSchema } from './local-conversion';
+export type { LocalKnowledgeBaseImport } from './local-conversion';

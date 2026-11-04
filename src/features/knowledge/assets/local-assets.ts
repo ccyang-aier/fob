@@ -98,6 +98,16 @@ export async function readLocalAsset(
   }, 'readonly');
 }
 
+/** Explicit library conversion reads only this knowledge base's original bytes. */
+export async function listLocalKnowledgeBaseAssets(knowledgeBaseId: string): Promise<StoredLocalAsset[]> {
+  const prefix = `${knowledgeBaseId}:`;
+  return transact<StoredLocalAsset[]>((store, resolve, reject) => {
+    const request = store.getAll(IDBKeyRange.bound(prefix, `${prefix}\uffff`));
+    request.onsuccess = () => resolve(request.result as StoredLocalAsset[]);
+    request.onerror = () => reject(request.error ?? new Error(knowledgeT('unableToReadLocalAsset')));
+  }, 'readonly');
+}
+
 /** Remove bytes owned by one deleted browser knowledge base, preserving all other bases. */
 export async function removeLocalKnowledgeBaseAssets(knowledgeBaseId: string): Promise<void> {
   const prefix = `${knowledgeBaseId}:`;

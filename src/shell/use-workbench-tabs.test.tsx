@@ -6,7 +6,7 @@ import { KnowledgeUiSession } from '@/lib/knowledge-ui-session';
 import { KnowledgeUiSessionContext } from '@/lib/page-session-state';
 import { replaceWorkbenchLocation } from '@/lib/navigation-history';
 import { updateFolderNavigation } from '@/features/knowledge/navigation/document-navigation-location';
-import { createWorkbenchStartup } from './workbench-tabs';
+import { createWorkbenchStartup, createWorkbenchTabs, openWorkbenchTab, tabTarget } from './workbench-tabs';
 import { useWorkbenchTabs } from './use-workbench-tabs';
 import { useWorkbenchView } from './workbench-view';
 
@@ -14,9 +14,10 @@ let browser: Window, root: Root;
 let scope = 'alice:server:first', session = new KnowledgeUiSession(scope);
 let current: ReturnType<typeof useWorkbenchTabs>;
 const startup = createWorkbenchStartup();
+let allowMembers = true;
 function Capture() {
-  const [view, , , , search] = useWorkbenchView(scope);
-  const tabs = useWorkbenchTabs(scope, view, search, true, startup);
+  const [view, , , , search] = useWorkbenchView(scope, allowMembers);
+  const tabs = useWorkbenchTabs(scope, view, search, true, startup, allowMembers);
   useEffect(() => { current = tabs; }, [tabs]);
   return null;
 }
@@ -45,4 +46,15 @@ test('switching into a fresh knowledge base finishes restoration before acceptin
   expect(new URL(browser.location.href).searchParams.get('folder')).toBe('folder');
   expect(current.tabs[0].title).toBe('Local research');
   expect(current.tabs[0].search).toContain('knowledgeBase=fresh');
+});
+
+test('restoring a personal library removes obsolete member tabs while keeping its knowledge tab', async () => {
+  scope = 'alice:local:restored'; session = new KnowledgeUiSession(scope); await session.loaded;
+  const saved = openWorkbenchTab(createWorkbenchTabs(scope, tabTarget('knowledge', '?document=kept')), tabTarget('members'));
+  session.set('tabs', saved, null); allowMembers = false;
+  await act(async () => { replaceWorkbenchLocation(new URL('http://localhost:3001/?knowledgeBase=restored&source=local')); root.render(render()); });
+  expect(current.tabs.map(tab => tab.view)).toEqual(['knowledge']);
+  expect(current.tabs[0].search).toContain('document=kept');
+  expect(current.active).toBe(current.tabs[0].key);
+  expect(new URL(browser.location.href).searchParams.get('view')).not.toBe('members');
 });

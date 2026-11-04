@@ -9,8 +9,9 @@ let browser: Window;
 let root: Root;
 let current: ReturnType<typeof useWorkbenchView>;
 let scope = 'principal:local:project-a';
+let allowMembers = true;
 function Capture() {
-  const value = useWorkbenchView(scope);
+  const value = useWorkbenchView(scope, allowMembers);
   useEffect(() => { current = value; }, [value]);
   return null;
 }
@@ -67,4 +68,17 @@ test('old profile URLs fall back to knowledge without changing their document or
   expect(params.get('tab')).toBeNull();
   expect(params.get('knowledgeBase')).toBe('base');
   expect(params.get('document')).toBe('doc');
+});
+
+test('personal knowledge-base member URLs return to knowledge without losing document scope', async () => {
+  allowMembers = false;
+  await act(async () => {
+    browser.history.replaceState(null, '', '/?knowledgeBase=personal&source=local&document=doc&view=members&tab=members');
+    browser.dispatchEvent(new browser.Event('popstate'));
+    root.render(<Capture />);
+  });
+  expect(current[0]).toBe('knowledge');
+  const params = new URLSearchParams(browser.location.search);
+  expect(params.get('view')).toBeNull(); expect(params.get('tab')).toBeNull();
+  expect(params.get('knowledgeBase')).toBe('personal'); expect(params.get('document')).toBe('doc');
 });

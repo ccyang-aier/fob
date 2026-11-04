@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { readPresencePreference, resolvePresence } from './presence';
+import { readPresencePreference, readPresenceState, resolvePresence } from './presence';
 
 describe('device presence', () => {
   test('idle activity changes online to away, without overriding an explicit status', () => {
@@ -19,5 +19,17 @@ describe('device presence', () => {
     expect(readPresencePreference(null)).toBe('online');
     expect(readPresencePreference('invalid')).toBe('online');
     expect(readPresencePreference('busy')).toBe('busy');
+  });
+  test('custom status survives storage alongside the independent availability preference', () => {
+    const status = { preference: 'do-not-disturb', customStatus: { emoji: '🎧', text: ' 专注写作 ' } };
+    expect(readPresenceState(JSON.stringify(status))).toEqual({ preference: 'do-not-disturb', customStatus: { emoji: '🎧', text: '专注写作' } });
+    expect(resolvePresence(readPresenceState(JSON.stringify(status)).preference, false, false)).toBe('offline');
+    expect(readPresenceState('busy')).toEqual({ preference: 'busy', customStatus: null });
+  });
+  test('malformed and oversized custom statuses cannot enter the persisted preference', () => {
+    for (const customStatus of [{ emoji: '', text: 'test' }, { emoji: '😀', text: ' ' }, { emoji: '😀', text: 'a'.repeat(41) }, { emoji: 1, text: 'test' }]) {
+      expect(readPresenceState(JSON.stringify({ preference: 'away', customStatus }))).toEqual({ preference: 'away', customStatus: null });
+    }
+    expect(readPresenceState('{broken')).toEqual({ preference: 'online', customStatus: null });
   });
 });

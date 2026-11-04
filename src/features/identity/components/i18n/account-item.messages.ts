@@ -12,6 +12,12 @@ export const messages = defineMessages({
   '登录 Fob 账户': ['登录 Fob 账户', 'Sign in to Fob'],
   点击登录: ['点击登录', 'Sign in'],
   设置状态: ['设置状态', 'Set status'],
+  自定义状态: ['自定义状态', 'Custom status'],
+  '此刻在做什么？': ['此刻在做什么？', 'What are you up to?'],
+  清除状态: ['清除状态', 'Clear status'],
+  关闭: ['关闭', 'Close'],
+  取消: ['取消', 'Cancel'],
+  保存: ['保存', 'Save'],
   当前设备状态: ['当前设备状态', 'Device status'],
   '在线时，5 分钟无操作自动显示离开。': [
     '在线时，5 分钟无操作自动显示离开。',

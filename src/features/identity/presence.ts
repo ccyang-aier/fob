@@ -11,6 +11,23 @@ export const presenceOptions = [
 
 export type PresencePreference = (typeof presenceOptions)[number]['value'];
 export type PresenceStatus = PresencePreference | 'offline';
+export type CustomPresenceStatus = { emoji: string; text: string };
+export const customStatusMaxLength = 40;
+
+export function readPresenceState(value: string | null): { preference: PresencePreference; customStatus: CustomPresenceStatus | null } {
+  try {
+    const parsed: unknown = JSON.parse(value ?? 'null');
+    if (parsed && typeof parsed === 'object' && 'preference' in parsed) {
+      const candidate = 'customStatus' in parsed ? parsed.customStatus : null;
+      const customStatus = candidate && typeof candidate === 'object' && 'emoji' in candidate && 'text' in candidate
+        && typeof candidate.emoji === 'string' && candidate.emoji.length > 0 && candidate.emoji.length <= 32
+        && typeof candidate.text === 'string' && candidate.text.trim().length > 0 && candidate.text.trim().length <= customStatusMaxLength
+        ? { emoji: candidate.emoji, text: candidate.text.trim() } : null;
+      return { preference: readPresencePreference(String(parsed.preference)), customStatus };
+    }
+  } catch { /* Older versions stored the preference as plain text. */ }
+  return { preference: readPresencePreference(value), customStatus: null };
+}
 export const presenceIdleMs = 5 * 60 * 1_000;
 
 export function readPresencePreference(value: string | null): PresencePreference {

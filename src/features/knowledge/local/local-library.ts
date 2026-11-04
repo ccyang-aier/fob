@@ -28,7 +28,7 @@ export type LocalDocument = {
   indexStatus?: DocumentIndexStatus;
 };
 export type LocalTag = { id: string; baseId: string; name: string; pageIds: string[] };
-export type LocalKnowledgeBase = { id: string; name: string };
+export type LocalKnowledgeBase = { id: string; name: string; convertedTo?: { id: string; principal: string } };
 export type LocalLibrary = {
   bases: LocalKnowledgeBase[];
   folders: { id: string; knowledgeBaseId: string; name: string; parentId?: string | null; metadata?: FolderMetadata }[];

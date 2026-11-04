@@ -20,7 +20,7 @@ import { authErrorCopyFor } from './auth-errors';
 import { AccountDialog } from './components/account-dialog';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { createPresenceStore } from './presence-store';
-import type { PresencePreference } from './presence';
+import type { CustomPresenceStatus, PresencePreference } from './presence';
 import { presenceDisplay } from './presence';
 
 export function IdentityProvider({ children }: { children: ReactNode }) {
@@ -104,11 +104,12 @@ export function IdentityProvider({ children }: { children: ReactNode }) {
     notify('warning', uiText('登录已过期，请重新登录'));
   }, [store, notify]);
   const setPresence = useCallback(
-    (preference: PresencePreference) => {
-      if (presenceStore.getSnapshot().preference === preference) return;
-      presenceStore.setPreference(preference);
+    (preference: PresencePreference, customStatus: CustomPresenceStatus | null = null) => {
+      const previous = presenceStore.getSnapshot();
+      if (previous.preference === preference && previous.customStatus?.text === customStatus?.text && previous.customStatus?.emoji === customStatus?.emoji) return;
+      presenceStore.setPreference(preference, customStatus);
       const status = presenceDisplay(preference);
-      notify('success', uiText('状态已设为「{0}」', { '0': status.label }), undefined, {
+      notify('success', uiText('状态已设为「{0}」', { '0': customStatus?.text ?? status.label }), undefined, {
         markerColor: status.color,
       });
     },
@@ -125,6 +126,7 @@ export function IdentityProvider({ children }: { children: ReactNode }) {
       expireSession,
       presence: presence.status,
       presencePreference: presence.preference,
+      customStatus: presence.customStatus,
       setPresence,
     }),
     [

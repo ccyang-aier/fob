@@ -2,7 +2,7 @@
 
 import { createContext, useContext } from 'react';
 import type { IdentitySession } from './session-store';
-import type { PresencePreference, PresenceStatus } from './presence';
+import type { CustomPresenceStatus, PresencePreference, PresenceStatus } from './presence';
 
 export type IdentityContextValue = {
   session: IdentitySession;
@@ -14,7 +14,8 @@ export type IdentityContextValue = {
   openSwitchAccount: () => void;
   presence: PresenceStatus;
   presencePreference: PresencePreference;
-  setPresence: (value: PresencePreference) => void;
+  customStatus?: CustomPresenceStatus | null;
+  setPresence: (value: PresencePreference, customStatus?: CustomPresenceStatus | null) => void;
 };
 
 export const IdentityContext = createContext<IdentityContextValue | null>(null);

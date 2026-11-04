@@ -14,21 +14,22 @@ function subscribe(listener: () => void) {
   window.addEventListener(viewChanged, listener);
   return () => { window.removeEventListener('popstate', listener); window.removeEventListener(viewChanged, listener); };
 }
-export function useWorkbenchView(scopeKey: string | null) {
+export function useWorkbenchView(scopeKey: string | null, allowMembers = true) {
   useEffect(() => startNavigationHistory(scopeKey), [scopeKey]);
   const search = useSyncExternalStore(subscribe, () => window.location.search, () => '');
   useEffect(() => {
     const url = new URL(window.location.href);
-    if (url.searchParams.get('view') !== 'profile') return;
+    if (url.searchParams.get('view') !== 'profile' && (allowMembers || url.searchParams.get('view') !== 'members')) return;
+    const retired = url.searchParams.get('view');
     url.searchParams.delete('view');
-    if (url.searchParams.get('tab') === 'profile') url.searchParams.delete('tab');
+    if (url.searchParams.get('tab') === retired) url.searchParams.delete('tab');
     replaceWorkbenchLocation(url);
-  }, [search]);
+  }, [search, allowMembers]);
   const navigation = useSyncExternalStore(subscribeNavigationHistory, getNavigationSnapshot, getServerNavigationSnapshot);
   const params = new URLSearchParams(search);
   const settingsOpen = params.get('view') === 'settings';
   const requestedView = resolveView(params.get(settingsOpen ? 'returnView' : 'view'));
-  const view = requestedView === 'settings' ? 'knowledge' : requestedView;
+  const view = requestedView === 'settings' || (!allowMembers && requestedView === 'members') ? 'knowledge' : requestedView;
   return [view, (next: WorkbenchView) => {
     const url = new URL(window.location.href);
     if (next === 'settings' && url.searchParams.get('view') !== 'settings') {

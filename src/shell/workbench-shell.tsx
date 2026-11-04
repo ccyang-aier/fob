@@ -53,9 +53,10 @@ function WorkbenchChrome() {
     return () => { narrow.removeEventListener('change', collapseOnNarrowScreen); window.removeEventListener(KNOWLEDGE_NAVIGATED, collapseOnNarrowScreen); };
   }, []);
   const settingsSection = useSettingsSection();
-  const { scopeKey, status } = useKnowledgeBaseResources();
-  const [view, setView, settingsOpen, navigation, search] = useWorkbenchView(scopeKey);
-  const tabs = useWorkbenchTabs(scopeKey, view, search, identity.status !== 'checking' && status !== 'loading' && sessionStatus.ready, startupEntry);
+  const { scopeKey, status, selectedKnowledgeBase } = useKnowledgeBaseResources();
+  const allowMembers = selectedKnowledgeBase?.source !== 'local';
+  const [view, setView, settingsOpen, navigation, search] = useWorkbenchView(scopeKey, allowMembers);
+  const tabs = useWorkbenchTabs(scopeKey, view, search, identity.status !== 'checking' && status !== 'loading' && sessionStatus.ready, startupEntry, allowMembers);
   const activeKnowledge = tabs.tabs.find(tab => tab.key === tabs.active && tab.view === 'knowledge');
   const [lastKnowledgeKey, setLastKnowledgeKey] = useState<string | null>(null);
   if (activeKnowledge && lastKnowledgeKey !== activeKnowledge.key) setLastKnowledgeKey(activeKnowledge.key);

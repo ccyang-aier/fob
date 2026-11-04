@@ -192,49 +192,14 @@
   margin-left: auto;
   color: var(--muted);
   font-size: 10px;
-}
-
-.statusTrigger > svg:last-child {
-  margin-left: 0;
   flex-shrink: 0;
 }
+
+.statusLabel { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 .statusDot {
   width: 8px;
   height: 8px;
   flex: none;
   border-radius: 50%;
-}
-
-.statusMenu {
-  width: 200px;
-  padding: 4px;
-  border-radius: 8px;
-}
-
-.statusItem {
-  height: auto;
-  min-height: 38px;
-  gap: 8px;
-  padding-block: 6px;
-  border-radius: 5px;
-}
-
-.statusText {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.statusDescription {
-  color: var(--muted-strong);
-  font-size: 11px;
-}
-
-.statusNote {
-  padding: 6px 10px 8px;
-  color: var(--muted-strong);
-  font-size: 10px;
-  line-height: 16px;
 }
