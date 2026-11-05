@@ -11,7 +11,7 @@ import {
 } from './tree-actions';
 
 function access(
-  role: 'owner' | 'admin' | 'member' | 'guest',
+  role: KnowledgeAccess['role'],
   scopes: readonly string[],
 ): KnowledgeAccess {
   return {
@@ -25,10 +25,11 @@ function access(
 }
 
 describe('canEditTree (write gate)', () => {
-  test('needs a write scope; guests never edit even with a stray write scope', () => {
+  test('needs a write credential without overriding explicit viewer or guest resource grants', () => {
     expect(canEditTree(access('owner', ['read', 'write']))).toBe(true);
     expect(canEditTree(access('member', ['read', 'write']))).toBe(true);
-    expect(canEditTree(access('guest', ['read', 'write']))).toBe(false);
+    expect(canEditTree(access('guest', ['read', 'write']))).toBe(true);
+    expect(canEditTree(access('viewer', ['read', 'write']))).toBe(true);
     expect(canEditTree(access('admin', ['read']))).toBe(false);
     expect(canEditTree(undefined)).toBe(false);
   });

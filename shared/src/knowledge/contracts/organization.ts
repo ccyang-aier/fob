@@ -26,7 +26,7 @@ export const acceptKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema
   invitationId: entityIdSchema, token: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
 });
 export const revokeKnowledgeBaseInvitationInputSchema = knowledgeBaseScopeSchema.extend({ invitationId: entityIdSchema });
-export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email(), image: z.string().nullable().optional(), joinedAt: timestampSchema.optional() });
+export const knowledgeBaseMemberSummarySchema = memberSchema.extend({ name: z.string(), email: z.email(), image: z.string().nullable().optional(), joinedAt: timestampSchema.optional(), directAccessCount: z.number().int().nonnegative().nullable().optional() });
 export const teamspaceSchema = knowledgeBaseScopeSchema.extend({
   id: entityIdSchema, name: resourceNameSchema, defaultAccess: permissionLevelSchema.nullable(),
   parentId: entityIdSchema.nullable().optional(),

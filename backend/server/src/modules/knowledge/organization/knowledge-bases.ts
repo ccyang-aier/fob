@@ -3,7 +3,7 @@ import { and, asc, eq, gt } from 'drizzle-orm';
 import type { Pool } from 'pg';
 import { knowledgeBaseScopeSchema } from '@fob/shared/knowledge/contracts';
 import { createKnowledgeBaseInputSchema, listKnowledgeBasesInputSchema, renameKnowledgeBaseInputSchema } from '@fob/shared/knowledge/contracts';
-import { member, knowledgeBase, teamspace } from '../../../platform/database/resources/schema';
+import { member, knowledgeBase, teamspace, teamspaceMemberAccess } from '../../../platform/database/resources/schema';
 import { withFobIdentity, withKnowledgeBase } from '../../../platform/database/resources/transaction';
 import type { FobIdentity } from '../../../platform/identity/identity';
 import { inKnowledgeBase, knowledgeBaseView } from './context';
@@ -19,7 +19,9 @@ export function knowledgeBaseOperations(pool: Pool) {
         const actor = await currentIdentity(db, identity, true);
         const [created] = await db.insert(knowledgeBase).values({ id, name: parsed.name }).returning();
         await db.insert(member).values({ knowledgeBaseId: id, userId: actor.userId, role: 'owner' });
-        await db.insert(teamspace).values({ knowledgeBaseId: id, id: randomUUID(), name: '文档', defaultAccess: 'view' });
+        const folderId = randomUUID();
+        await db.insert(teamspace).values({ knowledgeBaseId: id, id: folderId, name: '文档', defaultAccess: 'view' });
+        await db.insert(teamspaceMemberAccess).values({ knowledgeBaseId: id, teamspaceId: folderId, userId: actor.userId, level: 'full' });
         return knowledgeBaseView(created!);
       });
     },

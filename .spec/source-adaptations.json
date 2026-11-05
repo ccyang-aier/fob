@@ -129,8 +129,8 @@
     "deleted": true
   },
   "src/features/knowledge/organization/organization-panel.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consume the independent identity context to remove the provider/account-view initialization cycle. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Apply the requested open-sided tables, lowered background section buttons and semantic action icons. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md.",
-    "sha256": "13c4342e13fdeaeef88590cb297028cca7dac2d7e09796eaf6a9f8c647b7bb54"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consume the independent identity context to remove the provider/account-view initialization cycle. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Apply the requested open-sided tables, lowered background section buttons and semantic action icons. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "15cb362dabd6bc20c6b471cbf4b2ac1dbe0d47664220a0b54630f2340617c4ad"
   },
   "src/features/knowledge/use-knowledge-base-selection.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -141,16 +141,16 @@
     "sha256": "1b03444f1902848184ab0a9a10953434e38a41488a8e98ab50fbe6e09cbb624e"
   },
   "backend/server/src/modules/knowledge/organization/knowledge-bases.integration.test.ts": {
-    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Verify default public view access, private-document isolation, access to subsequently created public documents and lack of default comment/edit/full permissions after joining.",
-    "sha256": "9916e144c567d199cd80c02299f95155805124b05ea7cfaa7b5743e217b3d658"
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Verify default public view access, private-document isolation, access to subsequently created public documents and lack of default comment/edit/full permissions after joining. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "d39394224b9f3cebd038c4ab39da9410a44687eb17c9050d71f22e9f47362975"
   },
   "backend/server/src/modules/knowledge/organization/knowledge-bases.ts": {
-    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Create the default public document folder with view access so newly joined members are read-only unless explicitly granted more access.",
-    "sha256": "3da7bdfedad1232f1f37b87d4f3ed5c915f7997063227690f1e2cb9e1fb64e9a"
+    "reason": "Knowledge workspace APIs list by membership, create by name, enforce owner-only rename/delete and retain direct KB authorization and deletion integrity. Create the default public document folder with view access so newly joined members are read-only unless explicitly granted more access. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "515b66f0c5c23939c8950fc852330e4428b047554172c9e4015339279c076f91"
   },
   "backend/server/src/modules/knowledge/organization/members.integration.test.ts": {
-    "reason": "Update knowledge member API fixture for direct KB creation and test actual shared 128KiB write body limit without changing member authorization. Verify owner-only invitation creation, the ordinary-member default, real directory avatars and invitation invalidation after inviter demotion. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "10bd2ff62d4260333782edb245fe50a13425dcfc2491c65efcc5b26e6f2bdc96"
+    "reason": "Update knowledge member API fixture for direct KB creation and test actual shared 128KiB write body limit without changing member authorization. Verify owner-only invitation creation, the ordinary-member default, real directory avatars and invitation invalidation after inviter demotion. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "9e498ef68214a06f3c09cf2ec43a95a790be6ebbea96e1b329f571d83f1fb790"
   },
   "backend/server/src/modules/knowledge/organization/project-scopes.integration.test.ts": {
     "reason": "Remove project-scope service and tests because Fob has only direct knowledge membership and page ACL; no compatibility route remains.",
@@ -169,8 +169,8 @@
     "sha256": "5751796247370f72ab946af90b9f8964aface89f848eec41d15e0129500794c9"
   },
   "shared/src/knowledge/contracts/organization.ts": {
-    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Default knowledge-base invitations to ordinary membership and add an optional real avatar to member summaries; preserve strict knowledge-base scoping. See docs/ui/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "ada9bb1e23ad0c56fa1d0ba2f3309f485b1344f24ed5029ad847a3362a39ae95"
+    "reason": "Make shared KB create/list contracts project-free and strict; reject obsolete scope injection while retaining knowledge member/group contracts. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Default knowledge-base invitations to ordinary membership and add an optional real avatar to member summaries; preserve strict knowledge-base scoping. See docs/ui/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Expose scoped per-member resource access contracts and real direct-grant counts while retaining historical ownership and persisted ACL compatibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "aad4685412b1edebbcdd376b6ff656dfef7a530f9c2e8698204e5f167bd2537f"
   },
   "src/features/companion/companion-layer.tsx": {
     "reason": "Keep the global companion in one viewport-sized manual popover with scoped menus/tooltips, escaping dialog transform/overflow without remounting the character or disabling native modal interactivity.",
@@ -319,16 +319,16 @@
     "sha256": "c0d32085666f97683a97f790290ff60c39d7ab005b1797475ac5ea1ba5d1ae92"
   },
   "backend/server/src/modules/knowledge/ai/tools/write.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "be3c4976d00a832bdc5e156514c16acfc1726e081c1f866873ec05475da182e3"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "f7fdbe24f83e32d388a4698dd332dd3cd880995e4a564adb070ed70715be7829"
   },
   "backend/server/src/modules/knowledge/api/page-routes.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing. Add an authorized atomic native text import mutation that persists initial Y.Doc content and creator ACL without overwriting retries or accepting standalone internal asset claims.",
-    "sha256": "103cd8b268d22848baa1cf7a22c41531409c08985239c8eeda4e5d533062f2a1"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing. Add an authorized atomic native text import mutation that persists initial Y.Doc content and creator ACL without overwriting retries or accepting standalone internal asset claims. Align destination, edit, transfer, recycle and recovery authorization with current role-aware resource grants; recheck live writers under the resource lock and retain fail-closed visibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "ffaf654081b71cb295480e4722a77beb060fd156fe631436083504be75643bfb"
   },
   "backend/server/src/modules/knowledge/assets/service.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Keep document-only guests from probing unrelated library assets, uploading without page edit access or revoking shared assets.",
-    "sha256": "717b290b12d665d0bbc4c656d4a04bcceceeeb9f03393f277badd6b8f18000a8"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Keep document-only guests from probing unrelated library assets, uploading without page edit access or revoking shared assets. Require readable document references for every attachment download, actual write access for uploads, and administrative authority for global asset revocation; update real storage acceptance fixtures. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "4911a037a6049687eea9221eb121fa8839da7b2420c35f0bcb6e23cf24737d19"
   },
   "backend/server/src/modules/knowledge/collaboration/page-collaboration-server.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Verify awareness identities and ownership; revalidate live sessions and permissions during sync and after permission changes.",
@@ -339,12 +339,12 @@
     "sha256": "5d290d20ba311ce27cb73b1f4b944b4fec2f34728a41ae01f94d9f9b0edc473f"
   },
   "backend/server/src/modules/knowledge/notifications/service.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "dde4d314811b12f3891e9f3dd9bc11488a801ef5c15555cc36257ebee2f8d596"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "b6f3c2a00ea2cd7ec472bbde8621564f0430565431b15281d102a761013ff5f2"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "bbdeb75c71545e2bed4fd4f7b9c34625a7e4f422b2b4b652973fd58c00cfd2c2"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Advance folder overview revision on existing directory rename and default-permission writes so stale overview mutations cannot overwrite them. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "9d9036fbb5714054bbf0a06171b81f186ab59a90f8be55bc5d5255465d57d865"
   },
   "backend/server/src/modules/knowledge/pages/tree.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
@@ -623,8 +623,8 @@
     "sha256": "0b080c1459fb88bb27a0f94c96ec18745b0efec35bd0f8644e4b91b0b7283057"
   },
   "src/features/knowledge/editor/comments-integration.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "d1cf73915df10effc2da74e2c3d501c4bd09f4cd26f8ac82ae2936c1d988a71e"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Read comment capability from the authenticated page policy independently of the three resource grants; retain guest restrictions and align file move controls and permission copy. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "c7940b25f5cbbdbf8794133f6f980d1b4533438a5b78a3dd493e147ebf9afd81"
   },
   "src/features/knowledge/editor/components/document-appearance-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -672,8 +672,8 @@
     "deleted": true
   },
   "src/features/knowledge/organization/members-section.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Apply the requested open-sided tables, lowered background section buttons and semantic action icons. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md. Polish member management with uniform role badges and descriptive role menus; replace the inline selection row with a page-visibility-aware bottom action dock, retaining selection limits, role authority, real mutations and optimistic rollback. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md.",
-    "sha256": "e122f48495db3b96b02137d856aea016f48c740fd45b7e6f8cfd39f3a8f78948"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Redesign the knowledge-base-scoped members page with a responsive semantic directory, complete cursor-backed membership counts and name/email/role filters, real account avatars and owner-only access to the existing invitation panel; preserve role authority, confirmation, optimistic rollback and server authorization. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Apply the requested open-sided tables, lowered background section buttons and semantic action icons. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md. Polish member management with uniform role badges and descriptive role menus; replace the inline selection row with a page-visibility-aware bottom action dock, retaining selection limits, role authority, real mutations and optimistic rollback. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members-design-qa.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "ca2672cb9e1fa756175ddd93146575da0bba9feb3d1637865eeeba46c4fa5078"
   },
   "src/features/knowledge/organization/permission-select.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Dropdown selection refinement (docs/ui/icon-system.md): Use the shared 18px selected-option indicator and matching empty slot without changing permission values, authorization or persistence.",
@@ -684,12 +684,12 @@
     "sha256": "7e1cedc92c2139b405a4496d60e3fe5b5ee4ae239768f1f81727bac3dd0a11d4"
   },
   "src/features/knowledge/organization/ui.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "b260ba322d24207e597ef4fe0a0df5fe14b09c183459c6acbfd87b069c7406da"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "dbd43889caaf0d159f8a8c09915deeaf63d4ae8e3b3450e218e2f40419d19b2f"
   },
   "src/features/knowledge/sharing/document-share-dialog.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the copy-only stub with Outline-style sharing, real user/group grants, bound-email invitations, inheritance and revocable publication. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "926998ef3fea825fb320d346160b73f5e8b1b0c0eb39f228da782b2aa03e6906"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the copy-only stub with Outline-style sharing, real user/group grants, bound-email invitations, inheritance and revocable publication. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Offer the three current resource permission levels and display persisted comment grants as read-compatible access. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md. Separate public publishing from resource member administration, reject guest publishing, and keep anonymous link and same-page expiry predicates closed. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "0196db6073d612cf0e3ee6e92b6605a5a91c3bb720282a17eae754cfc4e84243"
   },
   "src/features/companion/companion-action-menu.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -740,16 +740,16 @@
     "sha256": "b26af07f29afca2933d5d73479636f99427b8fdff9f79fa92e4c0e0d3f0fa517"
   },
   "backend/server/src/modules/knowledge/permissions/effective.ts": {
-    "reason": "Exclude document guests from knowledge-base default principals so invitations grant only authorized pages. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "14ddf0974c7cf773f6cb14ba4d34f79d3c79a47fa946a735235dc126425214e2"
+    "reason": "Exclude document guests from knowledge-base default principals so invitations grant only authorized pages. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Separate workspace role defaults from explicit resource grants, cap viewer defaults, preserve guest and anonymous restrictions, and authorize resource management and recovery from current permissions. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "9b3a9bccd6cb90bc785c0a5dcd64336a394310228fe3ac4ec19e62692a1ccb30"
   },
   "shared/src/knowledge/contracts/events.ts": {
     "reason": "Allow validated IANA time-zone presence for member local-time display.",
     "sha256": "27c837924aed53e754b0755cd1288a9429217d17fe2c4613db0997255cf733ae"
   },
   "shared/src/knowledge/contracts/index.ts": {
-    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose the runtime-neutral personal profile contract for ACL-filtered activity, resources, exact daily counts and pagination. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Publish the validated local-library transfer contract for the independent Web client and business service. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md.",
-    "sha256": "217bae50368a61ab53113b08f0e587892a5fd3c0d3f8e1592ea95eba6dbd6815"
+    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose the runtime-neutral personal profile contract for ACL-filtered activity, resources, exact daily counts and pagination. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Publish the validated local-library transfer contract for the independent Web client and business service. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Expose scoped per-member resource access contracts and real direct-grant counts while retaining historical ownership and persisted ACL compatibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "e7dda78ce9b2e4f35379d21fe85fbdc5469b6d4b1d7d67ac074349ed42c7ddcb"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the star control while preserving its icon, aria-pressed state and actual star operation; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -788,8 +788,8 @@
     "sha256": "a8a54b61c83a49e19c102be139a67886570c19583ed7d7fcc04c6daa581f6186"
   },
   "backend/server/src/modules/knowledge/api/page-route-guards.ts": {
-    "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing.",
-    "sha256": "d46d0e10a78d2c0d2f9f08607e9bfe27b9cf50f6e91a56a5a2d375629d961763"
+    "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing. Align destination, edit, transfer, recycle and recovery authorization with current role-aware resource grants; recheck live writers under the resource lock and retain fail-closed visibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "8eb238cc17bfa88541b35cf009f77aa140417090edadc445cf5b1a29744cd8db"
   },
   "shared/src/knowledge/contracts/pages.ts": {
     "reason": "Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing. Add a separate bounded text-import contract while retaining the metadata-only ordinary page creation contract.",
@@ -966,8 +966,8 @@
     "relocatedTo": "src/features/knowledge/documents/import/server-document-import.tsx"
   },
   "src/features/knowledge/editor/page-editor.tsx": {
-    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents. Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles. Update imports for component ownership without changing behavior.",
-    "sha256": "36b79c8a335e22e127c4ac29e2c8aaf5d82701790b807c13cbaa170e709a6817"
+    "reason": "Pass full-access move capability to file headers and treat text titles without file associations as ordinary native documents. Wait for local cache loading and initial uncached cloud body hydration before mounting the editor, preventing repeated placeholder paragraphs; retain acknowledged empty documents, offline fallback, collaboration and undo. Verify stored-body reopen cycles. Update imports for component ownership without changing behavior. Read comment capability from the authenticated page policy independently of the three resource grants; retain guest restrictions and align file move controls and permission copy. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "10015495f8c28bb533cb9baf33248e1b96e8075833dd44842c03abef5e309523"
   },
   "src/features/knowledge/assets/components/asset-uploader.test.tsx": {
     "reason": "Make the full import dropzone clickable and keyboard-accessible with a sibling file input, preserving drop, upload, progress and retry behavior.",
@@ -1282,14 +1282,14 @@
     "sha256": "07e30892d35c4075b210d9fe985885994cc87b099153e528e6123a7660eae3e7"
   },
   "src/features/knowledge/navigation/tree-actions.test.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Use credential write scope as the coarse navigation gate so explicit viewer and guest grants reach per-resource authorization. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
     "relocatedTo": "src/features/knowledge/navigation/tree/tree-actions.test.ts",
-    "sha256": "dd59a404fe718e8bbe82f9b571d74a630bc91070b138b0910c9cd8bb7422c8ee"
+    "sha256": "91814c49ceb444bd7121c54bbf4603939a4459c2e5aa11dad208a7bcc5653b2e"
   },
   "src/features/knowledge/navigation/tree-actions.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Use credential write scope as the coarse navigation gate so explicit viewer and guest grants reach per-resource authorization. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
     "relocatedTo": "src/features/knowledge/navigation/tree/tree-actions.ts",
-    "sha256": "d35c96b2df452dad751f70a81f4452da431d0ce71cc5f3ef83b8bb4dcaf93d01"
+    "sha256": "763836f972ab1500f6a5f4d9a146d60f77c73f153a2ca89ca39960a46fe99e33"
   },
   "src/features/knowledge/navigation/tree-model.messages.ts": {
     "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -1340,8 +1340,8 @@
     "sha256": "daff5fd175cece11d07bf1de234e0c5684bbb4bfb249f2f9b5a838f83e4bed30"
   },
   "backend/server/src/modules/knowledge/organization/teamspaces.integration.test.ts": {
-    "reason": "Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "7061d8ca685927389f7e1bd826d324fe18d7785c395bd1ff7b8dcd9c76230aba"
+    "reason": "Persist same-knowledge-base folder parents, validate creation and protect nested folder data; retain independent permissions. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "2abb4752cfdb91021767d21a0ed318862b2f9687893507b04cd3130ae1b366b4"
   },
   "src/features/knowledge/organization/errors.messages.ts": {
     "reason": "Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
@@ -1356,12 +1356,12 @@
     "reason": " Unify starred, drafts and trash with the shared scoped collection surface, real document metadata and existing actions; remove redundant knowledge-base eyebrows. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md."
   },
   "backend/server/src/modules/knowledge/organization/invitations.ts": {
-    "reason": "Restrict knowledge-base member invitation creation to owners while preserving email binding, one-time tokens, expiry, revocation and transactional authority checks. See docs/ui/knowledge-base-members.md. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations.",
-    "sha256": "505a6756c775f09b2ac529140d78cf5ac3673919553670de2a7df11451ba16d4"
+    "reason": "Restrict knowledge-base member invitation creation to owners while preserving email binding, one-time tokens, expiry, revocation and transactional authority checks. See docs/ui/knowledge-base-members.md. Acceptance rechecks owner authority; demotion to admin/member or removal invalidates outstanding invitations. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "d8fb2e465c01361a57d8afc7e540d31c48044347bab9d173d58f2f5c407c7450"
   },
   "backend/server/src/modules/knowledge/organization/members.ts": {
-    "reason": "Return real account avatars in the knowledge-base-scoped member directory without changing membership or guest directory authorization. See docs/ui/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "3c63b05447eeeb7b1bf4a53cba7348ad3769816b23a0e3e6a713a743feab54a8"
+    "reason": "Return real account avatars in the knowledge-base-scoped member directory without changing membership or guest directory authorization. See docs/ui/knowledge-base-members.md. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "ae702d1ce9945c1617121befbe93ac4b7202d931dbc86e76a8716ee7de81c9bf"
   },
   "src/features/knowledge/organization/members-section.messages.ts": {
     "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
@@ -1372,8 +1372,8 @@
     "sha256": "b1e7cfb3f6e955b79e7324a3c363d403089a3d568764a388021c6f39a8963533"
   },
   "src/features/knowledge/organization/client.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "04fd7c3bf1cfa9cefbecf1dc7f30c1a8ac9e134c7563356480fde808b817a5bc"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "19515d71d0d3d89473ae277a9053f595712a560c2f026a5b76e988b6159921d7"
   },
   "src/features/knowledge/organization/groups-section.messages.ts": {
     "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
@@ -1400,12 +1400,12 @@
     "sha256": "46345c810ac7b16806c8decccbb61783413c801cecf035f2b8f992ee288c6a50"
   },
   "src/features/knowledge/organization/view-model.messages.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "338f9baffeb5158154a30a4443b6cb5b3ebf8d0e08f71147e6c0f38258c16347"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "7522162342efa7cfba49b53f3b6677b6b08ca875d180bbe300bcf716713b8b43"
   },
   "src/features/knowledge/organization/view-model.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "51380a202c5ec57f91204002cc8420f39f9681b81538fcd60bcc3e72d1fb1bd3"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "42bec5e28243be68e62a30fcca45d278cf5283d186020b072d2d14e84e2c4e4e"
   },
   "src/features/knowledge/sharing/permission-model.test.ts": {
     "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
@@ -1420,16 +1420,16 @@
     "deleted": true
   },
   "backend/server/src/modules/knowledge/organization/membership-http.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Limit membership middleware to member and invitation routes so independently guarded catalog imports can accept their scoped multipart payload. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md.",
-    "sha256": "0696cbda8e9f924656dc350023683aefd03c494bbea90f27a1a633f9453711ad"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Limit membership middleware to member and invitation routes so independently guarded catalog imports can accept their scoped multipart payload. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "12393595e0e21b2f557177f04cb2df8fa1c851094c48de746090729e5a7b507a"
   },
   "backend/server/src/modules/knowledge/organization/membership-service.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "4a62421573754920b8ba9187a2680fdc40641ced3a4ac551700f57e3eb98fd60"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "a9a78c1efefb6340b526688fd949add731028d6de7227093a710528570d448f3"
   },
   "backend/server/src/modules/knowledge/permissions/authorization.integration.test.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "c24e0dabe9ad45d38072093075befc3b20c1c6cfd981ac617f210b2b74d7eca3"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Separate workspace role defaults from explicit resource grants, cap viewer defaults, preserve guest and anonymous restrictions, and authorize resource management and recovery from current permissions. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "f9bd81a29b5453fe03b13234b84d4b9a1eba6ac0df066cc4b34129c52cfcfa00"
   },
   "backend/server/src/modules/knowledge/permissions/fence.ts": {
     "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
@@ -1440,7 +1440,51 @@
     "sha256": "1dad2ea7a0a135e03a608c956ea7b3b4c023b3dbb5ac857769933c1c3066bc5a"
   },
   "backend/server/src/modules/knowledge/permissions/permissions.integration.test.ts": {
-    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md.",
-    "sha256": "65a45e6a37b481d33dc98c278e7d565661c939dda14d1ac44fe887f6db92da0b"
+    "reason": "Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Assert revoked readers disappear from ACL and index arrays while the explicit folder creator manager remains authorized. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "980d1bd9b8eccb120010e440e6c4ccb66550e5018b75277eb881cae715367556"
+  },
+  "src/features/knowledge/organization/view-model.test.ts": {
+    "reason": "Refactor the member directory around workspace role badges, separate per-member resource access, truthful filters and sorting, confirmed role changes and the existing bottom action dock. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "f27eab0161014b989d285f65787954c04a64feda386473edc25e2a229a9cfdaa"
+  },
+  "backend/server/src/modules/knowledge/api/database-routes.ts": {
+    "reason": "Align destination, edit, transfer, recycle and recovery authorization with current role-aware resource grants; recheck live writers under the resource lock and retain fail-closed visibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "e9c1f01e7579066e7eca50686a54dfcf0a2ed9a6bebca6f9a36d8f04abad50ae"
+  },
+  "backend/server/src/modules/knowledge/assets/assets.integration.test.ts": {
+    "reason": "Require readable document references for every attachment download, actual write access for uploads, and administrative authority for global asset revocation; update real storage acceptance fixtures. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "89b22f1da00e45d67c42aff11c9203e884eec4cee3a5b1837dd2aba4d8c417c9"
+  },
+  "backend/server/src/modules/knowledge/comments/comments.integration.test.ts": {
+    "reason": "Exercise Outline member read/comment capabilities and true access revocation while preserving comment author, resource and lifecycle guards. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "67594aa768e474dfd8229c2abddcfa4ed0abf3d5e374a1b01716689d2f8a37c2"
+  },
+  "backend/server/src/modules/knowledge/organization/context.ts": {
+    "reason": "Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "0285d6d19147f0634cf9f6754f5e9b5cfc82e4a1ef98d1b4e225ef025477321f"
+  },
+  "backend/server/src/modules/knowledge/permissions/authorization.ts": {
+    "reason": "Separate workspace role defaults from explicit resource grants, cap viewer defaults, preserve guest and anonymous restrictions, and authorize resource management and recovery from current permissions. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "fb2c0fabdc8b4beaffd1b1c03323b5fc47ddf593f79cfb197b36954eed9f898e"
+  },
+  "backend/server/src/modules/knowledge/permissions/index.ts": {
+    "reason": "Separate workspace role defaults from explicit resource grants, cap viewer defaults, preserve guest and anonymous restrictions, and authorize resource management and recovery from current permissions. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "613cae92b35b7f7ad4e1d39f84c7cb7c4b43cfe44e665cad68029947b71f8a44"
+  },
+  "backend/server/src/modules/knowledge/permissions/queries.ts": {
+    "reason": "Separate workspace role defaults from explicit resource grants, cap viewer defaults, preserve guest and anonymous restrictions, and authorize resource management and recovery from current permissions. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
+    "sha256": "94328cf5166ac109ae36b487ccefcac358c96a145a39b9d308f1e2272f0915c8"
+  },
+  "backend/server/src/modules/knowledge/api/asset-routes.integration.test.ts": {
+    "reason": "Verify unreadable or unattached hashes are forbidden before exposing whether an asset exists. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "6f8ab9d35ab045ceb515fd25668734fd183dcfcd7153906f53c95b8c8a220dcb"
+  },
+  "src/features/knowledge/editor/page-access.ts": {
+    "reason": "Read comment capability from the authenticated page policy independently of the three resource grants; retain guest restrictions and align file move controls and permission copy. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "48e3e7bc05874d97a462f804f66059b9b9d0c82ea28c93104794bd5d02b7323f"
+  },
+  "backend/server/src/modules/knowledge/sharing/links.ts": {
+    "reason": "Separate public publishing from resource member administration, reject guest publishing, and keep anonymous link and same-page expiry predicates closed. See docs/architecture/knowledge-permissions.md.",
+    "sha256": "e05242625e6b6bd59a5742a50d8d9ddbe0510bc8c6fd3e2c387ef52d0425854d"
   }
 }

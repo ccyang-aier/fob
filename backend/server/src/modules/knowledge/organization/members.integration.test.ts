@@ -164,7 +164,8 @@ describe('knowledgeBase and identity boundaries over real HTTP/PostgreSQL', () =
     const renamed = await result<Space>(request(`/${main.id}`, owner, 'PATCH', { name: 'Renamed by owner' }));
     expect(renamed.name).toBe('Renamed by owner');
     expect((await request(`/${main.id}/members/${owner.identity.userId}`, admin, 'PATCH', { role: 'member' })).status).toBe(403);
-    expect((await request(`/${main.id}/members/${regular.identity.userId}`, admin, 'PATCH', { role: 'admin' })).status).toBe(403);
+    expect((await request(`/${main.id}/members/${regular.identity.userId}`, admin, 'PATCH', { role: 'admin' })).status).toBe(200);
+    await result(request(`/${main.id}/members/${regular.identity.userId}`, owner, 'PATCH', { role: 'member' }));
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, regular, 'PATCH', { role: 'owner' })).status).toBe(403);
     expect((await request(`/${main.id}/members/${owner.identity.userId}`, admin, 'DELETE', {})).status).toBe(403);
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, guest, 'DELETE', {})).status).toBe(403);
@@ -197,17 +198,16 @@ describe('email-bound, expiring one-time invitations', () => {
     expect((await result<Space>(request(`/${space.id}`, owner))).role).toBe('owner');
   });
 
-  test('role ceilings cover invitation issue, reissue and revocation', async () => {
-    expect((await request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role: 'member' })).status).toBe(403);
-    expect((await request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role: 'admin' })).status).toBe(403);
+  test('administrators issue, reissue and revoke ordinary workspace invitations within ownership limits', async () => {
+    for (const role of ['member', 'viewer', 'guest', 'admin'] as const) {
+      const created = await result<Invite>(request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role }), 201);
+      expect(created.invitation.role).toBe(role);
+      await result(request(`/${main.id}/invitations/${created.invitation.id}`, admin, 'DELETE', {}));
+      expect((await accept(main, created, outsider, 404)).code).toBe('INVITATION_INVALID');
+    }
     expect((await request(`/${main.id}/invitations`, owner, 'POST', { email: outsider.email, role: 'owner' })).status).toBe(400);
     expect((await request(`/${main.id}/invitations`, regular, 'POST', { email: outsider.email, role: 'member' })).status).toBe(403);
     expect((await request(`/${main.id}/invitations`, guest)).status).toBe(403);
-    const high = await invite(main, outsider, 'admin');
-    expect((await request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role: 'member' })).status).toBe(403);
-    expect((await request(`/${main.id}/invitations/${high.invitation.id}`, admin, 'DELETE', {})).status).toBe(403);
-    await result(request(`/${main.id}/invitations/${high.invitation.id}`, owner, 'DELETE', {}));
-    expect((await accept(main, high, outsider, 404)).code).toBe('INVITATION_INVALID');
   });
 
   test('reissue rotates the token, expiry rejects acceptance, and membership cannot be promoted via a stale invitation', async () => {
@@ -223,18 +223,19 @@ describe('email-bound, expiring one-time invitations', () => {
     expect((await result<Space>(request(`/${space.id}`, regular))).role).toBe('guest');
   });
 
-  test('changing or removing an inviter’s authority invalidates outstanding delegated power', async () => {
+  test('delegated invitations remain valid for administrators and stop when management authority is removed', async () => {
     for (const nextRole of ['admin', 'member', null] as const) {
       const space = await create(owner, `Revoked inviter ${nextRole}`);
       await accept(space, await invite(space, coOwner, 'admin'), coOwner);
       await result(request(`/${space.id}/members/${coOwner.identity.userId}`, owner, 'PATCH', { role: 'owner' }));
       const issued = await invite(space, regular, 'member', coOwner);
       await result(request(`/${space.id}/members/${coOwner.identity.userId}`, owner, nextRole ? 'PATCH' : 'DELETE', nextRole ? { role: nextRole } : {}));
-      expect((await accept(space, issued, regular, 404)).code).toBe('INVITATION_INVALID');
+      if (nextRole === 'admin') expect((await accept(space, issued, regular)).role).toBe('member');
+      else expect((await accept(space, issued, regular, 404)).code).toBe('INVITATION_INVALID');
     }
   });
 
-  test('omitting an invitation role defaults to an ordinary member, and only an owner can issue it', async () => {
+  test('omitting an invitation role defaults to an ordinary member, and only a manager can issue it', async () => {
     const space = await create(owner, 'Default member invitation');
     const created = await result<Invite>(request(`/${space.id}/invitations`, owner, 'POST', { email: regular.email }), 201);
     expect(created.invitation.role).toBe('member');
@@ -337,7 +338,7 @@ describe('membership invariants and retired groups', () => {
     const rows = await server.database.admin.query<{role: string}>('SELECT role FROM resources.knowledge_base_member WHERE knowledge_base_id=$1 AND user_id=ANY($2::uuid[])', [space.id, ids]);
     expect(rows.rows.every(row => row.role === 'admin')).toBe(true);
     expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [owner.identity.userId, ...ids], role: 'member' })).status).toBe(409);
-    expect((await request(`/${space.id}/members`, regular, 'PATCH', { userIds: [coOwner.identity.userId], role: 'member' })).status).toBe(403);
+    expect((await request(`/${space.id}/members`, regular, 'PATCH', { userIds: [coOwner.identity.userId], role: 'member' })).status).toBe(200);
     expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [regular.identity.userId, regular.identity.userId], role: 'member' })).status).toBe(400);
   });
 

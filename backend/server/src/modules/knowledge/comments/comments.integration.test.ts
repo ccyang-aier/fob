@@ -183,7 +183,7 @@ describe('comment thread persistence and permissions', () => {
   });
 
   test('editing persists only for the author, obeys page ACL and resource scope, and preserves replies and likes', async () => {
-    const { pages } = await fixture.tree();
+    const { pages } = await fixture.tree({ defaultAccess: null, breaks: [0] });
     const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[1].pageId };
     const owner = fixture.owner.identity.userId;
     const reader = fixture.reader.identity.userId;
@@ -205,7 +205,7 @@ describe('comment thread persistence and permissions', () => {
     expect((await knowledgeBaseEvents(scope.knowledgeBaseId)).some(event => event.event?.type === 'comment.changed' && event.event.threadId === created.thread.id)).toBe(true);
     // The ACL-only fixture cannot consume the reply notification job.
     await fixture.resetJobs();
-    await grant(pages[0], [{ principal: principal('user', owner), level: 'view' }]);
+    await grant(pages[0], []);
     await expectCode(() => update(scope.knowledgeBaseId, owner, 'No comment permission'), 'COMMENT_ACCESS_DENIED');
   });
 
@@ -231,7 +231,7 @@ describe('comment thread persistence and permissions', () => {
   });
 
   test('page comments cannot be resolved; likes are persisted, idempotent, resource-scoped and cascade on deletion', async () => {
-    const { pages } = await fixture.tree();
+    const { pages } = await fixture.tree({ defaultAccess: null, breaks: [0] });
     const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[1].pageId };
     const owner = fixture.owner.identity.userId;
     const reader = fixture.reader.identity.userId;
@@ -256,7 +256,6 @@ describe('comment thread persistence and permissions', () => {
     await fixture.resetJobs();
     await grant(pages[0], [
       { principal: principal('user', owner), level: 'full' },
-      { principal: principal('user', reader), level: 'view' },
     ]);
     await expectCode(() => like(reader, true), 'COMMENT_ACCESS_DENIED');
     await expectCode(() => resolve(reader), 'COMMENT_ACCESS_DENIED');
@@ -264,7 +263,7 @@ describe('comment thread persistence and permissions', () => {
     expect((await fixture.admin.query('SELECT count(*)::int AS count FROM resources.comment_like WHERE comment_id=$1', [created.comment.id])).rows[0].count).toBe(0);
   });
 
-  test('view level is read-only: reads pass and every write path is denied', async () => {
+  test('view members can comment, reply and resolve while document editing stays separate', async () => {
     const { pages } = await fixture.tree();
     const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[1].pageId };
     const owner = fixture.owner.identity.userId;
@@ -276,19 +275,19 @@ describe('comment thread persistence and permissions', () => {
     }));
 
     expect(await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => listPageCommentThreads(db, { ...scope, userId: reader }))).toHaveLength(1);
-    await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => createCommentThread(db, {
+    await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => createCommentThread(db, {
       kind: 'issue', anchorKind: 'selection',
-      ...scope, userId: reader, bodyMd: 'No writes',
-    })), 'COMMENT_ACCESS_DENIED');
-    await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => replyCommentThread(db, {
-      knowledgeBaseId: scope.knowledgeBaseId, threadId: thread.id, userId: reader, bodyMd: 'No replies',
-    })), 'COMMENT_ACCESS_DENIED');
-    await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => resolveCommentThread(db, {
+      ...scope, userId: reader, bodyMd: 'Read access includes commenting',
+    }));
+    await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => replyCommentThread(db, {
+      knowledgeBaseId: scope.knowledgeBaseId, threadId: thread.id, userId: reader, bodyMd: 'Reader reply',
+    }));
+    await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => resolveCommentThread(db, {
       knowledgeBaseId: scope.knowledgeBaseId, threadId: thread.id, userId: reader,
-    })), 'COMMENT_ACCESS_DENIED');
-    await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => reopenCommentThread(db, {
+    }));
+    await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => reopenCommentThread(db, {
       knowledgeBaseId: scope.knowledgeBaseId, threadId: thread.id, userId: reader,
-    })), 'COMMENT_ACCESS_DENIED');
+    }));
 
     // Non-members cannot even read; missing pages deny identically.
     await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => listPageCommentThreads(db, {

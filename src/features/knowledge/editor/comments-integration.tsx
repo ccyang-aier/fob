@@ -14,7 +14,7 @@ import type { PageScope, PermissionLevel } from '@fob/shared/knowledge/contracts
 import { ChatCircleDots } from '@/components/icons';
 import { PageComments } from '../comments/comments-controller';
 import { usePageCommentThreads } from '../comments/comments-queries';
-import { levelSatisfies } from './editor-state';
+import { usePageCommentAccessQuery } from './page-access';
 import { useDocumentReference } from './document-reference';
 import styles from './comments-integration.module.css';
 
@@ -56,7 +56,6 @@ export function PageCommentsLayer({
   scope,
   knowledgeBaseId,
   editor,
-  level,
   children,
   railOpen,
   onRailOpenChange,
@@ -72,6 +71,7 @@ export function PageCommentsLayer({
   currentUser: { id: string; name: string; image?: string | null } | null;
 }) {
   const reference = useDocumentReference();
+  const commentAccess = usePageCommentAccessQuery(scope.knowledgeBaseId, scope.pageId);
   return (
     <div className={styles.rail} data-document-sidebar>
       {children}
@@ -80,7 +80,7 @@ export function PageCommentsLayer({
         knowledgeBaseId={knowledgeBaseId}
         editor={editor}
         currentUser={currentUser}
-        canComment={levelSatisfies(level, 'comment')}
+        canComment={commentAccess.data?.authorized === true}
         railOpen={railOpen}
         onRailOpenChange={onRailOpenChange}
         followDocumentLink={!reference?.fixed}

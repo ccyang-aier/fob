@@ -3,7 +3,7 @@ import type { Pool } from 'pg';
 import { entityIdSchema, localKnowledgeBaseImportSchema, principal, type LocalKnowledgeBaseImport } from '@fob/shared/knowledge/contracts';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import type { FobIdentity } from '../../../platform/identity/identity';
-import { asset, docState, documentVisit, knowledgeTemplate, member, page, pageAcl, teamspace } from '../../../platform/database/resources/schema';
+import { asset, docState, documentVisit, knowledgeTemplate, member, page, pageAcl, teamspace, teamspaceMemberAccess } from '../../../platform/database/resources/schema';
 import { parseInput, ResourceRequestError } from '../../../platform/resources/errors';
 import { createAuthorizedPage } from '../pages/tree';
 import { refreshPagePermissions } from '../api/page-route-guards';
@@ -56,7 +56,10 @@ export async function importLocalKnowledgeBase(pool: Pool, identity: FobIdentity
 
     const rootId = currentFolders[0]!.id;
     // Preserve resource UUIDs and ordering within their new knowledge-base scope.
-    for (const folder of folders) await db.insert(teamspace).values({ knowledgeBaseId, id: folder.id, name: folder.name, parentId: folder.parentId ?? null, defaultAccess: 'view', metadata: folder.metadata ?? {} });
+    for (const folder of folders) {
+      await db.insert(teamspace).values({ knowledgeBaseId, id: folder.id, name: folder.name, parentId: folder.parentId ?? null, defaultAccess: 'view', metadata: folder.metadata ?? {} });
+      await db.insert(teamspaceMemberAccess).values({ knowledgeBaseId, teamspaceId: folder.id, userId: actor.userId, level: 'full' });
+    }
     if (folders.length && documents.every(item => item.folderId)) await db.delete(teamspace).where(and(eq(teamspace.knowledgeBaseId, knowledgeBaseId), eq(teamspace.id, rootId)));
     for (const item of documents) {
       const scope = { knowledgeBaseId, pageId: item.id };

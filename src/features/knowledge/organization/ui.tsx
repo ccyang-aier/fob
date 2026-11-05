@@ -278,6 +278,7 @@ export function ConfirmDialog({
   body,
   confirmLabel,
   busy,
+  danger = true,
 }: {
   open: boolean;
   onClose: () => void;
@@ -286,6 +287,7 @@ export function ConfirmDialog({
   body: ReactNode;
   confirmLabel: string;
   busy?: boolean;
+  danger?: boolean;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -298,7 +300,7 @@ export function ConfirmDialog({
       footer={
         <>
           <DialogButton onClick={onClose}>{knowledgeT('cancel')}</DialogButton>
-          <DialogButton variant="danger" loading={busy} onClick={onConfirm} autoFocus>
+          <DialogButton variant={danger ? 'danger' : 'primary'} loading={busy} onClick={onConfirm} autoFocus>
             {confirmLabel}
           </DialogButton>
         </>

@@ -25,8 +25,8 @@ beforeAll(async () => {
     listMembers: async (_id: string, options: { cursor: string | null }) => {
       calls.push(options.cursor);
       return options.cursor === null
-        ? { items: [{ knowledgeBaseId: base, userId: 'owner', name: 'Owner', email: 'owner@example.test', image: null, role: 'owner' }], nextCursor: cursor }
-        : { items: [{ knowledgeBaseId: base, userId: 'later', name: 'Later member', email: 'later@example.test', image: null, role: 'member' }], nextCursor: null };
+        ? { items: [{ knowledgeBaseId: base, userId: 'owner', name: 'Owner', email: 'owner@example.test', image: null, role: 'owner', joinedAt: '2026-10-01T00:00:00Z' }], nextCursor: cursor }
+        : { items: [{ knowledgeBaseId: base, userId: 'later', name: 'Later member', email: 'later@example.test', image: null, role: 'member', joinedAt: '2026-11-05T00:00:00Z' }], nextCursor: null };
     },
   } }));
   mock.module('./invitation-client', () => ({ invitationClient: { list: async () => ({ items: [], nextCursor: null }) }, knowledgeBaseInvitationLink: () => '' }));
@@ -102,4 +102,18 @@ test('pending invitations have a real empty state and can return to joined membe
   expect(host.textContent).toContain('暂无待接受的邀请');
   await act(async () => host.querySelector<HTMLButtonElement>('#members-joined-tab')!.click());
   expect(host.querySelector('tbody')?.textContent).toContain('Later member');
+});
+
+
+test('member name and join-date sorting work across the complete directory', async () => {
+  await render('owner');
+  expect(host.querySelector('tbody tr')?.textContent).toContain('Later member');
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="按成员姓名排序"]')!.click());
+  expect(host.querySelector('tbody tr')?.textContent).toContain('Owner');
+  expect(host.querySelector('th[aria-sort="descending"]')).not.toBeNull();
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="按加入时间排序"]')!.click());
+  expect(host.querySelector('tbody tr')?.textContent).toContain('Owner');
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="按加入时间排序"]')!.click());
+  expect(host.querySelector('tbody tr')?.textContent).toContain('Later member');
+  expect(host.querySelector('tbody [aria-label^="变更"]')).toBeNull();
 });

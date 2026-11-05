@@ -16,6 +16,8 @@ import { createMarkdownPipeline } from '@fob/shared/knowledge/markdown';
 import { docState } from '../../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
 import { authorizePageAccess } from '../../permissions/authorization';
+import { lockPermissionKnowledgeBase } from '../../permissions/locking';
+import { requireActivePageWriter, requirePageDestination } from '../../api/page-route-guards';
 import { pageDocumentName } from '@fob/shared/knowledge/collaboration';
 import { PAGE_BODY_FRAGMENT, insertProseMirrorBlocks } from '../../import-export/y-encoding';
 import { agentOrigin, mcpOrigin } from '@fob/shared/knowledge/collaboration';
@@ -200,10 +202,10 @@ export const knowledgeAgentWriteTools = [
       requireWriteContext(context as KnowledgeAgentWriteContext);
       const write = context as KnowledgeAgentWriteContext;
       return withKnowledgeBase(write.pool, input.knowledgeBaseId, async (db) => {
-        if (input.parentId) {
-          const decision = await authorizePageAccess(db, { userId: write.authority.userId, scope: { knowledgeBaseId: input.knowledgeBaseId, pageId: input.parentId }, required: 'edit' });
-          if (decision.decision !== 'allow') throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'create_page');
-        }
+        await lockPermissionKnowledgeBase(db, input.knowledgeBaseId);
+        await requireActivePageWriter(db, write.authority);
+        try { await requirePageDestination(db, write.authority.userId, input); }
+        catch { throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'create_page'); }
         return createAuthorizedPage(db, {
           id: randomUUID(), knowledgeBaseId: input.knowledgeBaseId, teamspaceId: input.teamspaceId, parentId: input.parentId,
           title: input.title, kind: input.kind, databaseId: null, properties: {}, icon: input.icon ?? null, cover: input.cover ?? null,

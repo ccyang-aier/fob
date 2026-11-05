@@ -45,7 +45,7 @@ describe('page authorization entry for api, collaboration and ai callers', () =>
         userId: fixture.reader.identity.userId, scope: scopeOf(pages[2]), required: action,
       }));
       decisions[action] = decision.decision === 'allow';
-      if (decision.decision === 'allow') expect(decision.level).toBe('comment');
+      if (decision.decision === 'allow') expect(decision.level).toBe('view');
     }
     expect(decisions).toEqual({ view: true, comment: true, edit: false, full: false });
 
@@ -135,7 +135,7 @@ describe('page authorization entry for api, collaboration and ai callers', () =>
     const expected = { knowledgeBaseId: fixture.alpha.id, pageId: pages[1].pageId };
     for (const action of actions) {
       const result = await client.page.access.query({ ...scopeOf(pages[1]), action });
-      expect(result).toEqual({ ...expected, authorized: action === 'view' || action === 'comment', level: action === 'view' || action === 'comment' ? 'comment' : null });
+      expect(result).toEqual({ ...expected, authorized: action === 'view' || action === 'comment', level: action === 'view' || action === 'comment' ? 'view' : null });
     }
 
     // Apart from the caller's own echoed pageId, a denied existing page and a

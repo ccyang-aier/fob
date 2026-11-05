@@ -32,7 +32,7 @@ export type MemberRecord = Pick<KnowledgeBaseMemberSummary, 'knowledgeBaseId' | 
 export type OrganizationPage<T> = { items: T[]; nextCursor: string | null };
 export type RemovedResult = { removed: true };
 
-export const memberRoles: readonly MemberRole[] = ['owner', 'admin', 'member', 'guest'];
+export const memberRoles: readonly MemberRole[] = ['owner', 'admin', 'member', 'viewer', 'guest'];
 
 const organizationPathPrefix = '/api/knowledge-bases';
 

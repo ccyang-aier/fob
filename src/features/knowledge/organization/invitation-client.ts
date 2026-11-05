@@ -22,7 +22,7 @@ export function createInvitationClient(deps: OrganizationClientDeps) {
     },
     accept(input: { knowledgeBaseId: string; invitationId: string; token: string }, signal?: AbortSignal) {
       const parsed = acceptKnowledgeBaseInvitationInputSchema.parse(input);
-      return request<KnowledgeBase & { role: 'member' | 'admin' | 'guest' }>({ method: 'POST', path: `${path(parsed.knowledgeBaseId)}/${parsed.invitationId}/accept`, body: { token: parsed.token }, signal });
+      return request<KnowledgeBase & { role: 'member' | 'admin' | 'viewer' | 'guest' }>({ method: 'POST', path: `${path(parsed.knowledgeBaseId)}/${parsed.invitationId}/accept`, body: { token: parsed.token }, signal });
     },
   };
 }

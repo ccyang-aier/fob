@@ -28,6 +28,10 @@ test('multiple independent libraries each create their own default folder and ow
   expect(folders.items[0]).toMatchObject({ knowledgeBaseId: first.id, name: '文档', defaultAccess: 'view' });
   const secondFolders = await organization.listTeamspaces(owner.identity, { knowledgeBaseId: second.id });
   expect(secondFolders.items[0]!.id).not.toBe(folders.items[0]!.id);
+  const client = fixture.apiClient({ cookie: owner.cookie, origin: fixture.server.webOrigin }, first.id);
+  const pageId = randomUUID();
+  await client.page.create.mutate({ knowledgeBaseId: first.id, id: pageId, teamspaceId: folders.items[0]!.id, parentId: null, kind: 'doc', databaseId: null, title: 'First document' });
+  expect((await client.page.access.query({ knowledgeBaseId: first.id, pageId, action: 'edit' })).authorized).toBe(true);
 });
 
 test('library membership governs folders while any verified user may create a library', async () => {
@@ -114,8 +118,8 @@ test('joining the library grants read-only access to public documents, including
   const issued = await organization.createInvitation(owner.identity, { knowledgeBaseId: alpha.id, email: foreign.identity.email });
   await organization.acceptInvitation(foreign.identity, { knowledgeBaseId: alpha.id, invitationId: issued.invitation.id, token: issued.token });
   for (const item of tree.pages.slice(0,2)) {
-    expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action: 'view' })).toMatchObject({ authorized: true, level: 'view' });
-    for (const action of ['comment', 'edit', 'full'] as const) expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action })).toMatchObject({ authorized: false });
+    for (const action of ['view', 'comment'] as const) expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action })).toMatchObject({ authorized: true, level: 'view' });
+    for (const action of ['edit', 'full'] as const) expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: item.pageId, action })).toMatchObject({ authorized: false });
   }
   expect(await client.page.access.query({ knowledgeBaseId: alpha.id, pageId: tree.pages[2]!.pageId, action: 'view' })).toMatchObject({ authorized: false });
   const later = await fixture.tree({ teamspace: folder, parents: [null] });

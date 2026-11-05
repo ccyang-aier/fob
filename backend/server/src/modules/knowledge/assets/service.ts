@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { and, eq, sql } from 'drizzle-orm';
-import { assetDownloadInputSchema, assetRevokeInputSchema, assetUploadInputSchema } from '@fob/shared/knowledge/contracts';
+import { assetDownloadInputSchema, assetRevokeInputSchema, assetUploadInputSchema, folderAccessForMember } from '@fob/shared/knowledge/contracts';
 import type { AssetConfirmResult, AssetDownloadResult, AssetDownloadInput, AssetRevokeInput, AssetRevokeResult, AssetUploadInput, AssetUploadPrepareResult } from '@fob/shared/knowledge/contracts';
 import { z } from 'zod';
 import { asset, docState, member, page } from '../../../platform/database/resources/schema';
@@ -14,6 +14,7 @@ import { appendKnowledgeOutbox } from '../workers/outbox';
 import { KnowledgeAssetError } from './errors';
 import type { KnowledgeAssetStorage } from './storage';
 import { recordSubscriptionChange } from '../subscriptions/service';
+import { readFolderAccess } from '../organization/folder-access';
 
 const uploadGrantSeconds = 600;
 const downloadGrantSeconds = 300;
@@ -24,7 +25,7 @@ function parse<S extends z.ZodType>(schema: S, input: unknown): z.output<S> {
   return parsed.data;
 }
 
-/** Verified members share library assets; document guests need a readable attachment reference. */
+/** Membership scopes the request; attachment reads still require document access. */
 async function requireKnowledgeBaseMembership(db: ResourceTransaction, knowledgeBaseId: string, userId: string) {
   const principals = await expandRequestPrincipals(db, knowledgeBaseId, userId);
   if (!principals.length) throw new KnowledgeAssetError('ASSET_ACCESS_DENIED');
@@ -33,8 +34,16 @@ async function requireKnowledgeBaseMembership(db: ResourceTransaction, knowledge
   return { ...membership, principals };
 }
 
-async function requireGuestAssetAccess(db: ResourceTransaction, input: { knowledgeBaseId: string; principals: Principal[]; hash?: string; write?: boolean }) {
-  const accessible = effectivePageAccessCondition({ knowledgeBaseId: input.knowledgeBaseId, principals: input.principals, required: input.write ? 'edit' : 'view' });
+async function requireAssetUploadAccess(db: ResourceTransaction, knowledgeBaseId: string, userId: string, membership: Awaited<ReturnType<typeof requireKnowledgeBaseMembership>>) {
+  if (membership.role === 'owner' || membership.role === 'admin') return;
+  const folders = await readFolderAccess(db, knowledgeBaseId);
+  if (folders.some(folder => ['edit', 'full'].includes(folderAccessForMember(folder, { userId, role: membership.role }).level ?? ''))) return;
+  await requireAssetPageAccess(db, { knowledgeBaseId, principals: membership.principals, write: true, viewer: membership.role === 'viewer' });
+}
+
+async function requireAssetPageAccess(db: ResourceTransaction, input: { knowledgeBaseId: string; principals: Principal[]; hash?: string; write?: boolean; viewer?: boolean }) {
+  const principals = input.write && input.viewer ? input.principals.filter(subject => !subject.startsWith('knowledgeBase:')) : input.principals;
+  const accessible = effectivePageAccessCondition({ knowledgeBaseId: input.knowledgeBaseId, principals, required: input.write ? 'edit' : 'view' });
   const pages = await db.select({ id: page.id, properties: page.properties }).from(page).where(accessible);
   if (input.write && pages.length) return;
   if (!input.write && input.hash) {
@@ -63,7 +72,7 @@ const normalizeMime = (value: string) => value.split(';', 1)[0]!.trim().toLowerC
 export async function prepareKnowledgeBaseAssetUpload(storage: KnowledgeAssetStorage, db: ResourceTransaction, input: AssetUploadInput): Promise<AssetUploadPrepareResult> {
   const parsed = parse(assetUploadInputSchema, input);
   const membership = await requireKnowledgeBaseMembership(db, parsed.knowledgeBaseId, parsed.userId);
-  if (membership.role === 'guest') await requireGuestAssetAccess(db, { knowledgeBaseId: parsed.knowledgeBaseId, principals: membership.principals, write: true });
+  await requireAssetUploadAccess(db, parsed.knowledgeBaseId, parsed.userId, membership);
   const [existing] = await db.select({ status: asset.status }).from(asset).where(scopedBy(parsed));
   if (existing?.status === 'ready') return { action: 'reuse' };
   if (existing?.status === 'revoked') throw new KnowledgeAssetError('ASSET_NOT_READY');
@@ -81,7 +90,7 @@ export async function prepareKnowledgeBaseAssetUpload(storage: KnowledgeAssetSto
 export async function confirmKnowledgeBaseAssetUpload(storage: KnowledgeAssetStorage, db: ResourceTransaction, input: AssetUploadInput): Promise<AssetConfirmResult> {
   const parsed = parse(assetUploadInputSchema, input);
   const membership = await requireKnowledgeBaseMembership(db, parsed.knowledgeBaseId, parsed.userId);
-  if (membership.role === 'guest') await requireGuestAssetAccess(db, { knowledgeBaseId: parsed.knowledgeBaseId, principals: membership.principals, write: true });
+  await requireAssetUploadAccess(db, parsed.knowledgeBaseId, parsed.userId, membership);
   const [existing] = await db.select({ status: asset.status }).from(asset).where(scopedBy(parsed));
   if (existing?.status === 'revoked') throw new KnowledgeAssetError('ASSET_NOT_READY');
   if (existing?.status === 'ready') return { status: 'ready', created: false };
@@ -135,11 +144,11 @@ async function reject(storage: KnowledgeAssetStorage, intent: AssetUploadInput, 
   throw new KnowledgeAssetError(code);
 }
 
-/** Confirmed assets remain knowledge-base scoped; guests may read only attachments of accessible pages. */
+/** Knowing an attachment hash never bypasses its source document's visibility. */
 export async function presignKnowledgeBaseAssetDownload(storage: KnowledgeAssetStorage, db: ResourceTransaction, input: AssetDownloadInput): Promise<AssetDownloadResult> {
   const parsed = parse(assetDownloadInputSchema, input);
   const membership = await requireKnowledgeBaseMembership(db, parsed.knowledgeBaseId, parsed.userId);
-  if (membership.role === 'guest') await requireGuestAssetAccess(db, { knowledgeBaseId: parsed.knowledgeBaseId, principals: membership.principals, hash: parsed.hash });
+  await requireAssetPageAccess(db, { knowledgeBaseId: parsed.knowledgeBaseId, principals: membership.principals, hash: parsed.hash });
   const [record] = await db.select({ status: asset.status }).from(asset).where(scopedBy(parsed));
   if (!record) throw new KnowledgeAssetError('ASSET_NOT_FOUND');
   if (record.status !== 'ready') throw new KnowledgeAssetError('ASSET_NOT_READY');
@@ -151,7 +160,7 @@ export async function presignKnowledgeBaseAssetDownload(storage: KnowledgeAssetS
 export async function revokeKnowledgeBaseAsset(db: ResourceTransaction, input: AssetRevokeInput): Promise<AssetRevokeResult> {
   const parsed = parse(assetRevokeInputSchema, input);
   const membership = await requireKnowledgeBaseMembership(db, parsed.knowledgeBaseId, parsed.userId);
-  if (membership.role === 'guest') throw new KnowledgeAssetError('ASSET_ACCESS_DENIED');
+  if (membership.role !== 'owner' && membership.role !== 'admin') throw new KnowledgeAssetError('ASSET_ACCESS_DENIED');
   const predicate = scopedBy(parsed);
   const [record] = await db.select({ status: asset.status }).from(asset).where(predicate).for('update');
   if (!record) throw new KnowledgeAssetError('ASSET_NOT_FOUND');

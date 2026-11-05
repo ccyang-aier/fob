@@ -54,8 +54,8 @@ describe('role authority rendering', () => {
   });
 
   test('assignable roles follow the authority matrix', () => {
-    expect(assignableRoles('owner')).toEqual(['owner', 'admin', 'member', 'guest']);
-    expect(assignableRoles('admin')).toEqual(['member', 'guest']);
+    expect(assignableRoles('owner')).toEqual(['admin', 'member', 'viewer', 'guest']);
+    expect(assignableRoles('admin')).toEqual(['admin', 'member', 'viewer', 'guest']);
     expect(assignableRoles('member')).toEqual([]);
     expect(assignableRoles('guest')).toEqual([]);
   });
@@ -63,7 +63,7 @@ describe('role authority rendering', () => {
   test('per-row management is gated by the target role too', () => {
     expect(canManageMember('owner', 'owner')).toBe(true);
     expect(canManageMember('owner', 'guest')).toBe(true);
-    expect(canManageMember('admin', 'admin')).toBe(false);
+    expect(canManageMember('admin', 'admin')).toBe(true);
     expect(canManageMember('admin', 'owner')).toBe(false);
     expect(canManageMember('admin', 'member')).toBe(true);
     expect(canManageMember('admin', 'guest')).toBe(true);
@@ -73,11 +73,10 @@ describe('role authority rendering', () => {
 });
 
 describe('root default access presentation', () => {
-  test('exactly the four levels plus null, each labeled and described', () => {
+  test('three resource permissions plus null, with the persisted comment alias normalized', () => {
     expect(defaultAccessOptions().map((option) => option.value)).toEqual([
       null,
       'view',
-      'comment',
       'edit',
       'full',
     ]);
@@ -90,6 +89,7 @@ describe('root default access presentation', () => {
   test('labels resolve for every value with a safe fallback', () => {
     expect(defaultAccessLabel(null)).toBe('仅显式授权');
     expect(defaultAccessLabel('view')).toBe('可查看');
+    expect(defaultAccessLabel('comment')).toBe('可查看');
     expect(defaultAccessLabel('full')).toBe('完全控制');
     expect(defaultAccessLabel('unknown' as never)).toBe('仅显式授权');
   });

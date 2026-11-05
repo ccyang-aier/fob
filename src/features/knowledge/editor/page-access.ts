@@ -32,6 +32,17 @@ export function usePageAccessQuery(knowledgeBaseId: string, pageId: string) {
   });
 }
 
+/** Commenting is a member capability, not a fourth resource grant; ask the authoritative policy. */
+export function usePageCommentAccessQuery(knowledgeBaseId: string, pageId: string, enabled = true) {
+  return useQuery({
+    queryKey: [...pageAccessQueryKey(knowledgeBaseId, pageId), 'comment'],
+    queryFn: ({ signal }) => runKnowledgeCall(knowledgeBaseId, signal, client =>
+      client.page.access.query({ knowledgeBaseId, pageId, action: 'comment' }, { signal })),
+    enabled: enabled && knowledgeBaseId.length > 0 && pageId.length > 0,
+    refetchInterval: 5_000,
+  });
+}
+
 export interface PageEditorGateState {
   gate: PageEditorGate;
   /** The raw normalized error while the gate is in its error state. */

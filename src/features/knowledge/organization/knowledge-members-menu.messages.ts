@@ -2,7 +2,7 @@ import { defineMessages } from '@/lib/i18n';
 
 export const messages = defineMessages({
   title: ['知识库成员', 'Knowledge base members'], invite: ['邀请', 'Invite'], email: ['受邀者邮箱', 'Invitee email'],
-  inviteLink: ['邀请链接', 'Invitation link'], getLink: ['获取链接', 'Get link'], linkHint: ['填写邮箱，创建专属邀请链接', 'Enter an email to create a personal invite link'], ownerOnly: ['仅知识库创建者可生成邀请', 'Only the owner can create invitations'],
+  inviteLink: ['邀请链接', 'Invitation link'], getLink: ['获取链接', 'Get link'], linkHint: ['填写邮箱，创建专属邀请链接', 'Enter an email to create a personal invite link'], ownerOnly: ['仅知识库管理员可生成邀请', 'Only knowledge base administrators can create invitations'],
   placeholder: ['输入邮箱邀请成员', 'Enter an email to invite'], invalidEmail: ['请输入有效的邮箱地址', 'Enter a valid email address'],
   publicAccess: ['公开文档，默认只读', 'Public documents, read-only by default'], privateAccess: ['私有文档需单独授权', 'Private documents require separate access'],
   ready: ['邀请链接已生成', 'Invitation link is ready'], expires: ['{email} · 7 天内有效', '{email} · Valid for 7 days'],

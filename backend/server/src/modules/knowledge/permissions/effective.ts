@@ -1,4 +1,4 @@
-import { permissionLevels, principal } from '@fob/shared/knowledge/contracts';
+import { permissionLevels, principal, resourcePermission } from '@fob/shared/knowledge/contracts';
 import type { EffectivePermissions, PageAcl, PermissionLevel, Principal } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeBaseMember } from '@fob/shared/knowledge/contracts';
 
@@ -78,8 +78,17 @@ export function permissionFor(principals: readonly Principal[], permissions: Eff
   return null;
 }
 
+/** A workspace viewer reads public/default content, but may receive explicit edit/manage rights. */
+export function permissionForMember(role: KnowledgeBaseMember['role'], principals: readonly Principal[], permissions: EffectivePermissions) {
+  if (role !== 'viewer') return resourcePermission(permissionFor(principals, permissions));
+  const explicit = resourcePermission(permissionFor(principals.filter(value => !value.startsWith('knowledgeBase:')), permissions));
+  return explicit ?? (permissions.view.some(value => principals.includes(value)) ? 'view' : null);
+}
+
 export function canAccess(principals: readonly Principal[], permissions: EffectivePermissions, required: PermissionLevel): boolean {
   const available = permissionFor(principals, permissions);
+  // Raw principals include anonymous links: a read-only link never gains comment rights.
+  // Authenticated member capabilities are resolved separately by permissionForMember.
   return available !== null && rank(available) >= rank(required);
 }
 

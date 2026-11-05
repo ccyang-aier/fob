@@ -153,7 +153,7 @@ test('search, facets, counts and overview keep unreadable, recycled and foreign 
   const result = discoverySearchResultSchema.parse(await (await request('search', fixture.reader, { query: 'Discovery' })).json());
   expect(result.documents.some(document => document.id === hidden.root.pageId)).toBe(false);
   const folder = folderOverviewSchema.parse(await (await request(`folders/${visible.teamspace.id}`, fixture.reader)).json()); expect(folder.total).toBe(3);
-  expect((await request(`folders/${hidden.teamspace.id}`, fixture.reader)).status).toBe(403);
+  expect((await request(`folders/${hidden.teamspace.id}`, fixture.reader)).status).toBe(404);
   expect((await request(`folders/${visible.teamspace.id}`, fixture.foreign)).status).toBe(401);
   const facets = discoveryFacetsSchema.parse(await (await request('facets', fixture.reader)).json()); expect(facets.authors.some(author => author.id === fixture.foreign.identity.userId)).toBe(false);
   expect((await request('search', fixture.owner, { query: 'anything', folderId: 'invalid' })).status).toBe(400);

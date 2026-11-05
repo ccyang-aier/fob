@@ -187,14 +187,15 @@ describe('Teamspace metadata and root defaults over real HTTP/PostgreSQL', () =>
     }
   });
 
-  test('member can read metadata without acquiring page rights; guest and outsiders cannot browse', async () => {
+  test('private metadata is hidden from ordinary members and guests; administrators retain metadata access', async () => {
     const record = await create('Metadata only', null);
-    expect((await result<Teamspace>(request(path(record), regular))).defaultAccess).toBeNull();
+    expect((await request(path(record), regular)).status).toBe(404);
+    expect((await result<Teamspace>(request(path(record), admin))).defaultAccess).toBeNull();
     const listed = await result<{ items: Teamspace[] }>(request(`/${knowledgeBaseId}/teamspaces`, regular));
-    expect(listed.items.some((row) => row.id === record.id)).toBe(true);
+    expect(listed.items.some((row) => row.id === record.id)).toBe(false);
     for (const actor of [owner, admin, regular]) expect((await request(`/${knowledgeBaseId}/teamspaces`, actor)).status).toBe(200);
-    expect((await request(`/${knowledgeBaseId}/teamspaces`, guest)).status).toBe(403);
-    expect((await request(path(record), guest)).status).toBe(403);
+    expect((await request(`/${knowledgeBaseId}/teamspaces`, guest)).status).toBe(200);
+    expect((await request(path(record), guest)).status).toBe(404);
     expect((await request(`/${knowledgeBaseId}/teamspaces`, outsider)).status).toBe(404);
     expect((await request(path(record), outsider)).status).toBe(404);
   });
@@ -220,7 +221,7 @@ describe('Teamspace metadata and root defaults over real HTTP/PostgreSQL', () =>
       const updated = await result<Teamspace>(request(path(record), owner, 'PATCH', { defaultAccess }));
       expect(updated.defaultAccess).toBe(defaultAccess);
       const root = await withKnowledgeBase(server.database.pool, knowledgeBaseId, (db) => readTeamspacePermissionRoot(db, scope(record)));
-      expect(root).toEqual({ ...scope(record), defaultAccess, folderGrants: [] });
+      expect(root).toEqual({ ...scope(record), defaultAccess, folderGrants: [{ principal: `user:${owner.identity.userId}` as const, level: 'full' }] });
       const permissions = computeEffectivePermissions({ ...root, lineage: [{ id: pageId, parentId: null, knowledgeBaseId, teamspaceId: record.id, inheritsPermissions: true, grants: [] }] });
       expect(permissionFor([principal('knowledgeBase', knowledgeBaseId)], permissions)).toBe(defaultAccess);
     }

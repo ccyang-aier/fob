@@ -25,6 +25,6 @@ describe('asset routes', () => {
       expect(prepared.headers).toEqual({ 'content-type': 'text/plain' });
     }
     await expect(client.asset.download.query({ knowledgeBaseId: input.knowledgeBaseId, hash: input.hash }))
-      .rejects.toMatchObject({ data: { code: 'NOT_FOUND' } });
+      .rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
   });
 });

@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button';
 import { knowledgeErrorCodeOf } from '../entry-state';
 import { derivePageEditorView, pageBodyReady } from './editor-state';
 import { PageEditorSurface } from './editor-surface';
-import { usePageEditorGate } from './page-access';
+import { usePageCommentAccessQuery, usePageEditorGate } from './page-access';
 import { usePageEditorSession } from './page-session';
 
 function pageAccessErrorText(error: unknown, locale: Locale): string {
@@ -74,6 +74,7 @@ export function PageEditor({
   const format = page ? documentFileFormat(page.title) : null;
   const isFile = Boolean(page?.properties.fileAsset || (format && format !== 'markdown' && format !== 'text'));
   const { gate, error: gateError, retry } = usePageEditorGate(scope.knowledgeBaseId, scope.pageId);
+  const commentAccess = usePageCommentAccessQuery(scope.knowledgeBaseId, scope.pageId, isFile && gate.status === 'granted');
   // The collaboration session only exists once view access has been granted —
   // a denied page never opens a WebSocket or an IndexedDB copy.
   const session = usePageEditorSession(
@@ -123,9 +124,9 @@ export function PageEditor({
       <KnowledgeBaseFileDocument
         knowledgeBaseId={scope.knowledgeBaseId}
         page={page}
-        canComment={gate.level !== 'view'}
+        canComment={commentAccess.data?.authorized === true}
         canEdit={gate.level === 'edit' || gate.level === 'full'}
-        canMove={gate.level === 'full'}
+        canMove={gate.level === 'edit' || gate.level === 'full'}
         avatarName={user?.name ?? knowledgeT('me')}
         folderName={folderName}
         onBack={onBack}

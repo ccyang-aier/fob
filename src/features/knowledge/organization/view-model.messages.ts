@@ -3,7 +3,8 @@ import { defineMessages } from '@/lib/i18n';
 export const knowledgeMessages = defineMessages({
   explicitGrantsOnly: ['仅显式授权', 'Explicit grants only'],
   guest: ['访客', 'Guest'],
-  members: ['成员', 'Member'],
+  members: ['编辑者', 'Editor'],
+  viewer: ['查看者', 'Viewer'],
   administrator: ['管理员', 'Administrator'],
   owner: ['所有者', 'Owner'],
   knowledgeBaseMembersCanEditMoveAndShare: [

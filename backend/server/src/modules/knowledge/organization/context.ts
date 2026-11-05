@@ -14,7 +14,7 @@ export function requireDirectory(role: MemberRole) {
 
 export function requireRoleAuthority(actor: MemberRole, target: MemberRole) {
   requireManager(actor);
-  if (actor !== 'owner' && (target === 'owner' || target === 'admin')) {
+  if (actor !== 'owner' && target === 'owner') {
     throw new ResourceRequestError('FORBIDDEN', 'This role exceeds your management authority.', 403);
   }
 }

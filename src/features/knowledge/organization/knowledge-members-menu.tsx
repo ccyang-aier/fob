@@ -65,8 +65,8 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
   const { notify } = useAppAlert();
   const principal = session.status === 'authenticated' ? session.user.id : 'guest';
   const directory = useQuery({ queryKey: ['knowledge', base.id, 'member-directory', principal], queryFn: ({ signal }) => knowledgeBaseMemberDirectory(base.id, signal), staleTime: 0, refetchInterval: 30_000 });
-  const owner = !directory.isError && directory.data?.role === 'owner';
-  const invitations = useQuery({ queryKey: ['knowledge', base.id, 'member-invitations', principal], queryFn: ({ signal }) => allOrganizationPages(options => invitationClient.list(base.id, options), signal), enabled: owner, staleTime: 0, refetchInterval: 30_000 });
+  const manager = !directory.isError && (directory.data?.role === 'owner' || directory.data?.role === 'admin');
+  const invitations = useQuery({ queryKey: ['knowledge', base.id, 'member-invitations', principal], queryFn: ({ signal }) => allOrganizationPages(options => invitationClient.list(base.id, options), signal), enabled: manager, staleTime: 0, refetchInterval: 30_000 });
   const [email, setEmail] = useState(''), [fieldError, setFieldError] = useState(''), [error, setError] = useState('');
   const [activeInvite, setActiveInvite] = useState<CreatedKnowledgeBaseInvitation | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -85,7 +85,7 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
 
   async function invite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (pending.current || !owner) return;
+    if (pending.current || !manager) return;
     const parsed = createKnowledgeBaseInvitationInputSchema.safeParse({ knowledgeBaseId: base.id, email: email.trim() });
     if (!parsed.success) { setFieldError(t('invalidEmail')); return; }
     if (members.some(member => member.email.toLowerCase() === parsed.data.email)) { setFieldError(t('duplicate')); return; }
@@ -102,7 +102,7 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
   }
 
   async function revoke(id: string) {
-    if (pending.current || !owner) return;
+    if (pending.current || !manager) return;
     const signal = requestScope.current?.signal;
     pending.current = true; setBusy(id); setError('');
     try {
@@ -128,15 +128,15 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
   }
 
   return <div ref={setMenuRoot} className={styles.content}>
-    {owner ? <form className={styles.inviteForm} onSubmit={event => void invite(event)} noValidate aria-label={t('invite')} aria-busy={busy === 'create'}>
+    {manager ? <form className={styles.inviteForm} onSubmit={event => void invite(event)} noValidate aria-label={t('invite')} aria-busy={busy === 'create'}>
       <div className={styles.emailInput} data-invalid={Boolean(fieldError)}><input ref={emailInput} id={emailId} data-autofocus autoFocus type="email" name="email" autoComplete="email" maxLength={254} aria-label={t('email')} aria-invalid={Boolean(fieldError)} aria-describedby={fieldError ? `${emailId}-error` : replacing ? `${emailId}-hint` : undefined} placeholder={t('placeholder')} value={email} readOnly={Boolean(busy)} onChange={event => { setEmail(event.target.value); setFieldError(''); setError(''); }} /></div>
       <Button type="submit" className={styles.inviteButton} loading={busy === 'create'} disabled={!email.trim() || Boolean(busy && busy !== 'create')}>{t(replacing ? 'reissue' : 'invite')}</Button>
     </form> : null}
     {fieldError ? <p className={styles.fieldError} role="alert" id={`${emailId}-error`}>{fieldError}</p> : null}
-    {owner && replacing && !fieldError ? <p className={styles.fieldHint} id={`${emailId}-hint`}>{t('replacing')}</p> : null}
+    {manager && replacing && !fieldError ? <p className={styles.fieldHint} id={`${emailId}-hint`}>{t('replacing')}</p> : null}
     {error ? <AppAlert tone="error" title={error} /> : null}
-    <div className={styles.linkCard}><span className={styles.noteIcon}><LinkSimple size={18} aria-hidden /></span><div><strong>{t(liveInvite ? 'ready' : 'inviteLink')}</strong><p>{liveInvite ? t('expires', { email: liveInvite.invitation.email }) : t(owner ? 'linkHint' : 'ownerOnly')}</p></div>
-      <Button variant="outline" size="sm" className={styles.copyButton} loading={!liveInvite && busy === 'create'} disabled={!owner || Boolean(busy && (liveInvite || busy !== 'create'))} onClick={() => {
+    <div className={styles.linkCard}><span className={styles.noteIcon}><LinkSimple size={18} aria-hidden /></span><div><strong>{t(liveInvite ? 'ready' : 'inviteLink')}</strong><p>{liveInvite ? t('expires', { email: liveInvite.invitation.email }) : t(manager ? 'linkHint' : 'ownerOnly')}</p></div>
+      <Button variant="outline" size="sm" className={styles.copyButton} loading={!liveInvite && busy === 'create'} disabled={!manager || Boolean(busy && (liveInvite || busy !== 'create'))} onClick={() => {
         if (liveInvite) void copy();
         else { if (!email.trim()) { setFieldError(t('invalidEmail')); emailInput.current?.focus(); } else emailInput.current?.form?.requestSubmit(); }
       }}>{t(liveInvite ? 'copy' : replacing ? 'reissue' : 'getLink')}</Button>
@@ -146,8 +146,8 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
       <ul className={styles.members} aria-label={t('joined')}>{members.map(member => <JoinedMember member={member} key={member.userId} expanded={memberMenu?.userId === member.userId} onMore={anchor => setMemberMenu(memberMenu?.userId === member.userId ? null : { userId: member.userId, anchor })} />)}</ul>
       {!members.length ? <p className={styles.state}>{t('empty')}</p> : null}
     </>}
-    {owner && waiting.length ? <section className={styles.pending}><div className={styles.listHeading}><span>{t('pending')}</span><span>{waiting.length}</span></div>{waiting.map(item => <div className={styles.pendingRow} key={item.id}><span className={styles.pendingIcon}><Clock size={16} aria-hidden /></span><div className={styles.pendingIdentity}><strong>{item.email}</strong><small>{t('expiresOn', { date: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(new Date(item.expiresAt)) })}</small></div><div className={styles.pendingActions}><Button variant="ghost" size="sm" disabled={Boolean(busy)} onClick={() => { setEmail(item.email); setFieldError(''); setError(''); emailInput.current?.focus(); }}>{t('reinvite')}</Button><Button variant="ghost" size="sm" loading={busy === item.id} disabled={Boolean(busy && busy !== item.id)} onClick={() => void revoke(item.id)}>{t('revoke')}</Button></div></div>)}</section> : null}
-    {owner && invitations.isError ? <div className={styles.state}><AppAlert tone="error" title={t('pendingFailed')} /><Button variant="outline" size="sm" onClick={() => void invitations.refetch()}>{t('retry')}</Button></div> : null}
+    {manager && waiting.length ? <section className={styles.pending}><div className={styles.listHeading}><span>{t('pending')}</span><span>{waiting.length}</span></div>{waiting.map(item => <div className={styles.pendingRow} key={item.id}><span className={styles.pendingIcon}><Clock size={16} aria-hidden /></span><div className={styles.pendingIdentity}><strong>{item.email}</strong><small>{t('expiresOn', { date: new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(new Date(item.expiresAt)) })}</small></div><div className={styles.pendingActions}><Button variant="ghost" size="sm" disabled={Boolean(busy)} onClick={() => { setEmail(item.email); setFieldError(''); setError(''); emailInput.current?.focus(); }}>{t('reinvite')}</Button><Button variant="ghost" size="sm" loading={busy === item.id} disabled={Boolean(busy && busy !== item.id)} onClick={() => void revoke(item.id)}>{t('revoke')}</Button></div></div>)}</section> : null}
+    {manager && invitations.isError ? <div className={styles.state}><AppAlert tone="error" title={t('pendingFailed')} /><Button variant="outline" size="sm" onClick={() => void invitations.refetch()}>{t('retry')}</Button></div> : null}
     {menuRoot && memberMenu && menuMember ? <AnchoredPopover anchor={memberMenu.anchor} container={menuRoot} onClose={() => setMemberMenu(null)} label={t('memberActions', { name: menuMember.name })} width={168} role="menu" align="end">
       <button type="button" role="menuitem" className={'fob-menu-item ' + styles.menuItem} onClick={() => void copyEmail(menuMember)}><Copy size={14} aria-hidden />{t('copyEmail')}</button>
       {directory.data?.role === 'owner' || directory.data?.role === 'admin' ? <button type="button" role="menuitem" className={'fob-menu-item ' + styles.menuItem} onClick={onManage}><UsersThree size={14} aria-hidden />{t('manage')}</button> : null}

@@ -9,7 +9,7 @@ import {
   shareLinkSummarySchema,
 } from '@fob/shared/knowledge/contracts';
 import type { PageScope, PermissionLevel, Principal, ShareLinkLevel, ShareLinkSummary } from '@fob/shared/knowledge/contracts';
-import { pageAcl, shareLink } from '../../../platform/database/resources/schema';
+import { member, pageAcl, shareLink } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { authorizePageAccess } from '../permissions/authorization';
 import type { PageAccessDecision } from '../permissions/authorization';
@@ -42,6 +42,8 @@ async function requireManagerAuthority(db: ResourceTransaction, actorUserId: str
   const decision = await authorizePageAccess(db, { userId: actorUserId, scope, required: 'full' });
   if (decision.decision === 'deny') throw new KnowledgeSharingError('SHARING_FORBIDDEN');
   if (decision.decision === 'rebuilding') throw new KnowledgeSharingError('SHARING_REBUILDING');
+  const [actor] = await db.select({ role: member.role }).from(member).where(and(eq(member.knowledgeBaseId, scope.knowledgeBaseId), eq(member.userId, actorUserId)));
+  if (!actor || actor.role === 'guest') throw new KnowledgeSharingError('SHARING_FORBIDDEN');
   return decision;
 }
 

@@ -1,14 +1,14 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, isNull, sql } from 'drizzle-orm';
-import { principal } from '@fob/shared/knowledge/contracts';
+import { folderAccessForMember } from '@fob/shared/knowledge/contracts';
 import type { PageScope, PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { member, page, personalAccessToken } from '../../../platform/database/resources/schema';
 import { authUser } from '../../../platform/database/identity/schema';
 import { activeSessionMember } from '../access/session-access';
 import type { KnowledgeRequestContext } from '../access';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
-import { readTeamspacePermissionRoot } from '../organization/teamspaces';
-import { authorizePageAccess, expandRequestPrincipals } from '../permissions';
+import { readFolderAccess } from '../organization/folder-access';
+import { authorizePageAccess } from '../permissions';
 import { rebuildPermissionSubtree } from '../permissions/rebuild';
 
 /** Recheck a queued cross-folder writer after taking the permission boundary lock. */
@@ -31,11 +31,10 @@ export async function requirePageAccess(db: ResourceTransaction, userId: string,
 
 export async function requirePageDestination(db: ResourceTransaction, userId: string, input: { knowledgeBaseId: string; teamspaceId: string; parentId: string | null }) {
   if (input.parentId) return requirePageAccess(db, userId, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.parentId }, 'edit');
-  const root = await readTeamspacePermissionRoot(db, { knowledgeBaseId: input.knowledgeBaseId, teamspaceId: input.teamspaceId });
+  const root = (await readFolderAccess(db, input.knowledgeBaseId)).find(folder => folder.teamspaceId === input.teamspaceId);
   const [membership] = await db.select({ role: member.role }).from(member).where(and(eq(member.knowledgeBaseId, input.knowledgeBaseId), eq(member.userId, userId)));
-  if (membership?.role === 'owner' || membership?.role === 'admin') return;
-  const principals = await expandRequestPrincipals(db, input.knowledgeBaseId, userId);
-  if ((root.defaultAccess !== 'edit' && root.defaultAccess !== 'full') || !principals.includes(principal('knowledgeBase', input.knowledgeBaseId))) {
+  const level = root && membership ? folderAccessForMember(root, { userId, role: membership.role }).level : null;
+  if (level !== 'edit' && level !== 'full') {
     throw new TRPCError({ code: 'FORBIDDEN' });
   }
 }

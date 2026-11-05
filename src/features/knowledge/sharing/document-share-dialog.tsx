@@ -2,7 +2,7 @@
 import { useDeferredValue, useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Check, CaretLeft, Globe, LinkSimple, Question, ShareNetwork, Users, X } from '@/components/icons';
-import { documentInvitationInputSchema, documentInvitationReplySchema } from '@fob/shared/knowledge/contracts';
+import { documentInvitationInputSchema, documentInvitationReplySchema, resourcePermission } from '@fob/shared/knowledge/contracts';
 import type { PageScope, PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { useTranslation } from '@/lib/i18n';
 import { useAppAlert } from '@/components/app-alert-provider';
@@ -25,11 +25,12 @@ export function DocumentSwitch({ checked, label, disabled, onChange }: { checked
 }
 function PermissionOptions({ remove = false }: { remove?: boolean }) {
   const { t } = useTranslation(messages);
-  return <>{(['view', 'comment', 'edit', 'full'] as const).map(level => <option key={level} value={level}>{t(level)}</option>)}{remove && <option value="remove">{t('remove')}</option>}</>;
+  return <>{(['view', 'edit', 'full'] as const).map(level => <option key={level} value={level}>{t(level)}</option>)}{remove && <option value="remove">{t('remove')}</option>}</>;
 }
 function SharingContents({ scope, settings = false }: { scope: PageScope; settings?: boolean }) {
   const { t } = useTranslation(messages), { notify } = useAppAlert(), client = useQueryClient();
   const sharing = useDocumentSharing(scope), data = sharing.data;
+  const canPublish = data?.level === 'full' && data.people.find(person => person.id === data.userId)?.role !== 'guest';
   const [picker, setPicker] = useState(false), [query, setQuery] = useState('');
   const [selection, setSelection] = useState<{ principal?: string; email?: string; name: string } | null>(null);
   const [level, setLevel] = useState<PermissionLevel>('view'), [busy, setBusy] = useState(false);
@@ -95,14 +96,14 @@ function SharingContents({ scope, settings = false }: { scope: PageScope; settin
       {data.grants.map(grant => <div className={styles.row} key={grant.principal}>
         {grant.principal.startsWith('user:') ? <DocumentAvatar name={grant.name} image={grant.image} /> : <Users size={24} className="shrink-0" />}
         <div className={styles.rowText}><strong>{grant.principal.startsWith('group:') ? t('legacyAccess') : grant.name}</strong>{grant.principal.startsWith('group:') ? <small>{t('legacyAccessHint')}</small> : grant.inherited && <small>{t('inherited', { source: grant.source })}</small>}</div>
-        <div className={styles.level}><select aria-label={`${grant.name} · ${t('settings')}`} value={grant.level} disabled={!data.canManage || grant.inherited || grant.principal.startsWith('group:') || busy}
+        <div className={styles.level}><select aria-label={`${grant.name} · ${t('settings')}`} value={resourcePermission(grant.level) ?? 'view'} disabled={!data.canManage || grant.inherited || grant.principal.startsWith('group:') || busy}
           onChange={event => void mutate('/permissions', { principal: grant.principal, level: event.target.value === 'remove' ? null : event.target.value })}><PermissionOptions remove /></select>
           <Tooltip><TooltipTrigger asChild><span tabIndex={0} aria-label={t('permissionHelp')}><Question size={14} /></span></TooltipTrigger><TooltipContent>{grant.inherited ? t('inherited', { source: grant.source }) : t('permissionHelp')}</TooltipContent></Tooltip>
         </div>
       </div>)}
       {data.canManage && <>
         <div className={styles.row}><span className={styles.globe}><Globe size={16} /></span><div className={styles.rowText}><strong>{t('publish')}</strong><small>{t('publicHint')}</small></div>
-          <DocumentSwitch label={t('publish')} checked={Boolean(data.publication)} disabled={busy} onChange={() => void mutate('/publication', { enabled: !data.publication, expiresAt: publicationExpiry() }, data.publication ? 'unpublished' : 'published')} /></div>
+          <DocumentSwitch label={t('publish')} checked={Boolean(data.publication)} disabled={busy || !canPublish} onChange={() => void mutate('/publication', { enabled: !data.publication, expiresAt: publicationExpiry() }, data.publication ? 'unpublished' : 'published')} /></div>
         {data.publication && <>
           {publicLink ? linkInput(publicLink, t('publicLink')) : <Button variant="outline" size="sm" loading={busy} onClick={() => void mutate('/publication', { enabled: true, rotate: true })}>{t('regenerate')}</Button>}
           <div className={styles.publicationOptions}><span>{data.publication.expiresAt ? new Date(data.publication.expiresAt).toLocaleString() : t('never')}</span><button className={`fob-action ${styles.iconButton}`} title={t('regenerate')} aria-label={t('regenerate')} disabled={busy} onClick={() => void mutate('/publication', { enabled: true, rotate: true, expiresAt: publicationExpiry() })}><LinkSimple size={15} /></button></div>
@@ -111,7 +112,7 @@ function SharingContents({ scope, settings = false }: { scope: PageScope; settin
         {data.invitations.map(invitation => <div className={styles.row} key={invitation.id}><div className={styles.rowText}><strong>{invitation.email}</strong><small>{t('pending')} · {t(invitation.level)}</small></div><button className={`fob-action ${styles.iconButton}`} aria-label={`${t('revoke')} ${invitation.email}`} disabled={busy} onClick={() => void revokeInvitation(invitation.id)}><X size={16} /></button></div>)}
         {settings && <details className={styles.settings}><summary>{t('settings')}</summary>
           <div className={styles.row}><div className={styles.rowText}><strong>{t('inherit')}</strong><small>{t('inheritHint')}</small></div><DocumentSwitch checked={data.inheritsPermissions} label={t('inherit')} disabled={busy} onChange={() => void mutate('/inheritance', { inheritsPermissions: !data.inheritsPermissions })} /></div>
-          <label className={styles.publicationOptions}>{t('expiry')}<select aria-label={t('expiry')} disabled={busy} value={expiry ?? (data.publication?.expiresAt ? 'current' : 'never')} onChange={event => { const value = event.target.value; setExpiry(value); if (data.publication) void mutate('/publication', { enabled: true, expiresAt: publicationExpiry(value) }); }}>{data.publication?.expiresAt && <option value="current">{new Date(data.publication.expiresAt).toLocaleString()}</option>}{[['never', 'never'], ['1', 'day'], ['7', 'week'], ['30', 'month']].map(([value, label]) => <option key={value} value={value}>{t(label as 'never')}</option>)}</select></label>
+          <label className={styles.publicationOptions}>{t('expiry')}<select aria-label={t('expiry')} disabled={busy || !canPublish} value={expiry ?? (data.publication?.expiresAt ? 'current' : 'never')} onChange={event => { const value = event.target.value; setExpiry(value); if (data.publication) void mutate('/publication', { enabled: true, expiresAt: publicationExpiry(value) }); }}>{data.publication?.expiresAt && <option value="current">{new Date(data.publication.expiresAt).toLocaleString()}</option>}{[['never', 'never'], ['1', 'day'], ['7', 'week'], ['30', 'month']].map(([value, label]) => <option key={value} value={value}>{t(label as 'never')}</option>)}</select></label>
         </details>}
       </>}
     </div>}

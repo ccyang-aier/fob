@@ -1,5 +1,5 @@
-import { permissionLevels } from '@fob/shared/knowledge/contracts';
-import type { FolderAccessPolicy, KnowledgeBaseMemberSummary, PermissionLevel } from '@fob/shared/knowledge/contracts';
+import { folderAccessForMember } from '@fob/shared/knowledge/contracts';
+import type { FolderAccessPolicy, KnowledgeBaseMemberSummary } from '@fob/shared/knowledge/contracts';
 
 export function folderRows(folders: readonly FolderAccessPolicy[], search: string, collapsed: ReadonlySet<string>) {
   const byId = new Map(folders.map((folder) => [folder.teamspaceId, folder]));
@@ -29,8 +29,5 @@ export function folderRows(folders: readonly FolderAccessPolicy[], search: strin
 
 /** A directory preview, not a replacement for the document authorization check. */
 export function folderPermissionFor(folder: FolderAccessPolicy, member: Pick<KnowledgeBaseMemberSummary, 'userId' | 'role'>) {
-  const direct = folder.grants.find((grant) => grant.userId === member.userId);
-  const baseline = member.role === 'guest' ? null : folder.effectiveDefaultAccess;
-  if (direct && (!baseline || permissionLevels.indexOf(direct.level) >= permissionLevels.indexOf(baseline))) return { level: direct.level as PermissionLevel | null, sourceId: direct.sourceId, individual: true };
-  return { level: baseline, sourceId: folder.defaultSourceId, individual: false };
+  return folderAccessForMember(folder, member);
 }

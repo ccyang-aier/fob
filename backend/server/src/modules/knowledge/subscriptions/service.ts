@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { and, desc, eq, gte, inArray, isNull, ne, or, sql } from 'drizzle-orm';
 import type { EffectivePermissions, OutboxEvent, PageAcl, PageScope } from '@fob/shared/knowledge/contracts';
+import { folderAccessForMember } from '@fob/shared/knowledge/contracts';
 import { knowledgeSubscriptionTargetSchema } from '@fob/shared/knowledge/subscriptions';
 import type { SubscriptionChange } from '@fob/shared/knowledge/subscriptions';
 import { groupMember, member, notification, page, pageAcl, teamspace } from '../../../platform/database/resources/schema';
@@ -30,8 +31,8 @@ export async function setKnowledgeSubscription(db: ResourceTransaction, authorit
     if ('pageId' in target) {
       if ((await authorizePageAccess(db, { userId: authority.userId, scope: target, required: 'view' })).decision !== 'allow') throw unavailable();
     } else {
-      const [folder] = await db.select({ id: teamspace.id }).from(teamspace).where(and(eq(teamspace.knowledgeBaseId, target.knowledgeBaseId), eq(teamspace.id, target.teamspaceId)));
-      if (!folder || membership.role === 'guest') throw unavailable();
+      const folder = (await readFolderAccess(db, target.knowledgeBaseId)).find(item => item.teamspaceId === target.teamspaceId);
+      if (!folder || !folderAccessForMember(folder, { userId: authority.userId, role: membership.role }).level) throw unavailable();
     }
   }
   const predicate = and(eq(knowledgeSubscription.knowledgeBaseId, target.knowledgeBaseId), eq(knowledgeSubscription.userId, authority.userId), targetCondition(target));
@@ -106,11 +107,12 @@ export async function removeRecycledPageSubscriptions(db: ResourceTransaction, s
 
 /** Folder metadata uses the same directory authority as list/getTeamspace: current non-guest membership. */
 export async function recordFolderSubscriptionChange(db: ResourceTransaction, input: { knowledgeBaseId: string; teamspaceId: string; actorId: string }): Promise<NoticeEvent[]> {
-  const rows = await db.select({ userId: knowledgeSubscription.userId }).from(knowledgeSubscription)
+  const rows = await db.select({ userId: knowledgeSubscription.userId, role: member.role }).from(knowledgeSubscription)
     .innerJoin(member, and(eq(member.knowledgeBaseId, knowledgeSubscription.knowledgeBaseId), eq(member.userId, knowledgeSubscription.userId)))
-    .where(and(eq(knowledgeSubscription.knowledgeBaseId, input.knowledgeBaseId), eq(knowledgeSubscription.teamspaceId, input.teamspaceId), ne(member.role, 'guest'), ne(member.userId, input.actorId)));
+    .where(and(eq(knowledgeSubscription.knowledgeBaseId, input.knowledgeBaseId), eq(knowledgeSubscription.teamspaceId, input.teamspaceId), ne(member.userId, input.actorId)));
+  const folder = (await readFolderAccess(db, input.knowledgeBaseId)).find(item => item.teamspaceId === input.teamspaceId);
   const events: NoticeEvent[] = [];
-  for (const userId of [...new Set(rows.map((row) => row.userId))].sort()) {
+  for (const userId of [...new Set(rows.filter(row => folder && folderAccessForMember(folder, row).level).map(row => row.userId))].sort()) {
     const notificationId = randomUUID();
     await db.insert(notification).values({ knowledgeBaseId: input.knowledgeBaseId, id: notificationId, userId, pageId: null, kind: 'folder.changed',
       payload: { actorId: input.actorId, teamspaceId: input.teamspaceId, change: 'renamed' } });

@@ -3,15 +3,15 @@ import { and, asc, eq, gt, sql } from 'drizzle-orm';
 import type { Pool } from 'pg';
 import { createTeamspaceInputSchema, listTeamspacesInputSchema, moveTeamspaceInputSchema, removeTeamspaceInputSchema, teamspaceScopeSchema, updateTeamspaceInputSchema } from '@fob/shared/knowledge/contracts';
 import type { Teamspace, TeamspaceScope } from '@fob/shared/knowledge/contracts';
-import { page, teamspace } from '../../../platform/database/resources/schema';
+import { page, teamspace, teamspaceMemberAccess } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import type { FobIdentity } from '../../../platform/identity/identity';
-import { inKnowledgeBase, requireDirectory } from './context';
+import { inKnowledgeBase } from './context';
 import { currentIdentity, pageOf, requireManager } from '../../../platform/resources/context';
 import { ResourceRequestError, parseInput } from '../../../platform/resources/errors';
 import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
-import { readFolderAccess } from './folder-access';
+import { canManageFolder, readFolderAccess, readVisibleFolderAccess } from './folder-access';
 
 const targetTeamspace = (scope: TeamspaceScope) => and(eq(teamspace.knowledgeBaseId, scope.knowledgeBaseId), eq(teamspace.id, scope.teamspaceId));
 const teamspaceView = (row: typeof teamspace.$inferSelect): Teamspace => ({ knowledgeBaseId: row.knowledgeBaseId, id: row.id, parentId: row.parentId, name: row.name, defaultAccess: row.defaultAccess, icon: row.metadata.icon ?? null });
@@ -48,9 +48,15 @@ export interface TeamspacePermissionInvalidator {
 }
 
 export function teamspaceOperations(pool: Pool, permissions: TeamspacePermissionInvalidator) {
-  function mutate<T>(identity: FobIdentity, scope: TeamspaceScope, operation: (db: ResourceTransaction, record: typeof teamspace.$inferSelect, actorId: string) => Promise<T>) {
+  function mutate<T>(identity: FobIdentity, scope: TeamspaceScope, operation: (db: ResourceTransaction, record: typeof teamspace.$inferSelect, actorId: string) => Promise<T>, adminOnly = false) {
     return inKnowledgeBase(pool, identity, scope.knowledgeBaseId, true, async ({ db, role, actor }) => {
-      requireManager(role);
+      if (adminOnly) requireManager(role);
+      const policy = (await readFolderAccess(db, scope.knowledgeBaseId)).find(folder => folder.teamspaceId === scope.teamspaceId);
+      if (!policy) {
+        requireManager(role);
+        throw new ResourceRequestError('TEAMSPACE_NOT_FOUND', 'Folder was not found.', 404);
+      }
+      if (!canManageFolder(policy, { userId: actor.userId, role })) throw new ResourceRequestError('FORBIDDEN', 'Folder management permission is required.', 403);
       // FOR UPDATE conflicts with a new page's FK key-share lock. The empty
       // check and a container mutation cannot race a committed child insertion.
       const record = await loadTeamspace(db, scope, true);
@@ -62,29 +68,32 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
   return {
     async createTeamspace(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(createTeamspaceInputSchema, input);
-      return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, role }) => {
-        requireManager(role);
+      return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, role, actor }) => {
         if (parsed.parentId) {
+          const parent = (await readFolderAccess(db, parsed.knowledgeBaseId)).find(folder => folder.teamspaceId === parsed.parentId);
+          if (!parent) { requireManager(role); throw new ResourceRequestError('TEAMSPACE_NOT_FOUND', 'Folder was not found.', 404); }
+          if (!canManageFolder(parent, { userId: actor.userId, role })) throw new ResourceRequestError('FORBIDDEN', 'Parent folder management permission is required.', 403);
           await loadTeamspace(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.parentId }, true);
           await currentIdentity(db, identity);
-        }
+        } else requireManager(role);
         const [created] = await db.insert(teamspace).values({ ...parsed, id: randomUUID() }).returning();
+        await db.insert(teamspaceMemberAccess).values({ knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: created!.id, userId: actor.userId, level: 'full' });
         return teamspaceView(created!);
       });
     },
     async listTeamspaces(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(listTeamspacesInputSchema, input);
-      return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role }) => {
-        requireDirectory(role);
-        const rows = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, parsed.knowledgeBaseId), parsed.cursor ? gt(teamspace.id, parsed.cursor) : undefined))
+      return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role, actor }) => {
+        const visible = new Set((await readVisibleFolderAccess(db, parsed.knowledgeBaseId, { userId: actor.userId, role })).map(folder => folder.teamspaceId));
+        const rows = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, parsed.knowledgeBaseId), sql`${teamspace.id} = any(${sql.param([...visible])}::uuid[])`, parsed.cursor ? gt(teamspace.id, parsed.cursor) : undefined))
           .orderBy(asc(teamspace.id)).limit(parsed.limit + 1);
         return pageOf(rows.map(teamspaceView), parsed.limit, (row) => row.id);
       });
     },
     async getTeamspace(identity: FobIdentity, input: unknown) {
       const scope = parseInput(teamspaceScopeSchema, input);
-      return inKnowledgeBase(pool, identity, scope.knowledgeBaseId, false, async ({ db, role }) => {
-        requireDirectory(role);
+      return inKnowledgeBase(pool, identity, scope.knowledgeBaseId, false, async ({ db, role, actor }) => {
+        if (!(await readVisibleFolderAccess(db, scope.knowledgeBaseId, { userId: actor.userId, role })).some(folder => folder.teamspaceId === scope.teamspaceId)) throw new ResourceRequestError('TEAMSPACE_NOT_FOUND', 'Folder was not found.', 404);
         return teamspaceView(await loadTeamspace(db, scope));
       });
     },
@@ -122,7 +131,7 @@ export function teamspaceOperations(pool: Pool, permissions: TeamspacePermission
           await permissions.invalidate(db, { knowledgeBaseId: parsed.knowledgeBaseId, teamspaceId: parsed.teamspaceId });
         }
         return teamspaceView(updated!);
-      });
+      }, true);
     },
     async removeTeamspace(identity: FobIdentity, input: unknown) {
       const scope = parseInput(removeTeamspaceInputSchema, input);

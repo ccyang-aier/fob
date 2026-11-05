@@ -51,12 +51,14 @@ async function open() {
   await act(async () => { await Bun.sleep(30); });
 }
 
-test('only the verified owner response exposes the invitation form; ordinary members see the directory', async () => {
+test('only the verified manager response exposes the invitation form; ordinary members see the directory', async () => {
   role = 'member'; await render(); await open();
   expect(host.textContent).toContain('alpha member');
   expect(host.querySelector('input[type=email]')).toBeNull();
-  await act(async () => root.render(null)); role = 'owner'; await render(); await open();
-  expect(host.querySelector('input[type=email]')).not.toBeNull();
+  for (const manager of ['owner', 'admin'] as const) {
+    await act(async () => root.render(null)); role = manager; await render(); await open();
+    expect(host.querySelector('input[type=email]')).not.toBeNull();
+  }
 });
 
 test('the invitation-link card is always visible and a blank Get link focuses the email field without creating a token', async () => {

@@ -1,5 +1,5 @@
 export { canAccess, computeEffectivePermissions, expandPrincipals, permissionFor, restrictDuringRebuild } from './effective';
-export { authorizePageAccess, expandRequestPrincipals } from './authorization';
+export { authorizePageAccess, canManagePageAccess, expandRequestPrincipals } from './authorization';
 export type { PageAccessDecision } from './authorization';
 export { KnowledgePermissionError } from './errors';
 export { teamspacePermissionInvalidator } from './fence';

@@ -78,7 +78,7 @@ export const knowledgeDatabaseRouterRecord = {
   updateColumns: knowledgeMutation({
     input: updateDatabaseColumnsInputSchema, scopes: ['read', 'write'],
     resolve: ({ ctx, input }) => guarded(() => ctx.withResource(async (db, authority) => {
-      await requirePageAccess(db, authority.userId, input, 'full');
+      await requirePageAccess(db, authority.userId, input, 'edit');
       return updateAuthorizedDatabaseColumns(db, input);
     })),
   }),

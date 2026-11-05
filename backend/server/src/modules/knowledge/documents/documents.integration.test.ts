@@ -77,13 +77,13 @@ describe('document sharing, permissions, history and statistics over real HTTP a
   });
   test('inheritance breaks, member grants and revocations rebuild the full subtree before replying', async () => {
     const { root, pages } = await tree();
-    expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.reader.identity.userId), level: 'comment' })).status).toBe(200);
-    expect((await sharing(pages[2], fixture.reader)).level).toBe('comment');
+    expect((await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.reader.identity.userId), level: 'view' })).status).toBe(200);
+    expect((await sharing(pages[2], fixture.reader)).level).toBe('view');
     expect((await request(`${base(pages[1])}/inheritance`, fixture.owner, { inheritsPermissions: false })).status).toBe(200);
     expect((await request(base(pages[2]), fixture.reader)).status).toBe(403);
     expect((await sharing(pages[1])).level).toBe('full');
     expect((await request(`${base(pages[1])}/inheritance`, fixture.owner, { inheritsPermissions: true })).status).toBe(200);
-    expect((await sharing(pages[2], fixture.reader)).level).toBe('comment');
+    expect((await sharing(pages[2], fixture.reader)).level).toBe('view');
     await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', fixture.reader.identity.userId), level: null });
     expect((await request(base(pages[2]), fixture.reader)).status).toBe(403);
   });
@@ -129,6 +129,35 @@ describe('document sharing, permissions, history and statistics over real HTTP a
     const expired = await (await request(`${base(root)}/invitations`, fixture.owner, { email: fixture.reader.identity.email, level: 'view' })).json() as { invitationId: string };
     await fixture.admin.query('UPDATE resources.document_invitation SET expires_at=now()-interval \'1 second\' WHERE knowledge_base_id=$1 AND id=$2', [root.knowledgeBaseId, expired.invitationId]);
     expect((await request('/api/document-invitations/accept', fixture.reader, expired)).status).toBe(404);
+  });
+
+  test('an expiring publication never escapes its page predicate or reappears after revocation', async () => {
+    const source = await tree(), unrelated = await tree();
+    const expiresAt = new Date(Date.now() + 86_400_000).toISOString();
+    expect((await request(`${base(source.root)}/publication`, fixture.owner, { enabled: true, expiresAt })).status).toBe(200);
+    const publication = (await sharing(source.root)).publication!;
+    expect(publication.token).toStartWith('fob_share.');
+    expect((await sharing(unrelated.root)).publication).toBeNull();
+    expect((await request(`${base(source.root)}/publication`, fixture.owner, { enabled: false })).status).toBe(200);
+    expect((await sharing(source.root)).publication).toBeNull();
+    expect((await sharing(unrelated.root)).publication).toBeNull();
+    expect((await request('/api/public/documents', undefined, { token: publication.token })).status).toBe(404);
+  });
+
+  test('workspace administration and guest resource management do not silently enable public publishing', async () => {
+    const { root } = await tree();
+    const memberScope = { knowledgeBaseId: root.knowledgeBaseId, userId: fixture.reader.identity.userId };
+    await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', memberScope.userId), level: 'view' });
+    await fixture.organization.changeMemberRole(fixture.owner.identity, { ...memberScope, role: 'admin' });
+    try {
+      expect((await sharing(root, fixture.reader)).canManage).toBe(true);
+      expect((await request(`${base(root)}/publication`, fixture.reader, { enabled: true })).status).toBe(403);
+      await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', memberScope.userId), level: 'full' });
+      await fixture.organization.changeMemberRole(fixture.owner.identity, { ...memberScope, role: 'guest' });
+      expect((await sharing(root, fixture.reader)).canManage).toBe(true);
+      expect((await request(`${base(root)}/publication`, fixture.reader, { enabled: true })).status).toBe(403);
+      expect((await sharing(root)).publication).toBeNull();
+    } finally { await fixture.organization.changeMemberRole(fixture.owner.identity, { ...memberScope, role: 'member' }); }
   });
   test.each(['file', 'pdf'])('document guests cannot probe unrelated %s attachments, upload without edit access, or revoke library assets', async (kind) => {
     const { root } = await tree();

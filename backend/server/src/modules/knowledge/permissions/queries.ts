@@ -43,7 +43,7 @@ export function effectivePageAccessCondition(input: AccessInput & { required: Pe
     select 1 from ${pageEffectiveAcl}
     where ${pageEffectiveAcl.knowledgeBaseId} = ${page.knowledgeBaseId} and ${pageEffectiveAcl.pageId} = ${page.id}
       and ${pageEffectiveAcl.revision} = ${page.aclRevision}
-      and ${pageEffectiveAcl[input.required]} && ${sql.param(principals)}::text[]
+      and ${pageEffectiveAcl[input.required === 'comment' ? 'view' : input.required]} && ${sql.param(principals)}::text[]
   )`)!;
 }
 

@@ -1,9 +1,10 @@
 import { z } from 'zod';
-import { entityIdSchema, pageScopeSchema, timestampSchema, permissionLevelSchema } from './primitives';
+import { entityIdSchema, pageScopeSchema, timestampSchema, permissionLevelSchema, memberRoleSchema } from './primitives';
+import { resourcePermissionSchema } from './member-access';
 
 export const documentPersonSchema = z.object({
   id: entityIdSchema, name: z.string(), image: z.string().nullable(),
-  role: z.enum(['owner', 'admin', 'member', 'guest']),
+  role: memberRoleSchema,
 });
 export type DocumentPerson = z.infer<typeof documentPersonSchema>;
 export const documentGrantSchema = z.object({
@@ -24,7 +25,7 @@ export const documentInvitationReplySchema = pageScopeSchema.extend({ invitation
 export const documentMutationReplySchema = z.object({}).passthrough();
 export const documentPermissionInputSchema = z.object({
   principal: z.string().regex(/^(user|knowledgeBase):[a-f0-9-]{36}$/i),
-  level: permissionLevelSchema.nullable(),
+  level: resourcePermissionSchema.nullable(),
 });
 export const documentPublicationInputSchema = z.object({
   enabled: z.boolean(), rotate: z.boolean().default(false),
@@ -32,7 +33,7 @@ export const documentPublicationInputSchema = z.object({
 });
 export const documentInvitationInputSchema = z.object({
   email: z.email().transform(value => value.trim().toLowerCase()),
-  level: permissionLevelSchema.default('view'),
+  level: resourcePermissionSchema.default('view'),
 });
 export const documentInviteAcceptSchema = pageScopeSchema.extend({ invitationId: entityIdSchema, token: z.string().regex(/^[A-Za-z0-9_-]{43}$/) });
 export const documentStatisticsSchema = z.object({

@@ -1,7 +1,7 @@
-import { and, asc, count, eq, gt, inArray } from 'drizzle-orm';
+import { and, asc, count, eq, gt, inArray, sql } from 'drizzle-orm';
 import type { Pool } from 'pg';
 import { changeMemberRoleInputSchema, changeMemberRolesInputSchema, listOrganizationInputSchema, removeMemberInputSchema } from '@fob/shared/knowledge/contracts';
-import { member } from '../../../platform/database/resources/schema';
+import { member, pageAcl, teamspaceMemberAccess } from '../../../platform/database/resources/schema';
 import { authUser } from '../../../platform/database/identity/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import type { FobIdentity } from '../../../platform/identity/identity';
@@ -21,7 +21,9 @@ export function memberOperations(pool: Pool) {
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role }) => {
         requireDirectory(role);
         // Only identities attached to this authorized resource can be discovered.
-        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image, joinedAt: member.createdAt })
+        const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image, joinedAt: member.createdAt,
+          directAccessCount: role === 'owner' || role === 'admin' ? sql<number>`((select count(*) from ${teamspaceMemberAccess} where ${teamspaceMemberAccess.knowledgeBaseId}=${member.knowledgeBaseId} and ${teamspaceMemberAccess.userId}=${member.userId}) + (select count(*) from ${pageAcl} where ${pageAcl.knowledgeBaseId}=${member.knowledgeBaseId} and ${pageAcl.principal}='user:' || ${member.userId}::text and not ${pageAcl.inherited}))::int` : sql<null>`null`,
+        })
           .from(member).innerJoin(authUser, eq(authUser.id, member.userId))
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), parsed.cursor ? gt(member.userId, parsed.cursor) : undefined))
           .orderBy(asc(member.userId)).limit(parsed.limit + 1);

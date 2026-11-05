@@ -9,6 +9,7 @@ import { authUser } from '../../../platform/database/identity/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { expandPrincipals } from '../permissions/effective';
 import { effectivePageAccessCondition } from '../permissions/queries';
+import { readVisibleFolderAccess } from '../organization/folder-access';
 import { KnowledgeNotificationError } from './errors';
 
 export type NotificationRow = typeof notification.$inferSelect;
@@ -51,16 +52,13 @@ async function recipientPrincipals(db: ResourceTransaction, knowledgeBaseId: str
  * Folder notices recheck live directory rights and existence instead of using
  * the page-less branch; losing membership/directory access hides their names.
  */
-function inboxCondition(db: ResourceTransaction, knowledgeBaseId: string, userId: string, principals: readonly Principal[]) {
+async function inboxCondition(db: ResourceTransaction, knowledgeBaseId: string, userId: string, principals: readonly Principal[]) {
   const viewablePages = db.select({ id: page.id }).from(page)
     .where(effectivePageAccessCondition({ knowledgeBaseId, principals, required: 'view' }));
-  const viewableFolder = sql`EXISTS (
-    SELECT 1 FROM ${teamspace} INNER JOIN ${member}
-      ON ${member.knowledgeBaseId} = ${teamspace.knowledgeBaseId}
-    WHERE ${teamspace.knowledgeBaseId} = ${knowledgeBaseId}
-      AND ${teamspace.id}::text = ${notification.payload}->>'teamspaceId'
-      AND ${member.userId} = ${userId} AND ${member.role} <> 'guest'
-  )`;
+  const [recipient] = await db.select({ role: member.role }).from(member)
+    .where(and(eq(member.knowledgeBaseId, knowledgeBaseId), eq(member.userId, userId)));
+  const folderIds = recipient ? (await readVisibleFolderAccess(db, knowledgeBaseId, { userId, role: recipient.role })).map(folder => folder.teamspaceId) : [];
+  const viewableFolder = sql`${notification.payload}->>'teamspaceId' = any(${sql.param(folderIds)}::text[])`;
   return and(
     eq(notification.knowledgeBaseId, knowledgeBaseId),
     eq(notification.userId, userId),
@@ -108,7 +106,7 @@ export async function listNotificationInbox(db: ResourceTransaction, input: unkn
   const parsed = parse(listInputSchema, input);
   const principals = await recipientPrincipals(db, parsed.knowledgeBaseId, parsed.userId);
   if (!principals) return { items: [], unreadCount: 0, nextCursor: null };
-  const visible = inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals);
+  const visible = await inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals);
   const keyset = parsed.before !== undefined
     ? or(lt(notification.createdAt, new Date(parsed.before)),
         and(eq(notification.createdAt, new Date(parsed.before)), lt(notification.id, parsed.beforeId!)))
@@ -133,7 +131,7 @@ export async function countUnreadNotifications(db: ResourceTransaction, input: u
   const principals = await recipientPrincipals(db, parsed.knowledgeBaseId, parsed.userId);
   if (!principals) return 0;
   const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(notification)
-    .where(and(inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals), isNull(notification.readAt)));
+    .where(and(await inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals), isNull(notification.readAt)));
   return count;
 }
 
@@ -142,7 +140,7 @@ export async function markNotificationRead(db: ResourceTransaction, input: unkno
   const parsed = parse(readTargetInputSchema, input);
   const principals = await recipientPrincipals(db, parsed.knowledgeBaseId, parsed.userId);
   if (!principals) throw new KnowledgeNotificationError('NOTIFICATION_NOT_FOUND');
-  const visible = inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals);
+  const visible = await inboxCondition(db, parsed.knowledgeBaseId, parsed.userId, principals);
   const [updated] = await db.update(notification)
     .set({ readAt: new Date() })
     .where(and(

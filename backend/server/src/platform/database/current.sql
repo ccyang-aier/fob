@@ -15,7 +15,7 @@ CREATE TYPE "resources"."asset_status" AS ENUM('ready', 'revoked');
 CREATE TYPE "resources"."comment_anchor_kind" AS ENUM('page', 'selection');
 CREATE TYPE "resources"."comment_thread_kind" AS ENUM('comment', 'issue');
 CREATE TYPE "resources"."comment_thread_status" AS ENUM('open', 'resolved');
-CREATE TYPE "resources"."member_role" AS ENUM('owner', 'admin', 'member', 'guest');
+CREATE TYPE "resources"."member_role" AS ENUM('owner', 'admin', 'member', 'viewer', 'guest');
 CREATE TYPE "resources"."model_tier" AS ENUM('fast', 'smart', 'embed', 'rerank', 'vision');
 CREATE TYPE "resources"."outbox_topic" AS ENUM('doc.changed', 'acl.changed', 'asset.created', 'knowledgeBase.event');
 CREATE TYPE "resources"."page_kind" AS ENUM('doc', 'database', 'row');

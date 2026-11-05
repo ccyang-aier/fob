@@ -6,7 +6,8 @@ import { docState, documentVisit, member, page, personalAccessToken, shareLink, 
 import { expandRequestPrincipals, lockPermissionKnowledgeBase } from '../permissions';
 import { effectivePageAccessCondition } from '../permissions/queries';
 import { searchBlocksByKeyword } from '../search/keyword';
-import { discoverySearchInputSchema, folderMetadataSchema, folderTabSchema, folderUpdateSchema, type DiscoveryDocument } from '@fob/shared/knowledge/contracts';
+import { discoverySearchInputSchema, folderAccessForMember, folderMetadataSchema, folderTabSchema, folderUpdateSchema, type DiscoveryDocument } from '@fob/shared/knowledge/contracts';
+import { canManageFolder, readFolderAccess, readVisibleFolderAccess } from '../organization/folder-access';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { recordFolderSubscriptionChange } from '../subscriptions/service';
 import { appendKnowledgeOutbox } from '../workers/outbox';
@@ -15,34 +16,34 @@ import { activeSessionMember } from '../access/session-access';
 export class DiscoveryError extends Error {
   constructor(readonly status: 400 | 403 | 404 | 409, readonly code = 'DISCOVERY_UNAVAILABLE') { super(code); }
 }
-const manager = (authority: KnowledgeRequestContext) => ['owner', 'admin'].includes(authority.role);
 const updated = sql<Date>`greatest(${page.updatedAt}, coalesce(${docState.updatedAt}, ${page.updatedAt}))`;
 const views = sql<number>`coalesce((select sum(${documentVisit.views}) from ${documentVisit} where ${documentVisit.knowledgeBaseId}=${page.knowledgeBaseId} and ${documentVisit.pageId}=${page.id}),0)::int`;
 const published = sql<boolean>`exists(select 1 from ${shareLink} where ${shareLink.knowledgeBaseId}=${page.knowledgeBaseId} and ${shareLink.pageId}=${page.id} and ${shareLink.revokedAt} is null and (${shareLink.expiresAt} is null or ${shareLink.expiresAt}>clock_timestamp()))`;
 const projection = { id: page.id, title: page.title, icon: page.icon, folderId: page.teamspaceId, folderName: teamspace.name, parentId: page.parentId, createdBy: page.createdBy, creatorName: authUser.name, createdAt: page.createdAt, updatedAt: updated, views, public: published };
-function documents(db: ResourceTransaction) { return db.select(projection).from(page).innerJoin(teamspace, and(eq(teamspace.knowledgeBaseId, page.knowledgeBaseId), eq(teamspace.id, page.teamspaceId))).innerJoin(authUser, eq(authUser.id, page.createdBy)).leftJoin(docState, and(eq(docState.knowledgeBaseId, page.knowledgeBaseId), eq(docState.pageId, page.id))); }
+function documents(db: ResourceTransaction, folderIds: string[]) { return db.select({ ...projection, folderName: sql<string>`case when ${teamspace.id}=any(${sql.param(folderIds)}::uuid[]) then ${teamspace.name} else '' end` }).from(page).innerJoin(teamspace, and(eq(teamspace.knowledgeBaseId, page.knowledgeBaseId), eq(teamspace.id, page.teamspaceId))).innerJoin(authUser, eq(authUser.id, page.createdBy)).leftJoin(docState, and(eq(docState.knowledgeBaseId, page.knowledgeBaseId), eq(docState.pageId, page.id))); }
 function serialize(record: { id: string; title: string; icon: string | null; folderId: string; folderName: string; parentId: string | null; createdBy: string; creatorName: string; createdAt: Date; updatedAt: Date | string; views: number; public: boolean }): DiscoveryDocument {
   return { ...record, createdAt: record.createdAt.toISOString(), updatedAt: new Date(record.updatedAt).toISOString(), views: Number(record.views) };
 }
 async function access(db: ResourceTransaction, authority: KnowledgeRequestContext) {
   const principals = await expandRequestPrincipals(db, authority.knowledgeBaseId, authority.userId);
-  return { principals, condition: effectivePageAccessCondition({ knowledgeBaseId: authority.knowledgeBaseId, principals, required: 'view' }) };
+  const folders = await readVisibleFolderAccess(db, authority.knowledgeBaseId, authority);
+  return { principals, folderIds: folders.map(folder => folder.teamspaceId), condition: effectivePageAccessCondition({ knowledgeBaseId: authority.knowledgeBaseId, principals, required: 'view' }) };
 }
 export async function discoveryFacets(db: ResourceTransaction, authority: KnowledgeRequestContext) {
-  const { condition } = await access(db, authority);
+  const { condition, folderIds } = await access(db, authority);
   const visible = await db.selectDistinct({ folderId: page.teamspaceId, authorId: page.createdBy, name: authUser.name, image: authUser.image }).from(page).innerJoin(authUser, eq(authUser.id, page.createdBy)).where(condition);
-  const folders = await db.select({ id: teamspace.id, name: teamspace.name }).from(teamspace).where(and(eq(teamspace.knowledgeBaseId, authority.knowledgeBaseId), authority.role === 'guest' ? inArray(teamspace.id, visible.map(row => row.folderId)) : undefined)).orderBy(asc(teamspace.name));
+  const folders = await db.select({ id: teamspace.id, name: teamspace.name }).from(teamspace).where(and(eq(teamspace.knowledgeBaseId, authority.knowledgeBaseId), inArray(teamspace.id, folderIds))).orderBy(asc(teamspace.name));
   const authors = [...new Map(visible.map(row => [row.authorId, { id: row.authorId, name: row.name, image: row.image }])).values()].sort((a, b) => a.name.localeCompare(b.name));
   return { folders, authors };
 }
 export async function searchDocuments(db: ResourceTransaction, authority: KnowledgeRequestContext, input: unknown) {
   const parsed = discoverySearchInputSchema.safeParse(input); if (!parsed.success) throw new DiscoveryError(400, 'INVALID_INPUT');
-  const { query, folderId, authorId, limit } = parsed.data, { condition, principals } = await access(db, authority);
+  const { query, folderId, authorId, limit } = parsed.data, { condition, principals, folderIds } = await access(db, authority);
   const filters = and(folderId ? eq(page.teamspaceId, folderId) : undefined, authorId ? eq(page.createdBy, authorId) : undefined);
-  const titles = await documents(db).where(and(condition, filters, query ? sql`position(${query.toLocaleLowerCase()} in lower(${page.title})) > 0` : undefined)).orderBy(desc(updated), asc(page.id)).limit(limit + 1);
+  const titles = await documents(db, folderIds).where(and(condition, filters, query ? sql`position(${query.toLocaleLowerCase()} in lower(${page.title})) > 0` : undefined)).orderBy(desc(updated), asc(page.id)).limit(limit + 1);
   const blocks = query ? await searchBlocksByKeyword(db, { knowledgeBaseId: authority.knowledgeBaseId, principals, query, limit: 50, folderId, authorId }) : [];
   const contentIds = [...new Set(blocks.map(block => block.pageId))];
-  const bodyMatches = contentIds.length ? await documents(db).where(and(condition, filters, inArray(page.id, contentIds))) : [];
+  const bodyMatches = contentIds.length ? await documents(db, folderIds).where(and(condition, filters, inArray(page.id, contentIds))) : [];
   const records = new Map([...titles, ...bodyMatches].map(row => [row.id, serialize(row)]));
   const ordered = new Map(titles.map(row => [row.id, records.get(row.id)!]));
   for (const block of blocks) {
@@ -53,49 +54,52 @@ export async function searchDocuments(db: ResourceTransaction, authority: Knowle
   return { documents: [...ordered.values()].slice(0, limit), hasMore: ordered.size > limit || blocks.length === 50 };
 }
 export async function folderOverview(db: ResourceTransaction, authority: KnowledgeRequestContext, folderId: string, input: { tab?: string; q?: string; offset?: string }) {
-  if (authority.role === 'guest') throw new DiscoveryError(403);
   const tab = folderTabSchema.safeParse(input.tab ?? 'overview'), offset = Number(input.offset ?? '0');
   if (!tab.success || !Number.isSafeInteger(offset) || offset < 0 || offset > 100_000) throw new DiscoveryError(400, 'INVALID_INPUT');
   const [folder] = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, authority.knowledgeBaseId), eq(teamspace.id, folderId)));
   if (!folder) throw new DiscoveryError(404);
-  const metadata = folderMetadataSchema.parse(folder.metadata), { condition } = await access(db, authority);
+  const policy = (await readVisibleFolderAccess(db, authority.knowledgeBaseId, authority)).find(item => item.teamspaceId === folderId);
+  if (!policy) throw new DiscoveryError(404);
+  const level = folderAccessForMember(policy, authority).level;
+  const metadata = folderMetadataSchema.parse(folder.metadata), { condition, folderIds } = await access(db, authority);
   const scope = and(condition, eq(page.teamspaceId, folderId));
   const [count] = await db.select({ count: sql<number>`count(*)::int` }).from(page).where(scope);
-  if (!manager(authority) && !folder.defaultAccess && !count?.count) throw new DiscoveryError(403);
   const sort = metadata.sort ?? { field: 'position' as const, direction: 'asc' as const };
   const selectedOrder: Record<string, SQL | typeof page.position | typeof page.title | typeof page.createdAt> = { position: page.position, title: page.title, updatedAt: updated, createdAt: page.createdAt };
   const order = tab.data === 'popular' ? desc(views) : tab.data === 'updated' || tab.data === 'overview' ? desc(updated) : tab.data === 'oldest' ? asc(updated) : tab.data === 'alphabetical' ? sql`lower(${page.title}) collate "C" asc` : sort.direction === 'asc' ? asc(selectedOrder[sort.field]!) : desc(selectedOrder[sort.field]!);
   const pinnedIds = metadata.pinnedPageIds ?? [];
   const q = (input.q ?? '').trim().slice(0, 200), limit = tab.data === 'overview' ? 6 : 40;
   const pinnedFirst = tab.data === 'documents' && pinnedIds.length ? [sql`case when ${inArray(page.id, pinnedIds)} then 0 else 1 end`] : [];
-  const items = tab.data === 'overview' ? [] : await documents(db).where(and(scope, tab.data === 'documents' ? or(isNull(page.parentId), pinnedIds.length ? inArray(page.id, pinnedIds) : undefined) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(...pinnedFirst, order, asc(page.id)).limit(limit + 1).offset(offset);
-  const pinned = pinnedIds.length ? await documents(db).where(and(scope, inArray(page.id, pinnedIds))) : [];
+  const items = tab.data === 'overview' ? [] : await documents(db, folderIds).where(and(scope, tab.data === 'documents' ? or(isNull(page.parentId), pinnedIds.length ? inArray(page.id, pinnedIds) : undefined) : undefined, q ? sql`position(${q.toLocaleLowerCase()} in lower(${page.title}))>0` : undefined)).orderBy(...pinnedFirst, order, asc(page.id)).limit(limit + 1).offset(offset);
+  const pinned = pinnedIds.length ? await documents(db, folderIds).where(and(scope, inArray(page.id, pinnedIds))) : [];
   const visiblePinned = pinnedIds.flatMap(id => pinned.filter(row => row.id === id).map(serialize));
   const visibleIds = tab.data === 'overview' ? [] : [...new Set([...items.slice(0, limit), ...pinned].map(item => item.id))];
   const visits = visibleIds.length ? await db.select({ pageId: documentVisit.pageId, lastViewedAt: documentVisit.lastViewedAt }).from(documentVisit).where(and(eq(documentVisit.knowledgeBaseId, authority.knowledgeBaseId), eq(documentVisit.userId, authority.userId), inArray(documentVisit.pageId, visibleIds))) : [];
   const lastViewed = new Map(visits.map(visit => [visit.pageId, visit.lastViewedAt.toISOString()]));
   const withVisit = (document: DiscoveryDocument): DiscoveryDocument => ({ ...document, lastViewedAt: lastViewed.get(document.id) ?? null });
   return { folder: { id: folder.id, name: folder.name, defaultAccess: folder.defaultAccess, metadata: { ...metadata, ...(metadata.pinnedPageIds ? { pinnedPageIds: visiblePinned.map(document => document.id) } : {}) } }, total: count?.count ?? 0,
-    canManage: manager(authority), canCreate: manager(authority) || ['edit', 'full'].includes(folder.defaultAccess ?? ''),
+    canManage: canManageFolder(policy, authority), canCreate: level === 'edit' || level === 'full',
     documents: items.slice(0, limit).map(serialize).map(withVisit), pinned: tab.data === 'overview' ? [] : visiblePinned.map(withVisit), nextOffset: items.length > limit ? offset + limit : null };
 }
 export async function updateFolder(db: ResourceTransaction, authority: KnowledgeRequestContext, folderId: string, input: unknown) {
-  if (!manager(authority) || !authority.scopes.includes('write')) throw new DiscoveryError(403);
+  if (!authority.scopes.includes('write')) throw new DiscoveryError(403);
   const parsed = folderUpdateSchema.safeParse(input); if (!parsed.success) throw new DiscoveryError(400, 'INVALID_INPUT');
   await lockPermissionKnowledgeBase(db, authority.knowledgeBaseId);
   // A queued writer must not keep a role or credential that expired while waiting.
   if (authority.credential.kind === 'session') {
-    const role = await activeSessionMember(db, authority.knowledgeBaseId, { userId: authority.userId, sessionId: authority.credential.sessionId }, true);
-    if (!['owner', 'admin'].includes(role)) throw new DiscoveryError(403);
+    await activeSessionMember(db, authority.knowledgeBaseId, { userId: authority.userId, sessionId: authority.credential.sessionId }, true);
   } else {
     const [token] = await db.select({ role: member.role, scopes: personalAccessToken.scopes }).from(personalAccessToken)
       .innerJoin(authUser, eq(authUser.id, personalAccessToken.userId))
       .innerJoin(member, and(eq(member.knowledgeBaseId, personalAccessToken.knowledgeBaseId), eq(member.userId, personalAccessToken.userId)))
       .where(and(eq(personalAccessToken.knowledgeBaseId, authority.knowledgeBaseId), eq(personalAccessToken.id, authority.credential.tokenId), eq(personalAccessToken.userId, authority.userId), eq(authUser.emailVerified, true), isNull(personalAccessToken.revokedAt), sql`(${personalAccessToken.expiresAt} is null or ${personalAccessToken.expiresAt}>clock_timestamp())`)).for('share');
-    if (!token || !['owner', 'admin'].includes(token.role) || !(['read', 'write'] as const).every(scope => token.scopes.includes(scope))) throw new DiscoveryError(403);
+    if (!token || !(['read', 'write'] as const).every(scope => token.scopes.includes(scope))) throw new DiscoveryError(403);
   }
   const [folder] = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, authority.knowledgeBaseId), eq(teamspace.id, folderId))).for('update');
   if (!folder) throw new DiscoveryError(404);
+  const [currentMember] = await db.select({ role: member.role }).from(member).where(and(eq(member.knowledgeBaseId, authority.knowledgeBaseId), eq(member.userId, authority.userId)));
+  const policy = (await readFolderAccess(db, authority.knowledgeBaseId)).find(item => item.teamspaceId === folderId);
+  if (!currentMember || !policy || !canManageFolder(policy, { userId: authority.userId, role: currentMember.role })) throw new DiscoveryError(403);
   const previous = folderMetadataSchema.parse(folder.metadata), { expectedRevision, name, ...patch } = parsed.data;
   if ((previous.revision ?? 0) !== expectedRevision) throw new DiscoveryError(409, 'FOLDER_CONFLICT');
   if (patch.description !== undefined) {

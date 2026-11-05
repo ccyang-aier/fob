@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import type { FolderAccessPolicy, FolderMemberGrant, PermissionLevel } from '@fob/shared/knowledge/contracts';
+import { resourcePermission, type FolderAccessPolicy, type FolderMemberGrant, type PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { FolderOutline, Trash } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { useTranslation } from '@/lib/i18n';
@@ -16,7 +16,7 @@ import { organizationErrorTextOf } from './errors';
 import { managementMessages } from './management.messages';
 import styles from './management.module.css';
 
-const levels: PermissionLevel[] = ['view', 'comment', 'edit', 'full'];
+const levels: PermissionLevel[] = ['view', 'edit', 'full'];
 type Notify = (kind: 'success' | 'error', message: string) => void;
 
 function AccessSelect({ value, onChange, label, nullable = false, disabled = false, compact = false }: {
@@ -28,7 +28,7 @@ function AccessSelect({ value, onChange, label, nullable = false, disabled = fal
     ...(nullable ? [{ value: 'none', label: t('noAccess'), description: t('noAccessDescription') }] : []),
     ...levels.map(level => ({ value: level, label: t(level), description: descriptions[level] })),
   ];
-  return <DirectorySelect label={label} value={value ?? 'none'} options={options} compact={compact} disabled={disabled}
+  return <DirectorySelect label={label} value={resourcePermission(value) ?? 'none'} options={options} compact={compact} disabled={disabled}
     valueDisplay={value ? <PermissionBadge level={value} /> : <span className={styles.noAccessValue}>{t('noAccess')}</span>}
     onChange={next => onChange(next === 'none' ? null : next as PermissionLevel)} />;
 }

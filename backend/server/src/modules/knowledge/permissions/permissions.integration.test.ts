@@ -79,8 +79,9 @@ describe('permission materialization, fences and index sync', () => {
       const [block] = await db.select().from(blockIndex).where(and(eq(blockIndex.knowledgeBaseId, fixture.alpha.id), eq(blockIndex.pageId, pages[2].pageId)));
       return { effective, block };
     });
-    expect(cleared.effective?.view).toEqual([]);
-    expect(cleared.block?.principals).toEqual([]);
+    const creator = [principal('user', fixture.owner.identity.userId)];
+    expect(cleared.effective?.view).toEqual(creator);
+    expect(cleared.block?.principals).toEqual(creator);
   });
 
   test('inheritance breaks cut grants and restoring inheritance re-derives them', async () => {
@@ -133,7 +134,7 @@ describe('permission materialization, fences and index sync', () => {
       const [record] = await db.select({ aclRevision: page.aclRevision }).from(page).where(and(eq(page.knowledgeBaseId, fixture.alpha.id), eq(page.id, pages[2].pageId)));
       return { effective: effective!, aclRevision: record!.aclRevision };
     });
-    const expected = [principal('user', fixture.reader.identity.userId), principal('knowledgeBase', fixture.alpha.id)].sort();
+    const expected = [principal('user', fixture.owner.identity.userId), principal('user', fixture.reader.identity.userId), principal('knowledgeBase', fixture.alpha.id)].sort();
     expect(snapshot.effective.view).toEqual(expected);
     expect(snapshot.effective.revision).toBe(snapshot.aclRevision);
 

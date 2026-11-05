@@ -2,7 +2,7 @@ import { and, eq, isNull } from 'drizzle-orm';
 import type { PageScope } from '@fob/shared/knowledge/contracts';
 import { documentPublicationInputSchema } from '@fob/shared/knowledge/contracts';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
-import { asset, docState, page, shareLink } from '../../../platform/database/resources/schema';
+import { asset, docState, member, page, shareLink } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { createAuthorizedShareLink, revokeAuthorizedShareLink, shareLinkLocator, verifyShareLink, authorizeShareLinkPageAccess } from '../sharing/links';
 import { lockPermissionKnowledgeBase } from '../permissions';
@@ -15,7 +15,9 @@ export async function changeDocumentPublication(db: ResourceTransaction, scope: 
   const parsed = documentPublicationInputSchema.safeParse(input);
   if (!parsed.success) throw new DocumentServiceError(400, 'INVALID_INPUT');
   await lockPermissionKnowledgeBase(db, scope.knowledgeBaseId);
-  await requireDocument(db, scope, userId, 'full');
+  const { access } = await requireDocument(db, scope, userId, 'full');
+  const [actor] = await db.select({ role: member.role }).from(member).where(and(eq(member.knowledgeBaseId, scope.knowledgeBaseId), eq(member.userId, userId)));
+  if (access.level !== 'full' || !actor || actor.role === 'guest') throw new DocumentServiceError(403, 'DOCUMENT_FORBIDDEN');
   const active = await db.select().from(shareLink).where(and(eq(shareLink.knowledgeBaseId, scope.knowledgeBaseId), eq(shareLink.pageId, scope.pageId), isNull(shareLink.revokedAt)));
   // Turning off or rotating revokes every active link, including links created by another client.
   if (!parsed.data.enabled || parsed.data.rotate || active.some(link => !link.encryptedToken || (link.expiresAt && link.expiresAt <= new Date()))) {

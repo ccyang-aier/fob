@@ -60,10 +60,10 @@ export function treeActionsForRow(): readonly TreeAction[] {
   return rowActions();
 }
 
-/** The write gate: a guest role or a scope without write is a read-only tree (U05 owns fine-grained page ACL UI). */
+/** Credential gate only. Viewers and guests may hold explicit resource write rights; the API checks each target. */
 export function canEditTree(access: KnowledgeAccess | undefined): boolean {
   if (!access) return false;
-  return access.role !== 'guest' && access.scopes.includes('write');
+  return access.scopes.includes('write');
 }
 
 export function readOnlyTreeReason(locale?: Locale) {

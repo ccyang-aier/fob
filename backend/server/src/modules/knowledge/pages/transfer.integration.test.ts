@@ -42,7 +42,7 @@ test('cross-folder transfer preserves subtree identity, body and explicit ACL wh
   } finally { encoded.ydoc.destroy(); }
 });
 
-test('transfer requires source full access, destination write access, same knowledge base and token write scope', async () => {
+test('transfer requires source edit access, destination write access, same knowledge base and token write scope', async () => {
   const source = await fixture.tree({ defaultAccess: 'view' }), destination = await fixture.tree({ defaultAccess: 'edit' }), readOnly = await fixture.tree({ defaultAccess: 'view' }), foreign = await fixture.tree({ resource: 'beta' });
   await fixture.drain();
   const input = { ...source.root, targetTeamspaceId: destination.teamspace.id };

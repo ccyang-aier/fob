@@ -8,6 +8,7 @@ import { knowledgeMessages } from './view-model.messages';
 
 import type { MemberRole } from '@/features/knowledge/organization/client';
 import type { TeamspaceAccess } from '../data/knowledge-catalog-client';
+import { resourcePermission } from '@fob/shared/knowledge/contracts';
 
 /** The four observable list states plus the ready state they lead to. */
 export type OrganizationListState =
@@ -38,6 +39,7 @@ export function memberRoleLabels(locale?: Locale): Record<MemberRole, string> {
     owner: knowledgeT('owner'),
     admin: knowledgeT('administrator'),
     member: knowledgeT('members'),
+    viewer: knowledgeT('viewer'),
     guest: knowledgeT('guest'),
   };
 }
@@ -54,15 +56,15 @@ export function canManageOrganization(role: MemberRole): boolean {
 
 /** Roles the actor may assign; mirrors the backend `requireRoleAuthority` matrix. */
 export function assignableRoles(role: MemberRole): MemberRole[] {
-  if (role === 'owner') return ['owner', 'admin', 'member', 'guest'];
-  if (role === 'admin') return ['member', 'guest'];
+  if (role === 'owner') return ['admin', 'member', 'viewer', 'guest'];
+  if (role === 'admin') return ['admin', 'member', 'viewer', 'guest'];
   return [];
 }
 
 /** Whether the actor may touch (change role / remove) one specific member row. */
 export function canManageMember(actorRole: MemberRole, targetRole: MemberRole): boolean {
   if (actorRole === 'owner') return true;
-  if (actorRole === 'admin') return targetRole === 'member' || targetRole === 'guest';
+  if (actorRole === 'admin') return targetRole !== 'owner';
   return false;
 }
 
@@ -86,11 +88,6 @@ export function defaultAccessOptions(locale?: Locale): readonly DefaultAccessOpt
       description: knowledgeT('knowledgeBaseMembersCanViewPagesInThis'),
     },
     {
-      value: 'comment',
-      label: knowledgeT('canComment'),
-      description: knowledgeT('knowledgeBaseMembersCanViewAndCommentOn'),
-    },
-    {
       value: 'edit',
       label: knowledgeT('canEdit'),
       description: knowledgeT('knowledgeBaseMembersCanEditPageContentBy'),
@@ -105,12 +102,12 @@ export function defaultAccessOptions(locale?: Locale): readonly DefaultAccessOpt
 
 export function defaultAccessLabel(value: TeamspaceAccess, locale?: Locale): string {
   const options = defaultAccessOptions(locale);
-  return (options.find((option) => option.value === value) ?? options[0]).label;
+  return (options.find((option) => option.value === resourcePermission(value)) ?? options[0]).label;
 }
 
 export function defaultAccessDescription(value: TeamspaceAccess, locale?: Locale): string {
   const options = defaultAccessOptions(locale);
-  return (options.find((option) => option.value === value) ?? options[0]).description;
+  return (options.find((option) => option.value === resourcePermission(value)) ?? options[0]).description;
 }
 
 /**
