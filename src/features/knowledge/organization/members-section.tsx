@@ -1,22 +1,25 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import type { KnowledgeBaseInvitation } from '@fob/shared/knowledge/contracts';
-import { CaretDown, DotsThree, Trash, UserPlus, UsersThree } from '@/components/icons';
+import { CaretDown, DotsThree, Trash, UserPlus, UsersThree, X } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIdentity } from '@/features/identity/identity-context';
 import { useTranslation } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { usePageVisible } from '@/lib/page-visibility';
 import type { MemberRole } from './client';
 import { useChangeMemberRoleMutation, useMembersQuery, useRemoveMemberMutation } from './hooks';
 import { useBulkMemberRoleMutation, useInvitationsQuery } from './management-data';
 import type { MemberRow } from './list-mutations';
-import { assignableRoles, canManageMember, memberRoleLabels } from './view-model';
+import { assignableRoles, canManageMember } from './view-model';
 import { ConfirmDialog, ListStateShell, flattenPages, queryListState } from './ui';
-import { DirectorySearch, RoleLabel, TableCheck } from './management-ui';
+import { DirectorySearch, RoleLabel, RoleMenuItems, TableCheck } from './management-ui';
 import { MemberInvitationDialog } from './member-invitation-dialog';
 import { invitationClient } from './invitation-client';
 import { organizationErrorTextOf } from './errors';
@@ -32,6 +35,7 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
 }) {
   const { locale, t } = useTranslation(managementMessages);
   const { session } = useIdentity();
+  const visible = usePageVisible();
   const client = useQueryClient();
   const membersQuery = useMembersQuery(knowledgeBaseId);
   const invitationsQuery = useInvitationsQuery(knowledgeBaseId, actorRole === 'owner' || actorRole === 'admin');
@@ -60,7 +64,6 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
   const visibleInvitations = invitations.filter((invitation) => invitation.email.toLocaleLowerCase(locale).includes(normalized))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const busy = changeRole.isPending || bulkRole.isPending || removeMutation.isPending;
-  const labels = memberRoleLabels(locale);
   const roles = assignableRoles(actorRole);
   const formatDate = (value?: string) => value ? new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(value)) : '—';
 
@@ -92,7 +95,9 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
     finally { actionPending.current = false; setRevokingBusy(false); }
   }
 
-  return <div className={styles.page}>
+  return <div className={styles.page} data-selecting={selectedIds.length > 0 || undefined} onKeyDown={event => {
+    if (event.key === 'Escape' && !event.defaultPrevented && !busy) setSelected([]);
+  }}>
     <header className={styles.header}><h1 className={styles.title}>{t('members')}{membersQuery.isSuccess ? <span className={styles.count}>{t('memberCount', { count: members.length })}</span> : null}</h1>
       {actorRole === 'owner' ? <Button size="sm" className={styles.button} onClick={() => setInvite({ email: '', reissue: false })}><UserPlus size={16} aria-hidden />{t('invite')}</Button> : null}
     </header>
@@ -104,18 +109,11 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
         setTab(next); if (next === 'pending') setSelected([]);
         event.currentTarget.querySelector<HTMLButtonElement>(`#members-${next}-tab`)?.focus();
       }}>
-        <button type="button" role="tab" id="members-joined-tab" aria-selected={tab === 'joined'} tabIndex={tab === 'joined' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('joined'); void membersQuery.refetch(); }}>{t('joined')} {membersQuery.isSuccess ? members.length : ''}</button>
-        {actorRole === 'owner' || actorRole === 'admin' ? <button type="button" role="tab" id="members-pending-tab" aria-selected={tab === 'pending'} tabIndex={tab === 'pending' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('pending'); setSelected([]); void invitationsQuery.refetch(); }}>{t('pending')} {invitationsQuery.isSuccess ? activeInvitations.length : ''}</button> : null}
+        <button type="button" role="tab" id="members-joined-tab" aria-selected={tab === 'joined'} tabIndex={tab === 'joined' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('joined'); void membersQuery.refetch(); }}><span>{t('joined')}</span>{membersQuery.isSuccess ? <span className={styles.tabCount}>{members.length}</span> : null}</button>
+        {actorRole === 'owner' || actorRole === 'admin' ? <button type="button" role="tab" id="members-pending-tab" aria-selected={tab === 'pending'} tabIndex={tab === 'pending' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('pending'); setSelected([]); void invitationsQuery.refetch(); }}><span>{t('pending')}</span>{invitationsQuery.isSuccess ? <span className={styles.tabCount}>{activeInvitations.length}</span> : null}</button> : null}
       </div>
       <DirectorySearch value={search} onChange={setSearch} label={t('searchMembers')} clearLabel={t('clearSearch')} />
     </div>
-    {tab === 'joined' && selectedIds.length ? <div className={styles.bulk} role="region" aria-label={t('selected', { count: selectedIds.length })}>
-      <strong>{t('selected', { count: selectedIds.length })}</strong>
-      <DropdownMenu><DropdownMenuTrigger asChild><button type="button" disabled={busy} className="fob-action" data-surface="plain"><UsersThree size={16} aria-hidden />{t('changeRole')}<CaretDown size={12} aria-hidden /></button></DropdownMenuTrigger>
-        <DropdownMenuContent align="start">{roles.map((role) => <DropdownMenuItem key={role} onSelect={() => void updateRoles(selectedIds, role)}>{labels[role]}</DropdownMenuItem>)}</DropdownMenuContent>
-      </DropdownMenu>
-      <button type="button" className="fob-action" data-surface="plain" disabled={busy} onClick={() => setSelected([])}>{t('cancelSelection')}</button>
-    </div> : null}
     <div id="members-table-panel" role="tabpanel" aria-labelledby={tab === 'joined' ? 'members-joined-tab' : 'members-pending-tab'}>
       {tab === 'joined' ? <ListStateShell state={queryListState(membersQuery)} error={membersQuery.error} onRetry={() => void membersQuery.refetch()} emptyTitle={t('noMembers')}>
         <div className={styles.tableWrap}><table className={cn(styles.table, styles.memberTable)} aria-label={t('members')}><thead><tr>
@@ -126,7 +124,7 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
             onChange={() => setSelected(selectedIds.includes(member.userId) ? selectedIds.filter((id) => id !== member.userId) : [...selectedIds, member.userId])} /></td>
           <td><div className={styles.person}><UserAvatar name={member.name} image={member.image} className={styles.avatar} /><div className={styles.identity}><span className={styles.name}>{member.name}{session.status === 'authenticated' && member.userId === session.user.id ? <span className={styles.self}>{t('you')}</span> : null}</span><span className={styles.email} title={member.email}>{member.email}</span></div></div></td>
           <td>{manageable(member) ? <DropdownMenu><DropdownMenuTrigger asChild><button type="button" disabled={busy} aria-label={t('roleFor', { name: member.name })} className={cn('fob-action', styles.roleButton)} data-surface="plain"><RoleLabel role={member.role} /><CaretDown size={12} aria-hidden /></button></DropdownMenuTrigger>
-            <DropdownMenuContent align="start"><DropdownMenuRadioGroup value={member.role} onValueChange={(value) => { if (value !== member.role) void updateRoles([member.userId], value as MemberRole); }}>{roles.map((role) => <DropdownMenuRadioItem key={role} value={role}>{labels[role]}</DropdownMenuRadioItem>)}</DropdownMenuRadioGroup></DropdownMenuContent>
+            <DropdownMenuContent align="start" className={styles.roleMenu}><RoleMenuItems roles={roles} value={member.role} onChange={role => void updateRoles([member.userId], role)} /></DropdownMenuContent>
           </DropdownMenu> : <RoleLabel role={member.role} />}</td>
           <td className={styles.date}>{formatDate(member.joinedAt)}</td><td className={styles.actions}>{manageable(member) ? <DropdownMenu><DropdownMenuTrigger asChild><button type="button" disabled={busy} aria-label={t('actionsFor', { name: member.name })} className={cn('fob-action', styles.rowAction)} data-surface="plain"><DotsThree size={18} aria-hidden /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem variant="destructive" onSelect={() => setRemoving(member)}><Trash size={14} aria-hidden />{t('removeMember')}</DropdownMenuItem></DropdownMenuContent></DropdownMenu> : null}</td>
         </tr>)}</tbody></table>{!filtered.length ? <div className={styles.empty}>{t('noResults')}<Button variant="ghost" size="sm" onClick={() => setSearch('')}>{t('clearFilters')}</Button></div> : null}</div>
@@ -140,6 +138,16 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
       </div>}
     </div>
     {tab === 'joined' && membersQuery.isSuccess ? <p className={styles.footer} role="status">{search ? t('showing', { visible: filtered.length, total: members.length }) : t('total', { count: members.length })}</p> : tab === 'pending' && invitationsQuery.isSuccess ? <p className={styles.footer}>{t('invitationCount', { count: invitations.length })}</p> : null}
+    {tab === 'joined' && selectedIds.length > 0 && visible && !invite && !removing && !revoking ? createPortal(
+      <div className={styles.bulkPosition}><div className={styles.bulk} role="toolbar" aria-label={t('selected', { count: selectedIds.length })}>
+        <strong aria-live="polite">{t('selected', { count: selectedIds.length })}</strong><span className={styles.bulkSeparator} aria-hidden />
+        <DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="sm" disabled={busy} className={styles.bulkAction} data-surface="plain"><UsersThree size={16} aria-hidden />{t('changeRole')}<CaretDown size={12} aria-hidden /></Button></DropdownMenuTrigger>
+          <DropdownMenuContent side="top" align="center" className={styles.roleMenu}><RoleMenuItems roles={roles} onChange={role => void updateRoles(selectedIds, role)} /></DropdownMenuContent>
+        </DropdownMenu>
+        <span className={styles.bulkSeparator} aria-hidden />
+        <Tooltip><TooltipTrigger asChild><Button variant="ghost" size="icon-sm" className={styles.bulkClear} data-surface="plain" disabled={busy} onClick={() => setSelected([])} aria-label={t('cancelSelection')}><X size={16} aria-hidden /><span className="sr-only">{t('cancelSelection')}</span></Button></TooltipTrigger><TooltipContent>{t('cancelSelection')}</TooltipContent></Tooltip>
+      </div></div>, document.body,
+    ) : null}
     {invite ? <MemberInvitationDialog key={invite.email} knowledgeBaseId={knowledgeBaseId} members={members} {...invite} onClose={() => setInvite(null)} notify={notify} /> : null}
     <ConfirmDialog open={!!removing} onClose={() => { if (!actionPending.current) setRemoving(null); }} onConfirm={() => void removeMember()} busy={removeMutation.isPending} title={t('removeMember')} confirmLabel={t('remove')} body={t('removeBody', { name: removing?.name ?? '' })} />
     <ConfirmDialog open={!!revoking} onClose={() => { if (!actionPending.current) setRevoking(null); }} onConfirm={() => void revoke()} busy={revokingBusy} title={t('revoke')} confirmLabel={t('revoke')} body={t('revokeBody', { email: revoking?.email ?? '' })} />

@@ -3,6 +3,8 @@ import { Window } from 'happy-dom';
 import { act } from 'react';
 import type { Root } from 'react-dom/client';
 import type { MemberRole } from './client';
+import { PageVisibility } from '@/lib/page-visibility';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 let browser: Window, host: HTMLDivElement, root: Root;
 let Members: typeof import('./members-section').MembersSection;
@@ -37,8 +39,8 @@ beforeAll(async () => {
 beforeEach(async () => { await act(async () => root.render(null)); calls.length = 0; });
 afterAll(async () => { await act(async () => root?.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 
-async function render(role: MemberRole) {
-  await act(async () => root.render(<Provider><Members knowledgeBaseId={base} actorRole={role} notify={() => {}} /></Provider>));
+async function render(role: MemberRole, visible = true) {
+  await act(async () => root.render(<TooltipProvider><PageVisibility value={visible}><Provider><Members knowledgeBaseId={base} actorRole={role} notify={() => {}} /></Provider></PageVisibility></TooltipProvider>));
   for (let attempt = 0; attempt < 30 && !host.querySelector('table'); attempt++) await act(async () => { await new Promise(resolve => setTimeout(resolve, 10)); });
   expect(host.querySelector('table')).not.toBeNull();
 }
@@ -66,17 +68,31 @@ test('read-only members can search the directory without receiving role or remov
 });
 
 
-test('selection exposes only role changes and protects the final owner', async () => {
+test('selection opens a separate action dock without moving the member table and protects the final owner', async () => {
   await render('owner');
   expect(host.querySelector<HTMLButtonElement>('button[aria-label="选择 Owner"]')?.disabled).toBe(true);
   const checkbox = host.querySelector<HTMLButtonElement>('button[aria-label="选择 Later member"]')!;
   await act(async () => checkbox.click());
-  expect(host.querySelector('[role="region"]')?.textContent).toContain('已选择 1 人');
-  expect(host.querySelector('[role="region"]')?.textContent).toContain('变更角色');
+  expect(host.querySelector('[role="toolbar"]')).toBeNull();
+  const dock = document.querySelector('[role="toolbar"]')!;
+  expect(dock.textContent).toContain('已选择 1 人');
+  expect(dock.textContent).toContain('变更角色');
   expect(host.textContent).not.toContain('群组');
-  const clear = [...host.querySelectorAll('button')].find(button => button.textContent === '取消选择')!;
+  const clear = dock.querySelector<HTMLButtonElement>('button[aria-label="取消选择"]')!;
   await act(async () => clear.click());
-  expect(host.querySelector('[role="region"]')).toBeNull();
+  expect(document.querySelector('[role="toolbar"]')).toBeNull();
+});
+
+test('the member dock follows page visibility and Escape clears the selection', async () => {
+  await render('owner');
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label="选择 Later member"]')!.click());
+  expect(document.querySelector('[role="toolbar"]')).not.toBeNull();
+  await render('owner', false);
+  expect(document.querySelector('[role="toolbar"]')).toBeNull();
+  await render('owner');
+  expect(document.querySelector('[role="toolbar"]')).not.toBeNull();
+  await act(async () => host.querySelector('button[aria-label="选择 Later member"]')!.dispatchEvent(new browser.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }) as unknown as KeyboardEvent));
+  expect(document.querySelector('[role="toolbar"]')).toBeNull();
 });
 
 test('pending invitations have a real empty state and can return to joined members', async () => {

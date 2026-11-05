@@ -2,6 +2,7 @@
 
 import type { PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { MagnifyingGlass, SelectionCheck, X } from '@/components/icons';
+import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 import type { MemberRole } from './client';
@@ -12,6 +13,23 @@ import styles from './management.module.css';
 export function RoleLabel({ role }: { role: MemberRole }) {
   const { locale } = useTranslation(managementMessages);
   return <span className={styles.badge} data-role={role}>{memberRoleLabels(locale)[role]}</span>;
+}
+export function RoleMenuItems({ roles, value, onChange }: {
+  roles: readonly MemberRole[]; value?: MemberRole; onChange: (role: MemberRole) => void;
+}) {
+  const { t, locale } = useTranslation(managementMessages);
+  const labels = memberRoleLabels(locale);
+  const descriptions = {
+    owner: t('ownerDescription'), admin: t('adminDescription'),
+    member: t('memberDescription'), guest: t('guestDescription'),
+  };
+  return <DropdownMenuRadioGroup value={value ?? ''} onValueChange={next => { if (next !== value) onChange(next as MemberRole); }}>
+    {roles.map(role => <DropdownMenuRadioItem key={role} value={role} textValue={labels[role]}
+      indicator="none" emphasizeSelection={false} className={styles.selectOption}>
+      <span className={styles.optionCopy}><RoleLabel role={role} /><span className={styles.optionDescription}>{descriptions[role]}</span></span>
+      <span className={styles.optionCheck} aria-hidden>{value === role ? <SelectionCheck /> : null}</span>
+    </DropdownMenuRadioItem>)}
+  </DropdownMenuRadioGroup>;
 }
 export function PermissionBadge({ level }: { level: PermissionLevel | null }) {
   const { t } = useTranslation(managementMessages);
