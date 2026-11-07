@@ -135,7 +135,7 @@ export function DocumentOutlineNavigation({ open, pinned, onHoverChange, restore
         style={{ width: Math.max(4, 18 - depths[index] * 6) }} />)}</span>
     </button>
     {open && rail && <AnchoredPopover
-      anchor={rail} side="right" align="center" width={320} label={t('documentSections')}
+      anchor={rail} side="right" align="center" width={300} label={t('documentSections')}
       className={styles.floatingPanel} autoFocus={pinned} restoreFocusTo={restoreFocusTo}
       onClose={props.onClose} onMouseEnter={enter} onMouseLeave={leave}>
       <DocumentOutline {...props} previewHeading={previewHeading} onPreview={preview} />

@@ -8,7 +8,6 @@ import { List, Plus } from '@/components/icons';
 import { DocumentShareButton } from '../../../sharing/document-share-dialog';
 import { DocumentMoreMenu, type DocumentMenuActions } from '../document-more-menu';
 import { DocumentStarButton } from '../document-star';
-import { useDocumentNavigation } from '../../document-tools';
 import styles from './styles.module.css';
 
 export function DocumentEditorHeader({
@@ -39,7 +38,6 @@ export function DocumentEditorHeader({
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
-  const navigation = useDocumentNavigation();
   const headerRef = useRef<HTMLElement>(null);
   const leadingRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
@@ -67,29 +65,19 @@ export function DocumentEditorHeader({
   return (
     <header ref={headerRef} className={styles.header} data-title-room="false">
       <div ref={leadingRef} className={styles.leading}>
-        <button
-          ref={navigation?.outlineTrigger}
+        {pdfNavigation && <button
           type="button"
           className={`fob-action ${styles.iconButton}`}
           data-surface="plain"
           data-variant="hover"
-          aria-label={pdfNavigation ? knowledgeT('pdfThumbnails') : knowledgeT('documentOutline')}
-          title={
-            pdfNavigation
-              ? pdfNavigation.open
-                ? knowledgeT('collapseThumbnails')
-                : knowledgeT('expandThumbnails')
-              : navigation?.outlineOpen
-                ? knowledgeT('collapseOutline')
-                : knowledgeT('expandOutline')
-          }
-          aria-expanded={pdfNavigation?.open ?? navigation?.outlineOpen ?? false}
-          aria-controls={pdfNavigation?.id ?? navigation?.outlineId}
-          disabled={!pdfNavigation && !navigation?.onToggleOutline}
-          onClick={pdfNavigation?.onToggle ?? navigation?.onToggleOutline}
+          aria-label={knowledgeT('pdfThumbnails')}
+          title={knowledgeT(pdfNavigation.open ? 'collapseThumbnails' : 'expandThumbnails')}
+          aria-expanded={pdfNavigation.open}
+          aria-controls={pdfNavigation.id}
+          onClick={pdfNavigation.onToggle}
         >
           <List aria-hidden size={16} />
-        </button>
+        </button>}
         <DocumentStarButton starred={starred} onToggle={onToggleStar} />
       </div>
       <div className={styles.readingTitle} aria-hidden="true">

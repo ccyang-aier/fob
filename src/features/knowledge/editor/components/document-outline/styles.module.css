@@ -1,9 +1,10 @@
-.panel { display:flex; flex-direction:column; min-height:0; max-height:min(88dvh,840px,calc(100dvh - 48px)); }
-.chapters { display:flex; flex-direction:column; overflow:auto; min-height:0; overscroll-behavior:contain; scrollbar-width:thin; padding:0; }
-.chapter { display:block; flex:none; width:100%; min-width:0; height:32px; padding:0 8px; border:0; border-radius:9px; background:transparent; color:var(--muted-strong); text-align:start; font-size:14px; font-weight:400; line-height:32px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
-.chapter:hover,.chapter[aria-current=location] { color:var(--ink); }
+.panel { display:flex; flex-direction:column; min-height:0; }
+.chapters { display:flex; flex-direction:column; overflow:auto; min-height:0; overscroll-behavior:contain; scrollbar-width:thin; padding:0 8px; }
+.chapter { display:block; flex:none; width:100%; min-width:0; height:32px; padding:0 8px; border:0; border-radius:9px; background:transparent; color:var(--muted); text-align:start; font-size:14px; font-weight:400; line-height:32px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
+.chapter,.chapter[data-active=true] { --action-state-ink:var(--muted); }
+.chapter[aria-current=location] { --action-state-ink:var(--ink); color:var(--ink); }
 .chapter:focus-visible { outline:2px solid var(--control-border); outline-offset:-2px; }
-.floatingPanel { padding:8px; border-radius:18px; }
+.floatingPanel { display:flex; flex-direction:column; max-height:min(720px,calc(100dvh - 48px)); padding:8px 0; overflow:hidden; border-radius:18px; }
 .rail { position:absolute; z-index:15; top:50%; inset-inline-start:8px; transform:translateY(-50%); display:flex; align-items:center; justify-content:flex-start; width:54px; max-height:60%; padding:8px; border:0; background:transparent; cursor:pointer; }
 .ticks { display:grid; width:38px; height:100%; min-height:0; overflow:hidden; }
 .tick { display:block; align-self:center; height:2px; max-height:100%; background:color-mix(in srgb,var(--ink) var(--dock-ink,0%),var(--control-border)); transition:width 160ms cubic-bezier(.2,.8,.2,1),background-color 120ms linear; }
