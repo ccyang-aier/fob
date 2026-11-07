@@ -16,22 +16,15 @@ import {
 } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewWrapper } from '@tiptap/react';
-import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
-import { readLocalAsset, saveLocalAsset } from '../../../assets/local-assets';
-import { knowledgeAssetsApi } from '../../../assets/assets-api';
+import { saveLocalAsset } from '../../../assets/local-assets';
+import { useResolvedMedia, type ResolvedMedia } from './use-resolved-media';
+export type { ResolvedMedia } from './use-resolved-media';
 import { useAssetUploads } from '../../../assets/use-asset-uploads';
 import { takeInsertedMedia } from './insert-media';
 import { BlockActions } from '../block-actions';
 import styles from './media-block.module.css';
 
 export type MediaKind = 'image' | 'video' | 'audio' | 'file' | 'pdf';
-export interface ResolvedMedia {
-  url: string;
-  name: string;
-  mime: string;
-  size: number | null;
-}
-
 function LABELS(locale?: Locale): Record<MediaKind, string> {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
   return {
@@ -50,85 +43,6 @@ const ACCEPT: Record<MediaKind, string> = {
   pdf: 'application/pdf,.pdf',
 };
 
-function useResolvedMedia(source: string, localKnowledgeBaseId?: string, knowledgeBaseId?: string) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
-  const sourceKey = `${localKnowledgeBaseId ? `local:${localKnowledgeBaseId}` : `remote:${knowledgeBaseId ?? ''}`}:${source}`;
-  const [result, setResult] = useState<{
-    sourceKey: string;
-    value: ResolvedMedia | null;
-    error: keyof typeof knowledgeMessages | null;
-  }>({ sourceKey: '', value: null, error: null });
-  useEffect(() => {
-    let canceled = false;
-    let objectUrl: string | null = null;
-    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
-    const safe = safeKnowledgeUrl(source, 'media');
-    if (!safe?.startsWith('asset:')) return;
-    if (localKnowledgeBaseId) {
-      readLocalAsset(localKnowledgeBaseId, safe)
-        .then((asset) => {
-          if (canceled) return;
-          if (!asset) {
-            setResult({
-              sourceKey,
-              value: null,
-              error: 'localAssetNotFoundTheBrowserMayHave',
-            });
-            return;
-          }
-          objectUrl = URL.createObjectURL(asset.blob);
-          setResult({
-            sourceKey,
-            value: { url: objectUrl, name: asset.name, mime: asset.mime, size: asset.size },
-            error: null,
-          });
-        })
-        .catch(() => {
-          if (!canceled) setResult({ sourceKey, value: null, error: 'unableToReadLocalAsset' });
-        });
-    } else if (knowledgeBaseId) {
-      const refresh = () =>
-        knowledgeAssetsApi
-          .download(knowledgeBaseId, safe.slice(6))
-          .then((grant) => {
-            if (canceled) return;
-            setResult({
-              sourceKey,
-              value: { url: grant.url, name: '', mime: '', size: null },
-              error: null,
-            });
-            refreshTimer = setTimeout(
-              refresh,
-              Math.max(10_000, new Date(grant.expiresAt).getTime() - Date.now() - 60_000),
-            );
-          })
-          .catch(() => {
-            if (!canceled)
-              setResult({
-                sourceKey,
-                value: null,
-                error: 'unableToReadTeamAssetCheckPermissionsOr',
-              });
-          });
-      void refresh();
-    }
-    return () => {
-      canceled = true;
-      if (refreshTimer) clearTimeout(refreshTimer);
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
-    };
-  }, [source, sourceKey, localKnowledgeBaseId, knowledgeBaseId]);
-  if (!source) return { value: null, error: null };
-  const safe = safeKnowledgeUrl(source, 'media');
-  if (!safe) return { value: null, error: knowledgeT('assetUrlIsUnsafeOrInvalid') };
-  if (!safe.startsWith('asset:'))
-    return { value: { url: safe, name: '', mime: '', size: null }, error: null };
-  if (!localKnowledgeBaseId && !knowledgeBaseId)
-    return { value: null, error: knowledgeT('thisAssetIsNotConnectedToAnAccessible') };
-  return result.sourceKey === sourceKey
-    ? { ...result, error: result.error ? knowledgeT(result.error) : null }
-    : { value: null, error: null };
-}
 
 export function MediaBlockView({
   kind,
@@ -352,7 +266,8 @@ export function MediaBlockView({
           <button
             type="button"
             onClick={() => {
-              if (latestUpload && ['error', 'canceled'].includes(latestUpload.phase))
+              if (resolved.error) resolved.retry();
+              else if (latestUpload && ['error', 'canceled'].includes(latestUpload.phase))
                 uploads.retry(latestUpload.id);
               else inputRef.current?.click();
             }}

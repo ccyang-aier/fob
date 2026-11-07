@@ -16,6 +16,7 @@ import { createPortal } from 'react-dom';
 import type { Editor } from '@tiptap/react';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import { cn } from '@/lib/utils';
+import { usePageVisible } from '@/lib/page-visibility';
 import { filterSlashItems } from './slash-items';
 import {
   closeSlashMenu,
@@ -37,6 +38,7 @@ interface OpenMenuState {
 }
 
 export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
+  const visible = usePageVisible();
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
 
   // Keyed by editor: a stale editor's menu never renders after a scope switch
@@ -44,7 +46,7 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
   const [menuState, setMenuState] = useState<{ editor: Editor | null; menu: OpenMenuState | null }>(
     { editor: null, menu: null },
   );
-  const menu = menuState.editor === editor ? menuState.menu : null;
+  const menu = visible && menuState.editor === editor ? menuState.menu : null;
   const panelRef = useRef<HTMLDivElement>(null);
   const pointerInsideRef = useRef(false);
 

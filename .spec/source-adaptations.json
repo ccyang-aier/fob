@@ -559,8 +559,8 @@
     "sha256": "ba6bc8a02c33725ac4d3fe3957e9faee023cacdc2dd60a709697d375dcceb9d8"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md.",
-    "sha256": "234854ef7d2257b1003a51228220a2759af80d016714564fa25912ad80a2053d"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md.",
+    "sha256": "a836e896ca4dc5325d48219b7d1d0a4a5ed14f5bda355ed9bac27798911a9c92"
   },
   "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -1514,5 +1514,9 @@
   "backend/server/src/modules/knowledge/comments/mutations.ts": {
     "sha256": "9638184136317056829042883689040167878676b3b2550c481421407129ff93",
     "reason": "Owner-only member management and invitation authority; preserve actual resource grants and scoped collaborators. Compact role, checkbox filter and permission controls. See .spec/tasks/member-management-owner-only.md."
+  },
+  "src/features/knowledge/editor/commands/slash-menu.tsx": {
+    "sha256": "466f10f03e3943dd9810fab90c1070fd1816bcccbe0a32e2f0f4c3df9f6bc6d0",
+    "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md."
   }
 }
