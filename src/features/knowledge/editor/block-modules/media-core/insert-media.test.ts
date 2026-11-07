@@ -15,6 +15,19 @@ beforeAll(() => {
 
 describe('direct media picker', () => {
   for (const kind of ['image', 'video', 'audio'] as const) {
+    test(`${kind}: permissions revoked while the picker is open prevent insertion`, () => {
+      const editor = new Editor({ extensions: createKnowledgeExtensions() });
+      try {
+        const original = editor.getJSON();
+        insertMedia(kind)(editor);
+        const input = window.document.querySelector<HTMLInputElement>('input[type="file"]')!;
+        Object.defineProperty(input, 'files', { value: [new File(['fixture'], 'sample', { type: kind + '/test' })] });
+        editor.setEditable(false);
+        input.dispatchEvent(new window.Event('change'));
+        expect(editor.getJSON()).toEqual(original);
+        expect(window.document.querySelector('input[type="file"]')).toBeNull();
+      } finally { editor.destroy(); }
+    });
     test(`${kind}: selection opens first, cancellation inserts nothing, chosen file is consumed once`, () => {
       const editor = new Editor({ extensions: [...createKnowledgeExtensions(), createBlockIdExtension({ pageId: '00000000-0000-4000-8000-000000000001' })] });
       try {

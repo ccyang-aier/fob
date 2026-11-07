@@ -222,3 +222,12 @@
 - 验证：91 项测试、469 个断言通过，涵盖真实 MinIO 直传回读、哈希／秒传、上传错误与取消、插入文件、有限重试、持续拒绝、跨库取消、手动重试和多页签菜单。Web 类型、图标、国际化及修改文件 ESLint 通过；未改动后端授权与 Next.js 配置。
 - 实际 localhost:3001 当前文档：新 PNG 上传后无需刷新自动显示，浏览器确认 naturalWidth=400、naturalHeight=180；同一文档两个页签仅出现一个插入菜单；没有相关控制台错误。验证后移除测试图片和斜杠，正文前四块恢复两个空段落与原有文字，测试文件与截图保存在仓库外。曾尝试新建临时文档但创建失败，未产生新文档，本轮图片流程使用现有文档验证。
 - 截图：`C:/Users/17335/.codex/visualizations/2026/11/07/01a1b4d1-490c-7de3-926c-c7b75c41f771/image-upload-fixed.png`。桌面 IAB 使用 CUA 支持的 Playwright 接口（Browser plugin not available），未验证其他浏览器及移动视口。
+
+
+## 2026-11-07 手动选图静默丢失的补充修复
+
+- 用户明确仍在“/ → 图片”选择 PNG 后无响应。此前自动化选择没有触发 Windows 文件窗口返回页面的 focus，不能覆盖这一操作差异；上轮只修复了读取授权早于正文落库的问题。
+- 源码链路：IdentityProvider 在 window.focus 上刷新会话，session-store 发布新的 user 对象；PageEditorSurface 将整个 user 引用列为 extensions 的依赖，导致相同账号也重建并销毁旧编辑器。文件选择回调可能因旧实例已销毁而直接丢弃；也可能在上传中重建 NodeView，上传结果回写到已失效实例。
+- 使用真实 PageEditorSurface、Tiptap、Y.Doc、媒体 NodeView 与上传控制器，以相同用户的新对象复现两种时间点：选择窗口打开期间与 prepare 尚未返回期间。修复前两项均失败，旧编辑器 destroyed=true；修复后均通过，原实例和图片 src/alt 保持，Y.Doc 路径未替换。
+- 扩展装配改为依赖实际用户 ID、姓名和归一化头像字段，忽略单纯对象引用刷新；选择完成时重新验证 isEditable，图片／视频／音频均覆盖选择期间撤权的拒绝插入。
+- 97 项测试、529 个断言通过，涵盖上述两项、原协作实例、媒体选择、上传队列、真实 MinIO、读取重试和 slash 命令。用户在当前页签再次从“/ → 图片”手动选择自己的 PNG 后确认“现在能正常显示”。浏览器只读复核实际图片 complete=true、naturalWidth=864、naturalHeight=1821，保留用户上传的图片；证据在仓库外 `image-upload-manual-fixed.png`。实际文件选择窗口位于 Codex 宿主，未通过 Windows 原生自动化操作该宿主；手动路径结果由用户操作与浏览器渲染共同确认。

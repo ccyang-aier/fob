@@ -28,8 +28,8 @@
     "sha256": "520a979294198a024112801642bbea30920e8d386cb877a4d20c36a7b3c42f34"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar. Update imports for component ownership without changing behavior. Record bounded foreground learning time for the active knowledge document; pause in background, dialogs and idle periods. See docs/ui/personal-profile.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md.",
-    "sha256": "1ae54d203eab29767df6a18280261669fe2963c28ff593977b2e8e78ea2fabc0"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar. Update imports for component ownership without changing behavior. Record bounded foreground learning time for the active knowledge document; pause in background, dialogs and idle periods. See docs/ui/personal-profile.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md. Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md.",
+    "sha256": "97aa83ef4dde418cb2780d311f7b2e6b61054bd6fc207bb276e26c551d1e0351"
   },
   "src/features/knowledge/knowledge-base-header.messages.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -1324,8 +1324,8 @@
     "sha256": "ee297a89c0a4f2a8274b2340a2ef862b30fd88659eb5662f4a0ab9a072624ccb"
   },
   "src/features/knowledge/editor/block-modules/media-core/insert-media.ts": {
-    "reason": "Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
-    "sha256": "6bd57579ee0b2ed90c4aed0d7f244b3484d8adfa131a1273f1cd6f5d5d34461b"
+    "reason": "Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md.",
+    "sha256": "4f10a2799ee2d4eee123a11a473aa1c7cad3f09e36381d900caade38a76c8bf6"
   },
   "src/features/knowledge/local/local-library-navigation.messages.ts": {
     "reason": "Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
@@ -1518,5 +1518,9 @@
   "src/features/knowledge/editor/commands/slash-menu.tsx": {
     "sha256": "466f10f03e3943dd9810fab90c1070fd1816bcccbe0a32e2f0f4c3df9f6bc6d0",
     "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md."
+  },
+  "src/features/knowledge/editor/block-modules/media-core/insert-media.test.ts": {
+    "sha256": "2cccec12943b3bae275cf1b0acb891980bd45616efc1c8139f575be97f256db2",
+    "reason": "Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md."
   }
 }

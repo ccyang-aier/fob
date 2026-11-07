@@ -38,7 +38,7 @@ export function insertMedia(kind: PickableMedia): BlockInsertCommand {
       'change',
       () => {
         const file = input.files?.[0];
-        if (file && !editor.isDestroyed) {
+        if (file && !editor.isDestroyed && editor.isEditable) {
           const blockId = crypto.randomUUID();
           selectedFiles.set(blockId, file);
           if (!insertBlockNodes([editor.schema.nodes[kind].create({ blockId })])(editor))

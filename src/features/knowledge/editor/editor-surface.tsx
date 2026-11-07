@@ -97,6 +97,11 @@ export function PageEditorSurface({
 
   const fixedPane = Boolean(useDocumentReference()?.fixed);
   const document = session.document;
+  // Focus refreshes replace the session user object even when its identity is
+  // unchanged. Keep that refresh from destroying file pickers and live uploads.
+  const userId = user?.id;
+  const userName = user?.name;
+  const userImage = user?.image ?? null;
   // One extension set per page session: shared registry (E01) with the
   // block/callout/table and block-reference NodeViews layered on (E05/L02),
   // blockId integrity (E02), the y-prosemirror binding (B04/B08), suggestion
@@ -106,7 +111,7 @@ export function PageEditorSurface({
     const registry = applyEditorBlockModules(createKnowledgeExtensions(), {
       scope,
       origin: origin ?? '',
-      cacheIdentity: user?.id ?? 'anonymous',
+      cacheIdentity: userId ?? 'anonymous',
     });
     return [
       ...registry,
@@ -116,12 +121,12 @@ export function PageEditorSurface({
       createCommentsEditorExtension(),
       ...createBlockEditingExtensions(),
       ...createSlashPasteExtensions(),
-      ...(user
+      ...(userId
         ? [
             createAwarenessExtension({
               getAwareness: () => session.awareness,
               subscribeAwareness: session.subscribe,
-              identity: { userId: user.id, name: user.name, image: user.image },
+              identity: { userId, name: userName ?? '', image: userImage },
             }),
           ]
         : []),
@@ -130,7 +135,7 @@ export function PageEditorSurface({
     // only its identity-bearing fields belong here — otherwise the inline
     // object would rebuild (and remount) the editor on every parent render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scope.pageId, scope.knowledgeBaseId, document, pageUndo, origin, user, session]);
+  }, [scope.pageId, scope.knowledgeBaseId, document, pageUndo, origin, userId, userName, userImage, session]);
 
   const editor = useEditor(
     {
