@@ -11,8 +11,9 @@ import { knowledgeMessages } from './canvas-states.messages';
  */
 
 import type { ReactNode } from 'react';
-import { CircleNotch, SignOut, Warning, XCircle } from '@/components/icons';
+import { SignOut, Warning, XCircle } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import styles from './canvas-states.module.css';
 
 export function CanvasState({
   icon,
@@ -68,11 +69,12 @@ export function CanvasState({
 
 export function CanvasSpinner({ label }: { label: string }) {
   return (
-    <CanvasState
-      icon={<CircleNotch className="size-5 animate-spin" aria-hidden />}
-      title={label}
-      announce="polite"
-    />
+    <div className={styles.loading} role="status" aria-live="polite" aria-atomic="true">
+      <span className={styles.loadingLines} aria-hidden="true">
+        <span /><span /><span />
+      </span>
+      <p className={styles.loadingLabel}>{label}</p>
+    </div>
   );
 }
 

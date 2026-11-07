@@ -380,8 +380,8 @@
     "sha256": "dc7cdbc1085f23545a01f0c5b3b8e9edd4c776a97e152f587738e68b81051039"
   },
   "src/features/knowledge/canvas-states.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "9f359e3b5687bdb8881cb7868a90978b648bed2160cbba7a9a8e7195d3d9f55c"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Replace the boxed loading spinner with a borderless three-line motion indicator, preserving real stage labels, accessible status announcements and reduced-motion support. See docs/ui/loading-states.md and .spec/tasks/canvas-loading.md.",
+    "sha256": "07a80db70377f5a08731c89f65e8febffd074d86aee7403f27e3a7600b955780"
   },
   "src/features/knowledge/comments/components/comment-composer.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Unify comment/reply icons, reuse the shared OpenMoji picker and renderer, and use pastel anchors with font-relative counts; preserve Unicode Markdown, code, draft failures and collaboration. See docs/document-collaboration.md and .spec/tasks/comment-text-tools.md. Place the shared comment emoji picker to the left with viewport fallback for sidebar and selection composers.",
