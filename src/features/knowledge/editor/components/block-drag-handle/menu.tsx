@@ -6,7 +6,7 @@ import type { Transaction } from '@tiptap/pm/state';
 import { closeHistory } from '@tiptap/pm/history';
 import { yUndoPluginKey } from 'y-prosemirror';
 import { BLOCK_EDITS_MAP, blockEditFingerprint, documentBlockContent, readBlockEdit } from '@fob/shared/knowledge/collaboration';
-import { ArrowLeft, ArrowsClockwise, BlockDelete, BlockLink, CaretRight, Code, Info, ListBullets, ListChecks, ListNumbers, Plus, Quotes, SelectionCheck, TextHOne, TextHTwo, TextHThree, TextHFour, TextT } from '@/components/icons';
+import { ArrowLeft, ArrowsClockwise, CaretRight, Code, Info, LinkSimple, ListBullets, ListChecks, ListNumbers, Plus, Quotes, SelectionCheck, TextHOne, TextHTwo, TextHThree, TextHFour, TextT, Trash } from '@/components/icons';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTranslation } from '@/lib/i18n';
@@ -116,9 +116,9 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
         </DropdownMenuSubContent>
       </DropdownMenuSub>}
       <DropdownMenuItem className={styles.menuItem} onSelect={() => act(insertBelowMenuBlock(editor.state, target), true)}><Plus size={14} />{t('insertBelow')}</DropdownMenuItem>
-      <DropdownMenuItem className={styles.menuItem} disabled={!context} title={!context ? t('linkUnavailable') : undefined} onSelect={() => { void copyLink(); }}><BlockLink size={14} />{t('copyLink')}</DropdownMenuItem>
+      <DropdownMenuItem className={styles.menuItem} disabled={!context} title={!context ? t('linkUnavailable') : undefined} onSelect={() => { void copyLink(); }}><LinkSimple size={14} />{t('copyLink')}</DropdownMenuItem>
       <DropdownMenuSeparator className={styles.separator} />
-      <DropdownMenuItem className={styles.menuItem} variant="destructive" onSelect={() => act(deleteMenuBlock(editor.state, target))}><BlockDelete size={14} />{t('deleteBlock')}</DropdownMenuItem>
+      <DropdownMenuItem className={styles.menuItem} variant="destructive" onSelect={() => act(deleteMenuBlock(editor.state, target))}><Trash size={14} />{t('deleteBlock')}</DropdownMenuItem>
       <DropdownMenuSeparator className={styles.separator} />
       <div className={styles.metadata}>{edit ? <><span>{t('lastEditedBy', { name: edit.actorId === 'local' ? t('you') : edit.actorName ?? t('unknownEditor') })}</span><time dateTime={edit.editedAt}>{new Intl.DateTimeFormat(locale === 'zh-CN' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(edit.editedAt))}</time></> : <span>{t('noEditRecord')}</span>}</div>
       </>}
