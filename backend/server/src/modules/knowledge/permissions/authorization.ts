@@ -44,7 +44,7 @@ export async function authorizePageAccess(db: ResourceReadTransaction, input: { 
   return { decision: 'allow', pageId: scope.pageId, level, revision: materialized.revision };
 }
 
-/** Outline manageUsers: document access first, then resource or workspace administration. */
+/** Document access first, then explicit resource management or knowledge-base ownership. */
 export async function canManagePageAccess(db: ResourceReadTransaction, scope: PageScope, userId: string): Promise<boolean> {
   const access = await authorizePageAccess(db, { scope, userId, required: 'view' });
   if (access.decision !== 'allow') return false;
@@ -52,7 +52,7 @@ export async function canManagePageAccess(db: ResourceReadTransaction, scope: Pa
   const [actor] = await db.select({ role: member.role }).from(member)
     .where(and(eq(member.knowledgeBaseId, scope.knowledgeBaseId), eq(member.userId, userId)));
   if (!actor) return false;
-  if (actor.role === 'owner' || actor.role === 'admin') return true;
+  if (actor.role === 'owner') return true;
   const [record] = await db.select({ teamspaceId: page.teamspaceId }).from(page)
     .where(and(eq(page.knowledgeBaseId, scope.knowledgeBaseId), eq(page.id, scope.pageId)));
   const folder = record && (await readFolderAccess(db, scope.knowledgeBaseId)).find(folder => folder.teamspaceId === record.teamspaceId);

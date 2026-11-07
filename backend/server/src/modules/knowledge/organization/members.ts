@@ -22,7 +22,7 @@ export function memberOperations(pool: Pool) {
         requireDirectory(role);
         // Only identities attached to this authorized resource can be discovered.
         const rows = await db.select({ knowledgeBaseId: member.knowledgeBaseId, userId: member.userId, role: member.role, name: authUser.name, email: authUser.email, image: authUser.image, joinedAt: member.createdAt,
-          directAccessCount: role === 'owner' || role === 'admin' ? sql<number>`((select count(*) from ${teamspaceMemberAccess} where ${teamspaceMemberAccess.knowledgeBaseId}=${member.knowledgeBaseId} and ${teamspaceMemberAccess.userId}=${member.userId}) + (select count(*) from ${pageAcl} where ${pageAcl.knowledgeBaseId}=${member.knowledgeBaseId} and ${pageAcl.principal}='user:' || ${member.userId}::text and not ${pageAcl.inherited}))::int` : sql<null>`null`,
+          directAccessCount: role === 'owner' ? sql<number>`((select count(*) from ${teamspaceMemberAccess} where ${teamspaceMemberAccess.knowledgeBaseId}=${member.knowledgeBaseId} and ${teamspaceMemberAccess.userId}=${member.userId}) + (select count(*) from ${pageAcl} where ${pageAcl.knowledgeBaseId}=${member.knowledgeBaseId} and ${pageAcl.principal}='user:' || ${member.userId}::text and not ${pageAcl.inherited}))::int` : sql<null>`null`,
         })
           .from(member).innerJoin(authUser, eq(authUser.id, member.userId))
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), parsed.cursor ? gt(member.userId, parsed.cursor) : undefined))

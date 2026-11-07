@@ -46,7 +46,7 @@ import { CommentComposer } from './components/comment-composer';
 import { SelectionCommentPopover } from './components/selection-comment-popover';
 import type { CommentAuthor } from './components/comment-entry';
 import type { CommentReplyTarget } from './components/comment-thread-card';
-import { useMembersQuery } from '../organization/hooks';
+import { usePagePeopleQuery } from '../data/page-people';
 import { commentLink, readCommentLink } from './comment-link';
 
 const EMPTY_THREAD_IDS: ReadonlySet<string> = new Set();
@@ -145,15 +145,15 @@ export function PageComments({
   const [composerAt, setComposerAt] = useState<{ x: number; y: number } | null>(null);
   const [localRailOpen, setLocalRailOpen] = useState(false);
   const railOpen = controlledRailOpen ?? localRailOpen;
-  const membersQuery = useMembersQuery(railOpen ? scope.knowledgeBaseId : null);
+  const membersQuery = usePagePeopleQuery(scope, railOpen);
   const authors = useMemo(() => {
     const names = new Map<string, CommentAuthor>();
-    for (const page of membersQuery.data?.pages ?? [])
-      for (const member of page.items) names.set(member.userId, { name: member.name });
+    for (const member of membersQuery.isError ? [] : membersQuery.data ?? [])
+      names.set(member.userId, { name: member.name, image: member.image });
     if (currentUser)
       names.set(currentUser.id, { name: currentUser.name, image: currentUser.image });
     return names;
-  }, [membersQuery.data, currentUser]);
+  }, [membersQuery.data, membersQuery.isError, currentUser]);
   const setRailOpen = onRailOpenChange ?? setLocalRailOpen;
   const [replyTarget, setReplyTarget] = useState<CommentReplyTarget | null>(null);
   const lastDocRef = useRef<unknown>(null);

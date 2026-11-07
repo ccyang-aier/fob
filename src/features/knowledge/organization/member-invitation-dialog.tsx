@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { Check, LinkSimple } from '@/components/icons';
 import { createKnowledgeBaseInvitationInputSchema } from '@fob/shared/knowledge/contracts';
 import { useTranslation } from '@/lib/i18n';
 import { organizationErrorTextOf } from './errors';
@@ -42,9 +43,10 @@ export function MemberInvitationDialog({ knowledgeBaseId, members, email: initia
   }
   const link = created && typeof window !== 'undefined' ? knowledgeBaseInvitationLink(window.location.origin, created) : '';
   return <ModalDialog open onClose={() => { if (!pending.current) onClose(); }} title={created ? t('invitationCreated') : t('invite')}
+    footerStyle={{ paddingTop: created ? 12 : 16, paddingBottom: created ? 16 : 20 }}
     description={created ? t('linkHint') : t('invitationHint')}
-    footer={<><DialogButton onClick={onClose} disabled={busy}>{created ? t('close') : t('cancel')}</DialogButton>
-      {!created ? <DialogButton variant="primary" loading={busy} onClick={() => void create()}>{reissue ? t('reissue') : t('createInvitation')}</DialogButton> : null}</>}>
+    footer={<><DialogButton onClick={onClose} disabled={busy}>{created ? <Check size={16} aria-hidden /> : null}{created ? t('close') : t('cancel')}</DialogButton>
+      {!created ? <DialogButton variant="primary" loading={busy} onClick={() => void create()}><LinkSimple size={16} aria-hidden />{reissue ? t('reissue') : t('createInvitation')}</DialogButton> : null}</>}>
     {created ? <label className={styles.field}>{t('invitationLink')}<div className={styles.link}>
       <input className={styles.input} readOnly value={link} aria-label={t('invitationLink')} onFocus={(event) => event.target.select()} />
       <DialogButton onClick={() => { void navigator.clipboard.writeText(link).then(() => notify('success', t('copied'))).catch((cause) => notify('error', t('failed', { error: organizationErrorTextOf(cause) }))); }}>{t('copyLink')}</DialogButton>

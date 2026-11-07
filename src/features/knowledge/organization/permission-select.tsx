@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { PermissionLabel } from './management-ui';
 
 export type PermissionOption = { value: string; label: string; description: string };
 
@@ -73,7 +74,7 @@ export function PermissionSelect({
               )}
             >
               <span className="min-w-0 flex-1">
-                <span className="block text-[12px] font-medium">{option.label}</span>
+                <PermissionLabel value={option.value}>{option.label}</PermissionLabel>
                 <span className="mt-0.5 block text-[11px] leading-relaxed text-[var(--muted-strong)]">
                   {option.description}
                 </span>

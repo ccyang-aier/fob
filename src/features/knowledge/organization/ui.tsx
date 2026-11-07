@@ -16,7 +16,7 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import dialogStyles from './organization-dialog.module.css';
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Warning, WarningCircle, XCircle } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import type { MemberRole } from '@/features/knowledge/organization/client';
@@ -194,6 +194,7 @@ export function ModalDialog({
   children,
   footer,
   width = 'w-[440px]',
+  footerStyle,
 }: {
   open: boolean;
   onClose: () => void;
@@ -202,6 +203,7 @@ export function ModalDialog({
   children?: ReactNode;
   footer: ReactNode;
   width?: string;
+  footerStyle?: CSSProperties;
 }) {
   const visible = usePageVisible();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -245,7 +247,7 @@ export function ModalDialog({
           ) : null}
         </div>
         {children}
-        <div className="fob-dialog-footer [--dialog-footer-inset:0px]">{footer}</div>
+        <div className="fob-dialog-footer [--dialog-footer-inset:0px]" style={footerStyle}>{footer}</div>
       </div>
     </dialog>, document.body,
   );

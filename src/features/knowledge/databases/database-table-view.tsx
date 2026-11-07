@@ -26,8 +26,7 @@ import type {
 import { runKnowledgeCall } from '../data/trpc-client';
 import { knowledgeErrorCodeOf } from '../entry-state';
 import { CanvasError, CanvasForbidden, CanvasSpinner, CanvasState } from '../canvas-states';
-import { organizationQueryKeys } from '../organization/keys';
-import { organizationClient } from '@/features/knowledge/organization/client';
+import { usePagePeopleQuery } from '../data/page-people';
 import { knowledgeDatabasesApi } from './database-api';
 import { useDatabaseColumnsQuery, useDatabaseRowsQuery } from './database-queries';
 import { pruneQueryState, toggleSort, type SortKey } from './query-state';
@@ -146,21 +145,14 @@ export function DatabaseTableView({
     }
   }
 
-  const membersQuery = useQuery({
-    queryKey: organizationQueryKeys.members(scope.knowledgeBaseId),
-    queryFn: ({ signal }) =>
-      organizationClient.listMembers(scope.knowledgeBaseId, { limit: 100, signal }),
-    enabled: accessQuery.data?.authorized === true,
-    staleTime: 60_000,
-  });
+  const membersQuery = usePagePeopleQuery(scope, accessQuery.data?.authorized === true);
   const members: PersonOption[] = useMemo(
     () =>
-      (membersQuery.data?.items ?? []).map((member) => ({
+      (membersQuery.isError ? [] : membersQuery.data ?? []).map((member) => ({
         userId: member.userId,
         name: member.name,
-        email: member.email,
       })),
-    [membersQuery.data],
+    [membersQuery.data, membersQuery.isError],
   );
   const personNameOf = useMemo(() => personNameOfFactory(members), [members]);
 

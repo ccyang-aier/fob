@@ -55,13 +55,13 @@ export async function readFolderAccess(db: ResourceReadTransaction, knowledgeBas
 }
 
 export function canManageFolder(folder: FolderAccessPolicy, actor: { userId: string; role: MemberRole }) {
-  return actor.role === 'owner' || actor.role === 'admin' || folderAccessForMember(folder, actor).level === 'full';
+  return actor.role === 'owner' || folderAccessForMember(folder, actor).level === 'full';
 }
 
-/** Administrators may see collection metadata; private content still requires document access. */
+/** Only owners may inspect all folder metadata; every other role needs a resource grant. */
 export async function readVisibleFolderAccess(db: ResourceReadTransaction, knowledgeBaseId: string, actor: { userId: string; role: MemberRole }) {
   const policies = await readFolderAccess(db, knowledgeBaseId);
-  if (actor.role === 'owner' || actor.role === 'admin') return policies;
+  if (actor.role === 'owner') return policies;
   return policies.filter(folder => folderAccessForMember(folder, actor).level !== null).map(folder => canManageFolder(folder, actor) ? folder : {
     ...folder, explicit: folder.explicit.filter(grant => grant.userId === actor.userId), grants: folder.grants.filter(grant => grant.userId === actor.userId),
   });

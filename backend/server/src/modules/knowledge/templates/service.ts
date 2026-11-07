@@ -6,7 +6,7 @@ import {
   listKnowledgeTemplatesInputSchema, materializeKnowledgeTemplateDocument, updateKnowledgeTemplateInputSchema,
 } from '@fob/shared/knowledge/templates';
 import type { KnowledgeTemplateSummary } from '@fob/shared/knowledge/templates';
-import { principal } from '@fob/shared/knowledge/contracts';
+import { folderAccessForMember, principal } from '@fob/shared/knowledge/contracts';
 import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { asset, docState, member, page, pageAcl, teamspace } from '../../../platform/database/resources/schema';
 import { knowledgeTemplate } from '../../../platform/database/resources/schema/knowledge-templates';
@@ -16,6 +16,7 @@ import { requireKnowledgeScopes } from '../access';
 import type { KnowledgeRequestContext } from '../access';
 import { authorizePageAccess, effectivePageAccessCondition, expandRequestPrincipals, lockPermissionKnowledgeBase } from '../permissions';
 import { rebuildPermissionSubtree } from '../permissions/rebuild';
+import { readFolderAccess } from '../organization/folder-access';
 import { createAuthorizedPage } from '../pages/tree';
 import { collectAssetReferences } from '../import-export/body';
 import { prosemirrorDocToYDoc, yStateToProseMirrorDoc } from '../import-export/y-encoding';
@@ -33,7 +34,7 @@ async function actor(db: ResourceTransaction, authority: KnowledgeRequestContext
   if (!record) throw unavailable();
   return record;
 }
-const manages = (row: Template, userId: string, role: string) => row.createdBy === userId || role === 'owner' || role === 'admin';
+const manages = (row: Template, userId: string, role: string) => row.createdBy === userId || role === 'owner';
 function summary(row: Template, userId: string, role: string): KnowledgeTemplateSummary {
   return { knowledgeBaseId: row.knowledgeBaseId, id: row.id, sourcePageId: row.sourcePageId, name: row.name, description: row.description,
     title: row.title, icon: row.icon, createdBy: row.createdBy, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(), canManage: manages(row, userId, role) };
@@ -137,7 +138,8 @@ export async function createPageFromKnowledgeTemplate(db: ResourceTransaction, a
   } else {
     const [folder] = await db.select().from(teamspace).where(and(eq(teamspace.knowledgeBaseId, parsed.knowledgeBaseId), eq(teamspace.id, parsed.teamspaceId)));
     if (!folder) throw unavailable();
-    if (!['owner', 'admin'].includes(membership.role) && !['edit', 'full'].includes(folder.defaultAccess ?? '')) throw forbidden();
+    const policy = (await readFolderAccess(db, parsed.knowledgeBaseId)).find(entry => entry.teamspaceId === folder.id)!;
+    if (!['edit', 'full'].includes(folderAccessForMember(policy, { userId: authority.userId, role: membership.role }).level ?? '')) throw forbidden();
   }
   const document = independentDocument(row.document);
   await verifyAttachments(db, parsed.knowledgeBaseId, document, [row.icon, row.cover]);

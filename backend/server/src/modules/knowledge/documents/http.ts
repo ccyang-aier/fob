@@ -80,7 +80,8 @@ export function createDocumentCollaborationRoutes(deps: KnowledgeAccessDependenc
     if (!id.success) throw new DocumentServiceError(400, 'INVALID_INPUT');
     return context.json(await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
       await lockPermissionKnowledgeBase(db, scope.knowledgeBaseId);
-      await activeSessionMember(db, scope.knowledgeBaseId, context.get('identity'), true);
+      const role = await activeSessionMember(db, scope.knowledgeBaseId, context.get('identity'), true);
+      if (role !== 'owner') throw new DocumentServiceError(403, 'INVITATION_FORBIDDEN');
       await requireDocument(db, scope, context.get('identity').userId, 'full');
       await db.update(documentInvitation).set({ revokedAt: new Date() }).where(and(eq(documentInvitation.knowledgeBaseId, scope.knowledgeBaseId), eq(documentInvitation.pageId, scope.pageId), eq(documentInvitation.id, id.data)));
       return { revoked: true };

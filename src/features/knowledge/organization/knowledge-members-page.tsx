@@ -10,9 +10,11 @@ import { messages } from './knowledge-members-page.messages';
 /** Member management always belongs to the same knowledge base selected in the app header. */
 export function KnowledgeMembersPage() {
   const { t } = useTranslation(messages);
-  const { selectedKnowledgeBase, scopeKey } = useKnowledgeBaseResources();
+  const { selectedKnowledgeBase, selectedKnowledgeBaseRole, scopeKey } = useKnowledgeBaseResources();
   if (!selectedKnowledgeBase) return <CanvasState title={t('selectKnowledgeBase')} hint={t('selectKnowledgeBaseHint')} />;
   if (selectedKnowledgeBase.source === 'server') {
+    if (!selectedKnowledgeBaseRole) return <CanvasState title={t('checkingAccess')} />;
+    if (selectedKnowledgeBaseRole !== 'owner') return <CanvasState title={t('ownerOnly')} hint={t('ownerOnlyHint')} />;
     return <OrganizationPanel key={scopeKey} knowledgeBaseId={selectedKnowledgeBase.id} />;
   }
   return <section className="flex h-full min-h-0 flex-col" aria-label={t('members')}>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useDeferredValue, useRef, useState } from 'react';
-import { FileText, FolderOutline } from '@/components/icons';
+import { Check, FileText, FolderOutline } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
@@ -46,7 +46,8 @@ export function MemberAccessDialog({ knowledgeBaseId, member, onClose, notify }:
     finally { pending.current = false; }
   }
   return <ModalDialog open width="w-[760px]" title={t('memberAccessFor', { name: member.name })}
-    onClose={() => { if (!pending.current) onClose(); }} footer={<DialogButton onClick={onClose} disabled={update.isPending}>{t('close')}</DialogButton>}>
+    footerStyle={{ paddingTop: 12 }}
+    onClose={() => { if (!pending.current) onClose(); }} footer={<DialogButton onClick={onClose} disabled={update.isPending}><Check size={16} aria-hidden />{t('close')}</DialogButton>}>
     <div className={styles.accessProfile}><UserAvatar name={member.name} image={member.image} className={styles.accessAvatar} />
       <div className={styles.identity}><span className={styles.name}>{member.name}</span><span className={styles.email}>{member.email}</span></div>
       <RoleLabel role={member.role} />

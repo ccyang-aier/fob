@@ -18,7 +18,7 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const key of ['window','document','navigator','HTMLElement','Element','Node','Event','MouseEvent','MutationObserver','getComputedStyle']) globals[key] = key === 'window' ? browser : (browser as unknown as Record<string,unknown>)[key];
   globals.IS_REACT_ACT_ENVIRONMENT = true;
-  mock.module('../data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ selectedKnowledgeBase: selected, scopeKey: `account:${selected.id}`, principal: 'account' }) }));
+  mock.module('../data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ selectedKnowledgeBase: selected, selectedKnowledgeBaseRole: role, scopeKey: `account:${selected.id}`, principal: 'account' }) }));
   mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session: { status: 'authenticated', user: { id: 'account' } }, presence: 'online' }) }));
   mock.module('@/components/app-alert-provider', () => ({ useAppAlert: () => ({ notify: () => {} }) }));
   mock.module('@/components/ui/tooltip', () => Object.fromEntries(['Tooltip','TooltipTrigger','TooltipContent'].map(name => [name, ({ children }: { children: ReactNode }) => name === 'TooltipContent' ? null : children])));
@@ -51,14 +51,14 @@ async function open() {
   await act(async () => { await Bun.sleep(30); });
 }
 
-test('only the verified manager response exposes the invitation form; ordinary members see the directory', async () => {
-  role = 'member'; await render(); await open();
-  expect(host.textContent).toContain('alpha member');
-  expect(host.querySelector('input[type=email]')).toBeNull();
-  for (const manager of ['owner', 'admin'] as const) {
-    await act(async () => root.render(null)); role = manager; await render(); await open();
-    expect(host.querySelector('input[type=email]')).not.toBeNull();
+test('only the owner sees the member menu; other roles do not fetch the directory', async () => {
+  for (const otherRole of ['admin', 'member', 'viewer', 'guest']) {
+    role = otherRole; await render();
+    expect(host.querySelector('button')).toBeNull();
   }
+  expect(requests).toEqual([]);
+  role = 'owner'; await render(); await open();
+  expect(host.querySelector('input[type=email]')).not.toBeNull();
 });
 
 test('the invitation-link card is always visible and a blank Get link focuses the email field without creating a token', async () => {
@@ -84,8 +84,8 @@ test('switching knowledge bases closes the previous panel and never renders the 
 });
 
 test('local knowledge bases never request a server member directory or show an invitation form', async () => {
-  selected = { id: 'local', name: 'Local', source: 'local' }; await render(); await open();
-  expect(host.textContent).toContain('仅供当前浏览器使用');
+  selected = { id: 'local', name: 'Local', source: 'local' }; await render();
+  expect(host.querySelector('button')).toBeNull();
   expect(host.querySelector('input[type=email]')).toBeNull();
   expect(requests).toEqual([]);
 });

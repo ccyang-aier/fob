@@ -160,7 +160,7 @@ export async function deleteOwnComment(db: ResourceTransaction, input: unknown):
 }
 
 /**
- * KnowledgeBase owners/admins moderate threads on any page they can still view;
+ * KnowledgeBase owners moderate threads on any page they can still view;
  * recycled or otherwise inaccessible pages stay off limits like everywhere else.
  */
 export async function deleteCommentThreadAsAdmin(db: ResourceTransaction, input: unknown): Promise<void> {
@@ -170,7 +170,7 @@ export async function deleteCommentThreadAsAdmin(db: ResourceTransaction, input:
   await requireCommentAccess(db, { userId: parsed.userId, scope, required: 'view' });
   const [membership] = await db.select().from(member)
     .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, parsed.userId)));
-  if (!membership || (membership.role !== 'owner' && membership.role !== 'admin')) {
+  if (!membership || membership.role !== 'owner') {
     throw new KnowledgeCommentError('COMMENT_ACCESS_DENIED');
   }
   await db.delete(commentThread)

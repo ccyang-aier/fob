@@ -35,7 +35,7 @@ async function requireKnowledgeBaseMembership(db: ResourceTransaction, knowledge
 }
 
 async function requireAssetUploadAccess(db: ResourceTransaction, knowledgeBaseId: string, userId: string, membership: Awaited<ReturnType<typeof requireKnowledgeBaseMembership>>) {
-  if (membership.role === 'owner' || membership.role === 'admin') return;
+  if (membership.role === 'owner') return;
   const folders = await readFolderAccess(db, knowledgeBaseId);
   if (folders.some(folder => ['edit', 'full'].includes(folderAccessForMember(folder, { userId, role: membership.role }).level ?? ''))) return;
   await requireAssetPageAccess(db, { knowledgeBaseId, principals: membership.principals, write: true, viewer: membership.role === 'viewer' });
@@ -160,7 +160,7 @@ export async function presignKnowledgeBaseAssetDownload(storage: KnowledgeAssetS
 export async function revokeKnowledgeBaseAsset(db: ResourceTransaction, input: AssetRevokeInput): Promise<AssetRevokeResult> {
   const parsed = parse(assetRevokeInputSchema, input);
   const membership = await requireKnowledgeBaseMembership(db, parsed.knowledgeBaseId, parsed.userId);
-  if (membership.role !== 'owner' && membership.role !== 'admin') throw new KnowledgeAssetError('ASSET_ACCESS_DENIED');
+  if (membership.role !== 'owner') throw new KnowledgeAssetError('ASSET_ACCESS_DENIED');
   const predicate = scopedBy(parsed);
   const [record] = await db.select({ status: asset.status }).from(asset).where(predicate).for('update');
   if (!record) throw new KnowledgeAssetError('ASSET_NOT_FOUND');

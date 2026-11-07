@@ -150,9 +150,12 @@ describe('document sharing, permissions, history and statistics over real HTTP a
     await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', memberScope.userId), level: 'view' });
     await fixture.organization.changeMemberRole(fixture.owner.identity, { ...memberScope, role: 'admin' });
     try {
-      expect((await sharing(root, fixture.reader)).canManage).toBe(true);
+      expect((await sharing(root, fixture.reader)).canManage).toBe(false);
       expect((await request(`${base(root)}/publication`, fixture.reader, { enabled: true })).status).toBe(403);
       await request(`${base(root)}/permissions`, fixture.owner, { principal: principal('user', memberScope.userId), level: 'full' });
+      expect((await sharing(root, fixture.reader)).canManage).toBe(true);
+      expect((await sharing(root, fixture.reader)).canInvite).toBe(false);
+      expect((await request(`${base(root)}/invitations`, fixture.reader, { email: fixture.foreign.identity.email, level: 'view' })).status).toBe(403);
       await fixture.organization.changeMemberRole(fixture.owner.identity, { ...memberScope, role: 'guest' });
       expect((await sharing(root, fixture.reader)).canManage).toBe(true);
       expect((await request(`${base(root)}/publication`, fixture.reader, { enabled: true })).status).toBe(403);

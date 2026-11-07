@@ -4,10 +4,10 @@ import { useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import type { KnowledgeBaseInvitation } from '@fob/shared/knowledge/contracts';
-import { CaretDown, DotsThree, ShieldCheck, Trash, UserPlus, UsersThree, X } from '@/components/icons';
+import { CaretDown, DotsThree, SelectionCheck, ShieldCheck, Trash, UserPlus, UsersThree, X } from '@/components/icons';
 import { UserAvatar } from '@/components/user-avatar';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useIdentity } from '@/features/identity/identity-context';
 import { useTranslation } from '@/lib/i18n';
@@ -32,18 +32,26 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
   knowledgeBaseId: string; actorRole: MemberRole; notify: (kind: 'success' | 'error', text: string) => void;
   onMembershipChange?: () => void;
 }) {
+  if (actorRole !== 'owner') return <ListStateShell state="forbidden" emptyTitle="">{null}</ListStateShell>;
+  return <OwnerMembersSection knowledgeBaseId={knowledgeBaseId} actorRole={actorRole} notify={notify} onMembershipChange={onMembershipChange} />;
+}
+
+function OwnerMembersSection({ knowledgeBaseId, actorRole, notify, onMembershipChange }: {
+  knowledgeBaseId: string; actorRole: MemberRole; notify: (kind: 'success' | 'error', text: string) => void;
+  onMembershipChange?: () => void;
+}) {
   const { locale, t } = useTranslation(managementMessages);
   const { session } = useIdentity();
   const visible = usePageVisible();
   const client = useQueryClient();
   const membersQuery = useMembersQuery(knowledgeBaseId);
-  const invitationsQuery = useInvitationsQuery(knowledgeBaseId, actorRole === 'owner' || actorRole === 'admin');
+  const invitationsQuery = useInvitationsQuery(knowledgeBaseId, actorRole === 'owner');
   const changeRole = useChangeMemberRoleMutation(knowledgeBaseId);
   const bulkRole = useBulkMemberRoleMutation(knowledgeBaseId);
   const removeMutation = useRemoveMemberMutation(knowledgeBaseId);
   const [tab, setTab] = useState<'joined' | 'pending'>('joined');
   const [search, setSearch] = useState('');
-  const [roleFilter, setRoleFilter] = useState<MemberRole | 'all'>('all');
+  const [roleFilter, setRoleFilter] = useState<MemberRole[]>([]);
   const [sort, setSort] = useState<{ field: 'name' | 'joinedAt'; direction: 'ascending' | 'descending' }>({ field: 'name', direction: 'ascending' });
   const [accessUserId, setAccessUserId] = useState<string | null>(null);
   const [roleChange, setRoleChange] = useState<{ ids: string[]; role: MemberRole } | null>(null);
@@ -55,14 +63,14 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
   const actionPending = useRef(false);
   const members = flattenPages<MemberRow>(membersQuery.data);
   const owners = members.filter((member) => member.role === 'owner').length;
-  const isManager = actorRole === 'owner' || actorRole === 'admin';
-  const manageable = (member: MemberRow) => canManageMember(actorRole, member.role)
+  const isManager = actorRole === 'owner';
+  const manageable = (member: MemberRow) => canManageMember(actorRole)
     && !(session.status === 'authenticated' && member.userId === session.user.id) && !(member.role === 'owner' && owners === 1);
   const canInspect = (member: MemberRow) => isManager || session.status === 'authenticated' && member.userId === session.user.id;
   const inspectingMember = members.find(member => member.userId === accessUserId);
   const selectedIds = selected.filter((id) => members.some((member) => member.userId === id && manageable(member)));
   const normalized = search.trim().toLocaleLowerCase(locale);
-  const filtered = members.filter((member) => (roleFilter === 'all' || member.role === roleFilter)
+  const filtered = members.filter((member) => (!roleFilter.length || roleFilter.includes(member.role))
     && `${member.name}\n${member.email}`.toLocaleLowerCase(locale).includes(normalized)).sort((a, b) => {
       const order = sort.field === 'name' ? a.name.localeCompare(b.name, locale) : (a.joinedAt ?? '').localeCompare(b.joinedAt ?? '');
       return (sort.direction === 'ascending' ? order : -order) || a.userId.localeCompare(b.userId);
@@ -115,21 +123,25 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
     </header>
     <div className={styles.toolbar}>
       <div className={styles.subtabs} role="tablist" aria-label={t('members')} onKeyDown={(event) => {
-        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || !['owner', 'admin'].includes(actorRole)) return;
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) || actorRole !== 'owner') return;
         event.preventDefault();
         const next = event.key === 'Home' ? 'joined' : event.key === 'End' ? 'pending' : tab === 'joined' ? 'pending' : 'joined';
         setTab(next); if (next === 'pending') setSelected([]);
         event.currentTarget.querySelector<HTMLButtonElement>(`#members-${next}-tab`)?.focus();
       }}>
         <button type="button" role="tab" id="members-joined-tab" aria-selected={tab === 'joined'} tabIndex={tab === 'joined' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('joined'); void membersQuery.refetch(); }}><span>{t('joined')}</span>{membersQuery.isSuccess ? <span className={styles.tabCount}>{members.length}</span> : null}</button>
-        {actorRole === 'owner' || actorRole === 'admin' ? <button type="button" role="tab" id="members-pending-tab" aria-selected={tab === 'pending'} tabIndex={tab === 'pending' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('pending'); setSelected([]); void invitationsQuery.refetch(); }}><span>{t('pending')}</span>{invitationsQuery.isSuccess ? <span className={styles.tabCount}>{activeInvitations.length}</span> : null}</button> : null}
+        {actorRole === 'owner' ? <button type="button" role="tab" id="members-pending-tab" aria-selected={tab === 'pending'} tabIndex={tab === 'pending' ? 0 : -1} aria-controls="members-table-panel" className={cn('fob-action', styles.subtab)} onClick={() => { setTab('pending'); setSelected([]); void invitationsQuery.refetch(); }}><span>{t('pending')}</span>{invitationsQuery.isSuccess ? <span className={styles.tabCount}>{activeInvitations.length}</span> : null}</button> : null}
       </div>
       <div className={styles.directoryFilters}>
-        {tab === 'joined' ? <DropdownMenu><DropdownMenuTrigger asChild><Button size="sm" variant="outline" className={styles.button} aria-label={t('workspaceRole')} data-surface="plain">{roleFilter === 'all' ? t('allRoles') : labels[roleFilter]}<CaretDown size={12} aria-hidden /></Button></DropdownMenuTrigger>
-          <DropdownMenuContent align="end"><DropdownMenuRadioGroup value={roleFilter} onValueChange={value => setRoleFilter(value as MemberRole | 'all')}>
-            <DropdownMenuRadioItem value="all" emphasizeSelection={false}>{t('allRoles')}</DropdownMenuRadioItem>
-            {memberRoles.map(role => <DropdownMenuRadioItem key={role} value={role} emphasizeSelection={false}><RoleLabel role={role} /></DropdownMenuRadioItem>)}
-          </DropdownMenuRadioGroup></DropdownMenuContent></DropdownMenu> : null}
+        {tab === 'joined' ? <DropdownMenu><DropdownMenuTrigger asChild><Button size="sm" variant="outline" className={styles.button} aria-label={t('workspaceRole')} data-surface="plain">{!roleFilter.length ? t('allRoles') : roleFilter.length === 1 ? labels[roleFilter[0]!] : t('selectedRoles', { count: roleFilter.length })}<CaretDown size={12} aria-hidden /></Button></DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className={styles.roleFilterMenu}>
+            <DropdownMenuCheckboxItem checked={!roleFilter.length} indicator="none" onSelect={event => event.preventDefault()} onCheckedChange={() => setRoleFilter([])}>
+              <span className={styles.check} data-checked={!roleFilter.length || undefined} aria-hidden>{!roleFilter.length ? <SelectionCheck /> : null}</span>{t('allRoles')}
+            </DropdownMenuCheckboxItem>
+            {memberRoles.map(role => <DropdownMenuCheckboxItem key={role} checked={roleFilter.includes(role)} indicator="none" onSelect={event => event.preventDefault()} onCheckedChange={() => setRoleFilter(current => { const next = current.includes(role) ? current.filter(item => item !== role) : [...current, role]; return next.length === memberRoles.length ? [] : next; })}>
+              <span className={styles.check} data-checked={roleFilter.includes(role) || undefined} aria-hidden>{roleFilter.includes(role) ? <SelectionCheck /> : null}</span><RoleLabel role={role} />
+            </DropdownMenuCheckboxItem>)}
+          </DropdownMenuContent></DropdownMenu> : null}
         <DirectorySearch value={search} onChange={setSearch} label={t('searchMembers')} clearLabel={t('clearSearch')} />
       </div>
     </div>
@@ -150,20 +162,20 @@ export function MembersSection({ knowledgeBaseId, actorRole, notify, onMembershi
           <td>{canInspect(member) ? <button type="button" className={cn('fob-action', styles.resourceAccessButton)} data-surface="plain" aria-label={t('inspectMemberAccess', { name: member.name })} onClick={() => setAccessUserId(member.userId)}><ShieldCheck size={14} aria-hidden />{member.directAccessCount == null ? t('inspectAccess') : t('individualAccessCount', { count: member.directAccessCount })}</button> : <span className={styles.none}>—</span>}</td>
           <td className={styles.actions}>{manageable(member) ? <DropdownMenu><DropdownMenuTrigger asChild><button type="button" disabled={busy} aria-label={t('actionsFor', { name: member.name })} className={cn('fob-action', styles.rowAction)} data-surface="plain"><DotsThree size={18} aria-hidden /></button></DropdownMenuTrigger><DropdownMenuContent align="end">
             <DropdownMenuItem onSelect={() => setAccessUserId(member.userId)}><ShieldCheck size={14} aria-hidden />{t('resourceAccess')}</DropdownMenuItem>
-            <DropdownMenuSub><DropdownMenuSubTrigger>{t('changeRole')}</DropdownMenuSubTrigger><DropdownMenuSubContent className={styles.roleMenu}><RoleMenuItems roles={roles} value={member.role} onChange={role => setRoleChange({ ids: [member.userId], role })} /></DropdownMenuSubContent></DropdownMenuSub>
+            <DropdownMenuSub><DropdownMenuSubTrigger><UsersThree size={14} aria-hidden />{t('changeRole')}</DropdownMenuSubTrigger><DropdownMenuSubContent className={styles.roleMenu}><RoleMenuItems roles={roles} value={member.role} onChange={role => setRoleChange({ ids: [member.userId], role })} /></DropdownMenuSubContent></DropdownMenuSub>
             <DropdownMenuSeparator /><DropdownMenuItem variant="destructive" onSelect={() => setRemoving(member)}><Trash size={14} aria-hidden />{t('removeMember')}</DropdownMenuItem>
           </DropdownMenuContent></DropdownMenu> : null}</td>
-        </tr>)}</tbody></table>{!filtered.length ? <div className={styles.empty}>{t('noResults')}<Button variant="ghost" size="sm" onClick={() => setSearch('')}>{t('clearFilters')}</Button></div> : null}</div>
+        </tr>)}</tbody></table>{!filtered.length ? <div className={styles.empty}>{t('noResults')}<Button variant="ghost" size="sm" onClick={() => { setSearch(''); setRoleFilter([]); }}>{t('clearFilters')}</Button></div> : null}</div>
       </ListStateShell> : invitationsQuery.isPending ? <ListStateShell state="loading" emptyTitle={t('noInvitations')}>{null}</ListStateShell> : invitationsQuery.isError ? <ListStateShell state="error" error={invitationsQuery.error} onRetry={() => void invitationsQuery.refetch()} emptyTitle={t('noInvitations')}>{null}</ListStateShell> : <div className={styles.tableWrap}>
         <table className={styles.table} aria-label={t('pending')}><thead><tr><th scope="col">{t('email')}</th><th scope="col">{t('role')}</th><th scope="col">{t('invitedAt')}</th><th scope="col">{t('invitationStatus')}</th><th scope="col" className={styles.actions}><span className="sr-only">{t('actions')}</span></th></tr></thead>
           <tbody>{visibleInvitations.map((invitation) => <tr key={invitation.id}><td><span className={styles.name}>{invitation.email}</span><span className={styles.email}>{t('expiresAt')} {formatDate(invitation.expiresAt)}</span></td><td><RoleLabel role={invitation.role} /></td><td className={styles.date}>{formatDate(invitation.createdAt)}</td><td className={styles.date}>{Date.parse(invitation.expiresAt) > invitationsQuery.dataUpdatedAt ? t('waiting') : t('expired')}</td>
             <td className={styles.actions}><DropdownMenu><DropdownMenuTrigger asChild><button type="button" className={cn('fob-action', styles.rowAction)} data-surface="plain" aria-label={t('actionsFor', { name: invitation.email })}><DotsThree size={18} aria-hidden /></button></DropdownMenuTrigger><DropdownMenuContent align="end">
-              {canManageMember(actorRole, invitation.role) ? <DropdownMenuItem onSelect={() => setInvite({ email: invitation.email, reissue: true })}>{t('reissue')}</DropdownMenuItem> : null}<DropdownMenuItem variant="destructive" disabled={!canManageMember(actorRole, invitation.role)} onSelect={() => setRevoking(invitation)}>{t('revoke')}</DropdownMenuItem>
+              {canManageMember(actorRole) ? <DropdownMenuItem onSelect={() => setInvite({ email: invitation.email, reissue: true })}>{t('reissue')}</DropdownMenuItem> : null}<DropdownMenuItem variant="destructive" disabled={!canManageMember(actorRole)} onSelect={() => setRevoking(invitation)}>{t('revoke')}</DropdownMenuItem>
             </DropdownMenuContent></DropdownMenu></td></tr>)}</tbody></table>
         {!visibleInvitations.length ? <div className={styles.empty}>{search ? t('noResults') : t('noInvitations')}</div> : null}
       </div>}
     </div>
-    {tab === 'joined' && membersQuery.isSuccess ? <p className={styles.footer} role="status">{search || roleFilter !== 'all' ? t('showing', { visible: filtered.length, total: members.length }) : t('total', { count: members.length })}</p> : tab === 'pending' && invitationsQuery.isSuccess ? <p className={styles.footer}>{t('invitationCount', { count: invitations.length })}</p> : null}
+    {tab === 'joined' && membersQuery.isSuccess ? <p className={styles.footer} role="status">{search || roleFilter.length ? t('showing', { visible: filtered.length, total: members.length }) : t('total', { count: members.length })}</p> : tab === 'pending' && invitationsQuery.isSuccess ? <p className={styles.footer}>{t('invitationCount', { count: invitations.length })}</p> : null}
     {tab === 'joined' && selectedIds.length > 0 && visible && !invite && !removing && !revoking && !inspectingMember && !roleChange ? createPortal(
       <div className={styles.bulkPosition}><div className={styles.bulk} role="toolbar" aria-label={t('selected', { count: selectedIds.length })}>
         <strong aria-live="polite">{t('selected', { count: selectedIds.length })}</strong><span className={styles.bulkSeparator} aria-hidden />

@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { principal, type MemberRole, type PermissionLevel } from '@fob/shared/knowledge/contracts';
 import { asset, page, pageAcl, notification } from '../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
-import { authorizePageAccess } from '../permissions/authorization';
+import { authorizePageAccess, canManagePageAccess } from '../permissions/authorization';
 import { replaceAuthorizedPageAcl } from '../permissions/mutations';
 import { createPermissionsFixture, type PermissionsFixture, type PermissionTestActor } from '../permissions/permissions-test-fixture';
 import { createKnowledgeDiscoveryRoutes } from '../discovery/http';
@@ -95,18 +95,18 @@ describe('Outline workspace roles and per-resource access over real HTTP/Postgre
     const result = await (await request(`/api/knowledge/${fixture.alpha.id}/discovery/search`, fixture.reader, 'POST', { query: 'One shared record' })).json() as { documents: { id: string; folderName: string }[] };
     expect(result.documents).toHaveLength(1);
     expect(result.documents[0]).toMatchObject({ id: tree.root.pageId, folderName: '' });
-    const ownDocuments = await list('document', fixture.reader);
-    expect(ownDocuments.items.find(row => row.id === tree.root.pageId)).toMatchObject({ folderName: null, effective: 'view', direct: 'view', source: 'direct', canManage: false });
+    await expect(list('document', fixture.reader)).rejects.toMatchObject({ code: 'FORBIDDEN' });
     expect((await decision(tree.pages[1]!, 'view')).decision).toBe('allow');
     expect((await grant('document', tree.root.pageId, null)).status).toBe(200);
     expect((await decision(tree.pages[1]!, 'view')).decision).not.toBe('allow');
   });
 
-  test('workspace administrator may manage folder metadata but cannot read or edit an unshared private document', async () => {
+  test('administrator has no global metadata or document authority', async () => {
     const tree = await fixture.tree({ defaultAccess: null }); await fixture.drain(); await role('admin');
-    expect((await fixture.organization.listTeamspaces(fixture.reader.identity, { knowledgeBaseId: fixture.alpha.id })).items.some(row => row.id === tree.teamspace.id)).toBe(true);
+    expect((await fixture.organization.listTeamspaces(fixture.reader.identity, { knowledgeBaseId: fixture.alpha.id })).items.some(row => row.id === tree.teamspace.id)).toBe(false);
     expect((await decision(tree.root, 'view')).decision).toBe('deny');
-    expect((await list('document', fixture.reader)).items.some(row => row.id === tree.root.pageId)).toBe(false);
+    await expect(list('document', fixture.reader)).rejects.toMatchObject({ code: 'FORBIDDEN' });
+    await expect(fixture.organization.createTeamspace(fixture.reader.identity, { knowledgeBaseId: fixture.alpha.id, name: 'No global root authority' })).rejects.toMatchObject({ code: 'FORBIDDEN' });
     await expect(client(fixture.reader).page.update.mutate({ ...tree.root, title: 'Private bypass' })).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
     const actual = await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select({ title: page.title }).from(page).where(eq(page.id, tree.root.pageId)));
     expect(actual[0]!.title).not.toBe('Private bypass');
@@ -196,6 +196,28 @@ describe('Outline workspace roles and per-resource access over real HTTP/Postgre
     expect((await grant('folder', tree.teamspace.id, null)).status).toBe(200);
     expect((await inbox()).items.map(row => row.id)).not.toContain(notificationId);
     expect(await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => countUnreadNotifications(db, { knowledgeBaseId: fixture.alpha.id, userId: fixture.reader.identity.userId }))).toBe(0);
+  });
+
+  test('administrator needs actual full permission to manage a document', async () => {
+    const tree = await fixture.tree({ defaultAccess: 'view' }); await fixture.drain(); await role('admin');
+    const manages = () => withKnowledgeBase(fixture.pool, fixture.alpha.id, db => canManagePageAccess(db, tree.root, fixture.reader.identity.userId));
+    expect(await manages()).toBe(false);
+    expect((await grant('document', tree.root.pageId, 'full', fixture.owner, fixture.owner.identity.userId)).status).toBe(200);
+    expect((await grant('document', tree.root.pageId, 'full')).status).toBe(200);
+    expect(await manages()).toBe(true);
+    expect((await grant('document', tree.root.pageId, null)).status).toBe(200);
+    expect(await manages()).toBe(false);
+  });
+
+  test('every nonowner is denied member access inspection and mutations even on an authorized resource', async () => {
+    const tree = await fixture.tree({ defaultAccess: 'full' }); await fixture.drain();
+    for (const next of ['admin', 'member', 'viewer', 'guest'] as const) {
+      await role(next);
+      expect((await request(`${base()}/members/${fixture.reader.identity.userId}/access?kind=folder`, fixture.reader)).status).toBe(403);
+      expect((await request(`${base()}/members/${fixture.reader.identity.userId}/access`, fixture.reader, 'PATCH', {
+        kind: 'folder', resourceId: tree.teamspace.id, level: 'full', expectedRevision: 0,
+      })).status).toBe(403);
+    }
   });
 
   test('administrative inspection, pagination, strict input and cross-library resource ids stay scoped', async () => {

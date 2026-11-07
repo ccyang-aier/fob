@@ -41,7 +41,7 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
       {session.status === 'authenticated' && activeBase ? (
         <div className={styles.content}>
             <div className={styles.section}>
-              {role ? (
+              {role === 'owner' ? (
                   <MembersSection
                     key={`${activeBase.id}:${role}`}
                     knowledgeBaseId={activeBase.id}
@@ -51,7 +51,7 @@ function OrganizationPanelBody({ knowledgeBaseId }: { knowledgeBaseId: string })
                   />
               ) : (
                 <ListStateShell
-                  state={access.isError ? 'error' : 'loading'}
+                  state={role ? 'forbidden' : access.isError ? 'error' : 'loading'}
                   error={access.error}
                   onRetry={() => void access.refetch()}
                   emptyTitle={knowledgeT('unableToVerifyKnowledgeBasePermissions')}

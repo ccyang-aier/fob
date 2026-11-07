@@ -53,6 +53,7 @@ export function CreateTeamspaceDialog({
       open={open}
       onClose={close}
       title={knowledgeT('newFolder')}
+      footerStyle={{ paddingTop: 8, paddingBottom: 20 }}
       footer={
         <>
           <DialogButton onClick={close}>{knowledgeT('cancel')}</DialogButton>
@@ -74,7 +75,7 @@ export function CreateTeamspaceDialog({
         autoFocus
         placeholder={knowledgeT('enterFolderName')}
       />
-      <DefaultAccessField value={access} onChange={setAccess} disabled={mutation.isPending} />
+      <DefaultAccessField className="mt-0" value={access} onChange={setAccess} disabled={mutation.isPending} />
       {mutation.isError ? (
         <p role="alert" className="mt-3 text-[12px] text-[var(--err-ink)]">
           {organizationErrorTextOf(mutation.error)}

@@ -76,11 +76,11 @@ export function propertyTypeLabel(locale?: Locale): Record<PropertyDefinition['t
   };
 }
 
-/** 人员目录条目：由视图层从 O02 成员目录载入。 */
+/** 人员条目：仅载入当前文档有权访问的协作者。 */
 export interface PersonOption {
   userId: string;
   name: string;
-  email: string;
+  email?: string;
 }
 
 export function personNameOfFactory(
@@ -327,7 +327,7 @@ function SelectionEditor({
         .filter(
           (member) =>
             member.name.toLowerCase().includes(query.toLowerCase()) ||
-            member.email.toLowerCase().includes(query.toLowerCase()),
+            member.email?.toLowerCase().includes(query.toLowerCase()),
         )
         .map((member) => ({
           id: member.userId,

@@ -3,7 +3,7 @@
  * 有状态后端仿真（happy-dom），验证用户驱动的完整闭环——四态（加载 / 无权 /
  * 空 / 错误）、类型化单元格的乐观编辑与失败回滚、键盘导航契约、打开行正文、
  * 列删除与筛选触发的服务端重取。交互全部走真实 DOM 事件（act + click/键盘），
- * 传输经拦截全局 fetch 的仿真后端（U01 权威 tRPC 批信封 + O02 组织 REST），
+ * 传输经拦截全局 fetch 的仿真后端（U01 权威 tRPC 批信封 + 文档协作者查询），
  * 异步结算用真实时间轮询等待，不依赖固定刷新轮次。
  */
 
@@ -76,6 +76,8 @@ function stubBackend(options: StubOptions = {}) {
       { title: '发布准备', properties: { c_title_x: '检查单', c_num: 1, c_date: null, c_done: true, c_status: 'o_done', c_tags: [], c_owner: [] } },
     ]))],
     listRowsQueries: [] as Record<string, unknown>[],
+    peopleQueries: [] as Record<string, unknown>[],
+    directoryRequests: 0,
     updateColumnsCalls: [] as PropertyDefinition[][],
     createdRows: [] as string[],
     /** 收到的 updateRowProperties 请求（含被 failOnce 拒绝的尝试——尝试即调用）。 */
@@ -91,7 +93,8 @@ function stubBackend(options: StubOptions = {}) {
   const fetchImpl = (async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = new URL(String(input));
     if (url.pathname.endsWith('/members')) {
-      return new Response(JSON.stringify({ items: [member], nextCursor: null }), { status: 200, headers: { 'content-type': 'application/json' } });
+      state.directoryRequests++;
+      return new Response('{}', { status: 403 });
     }
     // tRPC 批查询把多个过程名并到同一路径（a,b），input 以 "0"/"1" 索引；
     // 条目形态随传输与序列化器而定（直排对象或 {"json":…} 包装），两种都解。
@@ -125,6 +128,9 @@ function stubBackend(options: StubOptions = {}) {
 
     const respondProcedure = (name: string, query: Record<string, unknown>): unknown => {
       switch (name) {
+        case 'page.people':
+          state.peopleQueries.push(query);
+          return { result: { data: { items: [{ userId: member.userId, name: member.name, image: null }], nextCursor: null } } };
         case 'page.access':
           return { result: { data: { knowledgeBaseId: knowledgeBase, pageId: database, authorized: state.authorized, level: state.authorized ? state.level : null } } };
         case 'database.getColumns':
@@ -271,14 +277,17 @@ describe('DatabaseTableView · 四态', () => {
 
 describe('DatabaseTableView · 类型化行渲染与行正文', () => {
   test('七类列按类型渲染（文本/数字/日期/复选/单选/多选/人员）', async () => {
-    stubBackend();
+    const state = stubBackend();
     const { host } = await mountView();
     await until(() => textOf(host).includes('需求评审'));
     expect(textOf(host)).toContain('本周完成');
     expect(textOf(host)).toContain('2026-09-30');
     expect(textOf(host)).toContain('待办');
     expect(textOf(host)).toContain('P1');
-    expect(textOf(host)).toContain('林澜');
+    await until(() => textOf(host).includes('林澜'));
+    expect(state.directoryRequests).toBe(0);
+    expect(state.peopleQueries).toHaveLength(1);
+    expect(state.peopleQueries[0]).toMatchObject({ knowledgeBaseId: knowledgeBase, pageId: database });
     expect(textOf(host)).toContain('发布准备');
   });
 

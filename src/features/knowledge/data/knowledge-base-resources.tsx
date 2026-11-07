@@ -136,10 +136,19 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
   useEffect(() => {
     if (!selectedKnowledgeBase || selectedKnowledgeBase.source !== 'server') return;
     const controller = new AbortController(), resourceKey = `${principal}:server:${selectedKnowledgeBase.id}`;
-    void knowledgeCatalogClient.getKnowledgeBase(selectedKnowledgeBase.id, controller.signal).then(base => {
-      if (!controller.signal.aborted) setRole({ key: resourceKey, value: base.role });
-    }).catch(() => {});
-    return () => controller.abort();
+    let refreshing = false;
+    const refreshRole = () => {
+      if (refreshing || document.visibilityState === 'hidden') return;
+      refreshing = true;
+      void knowledgeCatalogClient.getKnowledgeBase(selectedKnowledgeBase.id, controller.signal).then(base => {
+        if (!controller.signal.aborted) setRole({ key: resourceKey, value: base.role });
+      }).catch(() => { if (!controller.signal.aborted) setRole(null); }).finally(() => { refreshing = false; });
+    };
+    refreshRole();
+    const timer = setInterval(refreshRole, 30_000);
+    window.addEventListener('focus', refreshRole);
+    document.addEventListener('visibilitychange', refreshRole);
+    return () => { controller.abort(); clearInterval(timer); window.removeEventListener('focus', refreshRole); document.removeEventListener('visibilitychange', refreshRole); };
   }, [principal, selectedKnowledgeBase]);
   useEffect(() => {
     if (!selectedKnowledgeBase) return;

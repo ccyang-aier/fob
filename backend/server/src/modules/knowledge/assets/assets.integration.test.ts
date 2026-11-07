@@ -331,5 +331,9 @@ describe('knowledgeBase asset upload, confirmation and presigned access', () => 
     await expect(withKnowledgeBase(database.pool, alpha.knowledgeBaseId, (db) => confirmKnowledgeBaseAssetUpload(storage, db, foreignRequest)))
       .rejects.toMatchObject({ code: 'ASSET_ACCESS_DENIED' });
     expect(await assetRow(database.admin, alpha.knowledgeBaseId, content.hash)).toBeUndefined();
+    await database.admin.query("INSERT INTO resources.knowledge_base_member (knowledge_base_id,user_id,role) VALUES ($1,$2,'admin')", [alpha.knowledgeBaseId, outsider]);
+    // The administrator label supplies neither an editable upload location nor whole-library revocation.
+    await expect(withKnowledgeBase(database.pool, alpha.knowledgeBaseId, db => prepareKnowledgeBaseAssetUpload(storage, db, foreignRequest))).rejects.toMatchObject({ code: 'ASSET_ACCESS_DENIED' });
+    await expect(withKnowledgeBase(database.pool, alpha.knowledgeBaseId, db => revokeKnowledgeBaseAsset(db, { knowledgeBaseId: alpha.knowledgeBaseId, userId: outsider, hash: content.hash }))).rejects.toMatchObject({ code: 'ASSET_ACCESS_DENIED' });
   });
 });

@@ -67,7 +67,7 @@ export async function readDocumentSharing(db: ResourceTransaction, scope: PageSc
   const people = memberships.filter(person => permissionFor(expandPrincipals({ knowledgeBaseId: scope.knowledgeBaseId, userId: person.id,
     member: { knowledgeBaseId: scope.knowledgeBaseId, userId: person.id, role: person.role }, groups: groupMemberships.filter(row => row.userId === person.id) }), permissions));
   const canManage = await canManagePageAccess(db, scope, userId);
-  const canInvite = canManage && ['owner', 'admin'].includes(actor.role);
+  const canInvite = canManage && actor.role === 'owner';
   const canPublish = access.level === 'full' && actor.role !== 'guest';
   const publications = canPublish ? await db.select().from(shareLink).where(and(eq(shareLink.knowledgeBaseId, scope.knowledgeBaseId), eq(shareLink.pageId, scope.pageId), isNull(shareLink.revokedAt),
     or(isNull(shareLink.expiresAt), gt(shareLink.expiresAt, sql`clock_timestamp()`)))).orderBy(desc(shareLink.createdAt)).limit(1) : [];

@@ -27,6 +27,7 @@ type MemberMenu = { userId: string; anchor: HTMLButtonElement } | null;
 
 export function KnowledgeMembersButton({ className, label, onManage }: { className?: string; label?: string; onManage: () => void }) {
   const resources = useKnowledgeBaseResources();
+  if (resources.selectedKnowledgeBase?.source !== 'server' || resources.selectedKnowledgeBaseRole !== 'owner') return null;
   return <MembersTrigger key={resources.scopeKey ?? resources.principal} className={className} label={label} onManage={onManage} />;
 }
 
@@ -65,7 +66,7 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
   const { notify } = useAppAlert();
   const principal = session.status === 'authenticated' ? session.user.id : 'guest';
   const directory = useQuery({ queryKey: ['knowledge', base.id, 'member-directory', principal], queryFn: ({ signal }) => knowledgeBaseMemberDirectory(base.id, signal), staleTime: 0, refetchInterval: 30_000 });
-  const manager = !directory.isError && (directory.data?.role === 'owner' || directory.data?.role === 'admin');
+  const manager = !directory.isError && directory.data?.role === 'owner';
   const invitations = useQuery({ queryKey: ['knowledge', base.id, 'member-invitations', principal], queryFn: ({ signal }) => allOrganizationPages(options => invitationClient.list(base.id, options), signal), enabled: manager, staleTime: 0, refetchInterval: 30_000 });
   const [email, setEmail] = useState(''), [fieldError, setFieldError] = useState(''), [error, setError] = useState('');
   const [activeInvite, setActiveInvite] = useState<CreatedKnowledgeBaseInvitation | null>(null);
@@ -150,7 +151,7 @@ function ServerMembers({ base, memberMenu, setMemberMenu, onManage }: { base: Kn
     {manager && invitations.isError ? <div className={styles.state}><AppAlert tone="error" title={t('pendingFailed')} /><Button variant="outline" size="sm" onClick={() => void invitations.refetch()}>{t('retry')}</Button></div> : null}
     {menuRoot && memberMenu && menuMember ? <AnchoredPopover anchor={memberMenu.anchor} container={menuRoot} onClose={() => setMemberMenu(null)} label={t('memberActions', { name: menuMember.name })} width={168} role="menu" align="end">
       <button type="button" role="menuitem" className={'fob-menu-item ' + styles.menuItem} onClick={() => void copyEmail(menuMember)}><Copy size={14} aria-hidden />{t('copyEmail')}</button>
-      {directory.data?.role === 'owner' || directory.data?.role === 'admin' ? <button type="button" role="menuitem" className={'fob-menu-item ' + styles.menuItem} onClick={onManage}><UsersThree size={14} aria-hidden />{t('manage')}</button> : null}
+      {directory.data?.role === 'owner' ? <button type="button" role="menuitem" className={'fob-menu-item ' + styles.menuItem} onClick={onManage}><UsersThree size={14} aria-hidden />{t('manage')}</button> : null}
     </AnchoredPopover> : null}
   </div>;
 }

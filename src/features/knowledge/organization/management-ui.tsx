@@ -1,6 +1,7 @@
 'use client';
 
 import type { PermissionLevel } from '@fob/shared/knowledge/contracts';
+import type { ReactNode } from 'react';
 import { resourcePermission } from '@fob/shared/knowledge/contracts';
 import { MagnifyingGlass, SelectionCheck, X } from '@/components/icons';
 import { DropdownMenuRadioGroup, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu';
@@ -26,8 +27,8 @@ export function RoleMenuItems({ roles, value, onChange }: {
   };
   return <DropdownMenuRadioGroup value={value ?? ''} onValueChange={next => { if (next !== value) onChange(next as MemberRole); }}>
     {roles.map(role => <DropdownMenuRadioItem key={role} value={role} textValue={labels[role]}
-      indicator="none" emphasizeSelection={false} className={styles.selectOption}>
-      <span className={styles.optionCopy}><RoleLabel role={role} /><span className={styles.optionDescription}>{descriptions[role]}</span></span>
+      indicator="none" emphasizeSelection={false} className={styles.roleOption} title={descriptions[role]}>
+      <RoleLabel role={role} />
       <span className={styles.optionCheck} aria-hidden>{value === role ? <SelectionCheck /> : null}</span>
     </DropdownMenuRadioItem>)}
   </DropdownMenuRadioGroup>;
@@ -36,6 +37,9 @@ export function PermissionBadge({ level }: { level: PermissionLevel | null }) {
   const { t } = useTranslation(managementMessages);
   const canonical = resourcePermission(level);
   return canonical ? <span className={styles.badge} data-permission={canonical}>{t(canonical)}</span> : <span className={styles.none} aria-label={t('noAccess')}>—</span>;
+}
+export function PermissionLabel({ value, children }: { value: string; children: ReactNode }) {
+  return <span className={styles.badge} data-permission={value === 'explicit' || value === '' ? 'none' : value}>{children}</span>;
 }
 export function TableCheck({ checked, mixed, onChange, label, disabled }: {
   checked: boolean; mixed?: boolean; onChange: () => void; label: string; disabled?: boolean;

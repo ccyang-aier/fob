@@ -146,7 +146,7 @@ export function LibraryCanvas({
           onCreateFolder={() => onCreateFolder()}
           onCreateSubfolder={onCreateFolder}
           onImportFolder={onImportFolder}
-          canCreateFolder={canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin')}
+          canCreateFolder={canEditTree(access) && access?.role === 'owner'}
           canEdit={canEditTree(access)}
           upload={
             <KnowledgeBaseDocumentImport

@@ -39,36 +39,30 @@ describe('deriveListState', () => {
 
 /** Role rendering rules mirror the backend requireManager / requireRoleAuthority matrix. */
 describe('role authority rendering', () => {
-  test('guests cannot browse the directory; everyone else can', () => {
+  test('only owners can browse the directory', () => {
     expect(canBrowseDirectory('guest')).toBe(false);
-    expect(canBrowseDirectory('member')).toBe(true);
-    expect(canBrowseDirectory('admin')).toBe(true);
+    expect(canBrowseDirectory('member')).toBe(false);
+    expect(canBrowseDirectory('admin')).toBe(false);
     expect(canBrowseDirectory('owner')).toBe(true);
   });
 
-  test('only owners and admins see management controls', () => {
+  test('only owners see management controls', () => {
     expect(canManageOrganization('owner')).toBe(true);
-    expect(canManageOrganization('admin')).toBe(true);
+    expect(canManageOrganization('admin')).toBe(false);
     expect(canManageOrganization('member')).toBe(false);
     expect(canManageOrganization('guest')).toBe(false);
   });
 
   test('assignable roles follow the authority matrix', () => {
     expect(assignableRoles('owner')).toEqual(['admin', 'member', 'viewer', 'guest']);
-    expect(assignableRoles('admin')).toEqual(['admin', 'member', 'viewer', 'guest']);
+    expect(assignableRoles('admin')).toEqual([]);
     expect(assignableRoles('member')).toEqual([]);
     expect(assignableRoles('guest')).toEqual([]);
   });
 
-  test('per-row management is gated by the target role too', () => {
-    expect(canManageMember('owner', 'owner')).toBe(true);
-    expect(canManageMember('owner', 'guest')).toBe(true);
-    expect(canManageMember('admin', 'admin')).toBe(true);
-    expect(canManageMember('admin', 'owner')).toBe(false);
-    expect(canManageMember('admin', 'member')).toBe(true);
-    expect(canManageMember('admin', 'guest')).toBe(true);
-    expect(canManageMember('member', 'guest')).toBe(false);
-    expect(canManageMember('guest', 'member')).toBe(false);
+  test('member management requires ownership regardless of the target role', () => {
+    expect(canManageMember('owner')).toBe(true);
+    for (const role of ['admin', 'member', 'viewer', 'guest'] as const) expect(canManageMember(role)).toBe(false);
   });
 });
 

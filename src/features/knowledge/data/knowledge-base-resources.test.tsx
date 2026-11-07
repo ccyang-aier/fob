@@ -29,6 +29,8 @@ let renderedDialogs = 0;
 let assetCleanupFailure: Error | null = null;
 let mutations: { created: { name: string }[]; renamed: string[]; removed: string[] };
 
+let serverRole = 'owner';
+let roleFailure = false;
 beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3001/' });
   const globals = globalThis as Record<string, unknown>;
@@ -40,7 +42,7 @@ beforeAll(async () => {
   mock.module('../assets/local-assets', () => ({ removeLocalKnowledgeBaseAssets: async () => { if (assetCleanupFailure) throw assetCleanupFailure; } }));
   mock.module('./knowledge-catalog-client', () => ({ knowledgeCatalogClient: {
     listKnowledgeBases: (options: { cursor?: string | null; signal?: AbortSignal }) => { const pending = deferred<Page>(); listRequests.push({ ...options, pending }); return pending.promise; },
-    getKnowledgeBase: async (id: string) => ({ id, name: id, role: 'owner' }),
+    getKnowledgeBase: async (id: string) => { if (roleFailure) throw new Error('Access unavailable'); return { id, name: id, role: serverRole }; },
     createKnowledgeBase: async (input: { name: string }) => { mutations.created.push(input); if (createFailure) throw createFailure; return pendingCreate ? pendingCreate.promise : { id: 'created-server', name: input.name }; },
     updateKnowledgeBase: async (id: string, input: { name: string }) => { mutations.renamed.push(id); if (renameFailure) throw renameFailure; return pendingRename ? pendingRename.promise : { id, name: input.name }; },
     removeKnowledgeBase: async (id: string) => { mutations.removed.push(id); if (removeFailure) throw removeFailure; return { removed: true }; },
@@ -54,7 +56,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await act(async () => root.render(null));
   browser.history.replaceState({}, '', 'http://localhost:3001/'); localStorage.clear();
-  session = { status: 'anonymous' }; listRequests = []; pendingCreate = pendingRename = null;
+  serverRole = 'owner'; roleFailure = false; session = { status: 'anonymous' }; listRequests = []; pendingCreate = pendingRename = null;
   createFailure = renameFailure = removeFailure = assetCleanupFailure = null; mutations = { created: [], renamed: [], removed: [] }; renderedDialogs = 0;
   store = createLocalLibraryStore(localStorage);
 });
@@ -207,4 +209,16 @@ test('revoked knowledge membership never silently opens a different accessible w
   expect(resources.requestedKnowledgeBase).toEqual({ id: 'server-a', source: 'server' });
   await act(async () => resources.clearUnavailableSelection());
   expect(resources.selectedKnowledgeBase?.id).toBe('local-a');
+});
+
+test('focus revalidates ownership and failures clear stale management authority', async () => {
+  browser.history.replaceState({}, '', '/?knowledgeBase=server-a&source=server');
+  await user('alice'); await publish([{ id: 'server-a', name: 'Team' }]);
+  expect(resources.selectedKnowledgeBaseRole).toBe('owner');
+  serverRole = 'admin';
+  await act(async () => { browser.dispatchEvent(new browser.Event('focus')); });
+  expect(resources.selectedKnowledgeBaseRole).toBe('admin');
+  roleFailure = true;
+  await act(async () => { browser.dispatchEvent(new browser.Event('focus')); });
+  expect(resources.selectedKnowledgeBaseRole).toBeNull();
 });

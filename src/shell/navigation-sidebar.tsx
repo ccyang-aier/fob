@@ -25,9 +25,10 @@ export function NavigationSidebar({ open, onCollapse, onExpand, view, onViewChan
   onKnowledgeBaseChange: () => void;
 }) {
   const { t } = useTranslation(messages);
-  const { selectedKnowledgeBase } = useKnowledgeBaseResources();
+  const { selectedKnowledgeBase, selectedKnowledgeBaseRole } = useKnowledgeBaseResources();
   const { width, dragging, startResize } = useSidebarWidth(272);
   function row(id: WorkbenchPage) {
+    if (id === 'members' && selectedKnowledgeBaseRole !== 'owner') return null;
     const page = workbenchPages[id];
     const item: SidebarRowItem & { id: WorkbenchPage } = { id, label: t(page.label), icon: page.icon };
     const button = <NavButton item={item} active={view === item.id} compact={!open} iconSize={14} className={styles.utilityRow} data-compact={!open} onSelect={() => onViewChange(item.id)} />;

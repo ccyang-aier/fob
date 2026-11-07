@@ -44,27 +44,25 @@ export function memberRoleLabels(locale?: Locale): Record<MemberRole, string> {
   };
 }
 
-/** Directory (members and folders) is closed to guests. */
+/** The workspace member directory belongs exclusively to the knowledge-base owner. */
 export function canBrowseDirectory(role: MemberRole): boolean {
-  return role !== 'guest';
+  return role === 'owner';
 }
 
 /** KnowledgeBase management: creating folders, renames, defaults. */
 export function canManageOrganization(role: MemberRole): boolean {
-  return role === 'owner' || role === 'admin';
+  return role === 'owner';
 }
 
 /** Roles the actor may assign; mirrors the backend `requireRoleAuthority` matrix. */
 export function assignableRoles(role: MemberRole): MemberRole[] {
   if (role === 'owner') return ['admin', 'member', 'viewer', 'guest'];
-  if (role === 'admin') return ['admin', 'member', 'viewer', 'guest'];
   return [];
 }
 
 /** Whether the actor may touch (change role / remove) one specific member row. */
-export function canManageMember(actorRole: MemberRole, targetRole: MemberRole): boolean {
+export function canManageMember(actorRole: MemberRole): boolean {
   if (actorRole === 'owner') return true;
-  if (actorRole === 'admin') return targetRole !== 'owner';
   return false;
 }
 

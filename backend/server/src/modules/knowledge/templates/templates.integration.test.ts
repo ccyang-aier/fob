@@ -53,6 +53,10 @@ test('real template save, search, preview and metadata management snapshot the i
   expect(search.items[0]!.canManage).toBe(false);
   expect((await request(`/${template.id}`, fixture.reader, 'PATCH', { name: 'Stolen management' })).status).toBe(403);
   expect((await request(`/${template.id}`, fixture.reader, 'DELETE', {})).status).toBe(403);
+  await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, userId: fixture.reader.identity.userId, role: 'admin' });
+  expect((await request(`/${template.id}`, fixture.reader, 'PATCH', { name: 'Admin bypass' })).status).toBe(403);
+  expect((await request(`/${template.id}`, fixture.reader, 'DELETE', {})).status).toBe(403);
+  await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, userId: fixture.reader.identity.userId, role: 'member' });
   const changed = await request(`/${template.id}`, fixture.owner, 'PATCH', { name: 'Release plan', description: 'Revised description' });
   expect(changed.status).toBe(200);
   expect(await changed.json()).toMatchObject({ name: 'Release plan', description: 'Revised description' });
@@ -93,6 +97,9 @@ test('live source ACL and destination authority prevent template bypass after re
   const template = await save(tree.root.pageId);
   const restricted = await fixture.organization.createTeamspace(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, name: 'Restricted destination', defaultAccess: 'view' });
   expect((await request(`/${template.id}/pages`, fixture.reader, 'POST', { id: randomUUID(), teamspaceId: restricted.id })).status).toBe(403);
+  await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, userId: fixture.reader.identity.userId, role: 'admin' });
+  expect((await request(`/${template.id}/pages`, fixture.reader, 'POST', { id: randomUUID(), teamspaceId: restricted.id })).status).toBe(403);
+  await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: fixture.alpha.id, userId: fixture.reader.identity.userId, role: 'member' });
   await withKnowledgeBase(fixture.pool, fixture.alpha.id, async (db) => {
     await setAuthorizedPageInheritance(db, { ...tree.root, inheritsPermissions: false });
     await replaceAuthorizedPageAcl(db, { ...tree.root, grants: [{ principal: principal('user', fixture.owner.identity.userId), level: 'full' }] });

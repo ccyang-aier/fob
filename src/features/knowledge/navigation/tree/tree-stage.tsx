@@ -126,7 +126,7 @@ export function KnowledgeTreeStage({
   const toFolder = (section: NavigationFolder): SidebarProjectNode => ({
     id: section.id, kind: 'project', label: section.title, count: section.pageCount,
     projectIconId: 'folder', folderIcon: section.icon, starred: collections.starred.includes(section.id),
-    canCreateFolder: canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin'), canImport: canEditTree(access),
+    canCreateFolder: canEditTree(access) && access?.role === 'owner', canImport: canEditTree(access),
     expandable: section.pages.length > 0 || section.folders.length > 0, defaultExpanded: true,
     children: [...section.folders.map(toFolder), ...section.pages.map(toNode)],
   });
@@ -181,7 +181,7 @@ export function KnowledgeTreeStage({
       ) : teamspaceState === 'forbidden' ? (
         <TreeForbidden />
       ) : (
-        <TreeDragProvider folders={teamspaces} documents={dragDocuments} canMoveDocuments={canEditTree(access)} canMoveFolders={canEditTree(access) && (access?.role === 'owner' || access?.role === 'admin')} onMove={moves.move} onExpandFolder={expandFolder} errorText={moves.errorText}>
+        <TreeDragProvider folders={teamspaces} documents={dragDocuments} canMoveDocuments={canEditTree(access)} canMoveFolders={canEditTree(access) && access?.role === 'owner'} onMove={moves.move} onExpandFolder={expandFolder} errorText={moves.errorText}>
         <ExpandedPrimarySidebar
           className="min-h-0 flex-1"
           activeItem={selectedPageId ? '' : view}

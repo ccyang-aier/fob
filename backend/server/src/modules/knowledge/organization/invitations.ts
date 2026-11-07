@@ -82,7 +82,7 @@ export function invitationOperations(pool: Pool) {
         // Authority may have changed since issue. Revoked membership cannot leave
         // behind a usable invitation that silently grants its previous power.
         const [inviter] = await db.select().from(member).where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, invitation.invitedBy)));
-        if (!inviter || !['owner', 'admin'].includes(inviter.role)) throw invalidInvitation();
+        if (!inviter || inviter.role !== 'owner') throw invalidInvitation();
         const [existing] = await db.select().from(member).where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, actor.userId)));
         if (existing) throw new ResourceRequestError('CONFLICT', 'You are already a member of this knowledge base.', 409);
         await db.insert(member).values({ knowledgeBaseId: parsed.knowledgeBaseId, userId: actor.userId, role: invitation.role });

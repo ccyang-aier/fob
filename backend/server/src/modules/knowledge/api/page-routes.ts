@@ -17,6 +17,7 @@ import { createAuthorizedPage, moveAuthorizedPage, recycleAuthorizedPage, restor
 import { KnowledgePageError } from '../pages/errors';
 import { apiError } from './errors';
 import { knowledgeMutation, knowledgeQuery } from './procedures';
+import { pagePeopleQuery } from './page-people';
 
 function serializePage(row: typeof page.$inferSelect) {
   const record = { ...row };
@@ -35,6 +36,7 @@ async function guarded<T>(operation: () => Promise<T>): Promise<T> {
 
 /** All writes authorize under the same knowledgeBase lock used by tree/ACL changes. */
 export const knowledgePageRouterRecord = {
+  people: pagePeopleQuery,
   list: knowledgeQuery({
     input: listPagesInputSchema, scopes: ['read'],
     resolve: ({ ctx, input }) => guarded(() => ctx.withResource(async (db, authority) => {

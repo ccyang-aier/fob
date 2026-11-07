@@ -129,12 +129,15 @@ describe('knowledgeBase and identity boundaries over real HTTP/PostgreSQL', () =
     expect((await request('?limit=101', owner)).status).toBe(400);
   });
 
-  test('directory joins expose only resource members and guests cannot enumerate the directory', async () => {
-    const directory = await result<{ items: { userId: string; email: string; image: string | null }[] }>(request(`/${main.id}/members`, regular));
+  test('only owners may enumerate members and invitations', async () => {
+    const directory = await result<{ items: { userId: string; email: string; image: string | null }[] }>(request(`/${main.id}/members`, owner));
     expect(directory.items.map((row) => row.userId).sort()).toEqual([owner, admin, regular, guest].map((actor) => actor.identity.userId).sort());
     expect(directory.items.some((row) => row.email === outsider.email)).toBe(false);
     expect(directory.items.every((row) => row.image === null || typeof row.image === 'string')).toBe(true);
-    expect((await request(`/${main.id}/members`, guest)).status).toBe(403);
+    for (const actor of [admin, regular, guest]) {
+      expect((await request(`/${main.id}/members`, actor)).status).toBe(403);
+      expect((await request(`/${main.id}/invitations`, actor)).status).toBe(403);
+    }
     expect((await request(`/${other.id}/members`, owner)).status).toBe(404);
     expect((await request(`/${main.id}`, outsider)).status).toBe(404);
     expect((await result<Space>(request(`/${main.id}`, guest))).role).toBe('guest');
@@ -164,14 +167,14 @@ describe('knowledgeBase and identity boundaries over real HTTP/PostgreSQL', () =
     const renamed = await result<Space>(request(`/${main.id}`, owner, 'PATCH', { name: 'Renamed by owner' }));
     expect(renamed.name).toBe('Renamed by owner');
     expect((await request(`/${main.id}/members/${owner.identity.userId}`, admin, 'PATCH', { role: 'member' })).status).toBe(403);
-    expect((await request(`/${main.id}/members/${regular.identity.userId}`, admin, 'PATCH', { role: 'admin' })).status).toBe(200);
+    expect((await request(`/${main.id}/members/${regular.identity.userId}`, admin, 'PATCH', { role: 'admin' })).status).toBe(403);
     await result(request(`/${main.id}/members/${regular.identity.userId}`, owner, 'PATCH', { role: 'member' }));
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, regular, 'PATCH', { role: 'owner' })).status).toBe(403);
     expect((await request(`/${main.id}/members/${owner.identity.userId}`, admin, 'DELETE', {})).status).toBe(403);
     expect((await request(`/${main.id}/members/${regular.identity.userId}`, guest, 'DELETE', {})).status).toBe(403);
     expect((await request(`/${main.id}/members/${admin.identity.userId}`, admin, 'DELETE', {})).status).toBe(200);
     await accept(main, await invite(main, admin, 'admin'), admin);
-    expect((await request(`/${main.id}/members/${guest.identity.userId}`, admin, 'PATCH', { role: 'member' })).status).toBe(200);
+    expect((await request(`/${main.id}/members/${guest.identity.userId}`, admin, 'PATCH', { role: 'member' })).status).toBe(403);
     await result(request(`/${main.id}/members/${guest.identity.userId}`, owner, 'PATCH', { role: 'guest' }));
   });
 });
@@ -198,11 +201,13 @@ describe('email-bound, expiring one-time invitations', () => {
     expect((await result<Space>(request(`/${space.id}`, owner))).role).toBe('owner');
   });
 
-  test('administrators issue, reissue and revoke ordinary workspace invitations within ownership limits', async () => {
+  test('only owners issue, reissue and revoke invitations', async () => {
     for (const role of ['member', 'viewer', 'guest', 'admin'] as const) {
-      const created = await result<Invite>(request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role }), 201);
+      expect((await request(`/${main.id}/invitations`, admin, 'POST', { email: outsider.email, role })).status).toBe(403);
+      const created = await result<Invite>(request(`/${main.id}/invitations`, owner, 'POST', { email: outsider.email, role }), 201);
+      expect((await request(`/${main.id}/invitations/${created.invitation.id}`, admin, 'DELETE', {})).status).toBe(403);
       expect(created.invitation.role).toBe(role);
-      await result(request(`/${main.id}/invitations/${created.invitation.id}`, admin, 'DELETE', {}));
+      await result(request(`/${main.id}/invitations/${created.invitation.id}`, owner, 'DELETE', {}));
       expect((await accept(main, created, outsider, 404)).code).toBe('INVITATION_INVALID');
     }
     expect((await request(`/${main.id}/invitations`, owner, 'POST', { email: outsider.email, role: 'owner' })).status).toBe(400);
@@ -223,15 +228,14 @@ describe('email-bound, expiring one-time invitations', () => {
     expect((await result<Space>(request(`/${space.id}`, regular))).role).toBe('guest');
   });
 
-  test('delegated invitations remain valid for administrators and stop when management authority is removed', async () => {
+  test('invitations stop when their issuer loses ownership including demotion to admin', async () => {
     for (const nextRole of ['admin', 'member', null] as const) {
       const space = await create(owner, `Revoked inviter ${nextRole}`);
       await accept(space, await invite(space, coOwner, 'admin'), coOwner);
       await result(request(`/${space.id}/members/${coOwner.identity.userId}`, owner, 'PATCH', { role: 'owner' }));
       const issued = await invite(space, regular, 'member', coOwner);
       await result(request(`/${space.id}/members/${coOwner.identity.userId}`, owner, nextRole ? 'PATCH' : 'DELETE', nextRole ? { role: nextRole } : {}));
-      if (nextRole === 'admin') expect((await accept(space, issued, regular)).role).toBe('member');
-      else expect((await accept(space, issued, regular, 404)).code).toBe('INVITATION_INVALID');
+      expect((await accept(space, issued, regular, 404)).code).toBe('INVITATION_INVALID');
     }
   });
 
@@ -338,7 +342,7 @@ describe('membership invariants and retired groups', () => {
     const rows = await server.database.admin.query<{role: string}>('SELECT role FROM resources.knowledge_base_member WHERE knowledge_base_id=$1 AND user_id=ANY($2::uuid[])', [space.id, ids]);
     expect(rows.rows.every(row => row.role === 'admin')).toBe(true);
     expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [owner.identity.userId, ...ids], role: 'member' })).status).toBe(409);
-    expect((await request(`/${space.id}/members`, regular, 'PATCH', { userIds: [coOwner.identity.userId], role: 'member' })).status).toBe(200);
+    expect((await request(`/${space.id}/members`, regular, 'PATCH', { userIds: [coOwner.identity.userId], role: 'member' })).status).toBe(403);
     expect((await request(`/${space.id}/members`, owner, 'PATCH', { userIds: [regular.identity.userId, regular.identity.userId], role: 'member' })).status).toBe(400);
   });
 

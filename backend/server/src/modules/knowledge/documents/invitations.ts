@@ -17,7 +17,7 @@ export async function inviteToDocument(db: ResourceTransaction, scope: PageScope
   if (!parsed.success) throw new DocumentServiceError(400, 'INVALID_INPUT');
   await lockPermissionKnowledgeBase(db, scope.knowledgeBaseId);
   const role = await activeSessionMember(db, scope.knowledgeBaseId, identity, true);
-  if (!['owner', 'admin'].includes(role)) throw new DocumentServiceError(403, 'INVITATION_FORBIDDEN');
+  if (role !== 'owner') throw new DocumentServiceError(403, 'INVITATION_FORBIDDEN');
   await requireDocument(db, scope, identity.userId, 'full');
   await db.update(documentInvitation).set({ revokedAt: new Date() }).where(and(eq(documentInvitation.knowledgeBaseId, scope.knowledgeBaseId), eq(documentInvitation.pageId, scope.pageId),
     eq(documentInvitation.email, parsed.data.email), isNull(documentInvitation.acceptedAt), isNull(documentInvitation.revokedAt)));
@@ -35,7 +35,7 @@ export async function acceptDocumentInvitation(db: ResourceTransaction, identity
     eq(documentInvitation.pageId, pageId), isNull(documentInvitation.revokedAt), isNull(documentInvitation.acceptedAt), gt(documentInvitation.expiresAt, sql`clock_timestamp()`))).for('update');
   if (!invitation || invitation.email !== actor.email.toLowerCase() || !timingSafeEqual(Buffer.from(invitation.tokenHash, 'hex'), digest(token))) throw new DocumentServiceError(404);
   const [inviter] = await db.select().from(member).where(and(eq(member.knowledgeBaseId, knowledgeBaseId), eq(member.userId, invitation.invitedBy)));
-  if (!inviter || !['owner', 'admin'].includes(inviter.role)) throw new DocumentServiceError(404);
+  if (!inviter || inviter.role !== 'owner') throw new DocumentServiceError(404);
   await requireDocument(db, { knowledgeBaseId, pageId }, inviter.userId, 'full');
   await db.insert(member).values({ knowledgeBaseId, userId: identity.userId, role: 'guest' }).onConflictDoNothing();
   const previous = await db.select().from(pageAcl).where(and(eq(pageAcl.knowledgeBaseId, knowledgeBaseId), eq(pageAcl.pageId, pageId)));

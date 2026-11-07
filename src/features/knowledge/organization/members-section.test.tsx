@@ -59,14 +59,13 @@ test('directory counts and name/email search include members beyond the first AP
   expect(host.textContent).toContain('显示 1 / 2 位成员');
 });
 
-test('read-only members can search the directory without receiving role or removal controls', async () => {
-  await render('member');
-  expect(host.querySelectorAll('tbody tr')).toHaveLength(2);
-  expect(host.querySelector('input[aria-label="搜索姓名或邮箱"]')).not.toBeNull();
-  expect(host.querySelectorAll('tbody button[role="checkbox"][disabled]')).toHaveLength(2);
-  expect(host.querySelector('tbody [aria-haspopup="menu"]')).toBeNull();
+test('all nonowners are denied before directory queries mount', async () => {
+  for (const role of ['admin', 'member', 'viewer', 'guest'] as const) {
+    await act(async () => root.render(<TooltipProvider><Provider><Members knowledgeBaseId={base} actorRole={role} notify={() => {}} /></Provider></TooltipProvider>));
+    expect(host.querySelector('table')).toBeNull();
+  }
+  expect(calls).toEqual([]);
 });
-
 
 test('selection opens a separate action dock without moving the member table and protects the final owner', async () => {
   await render('owner');

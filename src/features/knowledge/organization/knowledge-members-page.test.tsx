@@ -7,6 +7,7 @@ let browser: Window, host: HTMLDivElement, root: Root;
 let Page: typeof import('./knowledge-members-page').KnowledgeMembersPage;
 let selected: { id: string; name: string; source: 'local' | 'server' } | null;
 let principal = 'account';
+let role: string | null = 'owner';
 const mounted: string[] = [];
 
 beforeAll(async () => {
@@ -15,7 +16,7 @@ beforeAll(async () => {
   for (const key of ['window', 'document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle']) globals[key] = key === 'window' ? browser : (browser as unknown as Record<string, unknown>)[key];
   globals.IS_REACT_ACT_ENVIRONMENT = true;
   mock.module('@/components/icons', () => Object.fromEntries(['UserCircle', 'CircleNotch', 'SignOut', 'Warning', 'XCircle'].map(name => [name, () => <svg aria-hidden />])));
-  mock.module('../data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ selectedKnowledgeBase: selected, scopeKey: selected ? `${principal}:${selected.source}:${selected.id}` : null }) }));
+  mock.module('../data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ selectedKnowledgeBase: selected, selectedKnowledgeBaseRole: role, scopeKey: selected ? `${principal}:${selected.source}:${selected.id}` : null }) }));
   mock.module('./organization-panel', () => ({ OrganizationPanel: ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
     mounted.push(knowledgeBaseId);
     return <section data-managed-knowledge-base={knowledgeBaseId}>Current knowledge members</section>;
@@ -24,7 +25,7 @@ beforeAll(async () => {
   const { createRoot } = await import('react-dom/client');
   host = document.createElement('div'); document.body.append(host); root = createRoot(host);
 }, 30_000);
-beforeEach(async () => { await act(async () => root.render(null)); mounted.length = 0; principal = 'account'; selected = { id: 'alpha', name: 'Alpha', source: 'server' }; });
+beforeEach(async () => { await act(async () => root.render(null)); mounted.length = 0; principal = 'account'; role = 'owner'; selected = { id: 'alpha', name: 'Alpha', source: 'server' }; });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 const render = () => act(async () => root.render(<Page />));
 
@@ -48,4 +49,14 @@ test('missing selection never falls back to another knowledge base membership', 
   selected = null; await render();
   expect(host.textContent).toContain('请选择知识库');
   expect(mounted).toEqual([]);
+});
+
+for (const otherRole of ['admin', 'member', 'viewer', 'guest', null]) test(`direct URL denies management for ${otherRole ?? 'unresolved role'}`, async () => {
+  role = otherRole; await render();
+  expect(host.querySelector('[data-managed-knowledge-base]')).toBeNull();
+  expect(mounted).toEqual([]);
+});
+test('ownership loss immediately unmounts management', async () => {
+  await render(); role = 'admin'; await render();
+  expect(host.querySelector('[data-managed-knowledge-base]')).toBeNull();
 });

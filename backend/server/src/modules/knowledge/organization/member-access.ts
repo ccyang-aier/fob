@@ -8,7 +8,7 @@ import type { MemberResourceAccess } from '@fob/shared/knowledge/contracts';
 import { member, page, pageAcl, pageEffectiveAcl, teamspace, teamspaceMemberAccess } from '../../../platform/database/resources/schema';
 import { authUser } from '../../../platform/database/identity/schema';
 import type { FobIdentity } from '../../../platform/identity/identity';
-import { currentIdentity, pageOf } from '../../../platform/resources/context';
+import { currentIdentity, pageOf, requireManager } from '../../../platform/resources/context';
 import { ResourceRequestError, parseInput } from '../../../platform/resources/errors';
 import { canManagePageAccess, expandRequestPrincipals } from '../permissions/authorization';
 import { effectivePageAccessCondition } from '../permissions/queries';
@@ -19,15 +19,15 @@ import { refreshPagePermissions } from '../api/page-route-guards';
 import { assertFolderManagerRetained, canManageFolder, readFolderAccess, readVisibleFolderAccess } from './folder-access';
 import { inKnowledgeBase } from './context';
 
-const manager = (role: string) => role === 'owner' || role === 'admin';
+const manager = (role: string) => role === 'owner';
 
-/** Per-member access inspection is an administrative view, or the member's own visible resources. */
+/** Only owners inspect the workspace member access directory; document bodies retain their own ACL. */
 export function memberAccessOperations(pool: Pool) {
   return {
     async listMemberAccess(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(listMemberAccessInputSchema, input);
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, false, async ({ db, role, actor }) => {
-        if (!manager(role) && actor.userId !== parsed.userId) throw new ResourceRequestError('FORBIDDEN', 'Member access management is required.', 403);
+        requireManager(role);
         const [target] = await db.select({ userId: member.userId, role: member.role }).from(member)
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, parsed.userId)));
         if (!target) throw new ResourceRequestError('MEMBER_NOT_FOUND', 'Knowledge base member was not found.', 404);
@@ -79,7 +79,7 @@ export function memberAccessOperations(pool: Pool) {
     async updateMemberAccess(identity: FobIdentity, input: unknown) {
       const parsed = parseInput(updateMemberAccessInputSchema, input);
       return inKnowledgeBase(pool, identity, parsed.knowledgeBaseId, true, async ({ db, role, actor }) => {
-        if (!manager(role) && actor.userId !== parsed.userId) throw new ResourceRequestError('FORBIDDEN', 'Member access management is required.', 403);
+        requireManager(role);
         const [target] = await db.select({ id: member.userId }).from(member)
           .where(and(eq(member.knowledgeBaseId, parsed.knowledgeBaseId), eq(member.userId, parsed.userId)));
         if (!target) throw new ResourceRequestError('MEMBER_NOT_FOUND', 'Knowledge base member was not found.', 404);

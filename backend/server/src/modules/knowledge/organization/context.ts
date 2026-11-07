@@ -9,7 +9,7 @@ import { ResourceRequestError } from '../../../platform/resources/errors';
 import { currentIdentity, requireManager } from '../../../platform/resources/context';
 
 export function requireDirectory(role: MemberRole) {
-  if (role === 'guest') throw new ResourceRequestError('FORBIDDEN', 'Guests cannot browse this directory.', 403);
+  requireManager(role);
 }
 
 export function requireRoleAuthority(actor: MemberRole, target: MemberRole) {

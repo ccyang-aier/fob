@@ -21,7 +21,7 @@ export async function currentIdentity(db: FobIdentityTransaction, identity: FobI
 }
 
 export function requireManager(role: MemberRole) {
-  if (role !== 'owner' && role !== 'admin') throw new ResourceRequestError('FORBIDDEN', 'Resource management permission is required.', 403);
+  if (role !== 'owner') throw new ResourceRequestError('FORBIDDEN', 'Knowledge base owner permission is required.', 403);
 }
 
 export function pageOf<T>(items: T[], limit: number, cursor: (item: T) => string) {

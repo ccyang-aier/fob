@@ -157,6 +157,11 @@ describe('comment thread persistence and permissions', () => {
     await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => deleteCommentThreadAsAdmin(db, {
       knowledgeBaseId: scope.knowledgeBaseId, threadId: created.thread.id, userId: reader,
     })), 'COMMENT_ACCESS_DENIED');
+    await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: scope.knowledgeBaseId, userId: reader, role: 'admin' });
+    await expectCode(() => withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, db => deleteCommentThreadAsAdmin(db, {
+      knowledgeBaseId: scope.knowledgeBaseId, threadId: created.thread.id, userId: reader,
+    })), 'COMMENT_ACCESS_DENIED');
+    await fixture.organization.changeMemberRole(fixture.owner.identity, { knowledgeBaseId: scope.knowledgeBaseId, userId: reader, role: 'member' });
     await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, (db) => deleteCommentThreadAsAdmin(db, {
       knowledgeBaseId: scope.knowledgeBaseId, threadId: created.thread.id, userId: owner,
     }));
