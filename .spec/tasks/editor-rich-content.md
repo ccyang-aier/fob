@@ -248,3 +248,10 @@
 - Browser plugin not available；通过 CUA Playwright 在独立后台页签验证，桌面 1347×758。图片靠左时与正文左缘一致，靠右时与正文右缘一致；用户原有图片为居中、24% 宽。实际横向拖动 40px 后成为 34%，显示宽度从约 206.3px 到 292.3px，宽高比保持约 0.47447，一次正文撤销回到原有 24%。图片来源与正文保留；测试撤销时恢复居中与24%宽；随后刷新显示当前协作状态为27%宽，未覆盖该更新值。image-layout-menu.png、image-resized.png 在仓库外 visualizations。
 - 真实白板排布改为居中后，约 206px 宽的块从正文左缘移至中点，随后恢复原靠左。Mermaid 和 PlantUML 的排布菜单均实际打开并显示三项；当前 PlantUML 示例渲染失败，本轮未修改其源码或渲染器，排布入口与共享属性保存由实机／组件测试分别覆盖。页面没有相关 console error，保留原 TextSelection 警告。窄屏本轮未单独实机验证。
 - 前端、共享包与业务服务 TypeScript、修改前端文件 ESLint、图标、国际化、架构与差异检查通过；Web 和业务服务保持运行。
+
+## 2026-11-08 统一排布图标线宽并隐藏对勾
+
+- 图片／图形块的排布入口和菜单选项改用集中目录的 Lucide AlignLeft／AlignCenter／AlignRight，统一走 outlineIcon 的 1.75 线宽；工具条的放大、替换与排布均为相同的 14px 实际尺寸。原有正文格式工具的实心图标保留。
+- 排布单选项设置 indicator=none，删除可见对勾和对应占位，保留 aria-checked、键盘操作与保存行为；所有共用此菜单的图片、白板、Mermaid 和 PlantUML 同步更新。
+- 既有图标、排布、图片和目录回归 23 tests／365 assertions／0 fail；TypeScript、修改文件 ESLint、图标规范、架构与差异检查通过。
+- Browser plugin not available；CUA Playwright 在 localhost:3001 桌面页面实测放大、替换、排布三个 SVG 均来自 Lucide，stroke-width=1.75、显示宽度约 13.99px。排布三项 indicator=none，每项仅保留一个排布图标，居中项 aria-checked=true；菜单打开与排布保存的既有组件回归通过。实际截图 block-control-icons.png 保存于仓库外 visualizations，验证未更改正文。

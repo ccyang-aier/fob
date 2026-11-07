@@ -7,6 +7,7 @@ export { FileText as EmptyDocument } from 'lucide-react';
 import { ArrowDown as LucideArrowDown, ArrowDownToLine as LucideArrowDownToLine, ArrowDownUp as LucideArrowDownUp, ArrowLeft as LucideArrowLeft, ArrowLeftRight as LucideArrowLeftRight, ArrowLeftToLine as LucideArrowLeftToLine, ArrowRight as LucideArrowRight, ArrowRightToLine as LucideArrowRightToLine, ArrowUp as LucideArrowUp, ArrowUpRight as LucideArrowUpRight, ArrowUpToLine as LucideArrowUpToLine, Check as LucideCheck, CheckCheck as LucideCheckCheck, ChevronDown as LucideChevronDown, ChevronLeft as LucideChevronLeft, ChevronRight as LucideChevronRight, ChevronUp as LucideChevronUp, ChevronsUpDown as LucideChevronsUpDown, Ellipsis as LucideEllipsis, ExternalLink as LucideExternalLink, FoldHorizontal as LucideFoldHorizontal, Folder as LucideFolder, Heart as LucideHeart, LoaderCircle as LucideLoaderCircle, Maximize as LucideMaximize, Minimize as LucideMinimize, Minus as LucideMinus, Plus as LucidePlus, RefreshCw as LucideRefreshCw, RotateCcw as LucideRotateCcw, RotateCw as LucideRotateCw, Star as LucideStar, ThumbsUp as LucideThumbsUp, UnfoldHorizontal as LucideUnfoldHorizontal, X as LucideX, ZoomIn as LucideZoomIn, ZoomOut as LucideZoomOut } from 'lucide-react';
 import { faAlignCenter } from '@fortawesome/free-solid-svg-icons/faAlignCenter';
 import { Heading4 as LucideHeading4 } from 'lucide-react';
+import { AlignCenter as LucideAlignCenter, AlignLeft as LucideAlignLeft, AlignRight as LucideAlignRight } from 'lucide-react';
 import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft';
 import { faAlignRight } from '@fortawesome/free-solid-svg-icons/faAlignRight';
 import { faArrowDownAZ } from '@fortawesome/free-solid-svg-icons/faArrowDownAZ';
@@ -354,6 +355,9 @@ export const ArrowsDownUp = /* @__PURE__ */ outlineIcon(LucideArrowDownUp, 'Arro
 export const ArrowsIn = /* @__PURE__ */ outlineIcon(LucideMinimize, 'ArrowsIn', 16);
 export const ArrowsInLineHorizontal = /* @__PURE__ */ outlineIcon(LucideFoldHorizontal, 'ArrowsInLineHorizontal', 16);
 export const ArrowsLeftRight = /* @__PURE__ */ outlineIcon(LucideArrowLeftRight, 'ArrowsLeftRight', 16);
+export const BlockAlignLeft = /* @__PURE__ */ outlineIcon(LucideAlignLeft, 'BlockAlignLeft', 16);
+export const BlockAlignCenter = /* @__PURE__ */ outlineIcon(LucideAlignCenter, 'BlockAlignCenter', 16);
+export const BlockAlignRight = /* @__PURE__ */ outlineIcon(LucideAlignRight, 'BlockAlignRight', 16);
 export const ArrowsOut = /* @__PURE__ */ outlineIcon(LucideMaximize, 'ArrowsOut', 16);
 export const ArrowsOutLineHorizontal = /* @__PURE__ */ outlineIcon(LucideUnfoldHorizontal, 'ArrowsOutLineHorizontal', 16);
 export const CaretDown = /* @__PURE__ */ outlineIcon(LucideChevronDown, 'CaretDown', 12);
