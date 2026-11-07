@@ -1,4 +1,4 @@
-.panel { display:flex; flex-direction:column; min-height:0; max-height:min(72dvh,640px); }
+.panel { display:flex; flex-direction:column; min-height:0; max-height:min(88dvh,840px,calc(100dvh - 48px)); }
 .chapters { display:flex; flex-direction:column; overflow:auto; min-height:0; overscroll-behavior:contain; scrollbar-width:thin; padding:0; }
 .chapter { display:block; flex:none; width:100%; min-width:0; height:32px; padding:0 8px; border:0; border-radius:9px; background:transparent; color:var(--muted-strong); text-align:start; font-size:14px; font-weight:400; line-height:32px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer; }
 .chapter:hover,.chapter[aria-current=location] { color:var(--ink); }

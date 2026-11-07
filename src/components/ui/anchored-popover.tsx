@@ -5,14 +5,14 @@ import { createPortal } from 'react-dom';
 import { getOverlayRoot } from '@/lib/overlay-root';
 import { cn } from '@/lib/utils';
 import styles from './anchored-popover.module.css';
-import { popoverPosition, type PopoverSide } from './popover-position';
+import { popoverPosition, type PopoverAlign, type PopoverSide } from './popover-position';
 
 export type PopoverAnchor = HTMLElement | { left: number; top: number; right: number; bottom: number; width?: number; height?: number };
 
 /** A non-modal surface for small, anchored forms and context menus. */
 export function AnchoredPopover({ anchor, onClose, label, children, width = 260, align = 'start', side = 'bottom', role = 'dialog', className, restoreFocusTo, autoFocus = true, container, onMouseEnter, onMouseLeave }: {
   anchor: PopoverAnchor; onClose: (reason?: 'escape' | 'outside') => void; label: string; children: ReactNode;
-  width?: number | 'max-content'; align?: 'start' | 'end'; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
+  width?: number | 'max-content'; align?: PopoverAlign; role?: 'dialog' | 'menu'; className?: string; restoreFocusTo?: HTMLElement;
   side?: PopoverSide;
   container?: HTMLElement;
   autoFocus?: boolean; onMouseEnter?: () => void; onMouseLeave?: () => void;
