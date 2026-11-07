@@ -91,7 +91,7 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
     const available = convertMenuBlock(editor.state, target, format) !== null;
     return <DropdownMenuItem key={key} className={styles.menuItem} disabled={!available} title={!available ? t('conversionUnavailable') : undefined}
       onSelect={() => act(convertMenuBlock(editor.state, target, format))}>
-      <Icon size={14} /><span>{t(key)}</span>{selected && <SelectionCheck className={styles.selected} />}
+      <Icon size={format.kind === 'heading' ? 16 : 14} /><span>{t(key)}</span>{selected && <SelectionCheck className={styles.selected} />}
     </DropdownMenuItem>;
   });
   return <DropdownMenu modal={false} open={Boolean(target)} onOpenChange={open => { if (!open) onClose(); }}>
