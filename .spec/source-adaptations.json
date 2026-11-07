@@ -632,8 +632,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-appearance/menu.tsx"
   },
   "src/features/knowledge/editor/components/document-outline.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Add personal heading-section folding and the reference-style floating outline, with hidden-target reveal and complete HTML snapshots. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md.",
-    "sha256": "8d988a92ba7565a9706b17489adaef745228a5db8d2f2415956ddb75b503a458",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Toggle parent outline branches from the whole row; preserve leaf navigation, collapse IDs and keyboard button semantics. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Add personal heading-section folding and the reference-style floating outline, with hidden-target reveal and complete HTML snapshots. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md. Keep the outline rail transparent and add pointer-proximity Dock magnification with directory hover and keyboard preview; see docs/editor-heading-navigation.md.",
+    "sha256": "f4eaca67675b07355d42c904c4c2a14dc85899b9cf33e54ceb3047c97d79a312",
     "relocatedTo": "src/features/knowledge/editor/components/document-outline/index.tsx"
   },
   "src/features/knowledge/editor/components/document-star-icon.tsx": {
@@ -765,8 +765,8 @@
     "sha256": "887eb4b8a7397fbeb10c558ce783b532747d1940be0fd7d45ed17da37287d5e0"
   },
   "src/features/knowledge/editor/components/document-outline.module.css": {
-    "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Add personal heading-section folding and the reference-style floating outline, with hidden-target reveal and complete HTML snapshots. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md.",
-    "sha256": "0321c3881694ebc3e8c4c4c4b421e46003603deef34060292f4c1573271fb423",
+    "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Add personal heading-section folding and the reference-style floating outline, with hidden-target reveal and complete HTML snapshots. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md. Keep the outline rail transparent and add pointer-proximity Dock magnification with directory hover and keyboard preview; see docs/editor-heading-navigation.md.",
+    "sha256": "b19c4d32948ffea424f4530c0d286f8509932c92b2de53aa175149d8711fd1ec",
     "relocatedTo": "src/features/knowledge/editor/components/document-outline/styles.module.css"
   },
   "src/features/knowledge/navigation/page-icon.test.tsx": {

@@ -4,10 +4,10 @@
 .chapter:hover,.chapter[aria-current=location] { color:var(--ink); }
 .chapter:focus-visible { outline:2px solid var(--control-border); outline-offset:-2px; }
 .floatingPanel { padding:8px; border-radius:18px; }
-.rail { position:absolute; z-index:15; top:50%; inset-inline-start:8px; transform:translateY(-50%); display:flex; align-items:center; justify-content:flex-start; width:42px; max-height:60%; padding:8px; border:0; border-radius:8px; background:transparent; cursor:pointer; }
-.ticks { display:grid; width:26px; height:100%; min-height:0; overflow:hidden; }
-.tick { display:block; align-self:center; height:2px; max-height:100%; background:var(--control-border); }
-.tick[data-active=true] { background:var(--ink); }
+.rail { position:absolute; z-index:15; top:50%; inset-inline-start:8px; transform:translateY(-50%); display:flex; align-items:center; justify-content:flex-start; width:54px; max-height:60%; padding:8px; border:0; background:transparent; cursor:pointer; }
+.ticks { display:grid; width:38px; height:100%; min-height:0; overflow:hidden; }
+.tick { display:block; align-self:center; height:2px; max-height:100%; background:color-mix(in srgb,var(--ink) var(--dock-ink,0%),var(--control-border)); transition:width 160ms cubic-bezier(.2,.8,.2,1),background-color 120ms linear; }
+@media (prefers-reduced-motion:reduce) { .tick { transition:none; } }
 .empty { padding:8px; color:var(--muted-strong); font-size:13px; }
 .empty strong { color:var(--ink-soft); font-weight:500; }
 .empty p { margin:8px 0 0; line-height:1.6; }
