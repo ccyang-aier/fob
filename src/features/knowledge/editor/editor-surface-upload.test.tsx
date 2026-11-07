@@ -5,6 +5,7 @@ import type { Root } from 'react-dom/client';
 import { Editor, Extension } from '@tiptap/core';
 import { EditorContent } from '@tiptap/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import * as Y from 'yjs';
 import { ySyncPluginKey } from 'y-prosemirror';
 import type { FobAuthUser } from '@/features/identity/auth-api';
@@ -64,10 +65,10 @@ for (const refreshAt of ['picker', 'upload'] as const) test(`same-user focus ref
   const session = { document, awareness: null, subscribe: () => () => {} } as unknown as PageDocumentSession;
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const view = derivePageEditorView({ status: 'granted', level: 'full' }, null);
-  const render = (identity: FobAuthUser) => act(async () => root.render(<QueryClientProvider client={queryClient}><Surface
+  const render = (identity: FobAuthUser) => act(async () => root.render(<QueryClientProvider client={queryClient}><TooltipProvider><Surface
     scope={scope} session={session} origin="http://localhost:8721" user={identity} pageUndo={undo} level="full" view={view}
     folderName="" knowledgeBaseId={scope.knowledgeBaseId} onBack={() => {}} onOpenSidebar={() => {}} onCreateDocument={() => {}} canCreateDocument
-  /></QueryClientProvider>));
+  /></TooltipProvider></QueryClientProvider>));
   try {
     await render(user); await settle(() => !!currentEditor && !currentEditor.isDestroyed);
     const original = currentEditor!;

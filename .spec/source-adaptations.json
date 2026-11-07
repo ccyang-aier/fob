@@ -559,8 +559,8 @@
     "sha256": "ba6bc8a02c33725ac4d3fe3957e9faee023cacdc2dd60a709697d375dcceb9d8"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md.",
-    "sha256": "a836e896ca4dc5325d48219b7d1d0a4a5ed14f5bda355ed9bac27798911a9c92"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Unify supplementary editor block actions in the shared top-right hover/focus toolbar with a continuous pointer bridge, preserve menu and read-only behavior, match callout typography to its document and use paired outline open/replace icons. See docs/editor-rich-content.md and .spec/tasks/editor-block-actions.md. Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md. Anchor image actions inside the full content block and provide shared modal enlargement and in-place replacement, preserving media identity, captions and current edit permissions. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "9b5b26e9df96129493613498e038296449bf97452a4e4e5f000046e75180d761"
   },
   "src/features/knowledge/editor/block-modules/ordered-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -1522,5 +1522,13 @@
   "src/features/knowledge/editor/block-modules/media-core/insert-media.test.ts": {
     "sha256": "2cccec12943b3bae275cf1b0acb891980bd45616efc1c8139f575be97f256db2",
     "reason": "Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md."
+  },
+  "src/features/knowledge/editor/block-modules/image/image-node-view.tsx": {
+    "reason": "Anchor image actions inside the full content block and provide shared modal enlargement and in-place replacement, preserving media identity, captions and current edit permissions. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Use the approved magnifying-glass control and a borderless image overlay on a full-viewport scrim.",
+    "sha256": "5867898463ae43e7c31343a7d7aba74d8faf1d7399ce4b8c34e847d1c13cbeef"
+  },
+  "src/features/knowledge/editor/block-modules/image/image-node-view.messages.ts": {
+    "reason": "Anchor image actions inside the full content block and provide shared modal enlargement and in-place replacement, preserving media identity, captions and current edit permissions. See docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
+    "sha256": "cd603ae22a9b03cb01f5a567020a3c0dbf9aa5915d84fca99381ba745170169d"
   }
 }

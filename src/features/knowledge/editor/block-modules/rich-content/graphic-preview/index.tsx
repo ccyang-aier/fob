@@ -12,7 +12,7 @@ import { clampGraphicView, fittedGraphicView, zoomGraphicView, type GraphicView 
 import type { GraphicSize } from './size';
 import styles from '../frame/styles.module.css';
 
-export function GraphicPreviewDialog({ src, title, onClose }: { src: string; title: string; onClose: () => void }) {
+export function GraphicPreviewDialog({ src, title, onClose, presentation = 'card' }: { src: string; title: string; onClose: () => void; presentation?: 'card' | 'image' }) {
   const { t } = useTranslation(richMessages);
   const titleId = useId();
   const [portalRoot] = useState(() => getOverlayRoot() ?? document.body);
@@ -25,6 +25,7 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
   const [view, setView] = useState<GraphicView>({ scale: 1, x: 0, y: 0 });
   const current = useRef(view);
   const drag = useRef<{ pointer: number; x: number; y: number; view: GraphicView } | null>(null);
+  const dragged = useRef(false);
   const publish = useCallback((next: GraphicView) => { current.current = next; setView(next); }, []);
   const fit = useCallback(() => publish(fittedGraphicView(imageSize.current, viewport.current)), [publish]);
   const zoom = useCallback((scale: number, anchor = { x: 0, y: 0 }) => publish(zoomGraphicView(current.current, scale, anchor, imageSize.current, viewport.current)), [publish]);
@@ -56,9 +57,9 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
     element.addEventListener('wheel', wheel, { passive: false });
     return () => { observer.disconnect(); element.removeEventListener('wheel', wheel); };
   }, [fit, zoom]);
-  return createPortal(<dialog ref={setDialog} className={styles.graphicViewer} aria-labelledby={titleId} data-graphic-viewer data-document-export-omit
+  return createPortal(<dialog ref={setDialog} className={styles.graphicViewer} aria-labelledby={titleId} data-graphic-viewer data-presentation={presentation} data-document-export-omit
     onCancel={event => { event.preventDefault(); onClose(); }}
-    onClick={event => { if (event.target !== event.currentTarget) return; const rect = event.currentTarget.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); }}
+    onClick={event => { if (event.target !== event.currentTarget) return; const rect = event.currentTarget.getBoundingClientRect(); if (presentation === 'image' || event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); }}
     onKeyDown={event => {
       if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onClose(); return; }
       if (['+', '=', '-', '0', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
@@ -70,11 +71,12 @@ export function GraphicPreviewDialog({ src, title, onClose }: { src: string; tit
       }
     }}>
     <OverlayRootContext.Provider value={dialog ?? undefined}>
-      <span id={titleId} className={styles.graphicViewerTitle}>{title}</span>
+      <span id={titleId} className={presentation === 'image' ? 'sr-only' : styles.graphicViewerTitle}>{title}</span>
       <div className={styles.graphicViewerClose}><GraphicToolButton label={t('closePreview')} onClick={onClose}><X size={18} aria-hidden /></GraphicToolButton></div>
-      <div ref={stage} className={styles.graphicViewerStage} tabIndex={0} aria-label={t('graphicViewport')} data-graphic-viewport
-        onPointerDown={event => { if (event.button !== 0) return; event.preventDefault(); event.currentTarget.focus({ preventScroll: true }); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.dragging = 'true'; drag.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, view: current.current }; }}
-        onPointerMove={event => { const start = drag.current; if (start?.pointer !== event.pointerId) return; publish(clampGraphicView({ ...start.view, x: start.view.x + event.clientX - start.x, y: start.view.y + event.clientY - start.y }, imageSize.current, viewport.current)); }}
+      <div ref={stage} className={styles.graphicViewerStage} tabIndex={0} aria-label={t(presentation === 'image' ? 'imageViewport' : 'graphicViewport')} data-graphic-viewport
+        onClick={event => { if (presentation !== 'image' || dragged.current) return; const image = event.currentTarget.querySelector('img'); if (!image) return; const rect = image.getBoundingClientRect(); if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) onClose(); }}
+        onPointerDown={event => { if (event.button !== 0) return; event.preventDefault(); dragged.current = false; event.currentTarget.focus({ preventScroll: true }); event.currentTarget.setPointerCapture(event.pointerId); event.currentTarget.dataset.dragging = 'true'; drag.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, view: current.current }; }}
+        onPointerMove={event => { const start = drag.current; if (start?.pointer !== event.pointerId) return; if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 3) dragged.current = true; publish(clampGraphicView({ ...start.view, x: start.view.x + event.clientX - start.x, y: start.view.y + event.clientY - start.y }, imageSize.current, viewport.current)); }}
         onPointerUp={event => { if (drag.current?.pointer !== event.pointerId) return; drag.current = null; event.currentTarget.dataset.dragging = 'false'; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
         onPointerCancel={event => { drag.current = null; event.currentTarget.dataset.dragging = 'false'; }} onLostPointerCapture={event => { drag.current = null; event.currentTarget.dataset.dragging = 'false'; }}
         onDoubleClick={event => { const rect = event.currentTarget.getBoundingClientRect(); const fitted = fittedGraphicView(imageSize.current, viewport.current).scale; if (current.current.scale > fitted * 1.5) fit(); else zoom(fitted * 2, { x: event.clientX - rect.left - rect.width / 2, y: event.clientY - rect.top - rect.height / 2 }); }}>

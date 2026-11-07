@@ -21,14 +21,14 @@ beforeAll(async () => {
 });
 afterAll(async () => { await browser.happyDOM.abort(); });
 
-test('overlay supports wheel zoom, drag, keyboard, fit, dismissal and focus return without fullscreen', async () => {
+for (const presentation of ['card', 'image'] as const) test(`${presentation} overlay supports wheel zoom, drag, keyboard, fit, dismissal and focus return without fullscreen`, async () => {
   const opener = document.createElement('button'), host = document.createElement('div');
   document.body.append(opener, host); opener.focus();
   const root = createRoot(host);
   let closed = 0;
   const src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400"/>';
   try {
-    await act(async () => root.render(<TooltipProvider><Dialog src={src} title="Diagram title" onClose={() => { closed++; }} /></TooltipProvider>));
+    await act(async () => root.render(<TooltipProvider><Dialog presentation={presentation} src={src} title="Diagram title" onClose={() => { closed++; }} /></TooltipProvider>));
     const dialog = document.querySelector<HTMLDialogElement>('[data-graphic-viewer]')!;
     expect(dialog.open).toBe(true);
     expect(Boolean(document.fullscreenElement)).toBe(false);
@@ -58,6 +58,8 @@ test('overlay supports wheel zoom, drag, keyboard, fit, dismissal and focus retu
     });
     expect(image.style.transform).toContain('translate(80px, 40px)');
     expect(captured).toBe(false);
+    await act(async () => stage.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: -100, clientY: -100 })));
+    expect(closed).toBe(0); // A drag that ends beyond the image must not dismiss its preview.
     await act(async () => button(/适应窗口|Fit to window/).click());
     expect(image.style.transform).toContain('translate(0px, 0px) scale(1)');
     await act(async () => dialog.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: '+' })));

@@ -4,7 +4,7 @@ import { useUiMessage } from '../../../ui-message';
 import { createTranslator, useTranslation, type Locale } from '@/lib/i18n';
 import { knowledgeMessages } from './media-block-view.messages';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { DragEvent as ReactDragEvent, ReactNode } from 'react';
+import type { ComponentType, DragEvent as ReactDragEvent, ReactNode } from 'react';
 import {
   ArrowSquareOut,
   Image as ImageIcon,
@@ -15,7 +15,7 @@ import {
   FilePdf,
 } from '@/components/icons';
 import type { NodeViewProps } from '@tiptap/react';
-import { NodeViewWrapper } from '@tiptap/react';
+import { NodeViewWrapper, useEditorState } from '@tiptap/react';
 import { saveLocalAsset } from '../../../assets/local-assets';
 import { useResolvedMedia, type ResolvedMedia } from './use-resolved-media';
 export type { ResolvedMedia } from './use-resolved-media';
@@ -25,6 +25,11 @@ import { BlockActions } from '../block-actions';
 import styles from './media-block.module.css';
 
 export type MediaKind = 'image' | 'video' | 'audio' | 'file' | 'pdf';
+export interface MediaBlockActionsProps {
+  source: ResolvedMedia;
+  title: string;
+  onReplace?: () => void;
+}
 function LABELS(locale?: Locale): Record<MediaKind, string> {
   const knowledgeT = createTranslator(knowledgeMessages, locale);
   return {
@@ -49,6 +54,7 @@ export function MediaBlockView({
   localKnowledgeBaseId,
   knowledgeBaseId,
   renderPreview,
+  actions: Actions,
   children,
   ...props
 }: NodeViewProps & {
@@ -56,15 +62,20 @@ export function MediaBlockView({
   localKnowledgeBaseId?: string;
   knowledgeBaseId?: string;
   renderPreview: (source: ResolvedMedia) => ReactNode;
+  actions?: ComponentType<MediaBlockActionsProps>;
   children?: ReactNode;
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
 
   const { node, editor, updateAttributes, HTMLAttributes } = props;
+  const editable = useEditorState({ editor, selector: ({ editor }) => editor.isEditable });
   const [error, setError] = useUiMessage(knowledgeMessages, null);
   const [progress, setProgress] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const pickFile = useCallback(() => {
+    if (!editor.isDestroyed && editor.isEditable) inputRef.current?.click();
+  }, [editor]);
   const source = String(node.attrs.src ?? '');
   const resolved = useResolvedMedia(source, localKnowledgeBaseId, knowledgeBaseId);
   const uploaded = useCallback(
@@ -84,6 +95,7 @@ export function MediaBlockView({
   const latestUpload = uploads.items.at(-1);
   const importFile = useCallback(
     async (file: File) => {
+      if (editor.isDestroyed || !editor.isEditable) return;
       if (!localKnowledgeBaseId && !knowledgeBaseId) {
         setError({ key: 'documentIsNotConnectedToAssetStorage' });
         return;
@@ -122,7 +134,7 @@ export function MediaBlockView({
         setProgress(null);
       }
     },
-    [localKnowledgeBaseId, knowledgeBaseId, kind, updateAttributes, addFiles, setError],
+    [editor, localKnowledgeBaseId, knowledgeBaseId, kind, updateAttributes, addFiles, setError],
   );
   useEffect(() => {
     const file = takeInsertedMedia(String(node.attrs.blockId));
@@ -195,7 +207,9 @@ export function MediaBlockView({
           {LABELS(locale)[kind]}…
         </div>
       )}
-      {source && resolved.value && (
+      {source && resolved.value && (Actions ? (
+        <Actions key={source} source={resolved.value} title={title} onReplace={editable ? pickFile : undefined} />
+      ) : (
         <BlockActions>
           <a
             href={resolved.value.url}
@@ -207,7 +221,7 @@ export function MediaBlockView({
           >
             <ArrowSquareOut size={16} aria-hidden />
           </a>
-          {editor.isEditable && (
+          {editable && (
             <button
               type="button"
               className="fob-action"
@@ -219,8 +233,8 @@ export function MediaBlockView({
             </button>
           )}
         </BlockActions>
-      )}
-      {!source && editor.isEditable && !busy && (
+      ))}
+      {!source && editable && !busy && (
         <button
           type="button"
           className={styles.pick}
@@ -277,9 +291,9 @@ export function MediaBlockView({
         </div>
       )}
       {children}
-      {source && (editor.isEditable || caption) && (
+      {source && (editable || caption) && (
         <figcaption className={styles.caption} contentEditable={false}>
-          {editor.isEditable ? (
+          {editable ? (
             <input
               aria-label={LABELS(locale)[kind] + knowledgeT('caption')}
               placeholder={knowledgeT('addCaption')}
