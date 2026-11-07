@@ -9,6 +9,12 @@ export function documentLink(location: string, target: DocumentLinkTarget): stri
   return url.href;
 }
 
+export function documentBlockLink(location: string, target: DocumentLinkTarget, blockId: string): string {
+  const url = new URL(documentLink(location, target));
+  url.searchParams.set('block', blockId);
+  return url.href;
+}
+
 export function readDocumentLink(location: string): DocumentLinkTarget | null {
   const params = new URL(location).searchParams;
   const pageId = params.get('document');

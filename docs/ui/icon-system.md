@@ -33,6 +33,7 @@
 | 星标/点赞等切换状态 | 未选中 Lucide 轮廓，已选中 FA7 Solid，保留状态含义 |
 | H1/H2/H3 等编辑指令 | 保留区别明确的 Lucide 标题级别；其他格式、媒体和资源类型使用 FA7 对应语义 |
 | 文档块拖拽手柄 | FA7 `grip-vertical`，集中导出 `DotsSixVertical`；六点造型，14px 图形、24px 拖拽区域 |
+| 块操作菜单的复制链接/删除 | 按用户提供的轻量轮廓参考，使用 Lucide `Link` / `Trash2`，集中导出 `BlockLink` / `BlockDelete`；转换及插入继续使用现有轮廓控制，标题 4 通过 `TextHFour` 使用官方 `Heading4` |
 | 评论入口与选中文字评论 | 统一使用 FA7 Solid `comment-dots`，集中导出 `ChatCircleDots` |
 | 内容块打开/更换资源 | 配套使用 Lucide `ExternalLink` / `ArrowLeftRight`，集中导出 `ArrowSquareOut` / `ArrowsLeftRight`；统一 14px、1.75 线宽，更换不用铅笔 |
 | 提示框自定义主题 | `ColorPalette` 保留 FA7 Solid `palette` 官方几何，以官方生成的 SVG 作为本地遮罩呈现炫彩色；仅用于用户指定的自定义颜色功能入口 |

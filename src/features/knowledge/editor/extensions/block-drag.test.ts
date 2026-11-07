@@ -82,6 +82,28 @@ test('blank writing lines exclude inline atoms, media and empty code blocks', ()
   expect(isBlankTextBlock(schema.nodes.codeBlock.create())).toBe(false);
 });
 
+test('click menus pin the hovered block, follow concurrent insertion and close on readonly', () => {
+  const host = document.createElement('div'); document.body.append(host);
+  const editor = new Editor({ element: host, extensions: createKnowledgeExtensions(), content: '<p data-block-id="body">Body</p><p>Next</p>' });
+  const box = (y: number) => ({ x: 100, y, left: 100, top: y, right: 600, bottom: y + 30, width: 500, height: 30, toJSON: () => ({}) });
+  host.getBoundingClientRect = () => ({ ...box(80), bottom: 500, height: 420 });
+  editor.view.dom.getBoundingClientRect = host.getBoundingClientRect;
+  const first = editor.view.dom.querySelector('p')!; first.getBoundingClientRect = () => box(100);
+  let open = false, openedAt: number | null = null;
+  const elements = { ...controls(), isMenuOpen: () => open, onMenu: (_view: unknown, pos: number) => { openedAt = pos; open = true; }, onMenuClose: () => { open = false; } };
+  editor.registerPlugin(createBlockDragPlugin(elements));
+  first.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 130, clientY: 110 }) as unknown as Event);
+  elements.handle.click();
+  expect(openedAt).toBe(0); expect(open).toBe(true);
+  document.body.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 10, clientY: 10 }) as unknown as Event);
+  expect(elements.handle.hidden).toBe(false); expect(blockDragKey.getState(editor.state)?.hovered).toBe(0);
+  editor.view.dispatch(editor.state.tr.insert(0, editor.schema.nodes.paragraph.create(null, editor.schema.text('Prefix'))));
+  expect(open).toBe(true); expect(blockDragKey.getState(editor.state)?.hovered).toBe(8);
+  editor.setEditable(false);
+  expect(open).toBe(false); expect(elements.handle.hidden).toBe(true);
+  editor.destroy(); host.remove();
+});
+
 test('blank rows offer insertion without a drag handle, and writing restores dragging', () => {
   const host = document.createElement('div');
   document.body.append(host);

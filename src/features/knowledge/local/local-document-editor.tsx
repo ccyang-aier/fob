@@ -7,6 +7,7 @@ import { recordLocalLearning } from '../profile/local-learning';
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './local-document-editor.messages';
 import { useEffect, useMemo } from 'react';
+import { updateBlockEdits } from '@fob/shared/knowledge/collaboration';
 import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from '../editor/editor-layout';
 import { DocumentEditorHeader } from '../editor/components/document-editor-header';
 import { TaskProgress } from '../editor/block-modules/task-list/task-progress';
@@ -61,7 +62,9 @@ export function LocalDocumentEditor({
       }),
     [document.id, knowledgeBaseId, store],
   );
-  const editor = useStandaloneEditor({ content: document.body, contentId: document.id, context, label: knowledgeT('pageContent'), onChange: body => onChange({ body }) });
+  const editor = useStandaloneEditor({ content: document.body, contentId: document.id, context, label: knowledgeT('pageContent'), onChange: body => onChange({ body,
+    blockEdits: updateBlockEdits(document.body, body, document.blockEdits ?? {}, { actorId: 'local', actorName: null, editedAt: new Date().toISOString() }),
+  }) });
   useEffect(() => {
     if (!editor || !navigationActive) return;
     const scope = { knowledgeBaseId, pageId: document.id };
@@ -79,6 +82,7 @@ export function LocalDocumentEditor({
 
   return (
     <DocumentEditorFrame
+      blockEdits={{ entries: document.blockEdits }}
       appearanceScope={`local:${knowledgeBaseId}:${document.id}`}
       navigation={{
         editor,

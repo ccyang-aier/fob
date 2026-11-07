@@ -32,6 +32,10 @@ interface DragElements {
   emptyClass?: string;
   emptyHint?: string;
   onInsert?: (view: EditorView, pos: number) => void;
+  onMenu?: (view: EditorView, pos: number) => void;
+  isMenuOpen?: () => boolean;
+  onMenuClose?: () => void;
+  menuAnchor?: HTMLElement;
 }
 
 function elementPosition(view: EditorView, element: HTMLElement): number | null {
@@ -153,6 +157,10 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         if (x < 0 || x + 24 > win.innerWidth || y < Math.max(0, bounds?.top ?? 0) || y + 24 > Math.min(win.innerHeight, bounds?.bottom ?? win.innerHeight)) { hide(); return; }
         handle.style.left = `${x}px`;
         handle.style.top = `${y}px`;
+        if (elements.menuAnchor) {
+          elements.menuAnchor.style.left = `${x}px`;
+          elements.menuAnchor.style.top = `${y}px`;
+        }
         const blank = pos !== null && isBlankTextBlock(view.state.doc.nodeAt(pos));
         handle.hidden = blank;
         if (insertHandle) {
@@ -162,6 +170,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         }
       };
       const hover = (event: MouseEvent) => {
+        if (elements.isMenuOpen?.()) return;
         if (value().source !== null || event.buttons) return;
         if (!view.editable || view.composing) { hide(); return; }
         if (!(event.target instanceof Element) || handle.contains(event.target) || insertHandle?.contains(event.target)) return;
@@ -232,6 +241,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         scrolling = win.requestAnimationFrame(autoScroll);
       };
       const dragStart = (event: DragEvent) => {
+        elements.onMenuClose?.();
         const pos = value().hovered;
         if (pos === null || !target || !view.editable || !event.dataTransfer || isBlankTextBlock(view.state.doc.nodeAt(pos))) { event.preventDefault(); return; }
         const selection = NodeSelection.create(view.state.doc, pos), slice = selection.content();
@@ -296,10 +306,11 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         finish();
       };
       const scroll = () => { if (value().source !== null) updateDrop(); else positionHandle(); };
-      const cancel = (event: KeyboardEvent) => { if (event.key === 'Escape') finish(); };
+      const cancel = (event: KeyboardEvent) => { if (event.key === 'Escape' && !event.defaultPrevented && !elements.isMenuOpen?.()) finish(); };
       const click = () => {
         const pos = value().hovered;
         if (pos === null || !view.editable) return;
+        if (elements.onMenu) { elements.onMenu(view, pos); return; }
         view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, pos)));
         view.focus();
       };
@@ -326,6 +337,14 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
       controlsObserver.observe(view.dom, { attributes: true, attributeFilter: ['data-active', 'data-reordering'], subtree: true });
       return {
         update(_view, previous) {
+          if (elements.isMenuOpen?.()) {
+            const pos = value().hovered;
+            const dom = pos === null ? null : view.nodeDOM(pos);
+            if (!view.editable || !(dom instanceof HTMLElement)) { elements.onMenuClose?.(); finish(); return; }
+            target = dom;
+            positionHandle();
+            return;
+          }
           if (!view.editable || previous.doc !== view.state.doc && value().source === null) { finish(); return; }
           if (previous.doc !== view.state.doc) updateDrop();
           if (target && value().source === null && !previous.selection.eq(view.state.selection)) positionHandle();

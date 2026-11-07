@@ -193,6 +193,7 @@ export function PageEditorSurface({
 
   return (
     <DocumentEditorFrame
+      blockEdits={{ document }}
       appearanceScope={`knowledgeBase:${user?.id ?? 'guest'}:${scope.knowledgeBaseId}:${scope.pageId}`}
       navigation={{
         editor,

@@ -2,6 +2,19 @@
 
 当前设计：[文档块拖拽](../../docs/editor-block-drag.md)。
 
+## 2026-11-07 块操作菜单
+
+- [x] 六点手柄点击打开参考风格菜单；保留原生拖动、空行加号、共享交互反馈和只读清理。
+- [x] 转换正文、标题 1–4、三类列表、引用、提示框和代码；列表单行操作保留相邻内容、编号和嵌套，原子内容不做有损转换。
+- [x] 下方插入复用完整插入菜单；删除、转换与插入隔离撤销批次；稳定块链接与定位、剪贴板成功/失败反馈接通。
+- [x] 服务端认证成员的块编辑记录随 Y.Doc 同步/持久化；本机记录与正文一起保存；内容指纹阻止过期作者信息，旧内容明确无记录。
+- [x] 浏览器真实文档验证段落转标题及撤销、下方插入后编辑、删除及单步撤销/重做；验证用临时段落已移除，原有正文恢复。
+- 验证入口：`src/features/knowledge/editor/extensions/block-menu.test.ts`、`block-drag.test.ts`、`components/block-drag-handle/menu.test.tsx`、`document-link.test.ts`，以及共享/服务端的 `collaboration/block-edits.test.ts`；覆盖稳定目标、内容与 ID、列表边界、剪贴板真实回调/拒绝、菜单切换、协作同步与加载/只读不伪造作者。
+- `bun test --isolate` 上述入口，加本机双窗同步及 slash/paste 实例回归：56 项通过、479 个断言。窄屏转换列表单层展开/返回及剪贴板拒绝已加入组件测试；自动化浏览器的虚拟剪贴板与页面写入的系统剪贴板隔离，真实复制回调由组件测试核验，不把虚拟剪贴板粘贴失败当作业务复制成功的证据。
+- `pnpm lint`（含 `icons:verify`）、`server:typecheck`、`shared:typecheck`、`architecture:verify`、`i18n:verify` 与生产构建通过；生产构建自带前端 TypeScript 检查。开发服务继续运行，生产输出使用独立 `.next-build`。
+- 真实 PostgreSQL/HTTP/WebSocket 协作与持久化回归为 9 项通过、1 项原有失败。失败是 `collaboration.integration.test.ts` 的 `view and comment connections sync read-only and their updates never land`：第 71 行等待 `fixture.owner` 管理员连接变成 readonly 超时。将新增 `blockEditsExtension` 替换为无逻辑扩展后单项重跑仍在同处失败，因此不将整个协作矩阵记为全绿；所有临时测试库均已清理。
+- 参考核对：桌面保留左侧圆角操作弹层与右侧转换菜单；390px 窄屏并排菜单原先发生裁切，已改为同层转换列表及返回入口，窗口恢复后保留桌面交互。浅色、深色、Escape 回焦均已实测，原主题、视口和侧栏展开状态已恢复；最终浏览器复核无新增错误。截图留在聊天的仓库外可视化目录。
+
 ## 实施
 
 - [x] 在共享文档正文装配浮动六点手柄，统一支持本地、协作与文件夹正文。

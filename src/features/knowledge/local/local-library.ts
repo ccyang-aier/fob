@@ -5,6 +5,7 @@ import type { DocumentFile } from '../documents/previews/file-format';
 import type { DocumentIndexStatus, DocumentSource } from '../documents/document-metadata';
 import type { JSONContent } from '@tiptap/core';
 import type { FolderMetadata } from '@fob/shared/knowledge/contracts';
+import type { BlockEdits } from '@fob/shared/knowledge/collaboration';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -15,6 +16,7 @@ export type LocalDocument = {
   icon?: string | null;
   title: string;
   body: JSONContent;
+  blockEdits?: BlockEdits;
   file?: DocumentFile;
   starred: boolean;
   draft: boolean;

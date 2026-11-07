@@ -1,4 +1,5 @@
 import * as Y from 'yjs';
+import { blockEditsExtension } from './block-edits';
 import { Hocuspocus } from '@hocuspocus/server';
 import type { Configuration } from '@hocuspocus/server';
 import { and, eq, sql } from 'drizzle-orm';
@@ -64,7 +65,7 @@ export function pageCollaborationConfiguration(deps: { authenticator: KnowledgeR
     name: 'fob-page-collaboration',
     debounce: persistence.debounceMs ?? 2_000,
     maxDebounce: persistence.maxDebounceMs ?? 10_000,
-    extensions: [...(broadcast ? [pageCollaborationRedisExtension(broadcast)] : []), ...(checkpoints ? [checkpoints] : [])],
+    extensions: [...(broadcast ? [pageCollaborationRedisExtension(broadcast)] : []), ...(checkpoints ? [checkpoints] : []), blockEditsExtension()],
     yDocOptions: { gc: true, gcFilter: () => true },
     async onConnect(data) {
       return collaboration.onConnect?.(data);
