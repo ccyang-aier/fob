@@ -115,7 +115,7 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
           {formatItems}
         </DropdownMenuSubContent>
       </DropdownMenuSub>}
-      <DropdownMenuItem className={styles.menuItem} onSelect={() => act(insertBelowMenuBlock(editor.state, target), true)}><Plus size={14} />{t('insertBelow')}</DropdownMenuItem>
+      <DropdownMenuItem className={styles.menuItem} onSelect={() => act(insertBelowMenuBlock(editor.state, target), true)}><Plus size={16} />{t('insertBelow')}</DropdownMenuItem>
       <DropdownMenuItem className={styles.menuItem} disabled={!context} title={!context ? t('linkUnavailable') : undefined} onSelect={() => { void copyLink(); }}><LinkSimple size={14} />{t('copyLink')}</DropdownMenuItem>
       <DropdownMenuSeparator className={styles.separator} />
       <DropdownMenuItem className={styles.menuItem} variant="destructive" onSelect={() => act(deleteMenuBlock(editor.state, target))}><Trash size={14} />{t('deleteBlock')}</DropdownMenuItem>
