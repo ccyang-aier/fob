@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, expect, mock, test } from 'bun:test';
 import { act, createElement, type ImgHTMLAttributes } from 'react';
 import { Window } from 'happy-dom';
-import { Editor } from '@tiptap/core';
+import { Editor, Extension } from '@tiptap/core';
+import { closeHistory, history, undo } from '@tiptap/pm/history';
 import { EditorContent } from '@tiptap/react';
 import { createKnowledgeExtensions } from '@fob/shared/knowledge/schema';
 
@@ -43,7 +44,8 @@ afterAll(async () => {
 async function mountImage() {
   const container = document.createElement('div'), host = document.createElement('div');
   container.append(host); document.body.append(container);
-  const editor = new Editor({ element: host, extensions: applyModules(createKnowledgeExtensions(), { localKnowledgeBaseId: 'image-actions-test' }), content: {
+  const editor = new Editor({ element: host, extensions: [...applyModules(createKnowledgeExtensions(), { localKnowledgeBaseId: 'image-actions-test' }),
+    Extension.create({ name: 'imageLayoutHistory', addProseMirrorPlugins: () => [history()] })], content: {
     type: 'doc', content: [{ type: 'image', attrs: { src: 'https://images.example/original.png', title: 'Original image', alt: 'Original alt', caption: 'Keep this caption', blockId: 'keep-image-id' } }],
   } });
   const root = createRoot(container);
@@ -95,10 +97,58 @@ test('read-only images keep enlargement and reject replacement if permission cha
     const before = JSON.stringify(editor.getJSON()), previousSaved = saved.length;
     await act(async () => editor.setEditable(false));
     expect(button(/^替换$|^Replace$/)).toBeUndefined();
+    expect(button(/^排布$|^Arrange$/)).toBeUndefined();
+    expect(fixture.block.querySelector('[data-graphic-resize]')).toBeNull();
     await fixture.select();
     expect(saved.length).toBe(previousSaved);
     await act(async () => button(/^放大$|^Enlarge$/)!.click());
     expect(document.querySelector<HTMLDialogElement>('[data-graphic-viewer]')?.open).toBe(true);
     expect(JSON.stringify(editor.getJSON())).toBe(before);
+  } finally { await fixture.dispose(); }
+});
+
+test('image resizing previews proportionally, commits once, undoes and cancels on capture or permission loss', async () => {
+  const fixture = await mountImage();
+  const { editor, block } = fixture;
+  try {
+    const surface = block.querySelector<HTMLElement>('[data-image-surface]')!;
+    Object.defineProperty(surface.parentElement!, 'clientWidth', { configurable: true, value: 1000 });
+    Object.defineProperties(surface, { offsetWidth: { configurable: true, get: () => surface.dataset.graphicAutoWidth === 'true' ? 200 : parseFloat(surface.style.width) * 10 }, offsetHeight: { configurable: true, get: () => surface.offsetWidth / 2 } });
+    surface.getBoundingClientRect = () => new browser.DOMRect(0, 0, surface.offsetWidth, surface.offsetHeight) as DOMRect;
+    const handle = surface.querySelector<HTMLButtonElement>('[data-graphic-resize="x"]')!;
+    let captured = false;
+    handle.setPointerCapture = () => { captured = true; }; handle.hasPointerCapture = () => captured; handle.releasePointerCapture = () => { captured = false; };
+    const pointer = (type: string, x: number) => act(async () => handle.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, button: 0, clientX: x, clientY: 100 })));
+    const before = JSON.stringify(editor.getJSON());
+    await act(async () => editor.view.dispatch(closeHistory(editor.state.tr)));
+    await pointer('pointerdown', 200); await pointer('pointermove', 250);
+    expect(surface.style.width).toBe('30%'); // Center anchoring follows the dragged edge at half the width delta.
+    expect(JSON.stringify(editor.getJSON())).toBe(before);
+    await pointer('pointerup', 250);
+    expect(editor.state.doc.firstChild?.attrs).toMatchObject({ width: 30, autoWidth: false, align: 'center', blockId: 'keep-image-id', caption: 'Keep this caption' });
+    await act(async () => { expect(undo(editor.state, editor.view.dispatch)).toBe(true); });
+    expect(JSON.stringify(editor.getJSON())).toBe(before);
+    for (const end of ['pointercancel', 'lostpointercapture']) {
+      await pointer('pointerdown', 200); await pointer('pointermove', 250); await pointer(end, 250);
+      expect(surface.style.width).toBe(''); expect(JSON.stringify(editor.getJSON())).toBe(before);
+    }
+    await pointer('pointerdown', 200); await pointer('pointermove', 250);
+    await act(async () => editor.setEditable(false));
+    expect(surface.style.width).toBe(''); expect(JSON.stringify(editor.getJSON())).toBe(before);
+  } finally { await fixture.dispose(); }
+});
+
+test('the image arrangement menu saves left, center and right while retaining source and width', async () => {
+  const fixture = await mountImage();
+  const { editor, block, button } = fixture;
+  try {
+    for (const [name, align] of [['靠左', 'left'], ['靠右', 'right'], ['居中', 'center']]) {
+      await act(async () => button(/^排布$|^Arrange$/)!.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, button: 0, pointerType: 'mouse' })));
+      const item = [...document.querySelectorAll<HTMLElement>('[role="menuitemradio"]')].find(item => item.textContent === name)!;
+      expect(Boolean(item)).toBe(true);
+      await act(async () => item.click());
+      expect(editor.state.doc.firstChild?.attrs).toMatchObject({ align, src: 'https://images.example/original.png', blockId: 'keep-image-id', width: 100 });
+      expect(block.dataset.blockAlign).toBe(align);
+    }
   } finally { await fixture.dispose(); }
 });

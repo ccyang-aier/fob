@@ -1,4 +1,4 @@
-import { integerAttribute, nullableString, stringAttribute } from './attributes';
+import { blockAlignmentAttribute, integerAttribute, nullableString, stringAttribute } from './attributes';
 import { defineBlock } from './types';
 import { safeKnowledgeUrl } from './urls';
 import { DEFAULT_MERMAID_THEME, isMermaidTheme, parseWhiteboardScene } from '../rich-content';
@@ -28,14 +28,14 @@ export const RICH_CONTENT_BLOCKS = [
   }),
   defineBlock({
     name: 'mermaid',
-    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), theme: { default: DEFAULT_MERMAID_THEME, validate(value: unknown) { if (!isMermaidTheme(value)) throw new TypeError('Invalid Mermaid theme'); } }, width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(360, 80, 1200), autoHeight: { default: true, validate: 'boolean' } },
+    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), theme: { default: DEFAULT_MERMAID_THEME, validate(value: unknown) { if (!isMermaidTheme(value)) throw new TypeError('Invalid Mermaid theme'); } }, align: blockAlignmentAttribute('left'), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(360, 80, 1200), autoHeight: { default: true, validate: 'boolean' } },
       toDOM: node => ['pre', { 'data-mermaid': '' }, ['code', { class: 'language-mermaid' }, node.attrs.source]] },
     markdown: { fromMd: { type: 'code', variant: 'mermaid' } }, index: { mode: 'text' },
     slash: { title: 'Mermaid 图表', keywords: ['mermaid', 'diagram', 'flowchart', '图表', '流程图', '时序图', '脑图'], group: 'media' },
   }),
   defineBlock({
     name: 'plantuml',
-    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(360, 80, 1200), autoHeight: { default: true, validate: 'boolean' } },
+    schema: { atom: true, draggable: true, attrs: { source: boundedText(50_000), title: boundedText(500), align: blockAlignmentAttribute('left'), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(360, 80, 1200), autoHeight: { default: true, validate: 'boolean' } },
       toDOM: node => ['pre', { 'data-plantuml': '' }, ['code', { class: 'language-plantuml' }, node.attrs.source]] },
     markdown: { fromMd: { type: 'code', variant: 'plantuml' } }, index: { mode: 'text' },
     slash: { title: 'PlantUML 图表', keywords: ['plantuml', 'puml', 'uml', 'diagram', '图表', '时序图', '类图', '活动图'], group: 'media' },
@@ -49,7 +49,7 @@ export const RICH_CONTENT_BLOCKS = [
   }),
   defineBlock({
     name: 'whiteboard',
-    schema: { atom: true, draggable: true, attrs: { title: boundedText(500), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(400, 80, 1200), autoHeight: { default: true, validate: 'boolean' }, preview: { default: '', validate(value: unknown) { if (typeof value !== 'string' || value.length > 8 * 1024 * 1024 || value !== '' && !/^data:image\/png;base64,iVBORw0KGgo[A-Za-z\d+/=]*$/.test(value)) throw new TypeError('Invalid whiteboard PNG preview'); } }, previewHash: { default: '', validate(value: unknown) { if (typeof value !== 'string' || value !== '' && !/^[a-f0-9]{64}$/.test(value)) throw new TypeError('Invalid whiteboard preview hash'); } }, scene: { default: '', validate(value: unknown) { if (typeof value !== 'string') throw new TypeError('Invalid whiteboard scene'); parseWhiteboardScene(value); } } },
+    schema: { atom: true, draggable: true, attrs: { title: boundedText(500), align: blockAlignmentAttribute('left'), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' }, height: integerAttribute(400, 80, 1200), autoHeight: { default: true, validate: 'boolean' }, preview: { default: '', validate(value: unknown) { if (typeof value !== 'string' || value.length > 8 * 1024 * 1024 || value !== '' && !/^data:image\/png;base64,iVBORw0KGgo[A-Za-z\d+/=]*$/.test(value)) throw new TypeError('Invalid whiteboard PNG preview'); } }, previewHash: { default: '', validate(value: unknown) { if (typeof value !== 'string' || value !== '' && !/^[a-f0-9]{64}$/.test(value)) throw new TypeError('Invalid whiteboard preview hash'); } }, scene: { default: '', validate(value: unknown) { if (typeof value !== 'string') throw new TypeError('Invalid whiteboard scene'); parseWhiteboardScene(value); } } },
       toDOM: node => ['figure', { 'data-whiteboard': '' }, node.attrs.title || 'Excalidraw'] },
     markdown: { fromMd: { directive: 'whiteboard', kind: 'leaf' } }, index: { mode: 'text' },
     slash: { title: 'Excalidraw 白板', keywords: ['excalidraw', 'whiteboard', 'drawing', '白板', '画板', '草图'], group: 'media' },

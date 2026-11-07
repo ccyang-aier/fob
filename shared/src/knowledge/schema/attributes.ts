@@ -3,6 +3,12 @@ import type { AttributeSpec } from '@tiptap/pm/model';
 export const nullableString: AttributeSpec = { default: null, validate: 'string|null' };
 export const stringAttribute: AttributeSpec = { default: '', validate: 'string' };
 
+export function blockAlignmentAttribute(defaultValue: 'left' | 'center' | 'right'): AttributeSpec {
+  return { default: defaultValue, validate(value: unknown) {
+    if (value !== 'left' && value !== 'center' && value !== 'right') throw new RangeError('Unknown block alignment');
+  } };
+}
+
 export function integerAttribute(defaultValue: number, min = 0, max = Number.MAX_SAFE_INTEGER): AttributeSpec {
   return {
     default: defaultValue,

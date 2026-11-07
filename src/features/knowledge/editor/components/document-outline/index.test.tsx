@@ -75,3 +75,19 @@ test('directory hover and keyboard focus drive the same line preview; only click
   await act(async () => row.click());
   expect(navigated()).toBe(4);
 });
+
+test('clicking a rail line navigates to its heading at compressed heights and clamps the padded ends', async () => {
+  const { rail, ticks, navigated } = await fixture();
+  ticks.getBoundingClientRect = () => ({ top: 100, height: 25 }) as DOMRect;
+  for (const [clientY, target] of [[90, 0], [102, 0], [112, 2], [124, 4], [140, 4]]) {
+    await act(async () => rail.dispatchEvent(new MouseEvent('click', { bubbles: true, clientY, detail: 1 })));
+    expect(navigated()).toBe(target);
+  }
+});
+
+test('keyboard activation still opens the accessible directory without choosing a pointer position', async () => {
+  const { rail, navigated } = await fixture();
+  await act(async () => { rail.click(); await nextFrame(); });
+  expect(navigated()).toBe(-1);
+  expect(document.activeElement?.textContent).toBe('Section 0');
+});

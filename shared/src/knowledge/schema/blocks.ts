@@ -1,6 +1,6 @@
 import type { NodeSpec } from '@tiptap/pm/model';
 
-import { integerAttribute, nullableObject, nullableString, stringAttribute } from './attributes';
+import { blockAlignmentAttribute, integerAttribute, nullableObject, nullableString, stringAttribute } from './attributes';
 import { defineBlock } from './types';
 import type { BlockDefinition } from './types';
 import { safeKnowledgeUrl } from './urls';
@@ -56,6 +56,7 @@ function mediaBlock(name: 'image' | 'video' | 'audio' | 'file', title: string): 
       draggable: true,
       attrs: {
         src: stringAttribute, alt: stringAttribute, title: nullableString, caption: stringAttribute, mime: nullableString,
+        ...(name === 'image' ? { align: blockAlignmentAttribute('center'), width: integerAttribute(100, 1, 100), autoWidth: { default: true, validate: 'boolean' } } : {}),
         size: { default: null, validate(value: unknown) {
           if (value !== null && (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0)) throw new TypeError('Expected a non-negative file size or null');
         } },

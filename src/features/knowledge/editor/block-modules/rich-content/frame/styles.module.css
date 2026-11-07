@@ -24,6 +24,8 @@
 .graphic img { display:block; width:100%; height:100%; min-width:0; min-height:0; max-width:100%; max-height:100%; margin:0; object-fit:contain; }
 .canvasFrame { display:flex; flex-direction:column; max-width:100%; min-width:min(100%,120px); box-sizing:border-box; border:0; border-radius:0; background:transparent; }
 .canvasFrame[data-graphic-auto-width="true"] { width:var(--graphic-preferred-width,338px); }
+.canvasFrame[data-block-align="center"] { margin-inline:auto; }
+.canvasFrame[data-block-align="right"] { margin-inline-start:auto; margin-inline-end:0; }
 .canvasFrame[data-graphic-auto-width="true"] .graphic img { max-width:min(100%,var(--graphic-image-width,100%)); }
 .canvasSurface { position:relative; display:flex; flex:1; flex-direction:column; min-width:0; min-height:0; border:var(--separator-width) solid transparent; border-radius:8px; background:var(--panel); }
 .canvasFrame:is(:hover,:focus-visible) > .canvasSurface,.canvasFrame:has(:focus-visible,[data-graphic-title-editing]) > .canvasSurface { border-color:var(--separator-color); }
@@ -46,7 +48,10 @@
 .graphicResize[data-resize-axis="x"] { top:0; right:-3px; bottom:17px; width:10px; }
 .graphicResize[data-resize-axis="y"] { left:0; right:17px; bottom:-3px; height:10px; }
 .graphicResize[data-resize-axis="nw-se"] { right:-3px; bottom:-3px; z-index:3; width:20px; height:20px; }
+.graphicResize[data-resize-edge="start"][data-graphic-resize="x"] { right:auto; left:-3px; }
+.graphicResize[data-resize-edge="start"][data-graphic-resize="nw-se"] { right:auto; left:-3px; bottom:-3px; z-index:3; width:20px; height:20px; }
 @media (hover:none),(pointer:coarse) { .canvasFrame:focus-within > .canvasSurface { border-color:var(--separator-color); } .graphicResize[data-resize-axis="x"] { width:16px; bottom:29px; } .graphicResize[data-resize-axis="y"] { height:16px; right:29px; } .graphicResize[data-resize-axis="nw-se"] { width:32px; height:32px; } }
+@media (hover:none),(pointer:coarse) { .graphicResize[data-resize-edge="start"][data-graphic-resize="nw-se"] { width:32px; height:32px; } }
 .graphicViewer { position:fixed; inset:0; width:min(84vw,1120px); max-width:none; height:min(84dvh,760px); max-height:none; margin:auto; padding:0; border:1px solid var(--control-border); border-radius:12px; background:var(--panel); color:var(--ink); overflow:hidden; }
 .graphicViewer::backdrop { background:rgb(0 0 0 / .55); }
 .graphicViewer[data-presentation="image"] { width:100vw; height:100dvh; border:0; border-radius:0; background:transparent; box-shadow:none; }

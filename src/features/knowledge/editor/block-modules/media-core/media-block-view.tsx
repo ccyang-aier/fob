@@ -26,6 +26,7 @@ import styles from './media-block.module.css';
 
 export type MediaKind = 'image' | 'video' | 'audio' | 'file' | 'pdf';
 export interface MediaBlockActionsProps {
+  nodeView: NodeViewProps;
   source: ResolvedMedia;
   title: string;
   onReplace?: () => void;
@@ -156,6 +157,7 @@ export function MediaBlockView({
       data-fob-node={node.type.name}
       data-block-actions-root
       data-kind={kind}
+      data-block-align={kind === 'image' ? node.attrs.align : undefined}
       data-block-id={node.attrs.blockId}
       data-empty={String(!source)}
       data-dragging={String(dragging)}
@@ -208,7 +210,7 @@ export function MediaBlockView({
         </div>
       )}
       {source && resolved.value && (Actions ? (
-        <Actions key={source} source={resolved.value} title={title} onReplace={editable ? pickFile : undefined} />
+        <Actions key={source} nodeView={props} source={resolved.value} title={title} onReplace={editable ? pickFile : undefined} />
       ) : (
         <BlockActions>
           <a

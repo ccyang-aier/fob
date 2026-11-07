@@ -133,9 +133,9 @@ test('Mermaid has no theme control and appearance changes never rewrite document
     await act(async () => editor.commands.insertContentAt(editor.state.doc.content.size, { type: 'mermaid', attrs: { title: 'Legacy diagram', blockId: 'second-diagram', theme: 'tokyo-night' } }));
     const diagram = container.querySelector<HTMLElement>('[data-fob-node="mermaid"]')!;
     const before = JSON.stringify(editor.getJSON());
-    expect(diagram.querySelectorAll('[data-block-actions] button')).toHaveLength(2);
+    expect(diagram.querySelectorAll('[data-block-actions] button')).toHaveLength(3);
     expect(Boolean(control(diagram, /图表主题|Diagram theme/))).toBe(false);
-    expect(Boolean(diagram.querySelector('[aria-haspopup="menu"]'))).toBe(false);
+    expect(diagram.querySelector('[aria-haspopup="menu"]')?.getAttribute('aria-label')).toMatch(/排布|Arrange/);
     const appearance = document.documentElement.dataset.theme;
     try {
       for (const theme of ['dark', 'light']) {
@@ -149,6 +149,26 @@ test('Mermaid has no theme control and appearance changes never rewrite document
     await act(async () => editor.setEditable(false));
     expect(diagram.querySelectorAll('[data-block-actions] button')).toHaveLength(1);
     expect(JSON.stringify(editor.getJSON())).toBe(before);
+  });
+});
+
+test('whiteboard, Mermaid and PlantUML share persisted alignment controls and hide them when read-only', async () => {
+  await withWhiteboard(true, async (container, editor) => {
+    await act(async () => editor.commands.insertContentAt(editor.state.doc.content.size, { type: 'plantuml', attrs: { title: 'UML', blockId: 'uml-layout' } }));
+    for (const type of ['whiteboard', 'mermaid', 'plantuml']) {
+      const block = container.querySelector<HTMLElement>(`[data-fob-node="${type}"]`)!;
+      const original = editor.state.doc.content.content.find(node => node.type.name === type)!.attrs;
+      for (const [label, align] of [['居中', 'center'], ['靠右', 'right'], ['靠左', 'left']]) {
+        await act(async () => control(block, /^排布$|^Arrange$/).dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'mouse', button: 0 })));
+        const item = [...document.querySelectorAll<HTMLElement>('[role="menuitemradio"]')].find(item => item.textContent === label)!;
+        expect(Boolean(item)).toBe(true);
+        await act(async () => item.click());
+        expect(block.dataset.blockAlign).toBe(align);
+        expect(editor.state.doc.content.content.find(node => node.type.name === type)!.attrs).toEqual({ ...original, align });
+      }
+    }
+    await act(async () => editor.setEditable(false));
+    expect(container.querySelectorAll('[aria-label="排布"]')).toHaveLength(0);
   });
 });
 

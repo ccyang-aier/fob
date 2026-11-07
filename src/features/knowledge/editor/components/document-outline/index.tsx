@@ -128,7 +128,15 @@ export function DocumentOutlineNavigation({ open, pinned, onHoverChange, restore
         preview(Math.max(0, Math.min(props.headings.length - 1,
           (event.clientY - bounds.top) / bounds.height * props.headings.length - 0.5)));
       }}
-      onClick={(event) => { if (event.detail === 0) enterWithKeyboard(); else enter(); }}
+      onClick={(event) => {
+        if (event.detail === 0) { enterWithKeyboard(); return; }
+        const bounds = ticks.current?.getBoundingClientRect();
+        if (!bounds?.height || !props.headings.length) { enter(); return; }
+        const index = Math.max(0, Math.min(props.headings.length - 1,
+          Math.floor((event.clientY - bounds.top) / bounds.height * props.headings.length)));
+        preview(index);
+        props.onNavigate(index);
+      }}
       onKeyDown={(event) => { if (event.key === 'ArrowDown') { event.preventDefault(); enterWithKeyboard(); } }}>
       <span ref={ticks} className={styles.ticks} style={{ gridTemplateRows: `repeat(${Math.max(1, props.headings.length)}, minmax(0, 1fr))` }} aria-hidden>{props.headings.map((heading, index) => <span key={heading.id}
         className={styles.tick} data-base-width={Math.max(4, 18 - depths[index] * 6)}

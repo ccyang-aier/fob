@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { useTranslation } from '@/lib/i18n';
 import { richMessages } from './messages';
 import { BlockActions } from '../../block-actions';
+import { BlockAlignmentMenu } from '../../block-alignment-menu';
 import { GraphicBlockTitle } from './title';
 import { GraphicBlockResize } from './graphic-resize';
 import { GraphicToolButton } from './tool-button';
@@ -44,10 +45,11 @@ export function RichBlockFrame({ props, icon: Icon, title, actions, children, re
   }
   const tools = <BlockActions placement={canvas ? 'canvas' : 'outside'} touchVisibility={canvas ? 'on-demand' : 'always'}>
     {actions}
+    {canvas && editable && <BlockAlignmentMenu props={props} />}
     {resizable && (canvas ? <GraphicToolButton label={t('enlargeGraphic')} disabled={!preview} onClick={() => setPreviewOpen(true)}><MagnifyingGlassPlus size={16} aria-hidden /></GraphicToolButton>
       : <button className={`fob-action ${styles.iconButton}`} data-surface="plain" type="button" title={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} aria-label={t(fullscreen ? 'exitFullscreen' : 'fullscreen')} onClick={() => void toggleFullscreen()}><ArrowsOut size={16} aria-hidden /></button>)}
   </BlockActions>;
-  return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} data-graphic-auto-height={canvas ? autoHeight : undefined} data-graphic-auto-width={canvas ? autoWidth : undefined} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
+  return <TooltipProvider><NodeViewWrapper ref={root} as="div" {...props.HTMLAttributes} data-fob-node={props.node.type.name} data-block-actions-root data-block-id={props.node.attrs.blockId} data-block-align={canvas ? props.node.attrs.align : undefined} data-graphic-auto-height={canvas ? autoHeight : undefined} data-graphic-auto-width={canvas ? autoWidth : undefined} className={`${styles.root}${canvas ? ` ${styles.canvasFrame}` : ''}`} contentEditable={false}
     style={canvas ? { width: autoWidth ? undefined : `${width}%`, height: resizable && !autoHeight ? height : undefined, '--graphic-preferred-width': `${(intrinsicWidth ?? 320) + 18}px`, '--graphic-image-width': intrinsicWidth ? `${intrinsicWidth}px` : '100%' } as CSSProperties : undefined}
     role={canvas ? 'group' : undefined} aria-label={canvas ? String(props.node.attrs.title || title) : undefined} tabIndex={canvas ? 0 : undefined}
     onClick={canvas ? (event: MouseEvent<HTMLDivElement>) => {

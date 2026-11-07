@@ -1,0 +1,2 @@
+.surface { position:relative; flex:none; width:var(--image-natural-width,100%); max-width:100%; min-width:0; line-height:0; }
+.surface[data-image-surface] img { display:block; width:100%; height:auto; max-width:100%; max-height:none; margin:0; object-fit:contain; border-radius:7px; }
