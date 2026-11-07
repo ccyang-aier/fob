@@ -2,6 +2,7 @@ import { createTranslator, getLocale } from '@/lib/i18n';
 import { knowledgeMessages } from './document-html-export.messages';
 
 import type { Editor } from '@tiptap/core';
+import { withExpandedHeadingSections } from '../extensions/heading-sections';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -56,7 +57,6 @@ export async function exportDocumentHtml(editor: Editor, title: string): Promise
   const owner = source.ownerDocument;
   const view = owner.defaultView!;
   await owner.fonts?.ready;
-  const clone = source.cloneNode(true) as HTMLElement;
   const resources = new Map<string, Promise<string>>();
   const families = new Set<string>();
   const pseudoRules: string[] = [];
@@ -254,7 +254,11 @@ export async function exportDocumentHtml(editor: Editor, title: string): Promise
         copy.setAttribute(attribute, new URL(value, owner.baseURI).href);
     }
   };
-  snapshot(source, clone);
+  const clone = withExpandedHeadingSections(editor.view, () => {
+    const copy = source.cloneNode(true) as HTMLElement;
+    snapshot(source, copy);
+    return copy;
+  });
   await Promise.all(pending);
 
   const fontRules: string[] = [];

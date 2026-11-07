@@ -29,7 +29,8 @@ import {
   TextAa,
   X,
 } from '@/components/icons';
-import { DocumentOutline } from './components/document-outline';
+import { DocumentOutlineNavigation } from './components/document-outline';
+import { expandHeadingSectionsAt } from './extensions/heading-sections';
 import { documentSearchKey, findDocumentMatches } from './extensions/document-search';
 import type { DocumentLinkTarget } from './document-link';
 import { useDocumentReference } from './document-reference';
@@ -78,13 +79,13 @@ export function DocumentNavigationTools({
   const reference = useDocumentReference();
   const host = useRef<HTMLDivElement>(null);
   const visible = usePageVisible();
-  const documentHost = useRef<HTMLDivElement>(null);
   const outlineTrigger = useRef<HTMLButtonElement>(null);
   const outlineId = useId();
-  const [outlinePreference, setOutlineOpen] = useState<boolean | null>(null);
-  const [compact, setCompact] = useState(true);
-  const outlineOpen = outlinePreference ?? !compact;
-  const closeOutline = useCallback(() => setOutlineOpen(false), []);
+  const [outlinePinned, setOutlineOpen] = useState(false);
+  const [outlineHovered, setOutlineHovered] = useState(false);
+  const [outlineFocusTarget, setOutlineFocusTarget] = useState<HTMLButtonElement | null>(null);
+  const outlineOpen = outlinePinned || outlineHovered;
+  const closeOutline = useCallback(() => { setOutlineOpen(false); setOutlineHovered(false); }, []);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [matchCase, setMatchCase] = useState(false);
@@ -121,12 +122,6 @@ export function DocumentNavigationTools({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editor, revision, knowledgeT]);
   useEffect(() => {
-    if (!documentHost.current) return;
-    const observer = new ResizeObserver(([entry]) => setCompact(entry.contentRect.width < 760));
-    observer.observe(documentHost.current);
-    return () => observer.disconnect();
-  }, []);
-  useEffect(() => {
     if (!editor) return;
     const update = () => setRevision((value) => value + 1);
     editor.on('update', update);
@@ -156,6 +151,7 @@ export function DocumentNavigationTools({
         if (
           element instanceof HTMLElement &&
           element.isConnected &&
+          element.getClientRects().length > 0 &&
           element.getBoundingClientRect().top <= top
         )
           active = index;
@@ -197,6 +193,7 @@ export function DocumentNavigationTools({
     const active = documentSearchKey.getState(editor.state);
     const match = searchOpen ? active?.matches[active.current] : undefined;
     if (match) {
+      expandHeadingSectionsAt(editor.view, match.from);
       const node = editor.view.domAtPos(match.from).node;
       (node instanceof HTMLElement ? node : node.parentElement)?.scrollIntoView({
         block: 'center',
@@ -298,7 +295,7 @@ export function DocumentNavigationTools({
         outlineOpen: Boolean(editor) && outlineOpen,
         outlineId,
         outlineTrigger,
-        onToggleOutline: editor ? () => setOutlineOpen(!outlineOpen) : undefined,
+        onToggleOutline: editor ? () => { setOutlineFocusTarget(outlineTrigger.current); setOutlineOpen(!outlineOpen); setOutlineHovered(false); } : undefined,
       }}
     >
       <div ref={host} className={styles.toolsSurface} data-reading={Boolean(editor)} data-title-visible="false">
@@ -385,27 +382,22 @@ export function DocumentNavigationTools({
             )}
           </div>
           <div className={styles.surfaceBody}>
-            <div ref={documentHost} className={styles.documentSurface}>
+            <div className={styles.documentSurface}>
               <div
                 className={styles.readingSurface}
                 data-outline-open={Boolean(editor) && outlineOpen}
               >
-                {editor && outlineOpen && (
-                  <aside
-                    className={styles.readingRail}
-                    aria-label={knowledgeT('documentReadingNavigation')}
-                  >
-                    <div className={styles.railHeader}>
-                      <div className={styles.railLabel}>
-                        <strong>{knowledgeT('outline')}</strong>
-                        <span>{headings.length}</span>
-                      </div>
-                    </div>
-                    <DocumentOutline
+                {editor && (
+                    <DocumentOutlineNavigation
+                      open={outlineOpen}
+                      pinned={outlinePinned}
+                      onHoverChange={(value) => { setOutlineFocusTarget(outlineTrigger.current); setOutlineHovered(value); }}
+                      restoreFocusTo={outlineFocusTarget ?? undefined}
                       id={outlineId}
                       headings={headings}
                       activeHeading={activeHeading}
                       onNavigate={(index) => {
+                        expandHeadingSectionsAt(editor.view, headings[index].pos);
                         const element = editor.view.nodeDOM(headings[index].pos);
                         requestAnimationFrame(() => {
                           const scroll = host.current
@@ -426,12 +418,8 @@ export function DocumentNavigationTools({
                         });
                         setActiveHeading(index);
                       }}
-                      onClose={() => {
-                        closeOutline();
-                        outlineTrigger.current?.focus();
-                      }}
+                      onClose={closeOutline}
                     />
-                  </aside>
                 )}
                 <div className={styles.readingCanvas}>{children}</div>
               </div>

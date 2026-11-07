@@ -1,116 +1,92 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from '@/lib/i18n';
+import { AnchoredPopover } from '@/components/ui/anchored-popover';
 import { knowledgeMessages } from './messages';
-import { useState } from 'react';
-import { Minus, Plus } from '@/components/icons';
 import styles from './styles.module.css';
 
-export function DocumentOutline({
-  id,
-  headings,
-  activeHeading,
-  onClose,
-  onNavigate,
-}: {
+export type OutlineHeading = { id: string; pos: number; level: number; title: string };
+type OutlineProps = {
   id: string;
-  headings: { id: string; pos: number; level: number; title: string }[];
+  headings: OutlineHeading[];
   activeHeading: number;
   onClose: () => void;
   onNavigate: (index: number) => void;
-}) {
-  const { t: knowledgeT } = useTranslation(knowledgeMessages);
+};
 
-  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set());
-  const rows: {
-    heading: (typeof headings)[number];
-    index: number;
-    ancestors: number[];
-    hasNext: boolean;
-  }[] = [];
+/** Indent by actual ancestry, including documents that skip heading levels. */
+export function outlineDepths(headings: OutlineHeading[]) {
   const ancestors: number[] = [];
-  const lastChild = new Map<number | undefined, (typeof rows)[number]>();
-  for (const [index, heading] of headings.entries()) {
-    while (ancestors.length && headings[ancestors[ancestors.length - 1]].level >= heading.level)
-      ancestors.pop();
-    const parent = ancestors[ancestors.length - 1];
-    const previous = lastChild.get(parent);
-    if (previous) previous.hasNext = true;
-    const row = { heading, index, ancestors: [...ancestors], hasNext: false };
-    rows.push(row);
-    lastChild.set(parent, row);
-    ancestors.push(index);
-  }
-  return (
-    <div
-      id={id}
-      className={styles.panel}
-      onKeyDown={(event) => {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          onClose();
-        }
-      }}
-    >
-      {headings.length ? (
-        <nav className={styles.chapters} aria-label={knowledgeT('documentSections')}>
-          {rows.map(({ heading, index, ancestors: parents, hasNext }) => {
-            if (parents.some((parent) => collapsed.has(headings[parent].id))) return null;
-            const depth = parents.length;
-            const hasChildren = rows[index + 1]?.ancestors.includes(index) ?? false;
-            const isCollapsed = collapsed.has(heading.id);
-            const active =
-              index === activeHeading ||
-              (isCollapsed && rows[activeHeading]?.ancestors.includes(index));
-            return (
-              <div
-                key={heading.id}
-                className={styles.chapter}
-                data-root={depth === 0}
-                data-active={Boolean(active)}
-                style={{ paddingInlineStart: `${8 + depth * 16}px` }}
-              >
-                {parents
-                  .slice(1)
-                  .map(
-                    (parent, level) =>
-                      rows[parent].hasNext && (
-                        <span
-                          key={parent}
-                          aria-hidden
-                          className={styles.guide}
-                          style={{ insetInlineStart: `${12 + level * 16}px` }}
-                        />
-                      ),
-                  )}
-                {depth > 0 && (
-                  <span
-                    aria-hidden
-                    className={styles.branch}
-                    data-last={!hasNext}
-                    style={{ insetInlineStart: `${12 + (depth - 1) * 16}px` }}
-                  />
-                )}
-                {hasChildren ? (
-                  <button type="button" className={styles.fold}
-                    aria-label={knowledgeT('valueSectionValue', { v0: isCollapsed ? knowledgeT('expand') : knowledgeT('collapse'), v1: heading.title })}
-                    aria-expanded={!isCollapsed}
-                    onClick={() => setCollapsed(current => { const next = new Set(current); if (next.has(heading.id)) next.delete(heading.id); else next.add(heading.id); return next; })}>
-                    {isCollapsed ? <Plus size={12} /> : <Minus size={12} />}
-                  </button>
-                ) : (
-                  <span className={styles.foldSpace} />
-                )}
-                <button type="button" className={styles.chapterTitle} title={heading.title} aria-current={index === activeHeading ? 'location' : undefined} onClick={() => onNavigate(index)}>{heading.title}</button>
-              </div>
-            );
-          })}
-        </nav>
-      ) : (
-        <div className={styles.empty} role="status">
-          <strong>{knowledgeT('noSectionsYet')}</strong>
-        </div>
-      )}
-    </div>
-  );
+  return headings.map(({ level }) => {
+    while (ancestors.length && ancestors[ancestors.length - 1] >= level) ancestors.pop();
+    const depth = ancestors.length;
+    ancestors.push(level);
+    return depth;
+  });
+}
+
+export function DocumentOutline({ id, headings, activeHeading, onClose, onNavigate }: OutlineProps) {
+  const { t } = useTranslation(knowledgeMessages);
+  const depths = outlineDepths(headings);
+  const panel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    panel.current?.querySelector('[aria-current="location"]')?.scrollIntoView?.({ block: 'nearest' });
+  }, [activeHeading]);
+  return <div ref={panel} id={id} className={styles.panel} onKeyDown={(event) => {
+    if (event.key === 'Escape') { event.preventDefault(); onClose(); }
+    if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
+    const buttons = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('nav button')];
+    if (!buttons.length) return;
+    event.preventDefault();
+    const current = buttons.indexOf(event.target as HTMLButtonElement);
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+      : (current + (event.key === 'ArrowDown' ? 1 : -1) + buttons.length) % buttons.length;
+    buttons[next].focus();
+  }}>
+    {headings.length ? <nav className={styles.chapters} aria-label={t('documentSections')}>
+      {headings.map((heading, index) => <button key={heading.id} type="button"
+        className={`fob-action ${styles.chapter}`} style={{ paddingInlineStart: 8 + depths[index] * 12 }}
+        title={heading.title} aria-current={index === activeHeading ? 'location' : undefined}
+        data-autofocus={index === Math.max(0, activeHeading) ? '' : undefined}
+        onClick={() => onNavigate(index)}>{heading.title}</button>)}
+    </nav> : <div className={styles.empty} role="status"><strong>{t('noSectionsYet')}</strong><p>{t('addHeadingsToNavigateTheDocumentHere')}</p></div>}
+  </div>;
+}
+
+export function DocumentOutlineNavigation({ open, pinned, onHoverChange, restoreFocusTo, ...props }: OutlineProps & {
+  open: boolean; pinned: boolean; onHoverChange: (value: boolean) => void;
+  restoreFocusTo?: HTMLElement;
+}) {
+  const { t } = useTranslation(knowledgeMessages);
+  const [rail, setRail] = useState<HTMLButtonElement | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelClose = () => { if (closeTimer.current) clearTimeout(closeTimer.current); closeTimer.current = null; };
+  const enter = () => { cancelClose(); onHoverChange(true); };
+  const enterWithKeyboard = () => {
+    enter();
+    requestAnimationFrame(() => document.getElementById(props.id)?.querySelector<HTMLButtonElement>('[data-autofocus], nav button')?.focus());
+  };
+  const leave = () => { cancelClose(); closeTimer.current = setTimeout(() => onHoverChange(false), 180); };
+  useEffect(() => () => { if (closeTimer.current) clearTimeout(closeTimer.current); }, []);
+  const depths = outlineDepths(props.headings);
+  return <>
+    <button ref={setRail} type="button" className={`fob-action ${styles.rail}`}
+      data-variant="hover"
+      style={{ height: props.headings.length * 10 + 16, visibility: props.headings.length ? undefined : 'hidden' }} disabled={!props.headings.length}
+      aria-label={t('documentSections')} aria-expanded={open} aria-controls={open ? props.id : undefined}
+      aria-haspopup="dialog" onMouseEnter={enter} onMouseLeave={leave}
+      onClick={(event) => { if (event.detail === 0) enterWithKeyboard(); else enter(); }}
+      onKeyDown={(event) => { if (event.key === 'ArrowDown') { event.preventDefault(); enterWithKeyboard(); } }}>
+      <span className={styles.ticks} style={{ gridTemplateRows: `repeat(${Math.max(1, props.headings.length)}, minmax(0, 1fr))` }} aria-hidden>{props.headings.map((heading, index) => <span key={heading.id}
+        className={styles.tick} data-active={index === props.activeHeading}
+        style={{ width: index === props.activeHeading ? 26 : Math.max(4, 20 - depths[index] * 6) }} />)}</span>
+    </button>
+    {open && rail && <AnchoredPopover
+      anchor={rail} side="right" width={320} label={t('documentSections')}
+      className={styles.floatingPanel} autoFocus={pinned} restoreFocusTo={restoreFocusTo}
+      onClose={props.onClose} onMouseEnter={enter} onMouseLeave={leave}>
+      <DocumentOutline {...props} />
+    </AnchoredPopover>}
+  </>;
 }

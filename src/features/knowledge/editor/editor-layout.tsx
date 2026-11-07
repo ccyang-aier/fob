@@ -25,6 +25,7 @@ import type { DocumentLinkTarget } from './document-link';
 import { SelectionToolbar } from './components/selection-toolbar';
 import { SlashMenuLayer } from './commands';
 import { BlockDragHandle } from './components/block-drag-handle';
+import { HeadingSectionsControls } from './components/heading-sections';
 import { BlockMenuContext, type BlockEditSource } from './block-menu-context';
 import { useBlockMenuContext } from './block-menu-context';
 import { useDocumentTab } from './document-tab-context';
@@ -152,5 +153,5 @@ export function DocumentEditorContent({ editor, before, style, className, attrib
     editor.on('update', reveal); editor.on('mount', reveal);
     return () => { cancelAnimationFrame(frame); editor.off('update', reveal); editor.off('mount', reveal); };
   }, [editor, pageId, knowledgeBaseId, source, search]);
-  return <><div className={`${styles.document} ${className ?? ''}`} style={style} {...attributes}>{before}<EditorContent editor={editor} /><BlockDragHandle editor={editor} /></div><SelectionToolbar editor={editor} /><SlashMenuLayer editor={editor} /></>;
+  return <><div className={`${styles.document} ${className ?? ''}`} style={style} {...attributes}>{before}<EditorContent editor={editor} /><HeadingSectionsControls editor={editor} /><BlockDragHandle editor={editor} /></div><SelectionToolbar editor={editor} /><SlashMenuLayer editor={editor} /></>;
 }

@@ -151,9 +151,10 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
           : content ? content.top + Math.min(content.height, lineHeight) / 2 - 12
           : rect.top + Math.min(rect.height, lineHeight) / 2 - 12;
         const list = target.matches('li') ? target.parentElement?.getBoundingClientRect() : null;
+        const headingGap = target.hasAttribute('data-heading-section') ? 28 : 0;
         const x = computed.direction === 'rtl'
-          ? Math.max(rect.right, list?.right ?? rect.right) + 4
-          : Math.min(rect.left, list?.left ?? rect.left) - 28;
+          ? Math.max(rect.right, list?.right ?? rect.right) + 4 + headingGap
+          : Math.min(rect.left, list?.left ?? rect.left) - 28 - headingGap;
         if (x < 0 || x + 24 > win.innerWidth || y < Math.max(0, bounds?.top ?? 0) || y + 24 > Math.min(win.innerHeight, bounds?.bottom ?? win.innerHeight)) { hide(); return; }
         handle.style.left = `${x}px`;
         handle.style.top = `${y}px`;
@@ -181,7 +182,7 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         }
         let over = event.target;
         const rect = view.dom.getBoundingClientRect();
-        if (!view.dom.contains(over) && event.clientX >= rect.left - 36 && event.clientX < rect.left && event.clientY >= rect.top && event.clientY <= rect.bottom) {
+        if (!view.dom.contains(over) && event.clientX >= rect.left - 64 && event.clientX < rect.left && event.clientY >= rect.top && event.clientY <= rect.bottom) {
           over = owner.elementFromPoint(rect.left + 8, event.clientY) ?? over;
         }
         if (!view.dom.contains(over)) { hide(); return; }

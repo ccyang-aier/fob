@@ -56,7 +56,7 @@ test('chapter navigation leaves an explicitly expanded outline open in a compact
   const editor = new Editor({ extensions: createKnowledgeExtensions(), content: { type: 'doc', content: [{ type: 'heading', attrs: { level: 1, blockId: 'first' }, content: [{ type: 'text', text: 'First' }] }, { type: 'heading', attrs: { level: 2, blockId: 'second' }, content: [{ type: 'text', text: 'Second' }] }] } });
   function Header() {
     const navigation = useDocumentNavigation();
-    return <button aria-label="outline" aria-expanded={navigation?.outlineOpen} onClick={navigation?.onToggleOutline} />;
+    return <button ref={navigation?.outlineTrigger} aria-label="outline" aria-expanded={navigation?.outlineOpen} onClick={navigation?.onToggleOutline} />;
   }
   await act(async () => root.render(<section aria-label="页面编辑器"><DocumentNavigationTools editor={editor as Editor} title="Test" target={target} header={<Header />}><div data-document-scroll>{editor.view.dom.outerHTML}</div></DocumentNavigationTools></section>));
   await click('outline');
@@ -65,6 +65,9 @@ test('chapter navigation leaves an explicitly expanded outline open in a compact
   await act(async () => { chapter.click(); await new Promise(resolve => requestAnimationFrame(resolve)); });
   expect(document.querySelector('[aria-label="outline"]')?.getAttribute('aria-expanded')).toBe('true');
   expect(document.querySelector('[aria-label="文档章节"]')).not.toBeNull();
+  await click('outline');
+  expect(document.querySelector('[role="dialog"][aria-label="文档章节"]')).toBeNull();
+  expect(document.querySelector('[aria-label="outline"]')?.getAttribute('aria-expanded')).toBe('false');
   await act(async () => root.unmount());
   const host = document.createElement('div'); document.body.append(host); root = createRoot(host);
   editor.destroy();

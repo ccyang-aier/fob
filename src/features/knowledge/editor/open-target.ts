@@ -9,6 +9,7 @@
  */
 
 import type { EditorView } from '@tiptap/pm/view';
+import { expandHeadingSectionsAt } from './extensions/heading-sections';
 import type { PageScope } from '@fob/shared/knowledge/contracts';
 import { isValidBlockId } from '@fob/shared/knowledge/schema';
 
@@ -108,6 +109,7 @@ export function revealBlockInEditor(view: EditorView, blockId: string): boolean 
     return true;
   });
   if (target === null) return false;
+  expandHeadingSectionsAt(view, target);
   view.dispatch(view.state.tr.scrollIntoView().setMeta('addToHistory', false));
   const dom = view.nodeDOM(target);
   if (dom instanceof HTMLElement) {

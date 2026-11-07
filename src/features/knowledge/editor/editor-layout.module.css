@@ -10,6 +10,7 @@
 
 .scrollArea { min-height: 0; flex: 1; overflow-y: auto; overscroll-behavior: contain; scroll-padding-top: calc(var(--document-toolbar-height, 0px) + 28px); }
 .document {
+  position: relative;
   width: min(calc(100% - 112px), max(min(100% - 112px, 360px), var(--document-width)));
   font-family: var(--document-font);
   min-height: 100%;
@@ -90,5 +91,6 @@
 .document :global(.ProseMirror[contenteditable=true] h3:not([data-block-insert-hint])::before) { content:'H3' / ''; }
 .document :global(.ProseMirror[contenteditable=true] h4:not([data-block-insert-hint])::before) { content:'H4' / ''; }
 .document :global(.ProseMirror[contenteditable=true] :is(h1,h2,h3,h4):hover::before),.document :global(.ProseMirror[contenteditable=true]:focus-within [data-heading-current]::before) { opacity:1; }
+.document :global(.ProseMirror[contenteditable=true] [data-heading-section]::before) { display:none; }
 
 :global(html[data-theme="dark"]) .document :global(.ProseMirror a) { color:#8cc7ff; }
