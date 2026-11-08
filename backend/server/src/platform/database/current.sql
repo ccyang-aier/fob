@@ -193,6 +193,20 @@ CREATE TABLE "resources"."coffee_ledger" (
 	CONSTRAINT "coffee_ledger_beijing_day" CHECK ("resources"."coffee_ledger"."day" = ("resources"."coffee_ledger"."created_at" AT TIME ZONE 'Asia/Shanghai')::date)
 );
 
+CREATE TABLE "resources"."coffee_transfer" (
+	"id" uuid PRIMARY KEY NOT NULL,
+	"request_id" uuid NOT NULL,
+	"knowledge_base_id" uuid NOT NULL,
+	"page_id" uuid NOT NULL,
+	"sender_id" uuid NOT NULL,
+	"recipient_id" uuid NOT NULL,
+	"amount" integer NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "coffee_transfer_request_unique" UNIQUE("sender_id","request_id"),
+	CONSTRAINT "coffee_transfer_positive" CHECK ("resources"."coffee_transfer"."amount" BETWEEN 1 AND 1000),
+	CONSTRAINT "coffee_transfer_other_account" CHECK ("resources"."coffee_transfer"."sender_id" <> "resources"."coffee_transfer"."recipient_id")
+);
+
 CREATE TABLE "resources"."comment" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
@@ -286,6 +300,14 @@ CREATE TABLE "resources"."document_invitation" (
 	"revoked_at" timestamp with time zone,
 	CONSTRAINT "document_invitation_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
 	CONSTRAINT "document_invitation_token_valid" CHECK ("resources"."document_invitation"."token_hash" ~ '^[a-f0-9]{64}$')
+);
+
+CREATE TABLE "resources"."document_like" (
+	"knowledge_base_id" uuid NOT NULL,
+	"page_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "document_like_knowledge_base_id_page_id_user_id_pk" PRIMARY KEY("knowledge_base_id","page_id","user_id")
 );
 
 CREATE TABLE "resources"."document_visit" (
@@ -568,6 +590,8 @@ ALTER TABLE "resources"."block_embedding_model" ADD CONSTRAINT "block_embedding_
 ALTER TABLE "resources"."block_embedding_staging" ADD CONSTRAINT "block_embedding_staging_block_fk" FOREIGN KEY ("knowledge_base_id","page_id","block_id") REFERENCES "resources"."block_index"("knowledge_base_id","page_id","block_id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."block_index" ADD CONSTRAINT "block_index_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."coffee_ledger" ADD CONSTRAINT "coffee_ledger_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."coffee_transfer" ADD CONSTRAINT "coffee_transfer_sender_id_user_id_fk" FOREIGN KEY ("sender_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."coffee_transfer" ADD CONSTRAINT "coffee_transfer_recipient_id_user_id_fk" FOREIGN KEY ("recipient_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_author_id_user_id_fk" FOREIGN KEY ("author_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_thread_fk" FOREIGN KEY ("knowledge_base_id","thread_id") REFERENCES "resources"."comment_thread"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."comment" ADD CONSTRAINT "comment_reply_target_fk" FOREIGN KEY ("knowledge_base_id","reply_to_comment_id") REFERENCES "resources"."comment"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
@@ -581,6 +605,8 @@ ALTER TABLE "resources"."document_edit" ADD CONSTRAINT "document_edit_user_id_us
 ALTER TABLE "resources"."document_edit" ADD CONSTRAINT "document_edit_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_like" ADD CONSTRAINT "document_like_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_like" ADD CONSTRAINT "document_like_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."document_visit" ADD CONSTRAINT "document_visit_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."document_visit" ADD CONSTRAINT "document_visit_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."group" ADD CONSTRAINT "group_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
@@ -632,6 +658,9 @@ CREATE INDEX "block_embedding_staging_model_idx" ON "resources"."block_embedding
 CREATE INDEX "block_index_principals_gin_idx" ON "resources"."block_index" USING gin ("principals");
 CREATE INDEX "block_index_embedding_model_idx" ON "resources"."block_index" USING btree ("knowledge_base_id","embed_model","embed_dimensions");
 CREATE INDEX "block_index_bm25_idx" ON "resources"."block_index" USING paradedb ("id",("content_md"::pdb.jieba)) WITH (key_field='id');
+CREATE INDEX "coffee_transfer_sender_time_idx" ON "resources"."coffee_transfer" USING btree ("sender_id","created_at");
+CREATE INDEX "coffee_transfer_recipient_time_idx" ON "resources"."coffee_transfer" USING btree ("recipient_id","created_at");
+CREATE INDEX "coffee_transfer_page_idx" ON "resources"."coffee_transfer" USING btree ("knowledge_base_id","page_id");
 CREATE INDEX "comment_thread_time_idx" ON "resources"."comment" USING btree ("knowledge_base_id","thread_id","created_at");
 CREATE INDEX "comment_author_idx" ON "resources"."comment" USING btree ("author_id");
 CREATE INDEX "comment_thread_page_idx" ON "resources"."comment_thread" USING btree ("knowledge_base_id","page_id","status");

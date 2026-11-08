@@ -1,12 +1,13 @@
 import { afterAll, beforeAll, expect, test } from 'bun:test';
 import { Window } from 'happy-dom';
-import { act } from 'react';
+import { act, useState } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createHistoryApi } from './history-api';
 
 let browser: Window, root: Root, closeCalls = 0;
 const requests: string[] = [];
+const selections: (string | null)[] = [];
 const scope = { knowledgeBaseId: '10000000-0000-4000-8000-000000000001', pageId: '10000000-0000-4000-8000-000000000002' };
 let renderPanel: (fail?: boolean) => Promise<void>;
 beforeAll(async () => {
@@ -27,9 +28,13 @@ beforeAll(async () => {
       return Response.json(url.endsWith('/activity') ? {
         readers: [{ userId: scope.pageId, name: '浏览者甲', image: null, occurredAt: new Date().toISOString() }],
         edits: [{ id: scope.pageId, userId: scope.pageId, name: '编辑者乙', image: null, occurredAt: new Date().toISOString() }],
-      } : { checkpoints: [], nextCursor: null });
+      } : { checkpoints: [{ checkpointId: scope.pageId, pageId: scope.pageId, label: '旧版本甲', authors: [], createdAt: new Date().toISOString() }], nextCursor: null });
     } });
-    await act(async () => root.render(<QueryClientProvider client={client}><AppAlertProvider><HistoryPanel {...scope} editor={null} canEdit={false} onClose={() => { closeCalls++; }} api={api} /></AppAlertProvider></QueryClientProvider>));
+    function Harness() {
+      const [selected, setSelected] = useState<string | null>(null);
+      return <HistoryPanel {...scope} selectedVersionId={selected} onSelectVersion={id => { selections.push(id); setSelected(id); }} onClose={() => { closeCalls++; }} api={api} />;
+    }
+    await act(async () => root.render(<QueryClientProvider client={client}><AppAlertProvider><Harness /></AppAlertProvider></QueryClientProvider>));
   };
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); });
@@ -39,17 +44,27 @@ async function waitFor(text: string) {
 }
 function tab(name: string) { return [...document.querySelectorAll<HTMLButtonElement>('[role="tab"]')].find(button => button.textContent === name)!; }
 
-test('activity tabs show real reader/edit payloads and use roving keyboard focus for versions', async () => {
+test('activity has two tabs, aligned reader data and direct version selection without the old controls', async () => {
   await renderPanel(); await waitFor('浏览者甲');
   expect(document.querySelector('[role="tabpanel"]')?.textContent).not.toContain('编辑者乙');
-  await act(async () => tab('编辑记录').click()); await waitFor('编辑者乙');
-  expect(document.querySelector('[role="tabpanel"]')?.textContent).not.toContain('浏览者甲');
-  await act(async () => tab('编辑记录').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })));
+  expect(document.querySelectorAll('[role="tab"]')).toHaveLength(2);
+  expect(document.body.textContent).not.toContain('编辑记录');
+  await act(async () => tab('浏览记录').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })));
   await waitFor('当前版本');
   expect(tab('版本').getAttribute('aria-selected')).toBe('true');
   expect(document.activeElement).toBe(tab('版本'));
   expect(requests.some(url => url.endsWith(`/pages/${scope.pageId}/collaboration/activity`))).toBe(true);
   expect(requests.some(url => url.endsWith(`/pages/${scope.pageId}/checkpoints`))).toBe(true);
+  await waitFor('旧版本甲');
+  expect(document.body.textContent).not.toContain('高亮显示更改');
+  expect(document.body.textContent).not.toContain('保存版本');
+  const version = [...document.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.includes('旧版本甲'))!;
+  await act(async () => version.click());
+  expect(selections.at(-1)).toBe(scope.pageId);
+  expect(version.getAttribute('aria-current')).toBe('true');
+  const current = [...document.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent === '当前版本')!;
+  await act(async () => current.click()); expect(selections.at(-1)).toBeNull();
+  expect(requests.some(url => url.includes('/compare') || url.includes('/restore'))).toBe(false);
   const close = document.querySelector<HTMLButtonElement>('[aria-label="关闭动态"]')!;
   await act(async () => close.click()); expect(closeCalls).toBe(1);
 });

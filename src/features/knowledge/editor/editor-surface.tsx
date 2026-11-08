@@ -31,6 +31,7 @@ import { createSlashPasteExtensions } from './commands';
 import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from './editor-layout';
 import { PageIconPicker } from '../navigation/page-icon-picker';
 import { DocumentEditorHeader } from './components/document-editor-header';
+import { DocumentInteractions } from './components/document-interactions';
 import { DocumentSidebar } from './components/document-sidebar';
 import { AppAlert } from '@/components/app-alert';
 import { readonlyMessageCopy } from './editor-state';
@@ -45,10 +46,13 @@ import { pageCollaborationExtension } from './page-collaboration';
 import { createPageReviewExtension, PageReviewRail } from './review-integration';
 import { createBlockEditingExtensions } from './extensions';
 import { HistoryPanel } from '../history/history-panel';
+import { useDocumentVersion } from '../history/use-document-version';
+import { VersionDocument } from '../history/version-document';
+import { activityMessages } from '../history/activity.messages';
+import { Button } from '@/components/ui/button';
 import {
   createCommentsEditorExtension,
   PageCommentsLayer,
-  PageCommentsTrigger,
 } from './comments-integration';
 import { usePageMetadata } from './use-page-metadata';
 import { useSidebarCollections } from '../navigation/sidebar-collections';
@@ -94,6 +98,8 @@ export function PageEditorSurface({
 }) {
   const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
   const { t: collaborationT } = useTranslation(collaborationMessages);
+  const { t: activityT } = useTranslation(activityMessages);
+  const version = useDocumentVersion(scope);
 
   const fixedPane = Boolean(useDocumentReference()?.fixed);
   const document = session.document;
@@ -152,8 +158,8 @@ export function PageEditorSurface({
   // The P03 level and the B04 error phase can both change while mounted;
   // keep the instance's editable flag glued to the derived decision.
   useEffect(() => {
-    editor?.setEditable(view.editable);
-  }, [editor, view.editable]);
+    editor?.setEditable(view.editable && !version.selectedId);
+  }, [editor, view.editable, version.selectedId]);
 
   const navigationActive = useKnowledgeNavigationActive();
   useProfileLearning(scope,navigationActive && Boolean(user));
@@ -195,35 +201,38 @@ export function PageEditorSurface({
         name: collaboration.data?.people.find(person => person.id === pageTitle.createdBy)?.name ?? collaborationT('member'),
       })
     : knowledgeT('document');
+  const displayEditor = version.selectedId ? version.editor : editor;
+  const displayTitle = version.selectedId ? version.preview.data?.title ?? pageTitle.title : pageTitle.title;
+  const closeHistory = () => { version.select(null); setHistoryOpen(false); };
 
   return (
     <DocumentEditorFrame
       blockEdits={{ document }}
       appearanceScope={`knowledgeBase:${user?.id ?? 'guest'}:${scope.knowledgeBaseId}:${scope.pageId}`}
       navigation={{
-        editor,
-        title: pageTitle.title,
+        editor: displayEditor,
+        title: displayTitle,
         target: { knowledgeBaseId: scope.knowledgeBaseId, pageId: scope.pageId, source: 'server' },
       }}
       sidebar={
         <PageCommentsLayer
           scope={scope}
           knowledgeBaseId={knowledgeBaseId}
-          editor={editor}
+          editor={version.selectedId ? null : editor}
           level={level}
           currentUser={user}
           railOpen={commentsOpen}
           onRailOpenChange={setCommentsOpen}
         >
-          <PageReviewRail editor={editor} editable={view.editable} />
+          <PageReviewRail editor={version.selectedId ? null : editor} editable={view.editable && !version.selectedId} />
           {historyOpen && (
             <DocumentSidebar panel="history" defaultWidth={400} className={historyStyles.rail}>
               <HistoryPanel
                 knowledgeBaseId={scope.knowledgeBaseId}
                 pageId={scope.pageId}
-                editor={editor}
-                canEdit={view.editable}
-                onClose={() => setHistoryOpen(false)}
+                selectedVersionId={version.selectedId}
+                onSelectVersion={version.select}
+                onClose={closeHistory}
               />
             </DocumentSidebar>
           )}
@@ -231,13 +240,16 @@ export function PageEditorSurface({
       }
       header={
         <DocumentEditorHeader
-          editor={editor}
+          editor={displayEditor}
           folderName={folderName}
-          title={pageTitle.title}
+          title={displayTitle}
           avatarName={user?.name ?? knowledgeT('me')}
           starred={collections.starred.includes(scope.pageId)}
           onOpenSidebar={onOpenSidebar}
           onToggleStar={() => toggleStar(scope.pageId)}
+          interactions={<DocumentInteractions key={`${scope.knowledgeBaseId}:${scope.pageId}:${user?.id}`} scope={scope} commentsOpen={commentsOpen} onComments={() => {
+            version.select(null); setHistoryOpen(false); setCommentsOpen(value => !value);
+          }} />}
           onCreateDocument={onCreateDocument}
           canCreateDocument={canCreateDocument}
           shareDescription={knowledgeT('copyTheTitleAndContentToPasteInto')}
@@ -252,7 +264,7 @@ export function PageEditorSurface({
             ) : undefined
           }
           menuActions={{
-            canImport: canCreateDocument,
+            canImport: canCreateDocument && !version.selectedId,
             canMove: level === 'full',
             target: {
               knowledgeBaseId: scope.knowledgeBaseId,
@@ -260,6 +272,7 @@ export function PageEditorSurface({
               source: 'server',
             },
             onComments: () => {
+              version.select(null);
               setHistoryOpen(false);
               setCommentsOpen(true);
             },
@@ -280,16 +293,13 @@ export function PageEditorSurface({
         />
       }
     >
-      {view.readonlyReason ? (
-        <AppAlert
-          tone={view.readonlyReason === 'auth-failed' ? 'error' : 'info'}
-          title={readonlyMessageCopy(view.readonlyReason, level)}
-          className="mx-4 mt-3"
-        />
-      ) : null}
-      <DocumentEditorBody
+      {version.selectedId ? version.preview.isPending ? <p role="status" className={historyStyles.versionState}>{activityT('loadingVersion')}</p>
+        : version.preview.isError ? <div className={historyStyles.versionState}><AppAlert tone="error" title={activityT('failedVersion')} /><Button variant="outline" size="sm" onClick={() => void version.preview.refetch()}>{activityT('retry')}</Button></div>
+          : <VersionDocument key={version.selectedId} scope={scope} version={version.preview.data} origin={origin ?? ''} identity={user?.id ?? 'anonymous'} onEditor={version.bindEditor} onCurrent={() => version.select(null)} />
+        : <DocumentEditorBody
         editor={editor}
-        before={
+        before={<>
+          {view.readonlyReason && <AppAlert tone={view.readonlyReason === 'auth-failed' ? 'error' : 'info'} title={readonlyMessageCopy(view.readonlyReason, level)} className="mb-4" />}
           <DocumentHeading
             title={pageTitle.title}
             icon={
@@ -308,14 +318,6 @@ export function PageEditorSurface({
               <>
                 <span>{updatedLabel}</span>
                 {view.sync.badge !== 'synced' && <SyncIndicator view={view.sync} />}
-                <PageCommentsTrigger
-                  scope={scope}
-                  open={commentsOpen}
-                  onToggle={() => {
-                    setHistoryOpen(false);
-                    setCommentsOpen((value) => !value);
-                  }}
-                />
                 {pageTitle.fetchError ? (
                   <span role="alert" className="text-[var(--err-ink)]">
                     {knowledgeT('titleUnavailable')}
@@ -330,8 +332,8 @@ export function PageEditorSurface({
               </>
             }
           />
-        }
-      />
+        </>}
+      />}
     </DocumentEditorFrame>
   );
 }

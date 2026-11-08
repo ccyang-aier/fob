@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 import { getTableConfig } from 'drizzle-orm/pg-core';
-import { resourceTables, knowledgeBase, member, coffeeLedger } from './schema';
+import { resourceTables, knowledgeBase, member, coffeeLedger, coffeeTransfer } from './schema';
 import { resourceRlsSql, resourcePoliciesForTable } from './rls';
 
 describe('resource RLS installation definition', () => {
@@ -19,12 +19,18 @@ describe('resource RLS installation definition', () => {
   });
 
   test('knowledge resources are library scoped; account assets have only verified-account read and award policies', () => {
-    for (const table of resourceTables.filter(table => table !== coffeeLedger)) expect(resourcePoliciesForTable(table).some((policy) => policy.name === 'knowledge_base_scope')).toBe(true);
+    for (const table of resourceTables.filter(table => table !== coffeeLedger && table !== coffeeTransfer)) expect(resourcePoliciesForTable(table).some((policy) => policy.name === 'knowledge_base_scope')).toBe(true);
     const account = resourcePoliciesForTable(coffeeLedger);
     expect(account.map(policy => policy.command)).toEqual(['SELECT', 'INSERT']);
     expect(account[0].using).toContain('app.auth_session_id');
     expect(account[1].check).toContain("AT TIME ZONE 'Asia/Shanghai'");
     expect(account.some(policy => policy.name === 'knowledge_base_scope')).toBe(false);
+    const transfers = resourcePoliciesForTable(coffeeTransfer);
+    expect(transfers.map(policy => policy.command)).toEqual(['SELECT', 'INSERT']);
+    expect(transfers[0].using).toContain('"sender_id"');
+    expect(transfers[0].using).toContain('"recipient_id"');
+    expect(transfers[1].check).toContain('app.auth_session_id');
+    expect(transfers[1].check).toContain('app.knowledge_base_id');
     const root = resourcePoliciesForTable(knowledgeBase).find((policy) => policy.name === 'knowledge_base_scope')!;
     expect(root.using).toMatch(/^"id" =/);
   });

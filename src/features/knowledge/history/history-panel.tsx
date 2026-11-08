@@ -1,7 +1,6 @@
 'use client';
 import { useId, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import type { Editor } from '@tiptap/react';
 import { X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { AppAlert } from '@/components/app-alert';
@@ -14,11 +13,11 @@ import styles from './history-panel.module.css';
 import collaborationStyles from '../sharing/document-collaboration.module.css';
 
 const defaultApi = createHistoryApi();
-const tabs = ['readers', 'edits', 'versions'] as const;
+const tabs = ['readers', 'versions'] as const;
 type ActivityTab = typeof tabs[number];
-export interface HistoryPanelProps { knowledgeBaseId: string; pageId: string; editor: Editor | null; canEdit: boolean; onClose(): void; api?: HistoryApi }
+export interface HistoryPanelProps { knowledgeBaseId: string; pageId: string; selectedVersionId: string | null; onSelectVersion(id: string | null): void; onClose(): void; api?: HistoryApi }
 
-export function HistoryPanel({ knowledgeBaseId, pageId, editor, canEdit, onClose, api = defaultApi }: HistoryPanelProps) {
+export function HistoryPanel({ knowledgeBaseId, pageId, selectedVersionId, onSelectVersion, onClose, api = defaultApi }: HistoryPanelProps) {
   const { t } = useTranslation(activityMessages);
   const id = useId();
   const [tab, setTab] = useState<ActivityTab>('readers');
@@ -40,10 +39,10 @@ export function HistoryPanel({ knowledgeBaseId, pageId, editor, canEdit, onClose
         }}>{t(value)}</button>)}
     </div>
     <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${tab}`} className={styles.activityBody}>
-      {tab === 'versions' ? <VersionsPanel key={`${knowledgeBaseId}:${pageId}`} knowledgeBaseId={knowledgeBaseId} pageId={pageId} editor={editor} canEdit={canEdit} onClose={onClose} api={api} />
+      {tab === 'versions' ? <VersionsPanel key={`${knowledgeBaseId}:${pageId}`} knowledgeBaseId={knowledgeBaseId} pageId={pageId} selectedId={selectedVersionId} onSelect={onSelectVersion} api={api} />
         : activity.isPending ? <p role="status" className={styles.empty}>{t('loading')}</p>
           : activity.isError ? <div className={styles.error}><AppAlert tone="error" title={t('failed')} /><Button variant="outline" size="sm" onClick={() => void activity.refetch()}>{t('retry')}</Button></div>
-            : <ActivityList entries={activity.data[tab]} kind={tab} />}
+            : <ActivityList entries={activity.data.readers} />}
     </div>
   </section>;
 }

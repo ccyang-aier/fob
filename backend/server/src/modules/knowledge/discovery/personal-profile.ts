@@ -46,6 +46,10 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
       JOIN resources.comment_thread t ON t.knowledge_base_id=c.knowledge_base_id AND t.id=c.thread_id
       JOIN visible_pages p ON p.id=t.page_id WHERE l.knowledge_base_id=${kb}::uuid AND l.user_id=${user}::uuid
     UNION ALL
+    SELECT 'document-liked:' || l.page_id, 'liked', l.created_at, p.id, 'document', p.title, NULL
+      FROM resources.document_like l JOIN visible_pages p ON p.id=l.page_id
+      WHERE l.knowledge_base_id=${kb}::uuid AND l.user_id=${user}::uuid
+    UNION ALL
     SELECT 'subscribed:' || s.id, 'subscribed', s.created_at, coalesce(s.page_id, s.teamspace_id),
       CASE WHEN s.page_id IS NOT NULL THEN 'document' ELSE 'folder' END, coalesce(p.title, f.name), NULL
       FROM resources.knowledge_subscription s
@@ -108,20 +112,24 @@ export async function personalProfile(db: ResourceTransaction, authority: Knowle
     FROM personal_activity WHERE (at AT TIME ZONE 'Asia/Shanghai')::date = ${day ?? new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' })}::date`)).rows;
   const [received] = (await db.execute<{ count: number; total: number }>(sql`WITH ${visible}
     SELECT count(*) FILTER (WHERE (l.created_at AT TIME ZONE 'Asia/Shanghai')::date = ${day ?? new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' })}::date)::int AS count,
-      count(*)::int AS total FROM resources.comment_like l
-    JOIN resources.comment c ON c.knowledge_base_id=l.knowledge_base_id AND c.id=l.comment_id
-    JOIN resources.comment_thread t ON t.knowledge_base_id=c.knowledge_base_id AND t.id=c.thread_id
-    JOIN visible_pages p ON p.id=t.page_id
-    WHERE l.knowledge_base_id=${kb}::uuid AND c.author_id=${user}::uuid AND l.user_id<>${user}::uuid
-      `)).rows;
+      count(*)::int AS total FROM (
+        SELECT l.created_at FROM resources.comment_like l
+        JOIN resources.comment c ON c.knowledge_base_id=l.knowledge_base_id AND c.id=l.comment_id
+        JOIN resources.comment_thread t ON t.knowledge_base_id=c.knowledge_base_id AND t.id=c.thread_id
+        JOIN visible_pages p ON p.id=t.page_id
+        WHERE l.knowledge_base_id=${kb}::uuid AND c.author_id=${user}::uuid AND l.user_id<>${user}::uuid
+        UNION ALL SELECT l.created_at FROM resources.document_like l JOIN visible_pages p ON p.id=l.page_id
+        WHERE l.knowledge_base_id=${kb}::uuid AND p.created_by=${user}::uuid AND l.user_id<>${user}::uuid
+      ) l`)).rows;
+  const [coffee] = (await db.execute<{ total: number }>(sql`SELECT coalesce(sum(amount),0)::int AS total
+    FROM resources.coffee_transfer WHERE knowledge_base_id=${kb}::uuid AND recipient_id=${user}::uuid`)).rows;
   const [learning] = (await db.execute<{ minutes: number }>(sql`WITH ${visible}
     SELECT floor(coalesce(sum(v.study_seconds),0)/60)::int AS minutes FROM resources.document_visit v
     JOIN visible_pages p ON p.id=v.page_id WHERE v.knowledge_base_id=${kb}::uuid AND v.user_id=${user}::uuid`)).rows;
   const achievements = await personalProfileAchievements(db, authority);
   return {
     documentTotal: totals?.count ?? 0, sharedDocuments: totals?.shared ?? 0,
-    // No gifting records exist yet. Check-in awards are not received gifts.
-    receivedCoffeeTotal: 0,
+    receivedCoffeeTotal: coffee?.total ?? 0,
     learningMinutes: learning?.minutes ?? 0, ...achievements,
     documents: docs.rows.slice(0,40).map(resource), nextDocumentOffset: docs.rows.length>40 ? documentOffset+40 : null,
     folders: folders.rows.map(resource), saved: saved.rows.map(resource), calendar: calendar.rows,

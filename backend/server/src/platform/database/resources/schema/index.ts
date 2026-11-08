@@ -9,3 +9,4 @@ export * from './rewards';
 export * from './knowledge-templates';
 export * from './knowledge-subscriptions';
 export * from './document-collaboration';
+export * from './document-interactions';

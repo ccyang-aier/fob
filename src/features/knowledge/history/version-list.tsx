@@ -20,7 +20,7 @@ export function VersionList({ entries, selectedId, onSelect }: { entries: PageCh
   }
   return [...groups].map(([day, versions]) => <div key={day} className={styles.versionGroup}>
     <h3>{day === date.format(today) ? t('today') : day === date.format(yesterday) ? t('yesterday') : day}</h3>
-    {versions.map(entry => <button key={entry.checkpointId} type="button" className={`fob-action ${styles.version}`} data-active={selectedId === entry.checkpointId || undefined}
+    {versions.map(entry => <button key={entry.checkpointId} type="button" className={`fob-action ${styles.version}`} data-surface="plain" data-active={selectedId === entry.checkpointId || undefined}
       aria-current={selectedId === entry.checkpointId ? 'true' : undefined} onClick={() => onSelect(entry.checkpointId)}>
       <strong>{entry.label === 'Before restore' ? versionT('beforeRestore') : entry.label === 'Restored version' ? versionT('restoredVersion') : entry.label ?? time.format(new Date(entry.createdAt))}</strong>
       <small>{entry.authorDetails?.map(person => person.name).join(locale === 'zh-CN' ? '、' : ', ') || t('unknownEditor')}</small>

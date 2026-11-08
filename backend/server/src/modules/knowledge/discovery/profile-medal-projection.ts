@@ -23,6 +23,9 @@ export async function profileMedalProjection(db:ResourceTransaction,actor:Knowle
       FROM resources.comment_like l JOIN resources.comment c ON c.knowledge_base_id=l.knowledge_base_id AND c.id=l.comment_id
       JOIN resources.comment_thread t ON t.knowledge_base_id=c.knowledge_base_id AND t.id=c.thread_id
       JOIN visible p ON p.id=t.page_id WHERE l.knowledge_base_id=${kb}::uuid AND l.created_at<=clock_timestamp()
+      UNION ALL SELECT 'page:'||l.page_id::text||':'||l.user_id::text,l.user_id,p.created_by,l.created_at
+      FROM resources.document_like l JOIN visible p ON p.id=l.page_id
+      WHERE l.knowledge_base_id=${kb}::uuid AND l.created_at<=clock_timestamp()
     ), subscriptions AS (
       SELECT s.id,s.user_id,s.created_at AS at FROM resources.knowledge_subscription s
       WHERE s.knowledge_base_id=${kb}::uuid AND s.created_at<=clock_timestamp()

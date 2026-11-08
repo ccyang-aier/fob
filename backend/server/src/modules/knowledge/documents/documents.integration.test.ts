@@ -258,6 +258,28 @@ describe('document sharing, permissions, history and statistics over real HTTP a
       expect((await request(`${history(other.root)}?cursor=${cursor}`, fixture.owner)).status).toBe(404);
     } finally { snapshot.ydoc.destroy(); }
   });
+  test('historical attachments require a retained version of a currently visible page', async () => {
+    const visible = await tree(), hidden = await tree();
+    await request(`${base(visible.root)}/permissions`, fixture.owner, { principal: principal('user',fixture.reader.identity.userId),level:'view' });
+    const allowedHash='7'.repeat(64),privateHash='8'.repeat(64),checkpointId=randomUUID();
+    const storage=createKnowledgeAssetStorage({ endpoint:'http://127.0.0.1:59000',region:'us-east-1',bucket:'fob-knowledge',accessKeyId:'testing',secretAccessKey:'testing' });
+    await withKnowledgeBase(fixture.pool,visible.root.knowledgeBaseId,async db=>{
+      await db.insert(asset).values([allowedHash,privateHash].map(hash=>({ knowledgeBaseId:visible.root.knowledgeBaseId,hash,mime:'image/png',size:12 })));
+      for (const [scope,hash,id] of [[visible.root,allowedHash,checkpointId],[hidden.root,privateHash,randomUUID()]] as const) {
+        const snapshot=prosemirrorDocToYDoc(knowledgeSchema.node('doc',null,[knowledgeSchema.node('image',{src:`asset:${hash}`})]));
+        try { await db.insert(docCheckpoint).values({ ...scope,id,state:snapshot.state,stateVector:snapshot.stateVector,authors:[] }); }
+        finally { snapshot.ydoc.destroy(); }
+      }
+    });
+    const download=(hash:string)=>withKnowledgeBase(fixture.pool,visible.root.knowledgeBaseId,db=>presignKnowledgeBaseAssetDownload(storage,db,{ knowledgeBaseId:visible.root.knowledgeBaseId,userId:fixture.reader.identity.userId,hash }));
+    expect((await download(allowedHash)).method).toBe('GET');
+    await expect(download(privateHash)).rejects.toMatchObject({code:'ASSET_ACCESS_DENIED'});
+    await request(`${base(visible.root)}/permissions`,fixture.owner,{principal:principal('user',fixture.reader.identity.userId),level:null});
+    await expect(download(allowedHash)).rejects.toMatchObject({code:'ASSET_ACCESS_DENIED'});
+    await request(`${base(visible.root)}/permissions`,fixture.owner,{principal:principal('user',fixture.reader.identity.userId),level:'view'});
+    await withKnowledgeBase(fixture.pool,visible.root.knowledgeBaseId,db=>db.delete(docCheckpoint).where(eq(docCheckpoint.id,checkpointId)));
+    await expect(download(allowedHash)).rejects.toMatchObject({code:'ASSET_ACCESS_DENIED'});
+  });
   test('deletion-only edits create a distinct version even when the Yjs state vector is unchanged', async () => {
     const { root } = await tree();
     const authorization = await fixture.createToken(fixture.owner, ['read', 'write']);

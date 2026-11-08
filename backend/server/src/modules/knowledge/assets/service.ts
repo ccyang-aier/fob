@@ -3,7 +3,7 @@ import { and, eq, sql } from 'drizzle-orm';
 import { assetDownloadInputSchema, assetRevokeInputSchema, assetUploadInputSchema, folderAccessForMember } from '@fob/shared/knowledge/contracts';
 import type { AssetConfirmResult, AssetDownloadResult, AssetDownloadInput, AssetRevokeInput, AssetRevokeResult, AssetUploadInput, AssetUploadPrepareResult } from '@fob/shared/knowledge/contracts';
 import { z } from 'zod';
-import { asset, docState, member, page } from '../../../platform/database/resources/schema';
+import { asset, docCheckpoint, docState, member, page } from '../../../platform/database/resources/schema';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
 import { expandRequestPrincipals } from '../permissions/authorization';
 import { effectivePageAccessCondition } from '../permissions/queries';
@@ -54,6 +54,15 @@ async function requireAssetPageAccess(db: ResourceTransaction, input: { knowledg
       const body = yStateToProseMirrorDoc(state.state, knowledgeSchema);
       let found = false;
       body?.descendants(node => { if (Object.values(node.attrs).includes(address)) found = true; });
+      if (found) return;
+    }
+    // A retained historical version is readable under the same live page ACL.
+    // Once it is pruned, its unique attachments no longer authorize a download.
+    const checkpoints = await db.select({ state: docCheckpoint.state }).from(docCheckpoint)
+      .innerJoin(page, and(eq(page.knowledgeBaseId, docCheckpoint.knowledgeBaseId), eq(page.id, docCheckpoint.pageId))).where(accessible);
+    for (const snapshot of checkpoints) {
+      let found = false;
+      yStateToProseMirrorDoc(snapshot.state, knowledgeSchema)?.descendants(node => { if (Object.values(node.attrs).includes(address)) found = true; });
       if (found) return;
     }
   }

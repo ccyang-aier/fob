@@ -21,6 +21,7 @@ export function DocumentEditorHeader({
   menuActions,
   presence,
   pdfNavigation,
+  interactions,
 }: {
   editor: Editor | null;
   folderName: string;
@@ -35,6 +36,7 @@ export function DocumentEditorHeader({
   menuActions: DocumentMenuActions;
   presence?: ReactNode;
   pdfNavigation?: { open: boolean; id: string; onToggle: () => void };
+  interactions?: ReactNode;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -79,6 +81,7 @@ export function DocumentEditorHeader({
           <List aria-hidden size={16} />
         </button>}
         <DocumentStarButton starred={starred} onToggle={onToggleStar} />
+        {interactions}
       </div>
       <div className={styles.readingTitle} aria-hidden="true">
         <span>{title || knowledgeT('untitledDocument')}</span>

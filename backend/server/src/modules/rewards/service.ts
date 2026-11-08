@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { and, desc, eq, lt, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { Pool } from 'pg';
 import { beijingDay, coffeeCheckInInputSchema, coffeeLedgerInputSchema, coffeeSummaryFromDays } from '@fob/shared/rewards';
 import type { CoffeeCheckInResult, CoffeeLedgerEntry, CoffeeLedgerPage, CoffeeSummary } from '@fob/shared/rewards';
@@ -9,6 +9,7 @@ import type { ResourceTransaction } from '../../platform/database/resources/tran
 import type { FobIdentity } from '../../platform/identity/identity';
 import { currentIdentity, pageOf } from '../../platform/resources/context';
 import { ResourceRequestError } from '../../platform/resources/errors';
+import { readCoffeeBalance } from './wallet';
 
 async function databaseTime(db: ResourceTransaction): Promise<Date> {
   const result = await db.execute<{ now: Date }>(sql`SELECT clock_timestamp() AS now`);
@@ -17,7 +18,7 @@ async function databaseTime(db: ResourceTransaction): Promise<Date> {
 
 async function readSummary(db: ResourceTransaction, userId: string, now: Date): Promise<CoffeeSummary> {
   const entries = await db.select({ day: coffeeLedger.day }).from(coffeeLedger).where(eq(coffeeLedger.userId, userId));
-  return { accountId: userId, ...coffeeSummaryFromDays(entries.map(entry => entry.day), now) };
+  return { accountId: userId, ...coffeeSummaryFromDays(entries.map(entry => entry.day), now), balance: await readCoffeeBalance(db, userId) };
 }
 
 function parseInput<T>(schema: { safeParse: (input: unknown) => { success: boolean; data?: T } }, input: unknown): T {
@@ -52,15 +53,21 @@ export function createRewardsService(pool: Pool) {
     ledger(identity: FobIdentity, input: unknown = {}): Promise<CoffeeLedgerPage> {
       const { cursor, limit } = parseInput<ReturnType<typeof coffeeLedgerInputSchema.parse>>(coffeeLedgerInputSchema, input);
       return inAccount(identity, false, async (db, userId) => {
-        let beforeDay: string | undefined;
+        const source = sql`entries AS (
+          SELECT id,created_at,amount,'daily_check_in'::text AS kind FROM resources.coffee_ledger WHERE user_id=${userId}::uuid
+          UNION ALL SELECT id,created_at,CASE WHEN sender_id=${userId}::uuid THEN -amount ELSE amount END,
+            CASE WHEN sender_id=${userId}::uuid THEN 'coffee_sent' ELSE 'coffee_received' END
+            FROM resources.coffee_transfer WHERE sender_id=${userId}::uuid OR recipient_id=${userId}::uuid
+        )`;
+        let anchor: { id: string; at: string } | undefined;
         if (cursor) {
-          const [entry] = await db.select({ day: coffeeLedger.day }).from(coffeeLedger).where(and(eq(coffeeLedger.userId, userId), eq(coffeeLedger.id, cursor)));
-          if (!entry) throw new ResourceRequestError('INVALID_INPUT', 'Ledger cursor is not available.', 400);
-          beforeDay = entry.day;
+          [anchor] = (await db.execute<{ id: string; at: string }>(sql`WITH ${source} SELECT id,created_at::text AS at FROM entries WHERE id=${cursor}::uuid`)).rows;
+          if (!anchor) throw new ResourceRequestError('INVALID_INPUT', 'Ledger cursor is not available.', 400);
         }
-        const rows = await db.select().from(coffeeLedger).where(and(eq(coffeeLedger.userId, userId), beforeDay ? lt(coffeeLedger.day, beforeDay) : undefined))
-          .orderBy(desc(coffeeLedger.day)).limit(limit + 1);
-        const entries: CoffeeLedgerEntry[] = rows.map(row => ({ id: row.id, day: row.day, amount: 1, kind: 'daily_check_in', createdAt: row.createdAt.toISOString() }));
+        const rows = (await db.execute<{ id: string; created_at: Date; amount: number; kind: CoffeeLedgerEntry['kind'] }>(sql`WITH ${source}
+          SELECT * FROM entries WHERE ${anchor ? sql`(created_at,id)<(${anchor.at}::timestamptz,${anchor.id}::uuid)` : sql`true`}
+          ORDER BY created_at DESC,id DESC LIMIT ${limit + 1}`)).rows;
+        const entries: CoffeeLedgerEntry[] = rows.map(row => ({ id: row.id, day: beijingDay(new Date(row.created_at)), amount: row.amount, kind: row.kind, createdAt: new Date(row.created_at).toISOString() }));
         return { accountId: userId, ...pageOf(entries, limit, entry => entry.id) };
       });
     },

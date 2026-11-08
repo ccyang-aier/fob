@@ -5,10 +5,10 @@ export const coffeeDaySchema = z.iso.date();
 export const coffeeLedgerEntrySchema = z.object({
   id: z.uuid(),
   day: coffeeDaySchema,
-  amount: z.literal(1),
-  kind: z.literal('daily_check_in'),
+  amount: z.number().int().min(-1000).max(1000).refine(value => value !== 0),
+  kind: z.enum(['daily_check_in', 'coffee_sent', 'coffee_received']),
   createdAt: z.iso.datetime(),
-}).strict();
+}).strict().refine(entry => entry.kind === 'daily_check_in' ? entry.amount === 1 : entry.kind === 'coffee_sent' ? entry.amount < 0 : entry.amount > 0);
 export const coffeeSummarySchema = z.object({
   accountId: z.uuid(),
   balance: z.number().int().nonnegative(),

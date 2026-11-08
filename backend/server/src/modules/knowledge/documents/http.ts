@@ -20,6 +20,7 @@ import { DocumentServiceError, changeDocumentInheritance, changeDocumentPermissi
 import { changeDocumentPublication, readPublicDocument, requirePublicAsset } from './publication';
 import { readDocumentStatistics, recordDocumentVisit } from './statistics';
 import { readDocumentActivity } from './activity';
+import { readDocumentInteractions, changeDocumentLike, giftDocumentCoffee } from './interactions';
 import { acceptDocumentInvitation, inviteToDocument } from './invitations';
 
 type Environment = { Variables: { identity: FobIdentity } };
@@ -102,6 +103,22 @@ export function createDocumentCollaborationRoutes(deps: KnowledgeAccessDependenc
       return readDocumentActivity(db, scope, context.get('identity').userId);
     }));
   });
+  app.get(`${base}/interactions`, async context => {
+    const scope = scopeOf(context.req.param());
+    return context.json(await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
+      await activeSessionMember(db, scope.knowledgeBaseId, context.get('identity'));
+      return readDocumentInteractions(db, scope, context.get('identity').userId);
+    }));
+  });
+  app.post(`${base}/likes`, async context => {
+    const scope = scopeOf(context.req.param()), body = await input(context.req), identity = context.get('identity');
+    return context.json(await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
+      await lockPermissionKnowledgeBase(db, scope.knowledgeBaseId);
+      await activeSessionMember(db, scope.knowledgeBaseId, identity, true);
+      return changeDocumentLike(db, scope, identity.userId, body);
+    }));
+  });
+  app.post(`${base}/coffee`, async context => context.json(await giftDocumentCoffee(deps.pool, scopeOf(context.req.param()), context.get('identity'), await input(context.req))));
   app.post(accept, async context => {
     const parsed = documentInviteAcceptSchema.safeParse(await input(context.req));
     if (!parsed.success) throw new DocumentServiceError(404);

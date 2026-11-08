@@ -49,6 +49,14 @@ export const documentActivitySchema = z.object({
   edits: z.array(z.object({ id: entityIdSchema, userId: entityIdSchema.nullable(), name: z.string().nullable(), image: z.string().nullable(), occurredAt: timestampSchema })).max(20),
 });
 export type DocumentActivity = z.infer<typeof documentActivitySchema>;
+export const documentInteractionsSchema = z.object({
+  liked: z.boolean(), likes: z.number().int().nonnegative(), coffeeTotal: z.number().int().nonnegative(),
+  recipient: z.object({ id: entityIdSchema, name: z.string(), image: z.string().nullable() }), canGift: z.boolean(),
+});
+export type DocumentInteractions = z.infer<typeof documentInteractionsSchema>;
+export const documentLikeInputSchema = z.object({ liked: z.boolean() }).strict();
+export const documentCoffeeInputSchema = z.object({ requestId: entityIdSchema, accountId: entityIdSchema, amount: z.number().int().min(1).max(1000) }).strict();
+export const documentCoffeeResultSchema = z.object({ requestId: entityIdSchema, amount: z.number().int().positive(), balance: z.number().int().nonnegative() });
 export const publicDocumentSchema = z.object({
   title: z.string(), body: z.unknown(), updatedAt: timestampSchema,
   assets: z.record(z.string(), z.string()),

@@ -3,6 +3,7 @@ import type { PgTable } from 'drizzle-orm/pg-core';
 import type { PoolClient } from 'pg';
 import { resourceTables } from './schema';
 import { documentActivityRetentionSql } from './activity-retention';
+import { coffeeTransferGuardSql } from './coffee-transfer-guard';
 
 const identifier = (value: string) => `"${value.replaceAll('"', '""')}"`;
 const currentKnowledgeBase = `(SELECT NULLIF(current_setting('app.knowledge_base_id', true), '')::uuid)`;
@@ -15,7 +16,7 @@ const verifiedIdentityUser = `(SELECT s.user_id FROM auth.session s
     AND s.expires_at > clock_timestamp() AND u.email_verified IS TRUE)`;
 
 export interface ResourceRlsPolicy {
-  name: 'knowledge_base_scope' | 'own_identity' | 'reference_read' | 'backlink_target' | 'account_read' | 'account_award';
+  name: 'knowledge_base_scope' | 'own_identity' | 'reference_read' | 'backlink_target' | 'account_read' | 'account_award' | 'account_transfer';
   command: 'ALL' | 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
   using?: string;
   check?: string;
@@ -27,6 +28,10 @@ export function resourcePoliciesForTable(table: PgTable): ResourceRlsPolicy[] {
   if (config.name === 'coffee_ledger') return [
     { name: 'account_read', command: 'SELECT', using: `"user_id" = ${verifiedIdentityUser}` },
     { name: 'account_award', command: 'INSERT', check: `"user_id" = ${verifiedIdentityUser} AND "day" = (clock_timestamp() AT TIME ZONE 'Asia/Shanghai')::date` },
+  ];
+  if (config.name === 'coffee_transfer') return [
+    { name: 'account_read', command: 'SELECT', using: `"sender_id" = ${verifiedIdentityUser} OR "recipient_id" = ${verifiedIdentityUser} OR ${knowledgeBasePredicate}` },
+    { name: 'account_transfer', command: 'INSERT', check: `${knowledgeBasePredicate} AND "sender_id" = ${verifiedIdentityUser}` },
   ];
   const predicate = config.name === 'knowledge_base' ? `"id" = ${currentKnowledgeBase}` : knowledgeBasePredicate;
   const readPredicate = `${config.name === 'knowledge_base' ? '"id"' : '"knowledge_base_id"'} = ${readKnowledgeBase}`;
@@ -62,4 +67,5 @@ export function resourceRlsSql(tables: readonly PgTable[] = resourceTables): str
 export async function installResourceRls(client: Pick<PoolClient, 'query'>): Promise<void> {
   await client.query(resourceRlsSql());
   await client.query(documentActivityRetentionSql);
+  await client.query(coffeeTransferGuardSql);
 }

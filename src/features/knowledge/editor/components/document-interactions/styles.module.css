@@ -1,0 +1,41 @@
+.group { display:flex; align-items:center; gap:4px; }
+.action { position:relative; display:inline-flex; flex:none; align-items:center; justify-content:center; gap:4px; min-width:28px; height:32px; padding:0 4px; border:0; border-radius:6px; background:transparent; color:var(--ink-soft); cursor:pointer; }
+.action:disabled { opacity:.42; cursor:default; }
+.action[data-effect=like] { --celebration:#df6581; }
+.action[data-effect=coffee] { --celebration:#bd8747; }
+.action[data-effect=comment] { --celebration:#669fcb; }
+.action[data-active-icon=true][data-effect=like] { --action-state-ink:var(--celebration); color:var(--celebration); }
+.count { font-size:11px; line-height:16px; font-variant-numeric:tabular-nums; }
+.motion { position:relative; display:grid; width:16px; height:16px; place-items:center; }
+.motion > svg { position:relative; z-index:1; }
+.action:active .motion > svg { transform:scale(.88); }
+.motion[data-celebrating] > svg { animation:interaction-pop 620ms cubic-bezier(.16,1,.3,1); }
+.action[data-effect=coffee] .motion[data-celebrating] > svg { animation:coffee-cheers 850ms cubic-bezier(.16,1,.3,1); }
+.action[data-effect=comment] .motion[data-celebrating] > svg { animation:comment-bounce 600ms cubic-bezier(.16,1,.3,1); }
+.burst { position:absolute; inset:0; color:var(--celebration); pointer-events:none; }
+.particle { position:absolute; inset:50% auto auto 50%; width:3px; height:3px; border-radius:50%; background:currentColor; opacity:0; animation:interaction-particle 700ms cubic-bezier(.16,1,.3,1) var(--delay) both; }
+.sparkle { position:absolute; right:-10px; top:-8px; opacity:0; animation:interaction-sparkle 650ms ease-out 60ms both; }
+.flyingCup { position:absolute; left:0; top:0; opacity:0; animation:coffee-flight 900ms cubic-bezier(.16,1,.3,1) 40ms both; }
+.steam { position:absolute; left:6px; top:-4px; width:6px; height:12px; border-left:1px solid currentColor; border-right:1px solid currentColor; border-radius:50%; opacity:0; animation:coffee-steam 900ms ease-out; }
+@keyframes interaction-pop { 0%{transform:scale(.5) rotate(-18deg)} 42%{transform:scale(1.4) rotate(12deg)} 72%{transform:scale(1.08) rotate(-4deg)} 100%{transform:scale(1)} }
+@keyframes comment-bounce { 0%{transform:translateY(2px) scale(.75)} 42%{transform:translateY(-4px) rotate(-9deg) scale(1.2)} 70%{transform:translateY(1px) rotate(4deg)} 100%{transform:translateY(0) rotate(0)} }
+@keyframes coffee-cheers { 0%{transform:scale(.7) rotate(-18deg)} 35%{transform:translateY(-4px) rotate(16deg) scale(1.3)} 65%{transform:rotate(-5deg)} 100%{transform:scale(1)} }
+@keyframes interaction-particle { 0%{opacity:0;transform:translate(-50%,-50%) scale(.4)} 22%{opacity:.9} 100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.25)} }
+@keyframes interaction-sparkle { 0%{opacity:0;transform:scale(.2) rotate(-20deg)} 35%{opacity:1;transform:scale(1.1)} 100%{opacity:0;transform:translate(4px,-6px) scale(.3) rotate(20deg)} }
+@keyframes coffee-flight { 0%{opacity:0;transform:scale(.3)} 18%{opacity:1} 65%{opacity:.9;transform:translate(12px,-26px) scale(.9) rotate(-15deg)} 100%{opacity:0;transform:translate(28px,-36px) scale(.35) rotate(14deg)} }
+@keyframes coffee-steam { 0%{opacity:0;transform:translateY(0) scale(.4)} 35%{opacity:.8} 100%{opacity:0;transform:translateY(-22px) scale(1.2)} }
+.giftForm { padding:8px 24px 24px; }
+.recipient { display:flex; align-items:center; gap:10px; }
+.recipient strong { flex:1; min-width:0; overflow-wrap:anywhere; font-size:15px; font-weight:500; }
+.recipient > svg { color:#bd8747; }
+.balance { margin:16px 0; color:var(--muted-strong); font-size:13px; }
+.quantities { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:18px; }
+.quantities button { display:flex; align-items:center; justify-content:center; gap:6px; height:44px; padding:0 4px; border:1px solid var(--control-border); border-radius:8px; background:transparent; color:var(--ink); font-size:13px; }
+.quantities button svg { color:#bd8747; }
+.quantity { display:flex; align-items:center; justify-content:space-between; gap:16px; font-size:13px; }
+.quantity input { width:100px; height:32px; padding:4px 8px; border:1px solid var(--control-border); border-radius:6px; background:var(--panel); color:var(--ink); font:inherit; text-align:end; }
+.quantity input:focus-visible { border-color:var(--ink-soft); outline:none; box-shadow:none; }
+.giftForm footer { display:flex; justify-content:flex-end; gap:8px; margin-top:24px; }
+.giftForm > [role=alert] { margin-top:14px; }
+@container(max-width:430px) { .count { display:none; }.group{gap:2px} }
+@media(prefers-reduced-motion:reduce) { .motion[data-celebrating] > svg,.action[data-effect] .motion[data-celebrating] > svg { animation:none; }.burst { display:none; } }
