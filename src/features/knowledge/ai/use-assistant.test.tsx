@@ -118,3 +118,16 @@ test('Stop works for restored running conversations and refreshes their durable 
   await act(async () => { gets.at(-1)!.pending.resolve(stopped); await stopping; await flush(); });
   expect(value.busy).toBe(false); expect(value.conversation?.turns[0]?.status).toBe('cancelled');
 });
+
+test('a rejected request keeps the submitted draft until a start acknowledgement arrives exactly once', async () => {
+  await mount(); let acknowledged = 0, sending!: Promise<void>;
+  await act(async () => { sending = value.send('Keep this draft', 'document', 'fast', null, () => { acknowledged++; }); });
+  expect(acknowledged).toBe(0);
+  await act(async () => { ask!.pending.reject(new RequestError('configuration')); await sending; });
+  expect(acknowledged).toBe(0);
+  await act(async () => { sending = value.send('Accepted draft', 'document', 'fast', null, () => { acknowledged++; }); });
+  const start: AssistantStreamEvent = { type: 'start', conversationId: one, turn: { ...conversation(one).turns[0]!, status: 'running', answer: '' } };
+  await act(async () => { ask!.emit(start); ask!.emit(start); });
+  expect(acknowledged).toBe(1);
+  await act(async () => { ask!.pending.resolve(); await sending; });
+});

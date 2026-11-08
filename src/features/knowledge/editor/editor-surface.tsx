@@ -1,6 +1,7 @@
 'use client';
 
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+import { usePageVisible } from '@/lib/page-visibility';
 import { useProfileLearning } from '../profile/use-profile-learning';
 
 import { useTranslation } from '@/lib/i18n';
@@ -164,6 +165,7 @@ export function PageEditorSurface({
   }, [editor, view.editable, version.selectedId]);
 
   const navigationActive = useKnowledgeNavigationActive();
+  const pageVisible = usePageVisible();
   useProfileLearning(scope,navigationActive && Boolean(user));
   // L02: a block-reference click that lands on this page reveals the block —
   // a pre-mount navigation consumes its staged highlight, later targets ride
@@ -244,7 +246,7 @@ export function PageEditorSurface({
               />
             </DocumentSidebar>
           )}
-          {assistantOpen && user && <AssistantPanel key={`${scope.knowledgeBaseId}:${scope.pageId}:${user.id}`} scope={scope} userId={user.id} editable={view.editable && !version.selectedId} selection={assistantSelection} onClearSelection={() => setAssistantSelection('')} onClose={() => setAssistantOpen(false)} />}
+          {assistantOpen && navigationActive && pageVisible && user && <AssistantPanel key={`${scope.knowledgeBaseId}:${scope.pageId}:${user.id}`} scope={scope} userId={user.id} documentTitle={displayTitle} editable={view.editable && !version.selectedId} selection={assistantSelection} onClearSelection={() => setAssistantSelection('')} onClose={() => setAssistantOpen(false)} />}
         </PageCommentsLayer>
       }
       header={

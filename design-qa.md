@@ -45,3 +45,21 @@
 ## 生成星形修正
 
 原参考为用户的 `codex-clipboard-888ddb18-f3e6-48b8-8892-e467df95c1af.png`，不是随后指出错误版本的四角星截图。五角、斜向和右下长尖的原尺寸及 4 倍并排核对见 `.runtime/dev/generate-icon-shape-compare.png`；右侧直接渲染产品 `GenerateStar` 组件。菜单和空态使用相同 SVG 几何，布局与控件尺寸保持紧凑版。图标规则仅增加这个用户指定且固定摘要的例外。
+
+## AI 助手悬浮重构
+
+实际查看 Dribbble 上 [AI Agent chat widget](https://dribbble.com/shots/24512905-Chat-widget-for-AI-Agent)、[AI agent widget](https://dribbble.com/shots/25829668-AI-agent-widget-Daily-Design-29) 的图片，取其消息层级、贴底输入和轻量快捷提示，不复制宣传画布、渐变或品牌素材。单独子代理完成五项布局评估与机械预扫描（JSON `[]`），合并确认固定侧栏、控件堆叠及精灵补偿 80px 是主要问题。
+
+| 对照项 | 修正与真实证据 |
+| --- | --- |
+| 右侧固定栏挤压正文 | 改为 400 × 600px 可拖拽窗口；1119 × 917 视口打开前后正文均宽 676.8px |
+| 输入框悬在半空 | 输入区贴窗口底部；删除 80px 补偿，模型/资料范围/档位/发送合并为一条紧凑工具栏 |
+| 右下精灵挡发送 | 实际复现 Playwright pointer interception；改用独立 manual popover 后，最右下位置和设置关闭后均通过命中检测并实际发送 |
+| 历史空白与原生确认 | 搜索无结果明确显示空态，删除使用共享 AppAlert 确认；取消不会调用删除 |
+| 窄屏和键盘 | 390 × 320 模拟键盘视口下窗口 374 × 304px，输入最高 76px，发送在 y=267–295，菜单完整可见，无横向溢出 |
+
+真实模型回答了合成文档的负责人和日期并带引用；实际停止流式回答保留了已有正文。拖拽四角、方向键移动、重开位置恢复、外部编辑保持打开、切到成员页隐藏、模型菜单及 AI 设置的 Escape 隔离均经过 UI 操作验证。通过真实 Fullscreen API 进入/退出全屏后，宿主按事件移动且草稿仍保留；无原生 popover 的回退及原生模态重排另有自动回归。
+
+当前截图为 `.runtime/dev/assistant-floating-empty.png`、`assistant-floating-window.png`、`assistant-floating-answer.png`、`assistant-floating-stopped.png`、`assistant-floating-mobile.png`、`assistant-floating-keyboard.png` 和 `assistant-floating-dark.png`。连续跨模块热更新期间曾出现样式短暂失效，稳定刷新后重新验收；不以开发热更新中间态作为最终界面通过依据。
+
+最终稳定刷新后，URL/页面标题正确、正文有真实合成内容，无框架错误覆盖层，pageerror 与 console error 均为空；打开助手前后正文边界相同，窗口默认位置为 x=695/y=104、400 × 600px。生产构建、类型、ESLint、图标、国际化和架构检查通过。浏览器插件不可用，沿用用户已明确允许的本地 Chrome / Playwright 验收；键盘高度使用视口模拟，不声称物理手机验收。

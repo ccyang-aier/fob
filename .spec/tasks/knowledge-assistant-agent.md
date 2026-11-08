@@ -69,3 +69,17 @@
 ### 后续生成图标纠正
 
 用户再次指出四角星仍与原图不一致，已撤掉 Lucide Sparkle，按最早参考实现倾斜五角轮廓与右下长尖。菜单、生成块、助手、设置和协作光标共用 `GenerateStar`，检查脚本固定该组件摘要，例外不扩展到其它图标。原尺寸与放大对照为 `.runtime/dev/generate-icon-shape-compare.png`。既有图标与双编辑器协作回归 11 项 / 79 断言通过；图标检查、定向 ESLint、类型及架构检查通过。独立账户的实际菜单与生成块截图为 `generate-icon-menu.png` / `generate-icon-block.png`，浏览器校验两者 SVG 路径一致，pageerror 为 0；未调用模型或修改用户原有文档。
+
+## 可拖拽悬浮助手
+
+- [x] 参考真实 Dribbble 设计图片，重排标题、文档上下文、快捷提示、消息、历史和输入工具栏；保留 Fob 共享规范。
+- [x] 默认 400 × 600px 悬浮窗口，指针拖拽、方向键、位置记忆及 visualViewport 边界；打开前后正文宽度相同。
+- [x] 消息独立滚动和回到最新回答；输入自动增长、IME / Shift+Enter、提交前失败不清空草稿、共享删除确认和无匹配空态。
+- [x] 只展示活动文档浮窗；不锁背景，不在外部编辑时关闭；设置与菜单 Escape 独立，全屏不重建会话子树。
+- [x] 实际复现精灵顶层遮挡发送，修成独立 manual popover 和原生模态关闭后的受控置顶；菜单、Tooltip、设置各在正确宿主，最右下角实际发送通过。
+- [x] 独立合成知识库两篇文档；模型真实带引用回答负责人和日期，实际停止长回答保留约 2800 字符的界面内容。
+- [x] 390 × 844 窄屏、390 × 320 模拟键盘视口及深色检查；输入/发送/模型菜单完整可用，无横向溢出。
+- [x] 相关 AI / 设置 / 文档编辑器前端回归 71 项、511 断言通过，日志 `assistant-floating-tests.log`；类型、国际化、图标、ESLint 通过。
+- [x] 最终稳定页面 pageerror / console error 均为 0，正文边界不变；真实 Fullscreen API 进入退出保留输入。生产构建与架构检查通过，日志 `assistant-floating-build.log` / `assistant-floating-boundaries.log` / `assistant-floating-lint.log`。
+
+布局评估与机械扫描由两个独立子代理完成，机械结果为空；人工评估仍发现并修复输入区 80px 空白、信息层级及重复控件。设计与交互证据见 [design-qa.md](../../design-qa.md)，当前设计仍以 [知识助手](../../docs/knowledge-assistant-agent.md) 为准。
