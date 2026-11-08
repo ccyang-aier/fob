@@ -36,12 +36,13 @@
 }
 .titleInput, .titleInput:focus-visible { outline: none; border: 0; box-shadow: none; }
 .titleInput::placeholder { color: var(--muted); }
+.metadataRow { display:flex; align-items:center; gap:8px; margin-top:8px; }
 .metadata {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 8px;
+  min-width: 0;
   color: var(--muted-strong);
   font-size: 13px;
   line-height: 24px;

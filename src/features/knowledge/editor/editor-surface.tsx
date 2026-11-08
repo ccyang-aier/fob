@@ -10,7 +10,7 @@ import { knowledgeMessages } from './editor-surface.messages';
  * The editor surface of one page (E03): the Tiptap instance bound to the
  * shared E01 registry schema (never a second schema), the E02 blockId
  * extension and the B04/B08 collaboration extension, wrapped in the toolbar /
- * sync indicator / readonly banner frame.
+ * sync indicator / access metadata frame.
  *
  * `immediatelyRender: false` keeps the editor instance strictly
  * client-after-mount (no SSR rendering, no hydration mismatch); the body
@@ -32,9 +32,9 @@ import { DocumentEditorBody, DocumentEditorFrame, DocumentHeading } from './edit
 import { PageIconPicker } from '../navigation/page-icon-picker';
 import { DocumentEditorHeader } from './components/document-editor-header';
 import { DocumentInteractions } from './components/document-interactions';
+import { DocumentAccessIndicator } from './components/document-access-indicator';
 import { DocumentSidebar } from './components/document-sidebar';
 import { AppAlert } from '@/components/app-alert';
-import { readonlyMessageCopy } from './editor-state';
 import { SyncIndicator } from './components/document-editor-header/sync-indicator';
 import type { PageEditorViewModel } from './editor-state';
 import {
@@ -298,9 +298,7 @@ export function PageEditorSurface({
           : <VersionDocument key={version.selectedId} scope={scope} version={version.preview.data} origin={origin ?? ''} identity={user?.id ?? 'anonymous'} onEditor={version.bindEditor} onCurrent={() => version.select(null)} />
         : <DocumentEditorBody
         editor={editor}
-        before={<>
-          {view.readonlyReason && <AppAlert tone={view.readonlyReason === 'auth-failed' ? 'error' : 'info'} title={readonlyMessageCopy(view.readonlyReason, level)} className="mb-4" />}
-          <DocumentHeading
+        before={<DocumentHeading
             title={pageTitle.title}
             icon={
               <PageIconPicker
@@ -314,6 +312,7 @@ export function PageEditorSurface({
             onTitleCommit={() => {
               void pageTitle.save();
             }}
+            metadataStatus={view.readonlyReason ? <DocumentAccessIndicator reason={view.readonlyReason} level={level} /> : undefined}
             metadata={
               <>
                 <span>{updatedLabel}</span>
@@ -331,8 +330,7 @@ export function PageEditorSurface({
                 ) : null}
               </>
             }
-          />
-        </>}
+          />}
       />}
     </DocumentEditorFrame>
   );

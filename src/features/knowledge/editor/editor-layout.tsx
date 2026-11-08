@@ -66,6 +66,7 @@ export function DocumentHeading({
   onTitleCommit,
   editable = true,
   metadata,
+  metadataStatus,
   icon,
 }: {
   title: string;
@@ -73,6 +74,7 @@ export function DocumentHeading({
   onTitleCommit?: () => void;
   editable?: boolean;
   metadata?: ReactNode;
+  metadataStatus?: ReactNode;
   icon?: ReactNode;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
@@ -99,7 +101,12 @@ export function DocumentHeading({
           <h1 className={styles.title}>{title || knowledgeT('untitledDocument')}</h1>
         )}
       </div>
-      {metadata ? <div className={styles.metadata}>{metadata}</div> : null}
+      {metadata || metadataStatus ? (
+        <div className={styles.metadataRow}>
+          {metadata ? <div className={styles.metadata}>{metadata}</div> : null}
+          {metadataStatus}
+        </div>
+      ) : null}
     </div>
   );
 }

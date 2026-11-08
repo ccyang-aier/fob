@@ -1,0 +1,15 @@
+.indicator {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: var(--action-state-ink);
+  cursor: pointer;
+}
+.indicator[data-tone="warning"] { --action-state-ink: var(--warn-ink); }
+.indicator[data-tone="error"] { --action-state-ink: var(--err-ink); }
