@@ -14,7 +14,7 @@ import { faArrowDownAZ } from '@fortawesome/free-solid-svg-icons/faArrowDownAZ';
 import { faArrowDownZA } from '@fortawesome/free-solid-svg-icons/faArrowDownZA';
 import { faAt } from '@fortawesome/free-solid-svg-icons/faAt';
 import { faTicket } from '@fortawesome/free-solid-svg-icons/faTicket';
-import { Shapes as LucideShapes, MousePointer2 as LucideMousePointer2 } from 'lucide-react';
+import { Circle as LucideCircle, Diamond as LucideDiamond, Sparkle as LucideSparkle, Triangle as LucideTriangle, MousePointer2 as LucideMousePointer2 } from 'lucide-react';
 import { faAtom } from '@fortawesome/free-solid-svg-icons/faAtom';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
 import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
@@ -159,6 +159,7 @@ import { faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons/faWandMag
 import { Heading1 as LucideHeading1, Heading2 as LucideHeading2, Heading3 as LucideHeading3, MessageCircle as LucideMessageCircle, Square as LucideSquare, SquareX as LucideSquareX } from 'lucide-react';
 import { solidIcon, outlineIcon, multicolorSolidIcon } from './solid-icon';
 import { ICON_SIZES } from './metrics';
+import { fourShapeIcon } from './four-shape-icon';
 
 // Font Awesome 7 Solid is the default. Lucide is reserved for the explicit
 // lightweight controls below. Add official glyphs here; never draw UI SVGs.
@@ -293,8 +294,8 @@ export const Smiley = /* @__PURE__ */ solidIcon(faFaceSmile, 'Smiley');
 export const SortAscending = /* @__PURE__ */ solidIcon(faArrowDownAZ, 'SortAscending');
 export const SortDescending = /* @__PURE__ */ solidIcon(faArrowDownZA, 'SortDescending');
 export const Sparkle = /* @__PURE__ */ solidIcon(faWandMagicSparkles, 'Sparkle');
-export const GenerateStar = /* @__PURE__ */ outlineIcon(LucideStar, 'GenerateStar', 16);
-export const ShapesOutline = /* @__PURE__ */ outlineIcon(LucideShapes, 'ShapesOutline', 16);
+export const GenerateStar = /* @__PURE__ */ outlineIcon(LucideSparkle, 'GenerateStar', 16);
+export const ShapesOutline = /* @__PURE__ */ fourShapeIcon([LucideDiamond, LucideCircle, LucideTriangle, LucideSquare]);
 export const SelectionEdit = /* @__PURE__ */ outlineIcon(LucideMousePointer2, 'SelectionEdit', 16);
 export const Sparkles = /* @__PURE__ */ solidIcon(faWandMagicSparkles, 'Sparkles');
 export const SpeakerHigh = /* @__PURE__ */ solidIcon(faVolumeHigh, 'SpeakerHigh');

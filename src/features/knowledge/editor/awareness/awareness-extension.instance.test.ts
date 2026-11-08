@@ -181,7 +181,12 @@ describe('awareness cursors across two real editors', () => {
     await until(() => caretsOf(b, '[data-awareness-kind="agent"]').length > 0);
     const caret = caretsOf(b, `[data-awareness-client="${awarenessAgent.clientID}"]`)[0]!;
     expect(caret.dataset.awarenessEditing).toBe('true');
-    expect(caret.querySelector('svg.fob-awareness-agent-icon')).not.toBe(null);
+    const glyph = caret.querySelector('svg.fob-awareness-agent-icon');
+    expect(glyph).not.toBe(null);
+    expect(glyph?.getAttribute('data-icon-library')).toBe('lucide');
+    expect(glyph?.classList.contains('lucide-sparkle')).toBe(true);
+    expect(glyph?.getAttribute('fill')).toBe('none');
+    expect(glyph?.getAttribute('viewBox')).toBe('0 0 24 24');
     const flag = caret.querySelector<HTMLElement>('.fob-awareness-flag');
     expect(flag?.textContent).toBe('正在编辑');
     expect(flag?.title).toBe('研究智能体 · 正在编辑');

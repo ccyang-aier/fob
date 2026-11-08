@@ -44,7 +44,7 @@ test('does not request personal settings without a server knowledge base or auth
 test('shows the actual account and knowledge-base scope before rendering saved settings', async () => {
   resources.selectedKnowledgeBase = { id: 'server-a', name: '产品研发', source: 'server' }; await render();
   expect(requests.map(request => request.base)).toEqual(['server-a']); expect(document.body.textContent).toContain('当前账户 · 产品研发');
-  await resolve(); expect(document.querySelector<HTMLInputElement>('[name="fob-model-name"]')!.value).toBe('glm-5.3-flash');
+  await resolve(); expect(document.querySelector('[data-ai-connections]')?.textContent).toContain('glm-5.3-flash');
   expect(document.body.textContent).toContain('500'); expect(document.body.textContent).toContain('仅用于你在当前知识库');
 });
 
@@ -55,13 +55,13 @@ test('switching knowledge bases cancels old requests and cannot display the prev
   await resolve(); expect(document.body.textContent).toContain('当前账户 · Two');
   session = { status: 'authenticated', user: { id: 'bob' } }; await render();
   expect(requests.map(request => request.base)).toEqual(['server-a', 'server-b', 'server-b']);
-  expect(document.querySelector('[name="fob-model-name"]')).toBeNull();
+  expect(document.querySelector('[data-ai-connections]')).toBeNull();
 });
 
 test('settings load errors have a working retry rather than a fabricated ready state', async () => {
   resources.selectedKnowledgeBase = { id: 'server-a', name: 'One', source: 'server' }; await render();
   await act(async () => { requests[0].reject(new Error('offline')); await new Promise(done => setTimeout(done, 10)); });
-  expect(document.querySelector('[name="fob-model-name"]')).toBeNull(); expect(document.body.textContent).toContain('无法连接模型服务');
+  expect(document.querySelector('[data-ai-connections]')).toBeNull(); expect(document.body.textContent).toContain('无法连接模型服务');
   await act(async () => document.querySelector<HTMLButtonElement>('button')!.click()); expect(requests).toHaveLength(2);
-  await resolve(); expect(document.querySelector('[name="fob-model-name"]')).not.toBeNull();
+  await resolve(); expect(document.querySelector('[data-ai-connections]')).not.toBeNull();
 });

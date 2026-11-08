@@ -123,7 +123,7 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   // answers SERVICE_UNAVAILABLE by design.
   if (config.roles.includes('api')) {
     const preferences = createAssistantPreferences({ pool, key: createHash('sha256').update(`fob:model-credentials:${config.auth.secret}`).digest(), platform: fobModelGatewayOptions(config).platform, ollamaEndpoint: config.models.ollamaEndpoint });
-    const gateway = createFobModelGateway(config, { credentials: preferences.credentials, onCall: async record => {
+    const gateway = createFobModelGateway(config, { credentials: preferences.credentials, resolveProvider: preferences.connections.definition, onCall: async record => {
       await withKnowledgeBase(pool, record.context.knowledgeBaseId, async db => {
         const task = record.context.taskId ? (await db.select({ id: aiTask.id }).from(aiTask).where(eq(aiTask.id, record.context.taskId)))[0] : null;
         await db.insert(aiUsage).values({ knowledgeBaseId: record.context.knowledgeBaseId, id: randomUUID(), userId: record.context.userId, taskId: task?.id ?? null, operation: record.operation, status: record.status, tier: record.tier, provider: record.model?.provider ?? null, model: record.model?.model ?? null, inputTokens: record.usage.inputTokens, outputTokens: record.usage.outputTokens, durationMs: Math.round(record.durationMs), errorCode: record.errorCode ?? null });

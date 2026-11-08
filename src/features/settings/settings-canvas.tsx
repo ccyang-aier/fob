@@ -8,9 +8,9 @@ import { messages } from './i18n/settings-canvas.messages';
  * 布局为独立的设置侧栏 + 右侧内容画布；侧栏与工作台侧栏共用同一套材质与拖拽调宽。
  */
 
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import type { SettingsSection } from '@/lib/settings-navigation';
-import { Info, MagnifyingGlass, PaintBrush, SlidersHorizontal, Sparkle } from '@/components/icons';
+import { Info, MagnifyingGlass, PaintBrush, SlidersHorizontal, GenerateStar as Sparkle } from '@/components/icons';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,7 @@ import { AboutSettings } from './about-settings';
 import { AppearanceSettings } from './appearance-settings';
 import { GeneralSettings } from './general-settings';
 import { AISettings } from './ai/ai-settings';
+import styles from './settings-canvas.module.css';
 
 const SECTIONS: Array<SidebarRowItem & { id: SettingsSection; label: keyof typeof messages }> = [
   { id: 'appearance', label: '外观', icon: PaintBrush },
@@ -54,27 +55,27 @@ export function SettingsCanvas({
   return (
     <div
       /* 材质挂在设置页根节点：侧栏与主面板共用同一块材质底座，圆角缺口与侧栏无缝衔接 */
-      className="sidebar-material flex h-full min-h-0"
+      className={`sidebar-material ${styles.canvas}`}
       aria-label={uiText('设置')}
     >
       <div
-        style={{ width, zIndex: 20 }}
+        style={{ '--settings-sidebar-width': `${width}px` } as CSSProperties}
         className={cn(
-          'h-full shrink-0',
+          styles.sidebar,
           !dragging && 'transition-[width] duration-[220ms] ease-out-soft',
         )}
       >
         <nav
           aria-label={uiText('设置分区')}
-          className="relative flex h-full min-h-0 flex-col border-r border-[var(--wt-sidebar-edge)] px-3 pb-5 pt-3"
+          className={styles.navigation}
         >
-          <div className="flex h-9 shrink-0 items-center gap-1.5">
+          <div className={`${styles.desktopOnly} flex h-9 shrink-0 items-center gap-1.5`}>
             <span className="text-[13px] font-semibold tracking-[-0.01em] text-[var(--ink)]">
               {uiText('设置')}
             </span>
           </div>
 
-          <div className="relative mt-2.5">
+          <div className={`${styles.desktopOnly} relative mt-2.5`}>
             <MagnifyingGlass
               className="pointer-events-none absolute left-3 top-1/2 size-[15px] -translate-y-1/2 text-[var(--muted)]"
               aria-hidden
@@ -88,14 +89,15 @@ export function SettingsCanvas({
               className="h-[34px] w-full rounded-[6px] border border-[var(--line)] bg-panel pl-9 pr-3 text-[11.5px] text-[var(--ink)] outline-none transition-[border-color,box-shadow] placeholder:text-[var(--muted)] focus:border-[var(--accent)]"
             />
           </div>
-          <p className="mb-2 mt-5 px-2.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--muted)]">
+          <p className={`${styles.desktopOnly} mb-2 mt-5 px-2.5 text-[10px] font-medium uppercase tracking-[0.2em] text-[var(--muted)]`}>
             {uiText('偏好设置')}
           </p>
-          <div className="space-y-1">
-            {visibleSections.map((item) => (
+          <div className={styles.sections}>
+            {sections.map((item) => (
               <NavButton
                 key={item.id}
                 item={item}
+                className={cn(styles.sectionButton, !visibleSections.some(visible => visible.id === item.id) && styles.filteredOut)}
                 active={section === item.id}
                 onSelect={() => {
                   setSection(item.id as SettingsSection);
@@ -105,20 +107,20 @@ export function SettingsCanvas({
             ))}
           </div>
           {visibleSections.length === 0 ? (
-            <p className="px-2.5 py-4 text-[11px] text-[var(--muted)]">
+            <p className={`${styles.desktopOnly} px-2.5 py-4 text-[11px] text-[var(--muted)]`}>
               {uiText('没有匹配的设置')}
             </p>
           ) : null}
 
-          <SidebarResizeHandle dragging={dragging} onPointerDown={startResize} />
+          <SidebarResizeHandle className={styles.desktopOnly} dragging={dragging} onPointerDown={startResize} />
         </nav>
       </div>
 
       <ScrollArea
         as="main"
         scrollbar={false}
-        className="min-h-0 flex-1 overflow-hidden bg-panel"
-        viewportClassName="bg-panel"
+        className={`${styles.main} bg-panel`}
+        viewportClassName={`${styles.viewport} bg-panel`}
       >
         {section === 'appearance' ? (
           <AppearanceSettings />

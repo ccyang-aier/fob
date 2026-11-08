@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { assistantConversationSchema, assistantConversationListSchema, assistantSettingsSchema, assistantStreamEventSchema } from '@fob/shared/knowledge/contracts';
-import type { AssistantAsk, AssistantPreferencesInput, AssistantStreamEvent } from '@fob/shared/knowledge/contracts';
+import { assistantConversationSchema, assistantConversationListSchema, assistantSettingsSchema, assistantStreamEventSchema, assistantConnectionSchema, assistantConnectionTestSchema, assistantDiscoveredModelsSchema } from '@fob/shared/knowledge/contracts';
+import type { AssistantAsk, AssistantPreferencesInput, AssistantStreamEvent, AssistantConnectionInput, AssistantSelections } from '@fob/shared/knowledge/contracts';
 import { authenticatedFetch } from '@/lib/authenticated-fetch';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 
@@ -27,6 +27,12 @@ export const assistantApi = {
   settings: (base: string, signal?: AbortSignal) => json(base, 'settings', assistantSettingsSchema, { signal }),
   saveSettings: (base: string, input: AssistantPreferencesInput, signal?: AbortSignal) => json(base, 'settings', assistantSettingsSchema, { method: 'PUT', body: JSON.stringify(input), signal }),
   check: (base: string, signal?: AbortSignal) => json(base, 'check', z.object({ model: z.string() }), { method: 'POST', body: '{}', signal }),
+  createConnection: (base: string, input: AssistantConnectionInput, signal?: AbortSignal) => json(base, 'connections', assistantConnectionSchema, { method: 'POST', body: JSON.stringify(input), signal }),
+  updateConnection: (base: string, id: string, input: AssistantConnectionInput, signal?: AbortSignal) => json(base, `connections/${encodeURIComponent(id)}`, assistantConnectionSchema, { method: 'PUT', body: JSON.stringify(input), signal }),
+  removeConnection: (base: string, id: string, signal?: AbortSignal) => json(base, `connections/${encodeURIComponent(id)}`, z.object({ removed: z.boolean() }), { method: 'DELETE', body: '{}', signal }),
+  testConnection: (base: string, id: string, modelId: string, signal?: AbortSignal) => json(base, `connections/${encodeURIComponent(id)}/test`, assistantConnectionTestSchema, { method: 'POST', body: JSON.stringify({ modelId }), signal }),
+  discoverModels: (base: string, id: string, signal?: AbortSignal) => json(base, `connections/${encodeURIComponent(id)}/models`, assistantDiscoveredModelsSchema, { signal }),
+  saveSelections: (base: string, input: AssistantSelections, signal?: AbortSignal) => json(base, 'selections', assistantSettingsSchema, { method: 'PUT', body: JSON.stringify(input), signal }),
   list: (base: string, signal?: AbortSignal) => json(base, 'conversations', assistantConversationListSchema, { signal }),
   get: (base: string, id: string, signal?: AbortSignal) => json(base, `conversations/${id}`, assistantConversationSchema, { signal }),
   remove: (base: string, id: string, signal?: AbortSignal) => request(base, `conversations/${id}`, { method: 'DELETE', body: '{}', signal }),

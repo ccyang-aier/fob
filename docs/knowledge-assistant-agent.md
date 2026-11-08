@@ -4,13 +4,15 @@
 
 ## 接入与使用
 
-全局设置 → AI 接入管理当前账户在当前知识库的个人配置，文档助手齿轮复用相同表单。支持服务端默认、智谱 Coding / 开放平台，以及服务端已批准的 Ollama 地址；客户端不能提交任意 endpoint。空密钥保留已保存凭据，切回服务端默认会撤销个人凭据。连接测试使用真实 provider，usage 来自网关实际调用记录。
+全局设置 → AI 接入管理当前账户在当前知识库的多套个人服务商，文档助手齿轮复用相同组件。每套连接独立配置名称、协议、Base URL、加密密钥和模型清单；支持公网 HTTPS 兼容服务与服务端明确批准的 Ollama 地址。空密钥保留原凭据，切回服务端默认保留个人连接，删除连接才清理其密钥和默认关联。连接测试使用真实 provider，usage 来自网关实际调用记录。
 
 服务端默认读取 `KNOWLEDGE_AI_API_KEY`、`KNOWLEDGE_AI_CHAT_BASE_URL`、`KNOWLEDGE_AI_MODEL`；本次环境使用 BigModel Coding URL 与 `glm-5.3-flash`。凭据不进入仓库、浏览器状态或日志。个人凭据使用 AES-GCM，密钥由部署的 Fob 认证 secret 加产品域分离摘要得到；多 API 节点使用一致认证配置，轮换后需重新录入个人凭据。
 
 现有数据库执行一次幂等升级：`bun --env-file=.env.fob.local backend/server/scripts/upgrade-assistant.ts`。新数据库直接使用当前规范 schema，表拥有组合作用域外键、FORCE RLS 与应用角色授权。
 
 正文 `/` 菜单顶部提供「生成」「创建可视化」；生成内容保留为块内草稿，可停止、提出修改要求、撤销或采纳，采纳后成为普通文档块。可视化输出原生 Mermaid 节点。文档顶栏 AI 打开知识助手，选中文字的 AI 操作携带选区；来源按钮定位原文，回答由用户选择插入，再经普通建议审阅。本机文件夹知识库暂未接入此服务，入口明确呈现不可用状态。
+
+块菜单宽 360px、行高 32px，沿用 13px 产品控件字号；生成空态高 120px、胶囊输入条高 38px、操作圆钮 30px，正文阅读字号保持原有设置。生成星在菜单、块、助手、设置、选区和协作光标共用集中目录的官方 Lucide 单星；可视化共用官方四形组合。模型选择、协议和范围菜单均复用共享 Radix 控件，增长清单支持搜索；没有原生 select。
 
 ## Pi 源码依据
 
@@ -97,6 +99,28 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 
 数据库属性或页面标题可能没有正文块。它们仍计入 `contextPageIds`；不能为此伪造一个块锚点。需要正文引用时继续读取页面，工具给出实际 `sourceId` 后才允许 `[n](fob-source:n)`。最终答案中的未知来源编号会移除链接。
 
+## 多服务商连接与模型绑定
+
+个人配置使用 `assistant_connection(knowledge_base_id,user_id,id)` 保存独立连接。每个账户在每个知识库最多 24 个连接，每连接最多配置 100 个模型；连接名称、协议、Base URL、模型 ID/显示名称和凭据引用彼此独立。公共 DTO 只返回 `hasCredential`，不返回 API key、密文或 credential ID。API key 继续使用已有 AES-256-GCM credential store，附加认证数据绑定知识库、用户、凭据 ID、私有 provider ID 与 endpoint；更换 Base URL、协议或 key 时重新加密并撤销旧凭据。删除一个连接只撤销它自己的 key，并清除引用它的默认绑定。
+
+`assistant_preference.settings` 保留现有纯 `ModelSettings`，fast/smart 可以绑定不同连接及模型。`resolveFor(actor, selection?)` 校验连接归属和模型是否已配置；本轮临时选择只覆盖这一次请求，不修改默认绑定。连接或模型缺失、密钥不可用都返回真实配置错误。旧单服务商设置在服务端事务中迁为可见连接，保留 fast/smart 原模型和密钥；旧的、服务器已批准的 Ollama 设置也迁为可见的无 key 连接。
+
+模型协议有三个真实实现，不进行协议伪装：
+
+| 设置协议 | 后端 adapter | 请求路径 |
+| --- | --- | --- |
+| `openai-compatible` | `@ai-sdk/openai-compatible` 的 chat model | `/chat/completions` |
+| `openai-responses` | `@ai-sdk/openai` 的显式 `.responses(modelId)` | `/responses`，禁用供应商侧 response 存储 |
+| `anthropic` | `@ai-sdk/anthropic` | `/messages` |
+
+实现依据 [AI SDK v7 OpenAI provider 文档](https://ai-sdk.dev/providers/ai-sdk-providers/openai) 与 [OpenAI Compatible provider 文档](https://ai-sdk.dev/providers/openai-compatible-providers)。`@ai-sdk/openai` 固定为 4.0.77，与现有 `ai@7.0.116` 使用同一 `@ai-sdk/provider@4.0.18`，避免只升级某个 adapter 后产生协议类型漂移。
+
+静态平台配置继续使用服务器的受控 endpoint。个人连接以 `fob-connection-<uuid>` 作为私有 provider ID，Gateway 每次调用通过 `resolveProvider(context,providerId)` 按当前用户和知识库解析定义，验证 endpoint、模型清单与凭据；不修改共享 provider registry，也不临时切换全局默认模型。连接测试走同一个 Gateway 和用量记录，指定一个已配置模型真实调用，不能用“字段齐全”代替成功连接。
+
+自定义 Base URL 支持公开 HTTPS 地址。保存时验证 URL 语法、保留主机名和字面 IP；每次实际请求前重新解析全部 DNS 结果，任一私网、环回、链路本地、文档/保留或转译地址即拒绝。新的 Node `http(s)` socket 通过自定义 lookup 固定到刚验证的公网 IP，HTTP Host/TLS SNI 保持原 hostname，关闭连接池复用和地址二次选择。用户无法通过环境代理、DNS 重绑或 redirect 把带 key 的请求送入内部网络。HTTP 或私网地址只允许精确匹配服务器预先批准的 Ollama endpoint，网页不能自行扩展这个范围。
+
+`model-discovery.ts` 与存储分离，使用相同受控 transport 请求 `/models`。Anthropic 使用 `x-api-key`/`anthropic-version` 并按本地构造的 `after_id` 分页，不跟随供应商返回的任意 next URL；其他协议使用 Bearer key。结果去重并限制最多 300 个模型、3 页、累计 2 MiB、30 秒，清楚返回 `truncated`。发现清单不自动覆盖已配置模型，用户明确保存后才可用于绑定；认证失败、无模型、格式非法和超限结果分别体现，不能伪报连接成功。
+
 ## 预算和生命周期
 
 快速档最多 6 次模型调用、12 次工具、120 秒，每次输出最多 4096 tokens；深度档使用下表的 8 / 16 / 170 秒预算及每次最多 8192 tokens。两个档位可以绑定同一模型，研究预算仍有实际区别。
@@ -150,4 +174,4 @@ pnpm server:typecheck
 
 测试使用合成 provider stream 与真正的隔离 PostgreSQL/身份/ACL/索引/协作建议路径；不消耗生产模型凭据。覆盖多步工具结果回填、累计 usage、无 embedding 的真实关键词检索、文档范围收敛、标题/数据库行元数据撤权、工具边界撤权、凭据失效、跨服务实例取消、checkpoint/取消标记竞态、超时、输出前重试、Unicode/JSON/上下文预算、物理留存，以及正文提交后会话标记失败、用户接受建议后的重试去重。真实供应商连接与编辑器视效由产品集成验证另行完成。
 
-当前保留的边界：没有后台自主写作或无人确认的变更；没有通用终端、文件、浏览器工具；没有把任意 provider endpoint 暴露给客户端。知识检索的语义能力依赖实际 embedding 绑定及对应索引，不会用关键词结果冒充。更多可审阅写操作与长任务的自动恢复可在不改动 provider/工具权限边界的前提下继续扩展。
+当前保留的边界：没有后台自主写作或无人确认的变更；没有通用终端、文件、浏览器工具。客户端可以管理私有公开 HTTPS 连接，实际网络访问仍受服务器 DNS/IP、TLS、重定向及凭据范围约束。知识检索的语义能力依赖实际 embedding 绑定及对应索引，不会用关键词结果冒充。更多可审阅写操作与长任务的自动恢复可在不改动 provider/工具权限边界的前提下继续扩展。

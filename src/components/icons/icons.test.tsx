@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { ArrowLeft, Coffee, Folder, MagnifyingGlass, Moon, Star, StarOutline } from './index';
+import { ArrowLeft, Coffee, Folder, GenerateStar, MagnifyingGlass, Moon, ShapesOutline, Star, StarOutline } from './index';
 import { ICON_SIZES, resolveIconSize } from './metrics';
 
 test('system entities render local FA7 Solid glyphs and lightweight controls use Lucide', () => {
@@ -28,4 +28,18 @@ test('the shared renderer reduces every numeric glyph one step without resizing 
   expect(resolveIconSize(48)).toBe(46);
   expect(renderToStaticMarkup(<Folder size={19} />)).toContain('width:14px;height:14px');
   expect(renderToStaticMarkup(<Folder size={48} />)).toContain('width:46px;height:46px');
+});
+
+test('AI glyphs share the standard optical box and the four-shape reference uses official components', () => {
+  const generation = renderToStaticMarkup(<GenerateStar size={16} aria-hidden />);
+  const visualization = renderToStaticMarkup(<ShapesOutline size={16} aria-hidden />);
+  expect(generation).toContain('lucide-sparkle');
+  expect(generation).toContain('stroke-width="1.75"');
+  expect(generation).toContain('width:14px;height:14px');
+  expect(visualization).toContain('width:14px;height:14px');
+  expect(visualization).toContain('data-icon-composition="four-shapes"');
+  expect(visualization.match(/<svg\b/g)).toHaveLength(4);
+  for (const name of ['diamond', 'circle', 'triangle', 'square']) expect(visualization).toContain(`lucide-${name}`);
+  // 7/16-cell sizing × 4px source stroke = the full icon's 1.75px stroke.
+  expect(visualization.match(/stroke-width="4"/g)).toHaveLength(4);
 });

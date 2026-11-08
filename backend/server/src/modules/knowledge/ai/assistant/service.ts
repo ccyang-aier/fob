@@ -26,7 +26,9 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
     // Read authorization and actual configuration both precede creation/model work.
     const context = await assembleAssistantContext(deps.pool, actor, input);
     options.signal.throwIfAborted();
-    if (!(await deps.preferences.read(actor)).ready) throw new AssistantError('configuration', 503);
+    const availableSettings = await deps.preferences.resolveFor(actor, input.selection);
+    const available = await deps.preferences.read(actor);
+    if (!availableSettings[input.tier] && !available.platformModels?.[input.tier] && !(!available.platformModels && available.ready)) throw new AssistantError('configuration', 503);
     if ([...active.values()].filter(task => task.userId === actor.userId).length >= 2) throw new AssistantError('too_many_requests', 429);
     const started = await conversations.begin(actor, input);
     const turn: AssistantTurn = started.replay ? (await conversations.get(actor, started.id)).turns.find(item => item.id === started.turn.id)! : { ...started.turn, sources: context.sources, contextPageIds: context.contextPageIds, toolSteps: [] };
@@ -80,7 +82,7 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
       syncLedger();
       const tools = createKnowledgeAgentTools({ pool: deps.pool, authority: () => authority, mode: input.mode, pageId: input.pageId, ledger: context.ledger, search: deps.search });
       const model = createGatewayAgentModel({ gateway: deps.gateway, tier: input.tier,
-        context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, taskId: started.id }, resolveSettings: () => deps.preferences.resolve(authority) });
+        context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, taskId: started.id }, resolveSettings: () => deps.preferences.resolveFor(authority, input.selection) });
       let publishedSources = turn.sources.length, publishedTruncated = context.truncated;
       await runKnowledgeAgent({ model, tools, signal, check: recheck,
         ...(input.tier === 'fast' ? { limits: { modelSteps: 6, toolCalls: 12, timeoutMs: 120_000 } } : {}),
@@ -148,6 +150,11 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
     });
   }
   return { conversations, ask, apply, preferences: deps.preferences,
+    async checkConnection(actor: KnowledgeRequestContext, connectionId: string, modelId: string, signal: AbortSignal) {
+      const started = performance.now();
+      const result = await deps.gateway.generate({ context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId }, settings: await deps.preferences.resolveFor(actor, { connectionId, modelId }), tier: 'fast', messages: [{ role: 'user', content: 'Reply OK.' }], maxOutputTokens: 256, maxRetries: 0, timeoutMs: 45000, signal });
+      return { model: result.model.model, latencyMs: Math.max(0, Math.round(performance.now() - started)) };
+    },
     async cancel(actor: KnowledgeRequestContext, id: string) { const task = active.get(id); if (task?.userId === actor.userId && task.knowledgeBaseId === actor.knowledgeBaseId) task.controller.abort(); await conversations.requestCancel(actor, id); },
     async check(actor: KnowledgeRequestContext, signal: AbortSignal) { const result = await deps.gateway.generate({ context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId }, settings: await deps.preferences.resolve(actor), tier: 'fast', messages: [{ role: 'user', content: 'Reply OK.' }], maxOutputTokens: 256, maxRetries: 0, timeoutMs: 45000, signal }); return { model: result.model.model }; },
   };

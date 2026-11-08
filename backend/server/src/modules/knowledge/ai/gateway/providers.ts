@@ -1,12 +1,13 @@
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createCohere } from '@ai-sdk/cohere';
+import { createOpenAI } from '@ai-sdk/openai';
 import type { EmbeddingModel, LanguageModel, RerankingModel } from 'ai';
 import { modelEndpointSchema } from '@fob/shared/knowledge/contracts';
 import type { ModelTier } from '@fob/shared/knowledge/contracts';
 import type { ResolvedModel } from '../config';
 import { ModelGatewayError } from './errors';
-import type { GatewayFetch, GatewayOptions, GatewayProviderOptions } from './types';
+import type { GatewayFetch, GatewayOptions, GatewayProvider, GatewayProviderOptions } from './types';
 
 export const normalizeEndpoint = (endpoint: string) => new URL(modelEndpointSchema.parse(endpoint)).href.replace(/\/+$/, '');
 export const ollamaEndpoint = (endpoint: string) => `${normalizeEndpoint(endpoint).replace(/\/v1$/, '')}/v1`;
@@ -34,17 +35,18 @@ function guardedFetch(baseURL: string, fetcher: GatewayFetch): GatewayFetch {
   };
 }
 
-export function createGatewayModel(model: ResolvedModel, tier: ModelTier, config: GatewayOptions): {
+export function createGatewayModel(model: ResolvedModel, tier: ModelTier, config: GatewayOptions, override?: GatewayProvider): {
   language?: LanguageModel; embedding?: EmbeddingModel; reranking?: RerankingModel; options?: GatewayProviderOptions;
 } {
   const local = model.source === 'ollama';
-  const definition = local ? {
+  const definition: GatewayProvider | undefined = local ? {
     protocol: 'openai-compatible' as const,
     endpoints: (config.ollamaEndpoints ?? []).map(ollamaEndpoint),
     tiers: ['fast', 'smart', 'vision', 'embed'] as const,
     options: undefined,
-  } : config.providers[model.provider];
+  } : override ?? config.providers[model.provider];
   if (!definition) throw new ModelGatewayError('configuration');
+  if (definition.models && !definition.models.includes(model.model)) throw new ModelGatewayError('configuration');
   if (!(definition.tiers as readonly ModelTier[]).includes(tier)) throw new ModelGatewayError('unsupported_capability');
   let endpoints: string[], endpoint: string;
   try {
@@ -53,7 +55,7 @@ export function createGatewayModel(model: ResolvedModel, tier: ModelTier, config
   } catch { throw new ModelGatewayError('configuration'); }
   if (!endpoint || !endpoints.includes(endpoint)) throw new ModelGatewayError('endpoint_denied');
   // Bun augments global fetch with preconnect; SDK providers only call the standard function.
-  const fetch = guardedFetch(endpoint, config.fetch ?? globalThis.fetch) as typeof globalThis.fetch;
+  const fetch = guardedFetch(endpoint, definition.fetch ?? config.fetch ?? globalThis.fetch) as typeof globalThis.fetch;
   const options = definition.options;
   if (definition.protocol === 'openai-compatible') {
     const provider = createOpenAICompatible({ name: model.provider, baseURL: endpoint, apiKey: model.apiKey, fetch, includeUsage: true });
@@ -67,6 +69,10 @@ export function createGatewayModel(model: ResolvedModel, tier: ModelTier, config
   if (definition.protocol === 'anthropic') {
     if (tier === 'embed' || tier === 'rerank') throw new ModelGatewayError('unsupported_capability');
     return { language: createAnthropic({ baseURL: endpoint, apiKey: model.apiKey, fetch })(model.model), options };
+  }
+  if (definition.protocol === 'openai-responses') {
+    if (tier === 'embed' || tier === 'rerank') throw new ModelGatewayError('unsupported_capability');
+    return { language: createOpenAI({ name: model.provider, baseURL: endpoint, apiKey: model.apiKey, fetch }).responses(model.model), options: { ...options, openai: { ...options?.openai, store: false } } };
   }
   const provider = createCohere({ baseURL: endpoint, apiKey: model.apiKey, fetch });
   return tier === 'rerank' ? { reranking: provider.rerankingModel(model.model), options }

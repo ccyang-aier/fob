@@ -46,7 +46,9 @@ export function createModelGateway(config: GatewayOptions) {
         catch { throw new ModelGatewayError('configuration'); }
         record.model = { source: resolved.source, provider: resolved.provider, model: resolved.model, dimensions: resolved.dimensions };
         signal.throwIfAborted();
-        return createGatewayModel(resolved, tier, config);
+        const definition = config.providers[resolved.provider] ?? await config.resolveProvider?.(validated.context, resolved.provider);
+        signal.throwIfAborted();
+        return createGatewayModel(resolved, tier, config, definition);
       },
       failure(error: unknown) {
         const safe = modelGatewayError(error, signal, timedOut);

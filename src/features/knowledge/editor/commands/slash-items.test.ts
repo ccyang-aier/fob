@@ -12,6 +12,7 @@ import { Window } from 'happy-dom';
 import { beforeAll, describe, expect, test } from 'bun:test';
 import { Editor } from '@tiptap/core';
 import { setLocale } from '@/lib/i18n';
+import { GenerateStar, ShapesOutline } from '@/components/icons';
 import {
   createKnowledgeExtensions,
   createKnowledgeRegistry,
@@ -76,6 +77,8 @@ describe('slash menu items', () => {
       new Set(expected.map((definition) => definition.name)),
     );
     expect(items.slice(0, 2).map((item) => item.name)).toEqual(['aiBlock', 'aiVisualization']);
+    expect(items[0].icon).toBe(GenerateStar);
+    expect(items[1].icon).toBe(ShapesOutline);
     expect(items.filter(item => item.name.startsWith('heading')).map((item) => item.marker)).toEqual(['H1', 'H2', 'H3', 'H4']);
     expect(
       items.filter((item) => item.name.startsWith('heading')).map((item) => item.group),

@@ -25,15 +25,19 @@ export interface ModelCallRecord {
   errorCode?: string;
 }
 export interface GatewayProvider {
-  protocol: 'openai-compatible' | 'anthropic' | 'cohere';
+  protocol: 'openai-compatible' | 'openai-responses' | 'anthropic' | 'cohere';
   /** Exact server-approved base URLs; knowledgeBase settings cannot extend this list. */
   endpoints: readonly string[];
   tiers: readonly ModelTier[];
   options?: GatewayProviderOptions;
+  /** Server-resolved transport; private connections always pin validated DNS. */
+  fetch?: GatewayFetch;
+  models?: readonly string[];
 }
 export interface GatewayOptions {
   platform: PlatformModels;
   providers: Readonly<Record<string, GatewayProvider>>;
+  resolveProvider?: (context: ModelCallContext, provider: string) => Promise<GatewayProvider | undefined>;
   ollamaEndpoints?: readonly string[];
   credentials?: { find(context: ModelCallContext, id: string, provider: string): Promise<ModelCredential | null> };
   onCall?: (record: ModelCallRecord) => Promise<void>;

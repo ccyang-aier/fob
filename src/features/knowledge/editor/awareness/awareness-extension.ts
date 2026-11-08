@@ -1,6 +1,7 @@
 import { createTranslator, getLocale } from '@/lib/i18n';
 import { editorLocaleMeta } from '../use-editor-locale';
 import { knowledgeMessages } from './awareness-extension.messages';
+import { createGenerateStarElement } from '@/components/icons/generate-star-element';
 
 /**
  * The editor-side presence extension (B07): one Tiptap extension that both
@@ -56,10 +57,6 @@ export interface AwarenessExtensionOptions {
 /** Names shown on the caret flag stop at ~12 characters. */
 const NAME_LIMIT = 12;
 
-/** The Phosphor `Sparkle` glyph (fill) agents wear on their caret flag. */
-const AGENT_SPARKLE_PATH =
-  'M208,144a15.78,15.78,0,0,1-10.42,14.94L146,178l-19,51.62a15.92,15.92,0,0,1-29.88,0L78,178l-51.62-19a15.92,15.92,0,0,1,0-29.88L78,110l19-51.62a15.92,15.92,0,0,0,29.88,0L146,110l51.62,19A15.78,15.78,0,0,1,208,144Z';
-
 function truncateName(name: string): string {
   return name.length > NAME_LIMIT ? `${name.slice(0, NAME_LIMIT)}…` : name;
 }
@@ -99,14 +96,7 @@ const remoteCursorWidget: RemoteCursorWidgetBuilder = (resolved) => (): HTMLElem
     ? knowledgeT('valueEditing', { v0: resolved.name })
     : resolved.name;
   if (resolved.kind === 'agent') {
-    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    icon.setAttribute('viewBox', '0 0 256 256');
-    icon.setAttribute('aria-hidden', 'true');
-    icon.classList.add('fob-awareness-agent-icon');
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', AGENT_SPARKLE_PATH);
-    icon.append(path);
-    flag.append(icon);
+    flag.append(createGenerateStarElement(document, 'fob-awareness-agent-icon'));
   }
   flag.append(document.createTextNode(flagLabel(resolved)));
   caret.append(flag);
@@ -268,7 +258,7 @@ export function ensureAwarenessCursorStyles(): void {
   animation:fob-awareness-in .18s ease-out;
   transition:box-shadow .2s ease;
 }
-.ProseMirror .fob-awareness-agent-icon{width:9px;height:9px;flex:none;fill:currentColor;}
+.ProseMirror .fob-awareness-agent-icon{width:9px;height:9px;flex:none;}
 .ProseMirror .fob-awareness-caret[data-awareness-editing="true"] .fob-awareness-flag{
   animation:fob-awareness-in .18s ease-out,fob-awareness-pulse 1.8s ease-in-out .18s infinite;
 }

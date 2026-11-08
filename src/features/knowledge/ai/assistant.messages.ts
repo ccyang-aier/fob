@@ -7,6 +7,7 @@ export const assistantMessages = defineMessages({
   remove: ['删除对话', 'Delete conversation'], removeConfirm: ['删除这段对话？此操作无法撤销。', 'Delete this conversation? This cannot be undone.'],
   document: ['当前文档', 'Current document'], knowledgeBase: ['整个知识库', 'Knowledge base'], scope: ['资料范围', 'Source scope'],
   fast: ['快速', 'Fast'], smart: ['深度', 'Deep'], tier: ['思考档位', 'Thinking tier'],
+  defaultModel: ['默认 · {model}', 'Default · {model}'],
   intro: ['从你的知识中寻找答案', 'Find answers in your knowledge'],
   subtitle: ['询问当前文档，或切换到整个知识库查找资料。', 'Ask about this document, or search across your knowledge base.'],
   summary: ['总结这篇文档', 'Summarize this document'], summaryPrompt: ['请总结当前文档的核心内容和关键结论。', 'Summarize the key points and conclusions of this document.'],

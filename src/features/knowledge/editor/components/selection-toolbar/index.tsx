@@ -17,7 +17,7 @@ import {
   TextB,
   TextItalic,
   TextStrikethrough,
-  Sparkle,
+  GenerateStar as Sparkle,
 } from '@/components/icons';
 import { useBlockMenuContext } from '../../block-menu-context';
 import { requestAssistantSelection } from '../../../ai/assistant-bridge';

@@ -27,8 +27,8 @@ import {
 } from './slash-paste';
 import styles from './slash-menu.module.css';
 
-const MENU_WIDTH = 520;
-const MENU_MAX_HEIGHT = 480;
+const MENU_WIDTH = 360;
+const MENU_MAX_HEIGHT = 400;
 const groupLabels = { ai: 'aiGroup', knowledge: 'knowledgeGroup', media: 'mediaGroup', text: 'textGroup', layout: 'layoutGroup' } as const;
 const descriptions = { aiBlock: 'generateDescription', aiVisualization: 'visualizationDescription', pageLink: 'pageDescription', image: 'imageDescription', video: 'videoDescription', audio: 'audioDescription', file: 'fileDescription' } as const;
 const VIEWPORT_MARGIN = 8;

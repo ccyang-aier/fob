@@ -261,8 +261,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/index.tsx"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "e84962e9495cebae43ab4bded93a46a445cfa8b2a2c46dac631df3c2e768d784",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "69c664665a3512387fe2aa29062c6eef70715ccc101f1f67b47dffb0729de421",
     "relocatedTo": "src/features/knowledge/editor/components/selection-toolbar/index.tsx"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
@@ -463,12 +463,12 @@
     "relocatedTo": "src/features/knowledge/documents/previews/text/text-file-view.tsx"
   },
   "src/features/knowledge/editor/awareness/awareness-members.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Render deduplicated live members and verified role, local time and activity in individual profile cards.",
-    "sha256": "dbe79ffdbf044af471608e2fa94e26572be4b2a93e00a688b5a001aae81624bb"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Render deduplicated live members and verified role, local time and activity in individual profile cards. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "a3b8436200d056ca35f101a4b6effe0bcfb5138365f2f98aa7d264e39d316736"
   },
   "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "be0cddb4fb2475b5902e497fc3a8112bd1cf2a9ff3b58235ad5afe179554b104"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "12001dc376d871bf450d3105c575571fc976c974c9efb788364931ec90374986"
   },
   "src/features/knowledge/editor/block-modules/ai-block/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
@@ -850,8 +850,8 @@
     "sha256": "e08c9ce93f0f9376c091910b69e511ea957d9ccc63785aef89c775a3ec6e0344"
   },
   "src/features/knowledge/editor/commands/slash-items.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "559c11dadc6f2b988c63bbdfa6dd10a74c62d7c9157555fa58bfac1e8d514e49"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "c41a954edd957bc3cc81f59f6b3f2bd5a5d6075dcfc5fee2e9cc96896fef9ff1"
   },
   "src/features/knowledge/editor/commands/slash-paste.instance.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Cover zero-length empty-line insertion, clean cancellation and readonly/code/nonempty guards alongside the existing slash and paste tests.",
@@ -1516,8 +1516,8 @@
     "reason": "Owner-only member management and invitation authority; preserve actual resource grants and scoped collaborators. Compact role, checkbox filter and permission controls. See .spec/tasks/member-management-owner-only.md."
   },
   "src/features/knowledge/editor/commands/slash-menu.tsx": {
-    "sha256": "b1035c835b5c516e3e6ac04f8c208392bb4fa6519cd828aa2dbebc54be3b4a0b",
-    "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md."
+    "sha256": "b963460299ce0e71afa3e0f48b7e4df28fda77d384116aee580ebe5c0a7419d5",
+    "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md."
   },
   "src/features/knowledge/editor/block-modules/media-core/insert-media.test.ts": {
     "sha256": "2cccec12943b3bae275cf1b0acb891980bd45616efc1c8139f575be97f256db2",
@@ -1576,16 +1576,16 @@
     "sha256": "62623619d76f7f98abb9ac72cda710b1d9311d50161dfadb256263a7ec835d63"
   },
   "src/features/knowledge/editor/block-modules/ai-block/ai-block.module.css": {
-    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "8a69cd06e3fe3da190531884048622ce9194e5f9baac27d995c2c9d32e76ed2f"
+    "reason": "Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "23191955c5065f10dcccbfd489b45934e69885dbc05664b8e76c2dc93c15e8c1"
   },
   "src/features/knowledge/editor/commands/slash-menu.messages.ts": {
     "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
     "sha256": "68b126b3cd52bc42e4b1d8371fe5366fe20f0971dcb9eca00a9ee0c9b972bc29"
   },
   "src/features/knowledge/editor/commands/slash-menu.module.css": {
-    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "0c9881371ad06bc86850b25304c5e6ac7913b0b267736f6ecfea2e8094be3dcf"
+    "reason": "Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "3046c5c9c283821f5ade062f4169e1c14049e6d2ada8c061fc667d9665da9a5d"
   },
   "src/features/knowledge/editor/review/review-decisions.ts": {
     "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
@@ -1630,5 +1630,25 @@
   "shared/src/knowledge/contracts/ai-tasks.ts": {
     "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
     "sha256": "ca0936274158f47d90243bdc01dedc3933f5c7e82616f2d5a26014204ee44627"
+  },
+  "src/features/knowledge/editor/awareness/awareness-extension.instance.test.ts": {
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "c8265d176ebcda6c8740377520f414bc846aea65f21ee2dce999ba2417e487e6"
+  },
+  "src/features/knowledge/editor/awareness/awareness-extension.ts": {
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "318a70c941074dc249f0f3d16009703188445c977fac13b17e0716a94071cd41"
+  },
+  "backend/server/src/modules/knowledge/ai/gateway/gateway.ts": {
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "1a6d61f38a3cfe33e9060251f9a0fd2e9ea0209aeea4e3bab53910949d65ddc6"
+  },
+  "backend/server/src/modules/knowledge/ai/gateway/providers.ts": {
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "30db4e4624d0c28c66419ee201557b783589f50d8f0841000ad0ffe70de946d8"
+  },
+  "backend/server/src/modules/knowledge/ai/gateway/types.ts": {
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "9ac0e4ab6d90fff13489b397cb77e125d6102f010097005ab13d27a454a01536"
   }
 }

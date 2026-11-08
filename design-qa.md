@@ -1,35 +1,38 @@
 # AI 界面验收
 
-日期：2026-11-08。结果：**passed**，保留文档阅读字号与现有产品共享交互规范。
+日期：2026-11-08。用户指出首版尺寸过大、设置结构不合理后，重新验收紧凑版和多服务商配置；首版截图不作为本次视觉通过的依据。保留文档阅读字号与现有产品共享交互规范。
 
 参考：用户提供的五张生成菜单 / 空态 / 思考 / 流式 / 完成态图片。实现是现有 Fob 产品内的真实功能。业务设计见 [知识助手](docs/knowledge-assistant-agent.md)，自动验证与真实调用证据见 [.spec 记录](.spec/tasks/knowledge-assistant-agent.md)。
 
 ## 环境与证据
 
-先尝试内置浏览器，遇到脚本加载和 Chrome 控制故障；用户明确允许改用本地 Playwright 后，使用独立 Chrome 测试上下文、合成账户及隔离知识库完成验收。桌面视口 1600 × 900，窄屏 600 × 850、390 × 844，截图按 CSS 像素保存，未将截图缩放伪装为一致。
+用户已允许本地 Playwright 验收，使用独立 Chrome 测试上下文、合成账户及隔离知识库。紧凑版桌面视口 1130 × 917，窄屏 390 × 844，截图按 CSS 像素保存，未将截图缩放伪装为一致。
 
 本地截图位于忽略的 `.runtime/dev/`，未提交运行快照或认证状态：
 
 | 状态 | 证据 |
 | --- | --- |
-| 空态、胶囊和发送按钮 | `ai-empty-final.png`、`ai-empty-dark.png` |
-| 思考 | `ai-thinking-empty-final.png` |
-| 实际流式尾段 | `ai-streaming-tail-final.png` |
-| 完成、蓝色真实选区和采纳条 | `ai-review-final.png` |
-| 菜单分组与 AI 前置 | `ai-slash-final.png`、`ai-slash-narrow.png` |
-| 设置页及真实连接成功 | `ai-settings.png`、`ai-settings-connected.png` |
-| 知识助手、真实来源及插入审阅 | `ai-agent-answer.png`、`ai-agent-ui-answer.png`、`ai-agent-inserted.png` |
-| 窄屏输入、停止后的草稿 | `ai-mobile-empty.png`、`ai-mobile-review.png` |
-| 深色 | `ai-empty-dark.png` |
+| 空态、胶囊和发送按钮 | `ai-block-compact-empty.png` |
+| 思考 | `ai-block-compact-thinking.png` |
+| 完成、真实选区和采纳条 | `ai-block-compact-review.png` |
+| 菜单尺寸与统一四形图标 | `ai-slash-refined.png` |
+| 两个服务商、独立模型与默认选择 | `ai-providers-refined.png` |
+| 指定个人服务商的真实问答 | `ai-assistant-selected-provider.png` |
+| 窄屏设置 | `ai-providers-mobile.png` |
+| 窄屏生成审阅 | `ai-block-compact-mobile.png` |
+| 深色协议菜单 | `ai-providers-dark-menu.png` |
 
-`ai-compare-empty.png`、`ai-compare-thinking.png`、`ai-compare-review.png` 将原图与实现内容区域放在同一张图中比对。比对后修复输入聚焦黑边、全局建议侧栏重复打开、绿色建议下划线、完成未自动选择，以及星形数量；最终改用官方五角轮廓 Star，保持集中图标目录。处理中的输入固定为单行高度，长提示只在编辑时展开。
+生成星统一为官方 Lucide Sparkle；可视化采用官方 Diamond/Circle/Triangle/Square 的四格组合，二者线宽统一为 1.75。参考的非对称星形不在允许的官方目录中，使用最接近的单星，不能声称逐像素一致；未增加手绘路径或第三套图标。处理中的输入固定为单行高度，长提示只在编辑时展开。
 
 ## 视觉与交互结论
 
-- 空态 190px、16px 圆角和浅虚线；胶囊最大宽 576px、最小高度 54px，黑色圆形发送 / 停止按钮，柔和阴影。移动端按视口缩小并保留完整点击区。
+- 菜单实测 360 × 400px，行高 32px、字号 13px。空态实测 120px、10px 圆角和浅虚线；胶囊实测 420 × 38px，发送按钮 30 × 30px。没有通过缩放整个组件实现。
 - 完成态使用浅灰实线框、蓝色原生文字选区和下方悬浮「撤销 / 提出修改要求 / 采纳」。正文继承用户当前文档字号，避免改写阅读偏好；没有额外的全块选中背景。
 - 真实修改生成后选中新的文本；独立块采纳与原生撤销经过 UI 验证。全局审阅不消耗块内草稿。
-- 实际移动端生成 → 停止后保留部分正文；390px 视口下审阅条 x=121、宽=201，位于视口内，三个按钮可访问。空态容器宽 225、输入宽 137，无横向越界。
+- 完成条实测 264 × 38px，真实生成短句后「采纳」移除容器、保留普通正文。设置控件实测 30px 高、13px 字号，原生 select 数量为 0。
+- 浏览器实际创建两套不同协议服务商，保存独立模型；刷新后快速/深度分别保留 GLM Flash / GLM Research。智谱连接测试成功，读取实际模型目录，搜索 flashx、添加并保存后刷新仍保留。
+- 使用测试密钥的第二个服务商显示真实失败；删除它仅清理其深度默认关联，快速模型和另一个服务商保留。助手显式选择模型的请求携带对应 connectionId/modelId，并完成真实带来源问答。
+- 窄屏最初发现固定设置侧栏挤压配置区，已改为顶部四分区导航；配置区实测宽 324px 且无横向溢出。修复审阅胶囊内部按钮越界后，390px 视口实测胶囊 226 × 36px，三个按钮均被胶囊完整包住；真实生成与 fresh navigation 未产生 pageerror。
 - 助手输入与发送区域避让现有精灵，真实发送按钮和键盘 Enter 都可工作。Markdown 不执行 HTML，不加载模型返回的远程图片，来源跳转使用经过验证的页面 / 块。
 - 设置、助手、菜单均使用真实加载和错误状态；图标和国际化验证通过。深色控件、占位文字及选区保持对比。
 

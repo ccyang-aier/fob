@@ -38,18 +38,4 @@ export function compactJson(value: unknown, depth = 0): unknown {
   return null;
 }
 
-/** A non-cooperating read tool cannot hold a cancelled request open. */
-export async function abortable<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
-  if (signal.aborted) {
-    // work may already have started/rejected during argument evaluation.
-    void work.catch(() => {});
-    signal.throwIfAborted();
-  }
-  let abort: () => void = () => {};
-  const interrupted = new Promise<never>((_resolve, reject) => {
-    abort = () => reject(signal.reason ?? new DOMException('Aborted', 'AbortError'));
-    signal.addEventListener('abort', abort, { once: true });
-  });
-  try { return await Promise.race([work, interrupted]); }
-  finally { signal.removeEventListener('abort', abort); }
-}
+export { abortable } from '../abort';

@@ -1,11 +1,11 @@
-.menu { composes:menu-surface from global; position:fixed; z-index:50; max-height:min(480px,calc(100vh - 16px)); overflow-y:auto; overscroll-behavior:contain; padding:8px; border:1px solid var(--menu-border); border-radius:23px; color:var(--ink); scrollbar-width:thin; scrollbar-color:var(--line) transparent; }
-.groupLabel { margin:3px 10px 4px; padding-top:4px; color:var(--muted); font-size:15px; line-height:24px; }
-.groupLabel:not(:first-child) { margin-top:9px; }
-.item { display:flex; align-items:center; gap:10px; width:100%; min-height:40px; padding:7px 12px; border:0; border-radius:20px; font-size:16px; font-weight:400; text-align:left; outline:none; cursor:pointer; }
-.marker,.icon { display:inline-flex; flex:none; align-items:center; justify-content:center; width:20px; color:inherit; font-size:12px; font-weight:600; }
-.icon { height:20px; }
+.menu { composes:menu-surface from global; position:fixed; z-index:50; max-height:min(400px,calc(100vh - 16px)); overflow-y:auto; overscroll-behavior:contain; padding:6px; border:1px solid var(--menu-border); border-radius:12px; color:var(--ink); scrollbar-width:thin; scrollbar-color:var(--line) transparent; }
+.groupLabel { margin:0 8px 2px; padding-top:2px; color:var(--muted); font-size:12px; line-height:18px; }
+.groupLabel:not(:first-child) { margin-top:6px; }
+.item { display:flex; align-items:center; gap:8px; width:100%; min-height:32px; padding:4px 10px; border:0; border-radius:8px; font-size:13px; font-weight:400; line-height:20px; text-align:left; outline:none; cursor:pointer; }
+.marker,.icon { display:inline-flex; flex:none; align-items:center; justify-content:center; width:16px; color:inherit; font-size:11px; font-weight:600; }
+.icon { height:16px; }
 .title { flex:none; max-width:50%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.description { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--muted); font-size:15px; }
-.shortcut { flex:none; margin-left:auto; color:var(--muted-strong); font-size:12px; font-weight:400; white-space:nowrap; }
-.empty { display:flex; align-items:center; justify-content:center; min-height:64px; color:var(--muted); font-size:13px; }
-@media(max-width:600px) { .menu { border-radius:17px; }.item{font-size:14px;gap:8px}.description{font-size:13px}.groupLabel{font-size:13px} }
+.description { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--muted); font-size:12px; }
+.shortcut { flex:none; margin-left:auto; color:var(--muted-strong); font-size:11px; font-weight:400; white-space:nowrap; }
+.empty { display:flex; align-items:center; justify-content:center; min-height:48px; color:var(--muted); font-size:12px; }
+@media(max-width:480px) { .item { gap:6px; padding-inline:8px; } }

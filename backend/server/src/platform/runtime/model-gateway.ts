@@ -30,6 +30,6 @@ export function fobModelGatewayOptions(config: FobServiceConfig): GatewayOptions
     ollamaEndpoints: models.ollamaEndpoint ? [models.ollamaEndpoint] : [],
   };
 }
-export function createFobModelGateway(config: FobServiceConfig, options: Pick<GatewayOptions, 'credentials' | 'onCall'> = {}) {
+export function createFobModelGateway(config: FobServiceConfig, options: Pick<GatewayOptions, 'credentials' | 'onCall' | 'resolveProvider'> = {}) {
   return createModelGateway({ ...fobModelGatewayOptions(config), ...options });
 }

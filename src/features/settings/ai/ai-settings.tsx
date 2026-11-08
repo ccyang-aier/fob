@@ -45,6 +45,6 @@ function ScopedAISettings({ knowledgeBaseId, knowledgeBaseName, userId }: { know
     <p className={styles.hint}>{t('personalScope')}</p>
     {settings.isPending ? <p className={styles.loading} role="status">{t('loading')}</p>
       : settings.isError ? <div className={styles.empty}><AppAlert tone="error" title={t(assistantErrorKey(settings.error instanceof AssistantRequestError ? settings.error.code : 'failed'))} action={<Button variant="ghost" size="sm" onClick={() => void settings.refetch()}>{t('retry')}</Button>} /></div>
-        : <AIConnectionForm knowledgeBaseId={knowledgeBaseId} userId={userId} value={settings.data} onSaved={value => client.setQueryData(queryKey, value)} onChecked={() => void settings.refetch()} />}
+        : <AIConnectionForm knowledgeBaseId={knowledgeBaseId} userId={userId} value={settings.data} onSaved={value => { client.setQueryData(queryKey, value); void settings.refetch(); }} onChecked={() => void settings.refetch()} />}
   </>;
 }

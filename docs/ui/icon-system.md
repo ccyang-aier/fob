@@ -32,8 +32,9 @@
 | 主题月亮 | FA7 Solid `moon`，使用官方实心造型 |
 | 星标/点赞等切换状态 | 未选中 Lucide 轮廓，已选中 FA7 Solid，保留状态含义 |
 | H1/H2/H3 等编辑指令 | 保留区别明确的 Lucide 标题级别；其他格式、媒体和资源类型使用 FA7 对应语义 |
-| AI 生成块与可视化入口 | 按用户提供的生成块参考，使用官方 Lucide 五角 `Star` / `Shapes`，集中导出 `GenerateStar` / `ShapesOutline`；用于生成菜单、生成块空态及文档助手的轻量标识 |
+| AI 生成块与可视化入口 | `GenerateStar` 统一使用官方 Lucide 单颗 `Sparkle`，用于生成菜单、生成块空态及文档助手；参考的非对称星形采用最接近的官方单星，不复用收藏 `Star`。`ShapesOutline` 按参考的四格排列组合官方 `Diamond` / `Circle` / `Triangle` / `Square`，不绘制 SVG/path；两者同为 16px 请求尺寸、1.75 标准画布线宽。四格单元占整体 7/16，内部原版 glyph 的 4px 画布线宽等效于整体 1.75px，保持缩放后实际笔画一致。 |
 | AI 草稿修改要求 | 参考中的轻量指针控制使用官方 Lucide `MousePointer2`，集中导出 `SelectionEdit`；与既有轮廓撤销、上箭头及勾选配套使用 |
+| AI 接入设置、选区 AI 操作与协作者身份 | 同样复用 `GenerateStar`；非 React 的协作光标旗标经 `createGenerateStarElement` 克隆该官方组件的静态渲染结果，保留既有 9px 角色尺寸，不保存另一份路径或强制填色。 |
 | 文档块拖拽手柄 | FA7 `grip-vertical`，集中导出 `DotsSixVertical`；六点造型，14px 图形、24px 拖拽区域 |
 | 块操作菜单 | 链接、删除与格式类型复用系统默认 FA7 Solid（`LinkSimple` / `Trash` 等）；加号、转换、方向、选中标记及 H1–H4 沿用已有系统控制和编辑符号，不再为块菜单设置专用轮廓图标 |
 | 评论入口与选中文字评论 | 统一使用 FA7 Solid `comment-dots`，集中导出 `ChatCircleDots` |

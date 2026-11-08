@@ -1,0 +1,21 @@
+.canvas { display:flex; height:100%; min-height:0; min-width:0; }
+.sidebar { flex:none; width:var(--settings-sidebar-width); height:100%; z-index:20; }
+.navigation { position:relative; display:flex; flex-direction:column; height:100%; min-height:0; padding:12px 12px 20px; border-right:1px solid var(--wt-sidebar-edge); }
+.sections { display:flex; flex-direction:column; gap:4px; }
+.filteredOut { display:none; }
+.main { flex:1; min-height:0; min-width:0; overflow:hidden; }
+.viewport { width:100%; min-width:0; }
+
+@media(max-width:760px) {
+  .canvas { flex-direction:column; }
+  .sidebar { width:100%; height:auto; z-index:auto; transition:none; }
+  .navigation { height:auto; padding:12px 48px 10px 12px; border-right:0; border-bottom:1px solid var(--separator-color); }
+  .desktopOnly { display:none !important; }
+  .sections { flex-direction:row; gap:4px; width:100%; overflow-x:auto; scrollbar-width:none; }
+  .sections::-webkit-scrollbar { display:none; }
+  .sectionButton { flex:1 0 auto; justify-content:center; width:auto; padding-inline:8px; font-size:13px; }
+  .sectionButton > svg { display:none; }
+  /* A desktop search never removes the four mobile navigation choices. */
+  .filteredOut { display:flex; }
+  .main { width:100%; }
+}

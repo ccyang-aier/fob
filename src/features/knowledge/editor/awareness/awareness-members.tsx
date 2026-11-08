@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { Clock, Eye, PencilSimple, Sparkle } from '@/components/icons';
+import { Clock, Eye, PencilSimple, GenerateStar as Sparkle } from '@/components/icons';
 import type { DocumentPerson } from '@fob/shared/knowledge/contracts';
 import type { Awareness } from 'y-protocols/awareness';
 import { useTranslation } from '@/lib/i18n';

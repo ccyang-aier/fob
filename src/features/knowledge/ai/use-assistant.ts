@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AssistantConversation, PageScope } from '@fob/shared/knowledge/contracts';
+import type { AssistantConversation, AssistantModelSelection, PageScope } from '@fob/shared/knowledge/contracts';
 import { usePageSessionState } from '@/lib/page-session-state';
 import { assistantApi, AssistantRequestError } from './assistant-api';
 
@@ -39,13 +39,13 @@ export function useAssistant(scope: PageScope, userId: string) {
     window.addEventListener('fob:assistant-settings-changed', changed);
     return () => window.removeEventListener('fob:assistant-settings-changed', changed);
   }, [scope.knowledgeBaseId, userId, refresh]);
-  async function send(question: string, mode: 'document' | 'knowledgeBase', tier: 'fast' | 'smart') {
+  async function send(question: string, mode: 'document' | 'knowledgeBase', tier: 'fast' | 'smart', selection?: AssistantModelSelection | null) {
     if (pending.current || remoteRunning || applying.current || !question.trim()) return;
     pending.current = true; setFetchBusy(true); setError(null); setTruncated(false);
     const abort = new AbortController(); controller.current = abort;
     let result: AssistantConversation | null = conversation ? { ...conversation, turns: [...conversation.turns] } : null;
     try {
-      await assistantApi.ask(scope.knowledgeBaseId, { pageId: scope.pageId, ...(id ? { conversationId: id } : {}), requestId: crypto.randomUUID(), question, mode, tier }, abort.signal, event => {
+      await assistantApi.ask(scope.knowledgeBaseId, { pageId: scope.pageId, ...(id ? { conversationId: id } : {}), ...(selection ? { selection } : {}), requestId: crypto.randomUUID(), question, mode, tier }, abort.signal, event => {
         if (!active.current || abort.signal.aborted) return;
         if (event.type === 'start') { setId(event.conversationId); currentId.current = event.conversationId; result = { id: event.conversationId, title: result?.title || question.slice(0, 60), updatedAt: event.turn.createdAt, turns: [...(result?.turns ?? []).filter(turn => turn.id !== event.turn.id), event.turn].slice(-20) }; }
         if (event.type === 'sources') setTruncated(event.truncated);

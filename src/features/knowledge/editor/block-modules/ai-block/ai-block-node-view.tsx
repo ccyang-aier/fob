@@ -85,20 +85,20 @@ export function AiBlockNodeView({ scope, userId, ...props }: NodeViewProps & { s
 
   return <NodeViewWrapper as="section" {...HTMLAttributes} data-fob-node="ai-block" data-block-id={blockId}
     data-ai-stage={review ? 'review' : running ? filled ? 'generating' : 'thinking' : 'empty'} data-filled={filled || undefined} aria-busy={running} className={styles.root}>
-    {!filled && <div className={styles.emptyStar} contentEditable={false} aria-hidden><GenerateStar size={28} /></div>}
+    {!filled && <div className={styles.emptyStar} contentEditable={false} aria-hidden><GenerateStar size={24} /></div>}
     <NodeViewContent className={styles.content} contentEditable={running ? false : undefined} data-empty={!hasContent || undefined} />
     {preview && <div className={styles.preview} contentEditable={false} aria-hidden>{preview}</div>}
     {canEdit && <div className={styles.floating} contentEditable={false}>
       {review ? <div className={styles.decisions} role="toolbar" aria-label={t('reviewGeneration')}>
-        <button type="button" className={`fob-action ${styles.decision}`} data-surface="plain" disabled={!suggestionIds.length} onClick={undo}><ArrowCounterClockwise size={18} aria-hidden />{t('undoGeneration')}</button>
-        <button type="button" className={`fob-action ${styles.decision}`} data-surface="plain" onClick={revise}><SelectionEdit size={18} aria-hidden />{t('requestChanges')}</button>
-        <button type="button" className={styles.accept} onClick={() => acceptAiBlock(editor, blockId)}><Check size={18} aria-hidden />{t('adopt')}</button>
+        <button type="button" className={`fob-action ${styles.decision}`} data-surface="plain" disabled={!suggestionIds.length} onClick={undo}><ArrowCounterClockwise size={16} aria-hidden />{t('undoGeneration')}</button>
+        <button type="button" className={`fob-action ${styles.decision}`} data-surface="plain" onClick={revise}><SelectionEdit size={16} aria-hidden />{t('requestChanges')}</button>
+        <button type="button" className={styles.accept} onClick={() => acceptAiBlock(editor, blockId)}><Check size={16} aria-hidden />{t('adopt')}</button>
       </div> : <form className={styles.promptBar} onSubmit={event => { event.preventDefault(); void generate(); }}>
         <textarea ref={input} aria-label={t('aiTaskInstructions')} placeholder={running ? t('processing') : refining ? t('revisionPlaceholder') : t('describeWhatYouWantAiToDo')}
           value={running ? '' : draft} readOnly={running} rows={1} maxLength={8000}
-          onChange={event => { setDraft(event.target.value); event.target.style.height = '32px'; event.target.style.height = `${Math.min(96, event.target.scrollHeight)}px`; }} onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); if (!running) void generate(); } if (event.key === 'Escape' && refining) setRefining(false); }} />
+          onChange={event => { setDraft(event.target.value); event.target.style.height = '24px'; event.target.style.height = `${Math.min(72, event.target.scrollHeight)}px`; }} onKeyDown={event => { if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); if (!running) void generate(); } if (event.key === 'Escape' && refining) setRefining(false); }} />
         <Tooltip><TooltipTrigger asChild>{running ? <button type="button" className={styles.roundAction} aria-label={t('stop')} disabled={Boolean(busy) || !canStop || !task.snapshot} onClick={() => void stop()}><Stop size={16} aria-hidden /></button>
-          : <button type="submit" className={styles.roundAction} aria-label={t('generate')} disabled={!draft.trim() || Boolean(busy)}><ArrowUp size={24} aria-hidden /></button>}</TooltipTrigger><TooltipContent>{running ? t('stop') : t('generate')}</TooltipContent></Tooltip>
+          : <button type="submit" className={styles.roundAction} aria-label={t('generate')} disabled={!draft.trim() || Boolean(busy)}><ArrowUp size={18} aria-hidden /></button>}</TooltipTrigger><TooltipContent>{running ? t('stop') : t('generate')}</TooltipContent></Tooltip>
       </form>}
     </div>}
     {!canEdit && !filled && <p className={styles.notice} contentEditable={false}>{scope ? t('readOnlyGeneration') : t('aiTasksRequireAConnectedTeamKnowledgeBase')}</p>}

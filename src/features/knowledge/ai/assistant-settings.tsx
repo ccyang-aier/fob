@@ -11,7 +11,7 @@ export function AssistantSettingsDialog({ knowledgeBaseId, value, onSaved, onClo
   const { t } = useTranslation(assistantMessages);
   const { session } = useIdentity();
   if (session.status !== 'authenticated') return null;
-  return <DocumentModal title={t('settings')} onClose={onClose}>
+  return <DocumentModal title={t('settings')} onClose={onClose} wide>
     <AIConnectionForm key={`${session.user.id}:${knowledgeBaseId}`} compact knowledgeBaseId={knowledgeBaseId} userId={session.user.id} value={value} onSaved={onSaved} onChecked={onSaved} onDone={onClose} onCancel={onClose} />
   </DocumentModal>;
 }

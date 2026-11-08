@@ -8,9 +8,9 @@
 .iconButton { display:inline-flex; flex:none; align-items:center; justify-content:center; width:28px; height:28px; padding:0; border:0; border-radius:6px; color:var(--muted-strong); cursor:pointer; }
 .iconButton:disabled { opacity:.4; cursor:default; }
 .messages { flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; padding:8px 18px 20px; scrollbar-width:thin; }
-.welcome { margin:48px 0 24px; }
-.welcome > span { display:grid; place-items:center; width:42px; height:42px; margin-bottom:18px; border-radius:12px; background:#e9f4ff; }
-.welcome h3 { font-size:20px; font-weight:650; letter-spacing:-.025em; }
+.welcome { margin:32px 0 24px; }
+.welcome > span { display:grid; place-items:center; width:32px; height:32px; margin-bottom:12px; border-radius:8px; background:#e9f4ff; }
+.welcome h3 { font-size:17px; font-weight:650; letter-spacing:-.02em; }
 .welcome p { margin-top:8px; color:var(--muted-strong); font-size:13px; line-height:1.7; }
 .welcome > div { display:grid; gap:8px; margin-top:26px; }
 .welcome button { display:flex; align-items:center; justify-content:space-between; min-height:38px; padding:8px 10px; border:1px solid var(--control-border); border-radius:7px; text-align:left; font-size:13px; cursor:pointer; }
@@ -54,7 +54,10 @@
 .inputBox textarea { display:block; width:100%; min-height:80px; max-height:180px; resize:vertical; padding:12px 12px 6px; border:0; outline:none; box-shadow:none; background:transparent; color:var(--ink); font:inherit; font-size:13px; line-height:1.7; }
 .inputBox textarea::placeholder { color:var(--muted); }
 .composerTools { display:flex; align-items:center; gap:4px; padding:4px 8px 8px; }
-.composerTools select { max-width:135px; min-width:0; height:26px; padding:0 4px; border:0; border-radius:4px; background:transparent; color:var(--muted-strong); font-size:11px; cursor:pointer; }
+.choice { display:inline-flex; align-items:center; gap:5px; max-width:135px; min-width:0; height:26px; padding:0 5px; border:0; border-radius:4px; background:transparent; color:var(--muted-strong); font-size:11px; cursor:pointer; }
+.choice > span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.modelRow { padding:0 8px; }
+.modelControl { height:26px; border:0; background:transparent; font-size:11px; color:var(--muted-strong); padding-inline:5px; }
 .composerTools > span { flex:1; }
 .send { display:grid; flex:none; place-items:center; width:28px; height:28px; padding:0; border:0; border-radius:6px; color:var(--ink); cursor:pointer; }
 .send:disabled { opacity:.35; cursor:default; }

@@ -18,13 +18,16 @@ import { createAssistantService, type AssistantService } from './service';
 import { createAssistantRoutes } from './http';
 
 let fixture: PermissionsFixture, service: AssistantService;
-let calls: TextCall[] = [], behaviour: 'normal' | 'cancel' = 'normal';
+let calls: TextCall[] = [], checks: TextCall[] = [], behaviour: 'normal' | 'cancel' = 'normal';
 const platform = { providers: { test: { apiKey: 'synthetic-test-only' } }, defaults: { fast: { source: 'platform' as const, provider: 'test', model: 'test-model' }, smart: { source: 'platform' as const, provider: 'test', model: 'test-model' } } };
 beforeAll(async () => {
   fixture = await createPermissionsFixture({ mount(app, deps) {
     const preferences = createAssistantPreferences({ pool: deps.pool, key: new Uint8Array(32).fill(7), platform });
     const realGateway = createModelGateway({ platform, providers: {} });
-    const gateway = { ...realGateway, async *stream(input: TextCall) {
+    const gateway = { ...realGateway, async generate(input: TextCall) {
+      checks.push(input);
+      return { callId: randomUUID(), model: { source: 'platform' as const, provider: 'test', model: input.settings.fast?.model ?? 'test-model' }, text: 'OK', toolCalls: [], finishReason: 'stop', usage: { inputTokens: 2, outputTokens: 1 } };
+    }, async *stream(input: TextCall) {
       calls.push(input); yield { type: 'text-delta' as const, text: '项目六月上线。[1](fob-source:1)' };
       if (behaviour === 'cancel') input.signal?.throwIfAborted();
       yield { type: 'finish' as const, result: { callId: randomUUID(), model: { source: 'platform' as const, provider: 'test', model: 'test-model' }, toolCalls: [], finishReason: 'stop', usage: { inputTokens: 100, outputTokens: 20 } } };
@@ -34,7 +37,7 @@ beforeAll(async () => {
   } });
 }, 60000);
 afterAll(async () => { await fixture?.close(); }, 30000);
-beforeEach(async () => { await fixture.resetJobs(); calls = []; });
+beforeEach(async () => { await fixture.resetJobs(); calls = []; checks = []; });
 function request(path: string, actor = fixture.owner, body?: unknown, method = 'POST', knowledgeBaseId = fixture.alpha.id) {
   return fetch(`${fixture.server.origin}/api/knowledge/${knowledgeBaseId}/assistant/${path}`, { method: body === undefined ? 'GET' : method, headers: { origin: fixture.server.webOrigin, cookie: actor.cookie, ...(body === undefined ? {} : { 'content-type': 'application/json' }) }, body: body === undefined ? undefined : JSON.stringify(body) });
 }
@@ -55,6 +58,33 @@ async function ask(pageId: string, actor = fixture.owner, extra: Record<string, 
 }
 function finished(events: AssistantStreamEvent[]) { const event = [...events].reverse().find(event => event.type === 'finish'); if (event?.type !== 'finish') throw new Error(JSON.stringify(events)); return event.turn; }
 function started(events: AssistantStreamEvent[]) { const event = events.find(event => event.type === 'start'); if (event?.type !== 'start') throw new Error(JSON.stringify(events)); return event.conversationId; }
+
+test('private provider HTTP lifecycle routes explicit and default model choices without exposing credentials', async () => {
+  const input = { name: 'Personal gateway', protocol: 'openai-compatible', baseUrl: 'https://models.example/v1', apiKey: 'http-synthetic-only', models: [{ id: 'chosen-model', name: 'Chosen' }] };
+  const created = await request('connections', fixture.owner, input); expect(created.status).toBe(201);
+  const connection = await created.json() as { id: string; hasCredential: boolean };
+  expect(connection.hasCredential).toBe(true); expect(JSON.stringify(connection)).not.toContain('http-synthetic-only');
+  const selection = { connectionId: connection.id, modelId: 'chosen-model' };
+  const selected = await request('selections', fixture.owner, { fast: selection, smart: null }, 'PUT'); expect(selected.status).toBe(200);
+  expect(assistantSettingsSchema.parse(await selected.json()).selections?.fast).toEqual(selection);
+  const foreignSettings = assistantSettingsSchema.parse(await (await request('settings', fixture.reader)).json());
+  expect(foreignSettings.connections).toEqual([]);
+  expect((await request(`connections/${connection.id}/test`, fixture.reader, { modelId: 'chosen-model' })).status).not.toBe(200);
+  const checked = await request(`connections/${connection.id}/test`, fixture.owner, { modelId: 'chosen-model' }); expect(checked.status).toBe(200);
+  expect(await checked.json()).toMatchObject({ model: 'chosen-model' }); expect(checks).toHaveLength(1);
+  expect(checks[0]!.context).toEqual({ knowledgeBaseId: fixture.alpha.id, userId: fixture.owner.identity.userId });
+  expect(checks[0]!.settings.fast).toMatchObject({ source: 'byok', model: 'chosen-model' });
+  expect((await request(`connections/${connection.id}/test`, fixture.owner, { modelId: 'unconfigured' })).status).toBe(503);
+  expect(checks).toHaveLength(1);
+  const tree = await fixture.tree({ parents: [null] }); await seed(tree.root, 'Provider choice', 'Synthetic content.'); await fixture.drain();
+  const events = await ask(tree.root.pageId, fixture.owner, { selection }); expect(finished(events).status).toBe('done');
+  expect(calls.at(-1)!.settings.fast).toMatchObject({ source: 'byok', model: 'chosen-model' });
+  const { apiKey: _secret, ...publicInput } = input;
+  expect((await request(`connections/${connection.id}`, fixture.owner, { ...publicInput, name: 'Renamed' }, 'PUT')).status).toBe(200);
+  expect((await request(`connections/${connection.id}`, fixture.owner, {}, 'DELETE')).status).toBe(200);
+  const current = assistantSettingsSchema.parse(await (await request('settings')).json());
+  expect(current.connections).toEqual([]); expect(current.selections?.fast).toBeNull(); expect(current.platformModels?.fast).toBe('test-model');
+});
 
 test('real HTTP ask persists a private conversation, validates sources and writes one reviewable suggestion', async () => {
   const { pages } = await fixture.tree({ parents: [null] }); const scope = pages[0]!;
