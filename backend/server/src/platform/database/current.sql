@@ -123,6 +123,14 @@ CREATE TABLE "resources"."asset" (
 	CONSTRAINT "asset_derived_object" CHECK (jsonb_typeof("resources"."asset"."derived") = 'object' AND "resources"."asset"."derived"->>'status' IS NOT NULL AND "resources"."asset"."derived"->>'status' IN ('pending', 'processing', 'ready', 'failed'))
 );
 
+CREATE TABLE "resources"."assistant_preference" (
+	"knowledge_base_id" uuid NOT NULL,
+	"user_id" uuid NOT NULL,
+	"settings" jsonb DEFAULT '{}'::jsonb NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "assistant_preference_knowledge_base_id_user_id_pk" PRIMARY KEY("knowledge_base_id","user_id")
+);
+
 CREATE TABLE "resources"."backlink" (
 	"knowledge_base_id" uuid NOT NULL,
 	"src_page_id" uuid NOT NULL,
@@ -584,6 +592,8 @@ ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_knowledge_base_id_kn
 ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_task_fk" FOREIGN KEY ("knowledge_base_id","task_id") REFERENCES "resources"."ai_task"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."asset" ADD CONSTRAINT "asset_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."assistant_preference" ADD CONSTRAINT "assistant_preference_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."assistant_preference" ADD CONSTRAINT "assistant_preference_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."backlink" ADD CONSTRAINT "backlink_source_page_fk" FOREIGN KEY ("knowledge_base_id","src_page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."backlink" ADD CONSTRAINT "backlink_target_page_fk" FOREIGN KEY ("dst_knowledge_base_id","dst_page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."block_embedding_model" ADD CONSTRAINT "block_embedding_model_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;

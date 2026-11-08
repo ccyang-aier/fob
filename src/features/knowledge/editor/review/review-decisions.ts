@@ -6,14 +6,15 @@
  * real `reviewSuggestions` transaction against the live editor: the decision
  * crosses the y-prosemirror binding into the page's Y.Doc and lands on the
  * B08 human undo stack of this connection as the reviewer's own edit. "All"
- * passes every outstanding suggestionId into a single S01 transaction, so
+ * passes every outstanding page-level suggestionId into a single S01 transaction, so
  * each suggestion stays atomic while the batch is one Yjs transaction and one
  * undo step (the semantics S01 proved); a loop of per-id transactions would
  * fragment undo and is deliberately not used.
  */
 
 import type { Editor } from '@tiptap/core';
-import { collectSuggestions, reviewSuggestions } from '@fob/shared/knowledge/schema/suggestions';
+import { reviewSuggestions } from '@fob/shared/knowledge/schema/suggestions';
+import { collectPageReviewSuggestions } from './review-scope';
 import type { SuggestionDecision } from '@fob/shared/knowledge/schema/suggestions';
 
 export type ReviewDecisionOutcome = 'applied' | 'readonly' | 'missing';
@@ -26,7 +27,7 @@ export interface ReviewDecisionResult {
 
 /**
  * Applies one decision. `suggestionIds` omitted (or empty) decides *all*
- * outstanding suggestions; otherwise exactly those IDs, and a request whose
+ * outstanding page-level suggestions; otherwise exactly those IDs, and a request whose
  * IDs have already been resolved changes nothing (S01 tolerates re-review).
  */
 export function applyReviewDecision(
@@ -34,7 +35,7 @@ export function applyReviewDecision(
   input: { decision: SuggestionDecision; suggestionIds?: readonly string[] },
 ): ReviewDecisionResult {
   if (!editor.isEditable) return { outcome: 'readonly', suggestionIds: [] };
-  const outstanding = collectSuggestions(editor.state.doc).map((summary) => summary.suggestionId);
+  const outstanding = collectPageReviewSuggestions(editor.state.doc).map((summary) => summary.suggestionId);
   const requested = input.suggestionIds?.length ? input.suggestionIds.filter((id) => outstanding.includes(id)) : outstanding;
   if (requested.length === 0) return { outcome: 'missing', suggestionIds: [] };
   const transaction = reviewSuggestions(editor.state, { decision: input.decision, suggestionIds: requested });

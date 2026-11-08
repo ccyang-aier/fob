@@ -10,7 +10,7 @@ import { messages } from './i18n/settings-canvas.messages';
 
 import { useState } from 'react';
 import type { SettingsSection } from '@/lib/settings-navigation';
-import { Info, MagnifyingGlass, PaintBrush, SlidersHorizontal } from '@/components/icons';
+import { Info, MagnifyingGlass, PaintBrush, SlidersHorizontal, Sparkle } from '@/components/icons';
 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
@@ -20,10 +20,12 @@ import { SidebarResizeHandle, useSidebarWidth } from '@/components/sidebar-resiz
 import { AboutSettings } from './about-settings';
 import { AppearanceSettings } from './appearance-settings';
 import { GeneralSettings } from './general-settings';
+import { AISettings } from './ai/ai-settings';
 
 const SECTIONS: Array<SidebarRowItem & { id: SettingsSection; label: keyof typeof messages }> = [
   { id: 'appearance', label: '外观', icon: PaintBrush },
   { id: 'general', label: '通用', icon: SlidersHorizontal },
+  { id: 'ai', label: 'AI 接入', icon: Sparkle },
   { id: 'about', label: '关于', icon: Info },
 ];
 
@@ -122,6 +124,8 @@ export function SettingsCanvas({
           <AppearanceSettings />
         ) : section === 'general' ? (
           <GeneralSettings />
+        ) : section === 'ai' ? (
+          <AISettings />
         ) : (
           <AboutSettings />
         )}

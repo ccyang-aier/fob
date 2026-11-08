@@ -36,6 +36,8 @@ export function registerSlashInsert(name: string, run: SlashInsertCommand): void
 }
 
 const priority: Record<string, number> = {
+  aiBlock: -2,
+  aiVisualization: -1,
   heading1: 0,
   heading: 1,
   heading3: 2,
@@ -43,7 +45,8 @@ const priority: Record<string, number> = {
   taskList: 4,
   bulletList: 5,
   orderedList: 6,
-  emoji: 7,
+  pageLink: 0,
+  emoji: 12,
   image: 8,
   video: 9,
   audio: 10,
@@ -64,6 +67,7 @@ export function buildSlashItems(
       if (blockModule?.choices)
         return blockModule.choices.map((choice) => ({
           ...base,
+          icon: choice.icon ?? base.icon,
           name: choice.name,
           get title() {
             return blockTitle(choice.name, choice.title);
@@ -86,7 +90,8 @@ export function buildSlashItems(
         },
       ];
     });
-  return items.sort((a, b) => (priority[a.name] ?? 100) - (priority[b.name] ?? 100));
+  const groups: Record<SlashGroup, number> = { ai: 0, knowledge: 1, media: 2, text: 3, layout: 4 };
+  return items.sort((a, b) => groups[a.group] - groups[b.group] || (priority[a.name] ?? 100) - (priority[b.name] ?? 100));
 }
 
 export function filterSlashItems(

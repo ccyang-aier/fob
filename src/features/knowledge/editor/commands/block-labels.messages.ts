@@ -31,5 +31,6 @@ export const blockLabels = defineMessages({
   blockReference: ['块引用', 'Block reference'],
   pageLink: ['页面链接', 'Page link'],
   databaseView: ['数据库视图', 'Database view'],
-  aiBlock: ['AI 块', 'AI block'],
+  aiBlock: ['生成', 'Generate'],
+  aiVisualization: ['创建可视化', 'Create visualization'],
 });

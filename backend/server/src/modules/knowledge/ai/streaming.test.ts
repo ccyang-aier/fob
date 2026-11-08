@@ -6,7 +6,9 @@ describe('markdown stream splitter', () => {
   test('blank-line boundaries emit complete blocks; incomplete tails wait', () => {
     const splitter = new MarkdownStreamSplitter();
     expect(splitter.push('第一段尚未')).toEqual([]);
+    expect(splitter.preview).toBe('第一段尚未');
     expect(splitter.push('结束\n\n')).toEqual(['第一段尚未结束']);
+    expect(splitter.preview).toBe('');
     expect(splitter.push('## 标题\n\n- 列表项\n- 另一项\n\n')).toEqual(['## 标题', '- 列表项\n- 另一项']);
     expect(splitter.push('残段')).toEqual([]);
     expect(splitter.flush()).toBe('残段');

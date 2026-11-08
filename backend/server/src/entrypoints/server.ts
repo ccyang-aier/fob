@@ -3,6 +3,8 @@ import { createFobSocketTickets } from '../platform/identity/socket-tickets';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Pool } from 'pg';
+import { createHash, randomUUID } from 'node:crypto';
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { readFobServiceConfig } from '../platform/runtime/config';
 import type { FobServiceConfig } from '../platform/runtime/config';
@@ -22,7 +24,12 @@ import { createKnowledgeNotificationRoutes } from '../modules/knowledge/notifica
 import { createKnowledgeTemplateRoutes } from '../modules/knowledge/templates';
 import { createKnowledgeSubscriptionRoutes } from '../modules/knowledge/subscriptions';
 import { bindKnowledgeStreamingTasks, createKnowledgeStreamingTasks } from '../modules/knowledge/ai';
-import { createFobModelGateway } from '../platform/runtime/model-gateway';
+import { createFobModelGateway, fobModelGatewayOptions } from '../platform/runtime/model-gateway';
+import { createAssistantPreferences } from '../modules/knowledge/ai/assistant/preferences';
+import { createAssistantService } from '../modules/knowledge/ai/assistant/service';
+import { createAssistantRoutes } from '../modules/knowledge/ai/assistant/http';
+import { withKnowledgeBase } from '../platform/database/resources/transaction';
+import { aiTask, aiUsage } from '../platform/database/resources/schema';
 import { subscribeFobKnowledgeEvents } from '../platform/runtime/knowledge-events';
 import { createPageCollaborationListener } from '../modules/knowledge/collaboration/page-collaboration-bun';
 import { revalidatePageConnections } from '../modules/knowledge/collaboration/page-collaboration-server';
@@ -115,12 +122,20 @@ export async function startFobService(config: FobServiceConfig, environment: Nod
   // model credentials the gateway holds no platform binding and aiTask.*
   // answers SERVICE_UNAVAILABLE by design.
   if (config.roles.includes('api')) {
-    const gateway = createFobModelGateway(config);
+    const preferences = createAssistantPreferences({ pool, key: createHash('sha256').update(`fob:model-credentials:${config.auth.secret}`).digest(), platform: fobModelGatewayOptions(config).platform, ollamaEndpoint: config.models.ollamaEndpoint });
+    const gateway = createFobModelGateway(config, { credentials: preferences.credentials, onCall: async record => {
+      await withKnowledgeBase(pool, record.context.knowledgeBaseId, async db => {
+        const task = record.context.taskId ? (await db.select({ id: aiTask.id }).from(aiTask).where(eq(aiTask.id, record.context.taskId)))[0] : null;
+        await db.insert(aiUsage).values({ knowledgeBaseId: record.context.knowledgeBaseId, id: randomUUID(), userId: record.context.userId, taskId: task?.id ?? null, operation: record.operation, status: record.status, tier: record.tier, provider: record.model?.provider ?? null, model: record.model?.model ?? null, inputTokens: record.usage.inputTokens, outputTokens: record.usage.outputTokens, durationMs: Math.round(record.durationMs), errorCode: record.errorCode ?? null });
+      });
+    } });
     bindKnowledgeStreamingTasks(createKnowledgeStreamingTasks({
       pool,
       gateway,
       hocuspocus: config.roles.includes('collab') ? listener.hocuspocus : undefined,
+      resolveSettings: (knowledgeBaseId, userId) => preferences.resolve({ knowledgeBaseId, userId }),
     }));
+    app.route('/', createAssistantRoutes({ authenticator, trustedOrigins: auth.options.trustedOrigins as string[], service: createAssistantService({ pool, gateway, preferences, hocuspocus: config.roles.includes('collab') ? listener.hocuspocus : undefined }) }));
   }
   const worker = config.roles.includes('worker') ? await startFobKnowledgeWorker(config) : undefined;
   console.log(`Fob service ready on http://${config.hostname}:${listener.port} (roles: ${config.roles.join(',')})`);

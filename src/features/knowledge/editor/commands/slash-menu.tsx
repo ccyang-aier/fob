@@ -11,7 +11,7 @@ import { knowledgeMessages } from './slash-menu.messages';
  * and renders the registry-backed commands as a compact block picker.
  */
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Editor } from '@tiptap/react';
 import { getOverlayRoot } from '@/lib/overlay-root';
@@ -27,8 +27,10 @@ import {
 } from './slash-paste';
 import styles from './slash-menu.module.css';
 
-const MENU_WIDTH = 240;
-const MENU_MAX_HEIGHT = 324;
+const MENU_WIDTH = 520;
+const MENU_MAX_HEIGHT = 480;
+const groupLabels = { ai: 'aiGroup', knowledge: 'knowledgeGroup', media: 'mediaGroup', text: 'textGroup', layout: 'layoutGroup' } as const;
+const descriptions = { aiBlock: 'generateDescription', aiVisualization: 'visualizationDescription', pageLink: 'pageDescription', image: 'imageDescription', video: 'videoDescription', audio: 'audioDescription', file: 'fileDescription' } as const;
 const VIEWPORT_MARGIN = 8;
 
 interface OpenMenuState {
@@ -97,26 +99,25 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
     if (!editor || !menu) return;
     const panel = panelRef.current;
     if (!panel) return;
-    let coords: { left: number; top: number; bottom: number };
-    try {
-      coords = editor.view.coordsAtPos(menu.range.from);
-    } catch {
-      closeSlashMenu(editor.view);
-      return;
-    }
-    const height = Math.min(panel.offsetHeight, MENU_MAX_HEIGHT);
-    const left = Math.min(
-      Math.max(VIEWPORT_MARGIN, coords.left),
-      Math.max(VIEWPORT_MARGIN, window.innerWidth - MENU_WIDTH - VIEWPORT_MARGIN),
-    );
-    const below = coords.bottom + 6;
-    const top =
-      below + height + VIEWPORT_MARGIN > window.innerHeight
-        ? Math.max(VIEWPORT_MARGIN, coords.top - height - 6)
-        : below;
-    panel.style.left = `${Math.round(left)}px`;
-    panel.style.top = `${Math.round(top)}px`;
-    panel.style.visibility = 'visible';
+    const position = () => {
+      if (editor.isDestroyed) return;
+      let coords: { left: number; top: number; bottom: number };
+      try { coords = editor.view.coordsAtPos(menu.range.from); }
+      catch { closeSlashMenu(editor.view); return; }
+      const width = Math.min(MENU_WIDTH, window.innerWidth - VIEWPORT_MARGIN * 2);
+      const height = Math.min(panel.offsetHeight, MENU_MAX_HEIGHT, window.innerHeight - VIEWPORT_MARGIN * 2);
+      const left = Math.min(Math.max(VIEWPORT_MARGIN, coords.left), Math.max(VIEWPORT_MARGIN, window.innerWidth - width - VIEWPORT_MARGIN));
+      const below = coords.bottom + 6;
+      const top = below + height + VIEWPORT_MARGIN > window.innerHeight
+        ? Math.max(VIEWPORT_MARGIN, coords.top - height - 6) : below;
+      panel.style.left = `${Math.round(left)}px`;
+      panel.style.top = `${Math.round(top)}px`;
+      panel.style.visibility = 'visible';
+    };
+    position();
+    window.addEventListener('resize', position);
+    document.addEventListener('scroll', position, true);
+    return () => { window.removeEventListener('resize', position); document.removeEventListener('scroll', position, true); };
   }, [editor, menu]);
 
   // Keep the highlighted item inside the scroll viewport.
@@ -154,7 +155,7 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
           ref={panelRef}
           role="menu"
           aria-label={knowledgeT('insertBlock')}
-          style={{ visibility: 'hidden', width: MENU_WIDTH }}
+          style={{ visibility: 'hidden', width: `min(${MENU_WIDTH}px, calc(100vw - 16px))` }}
           onMouseEnter={() => {
             pointerInsideRef.current = true;
           }}
@@ -169,14 +170,12 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
             filtered.map((item, index) => {
               const active = item === activeItem;
               const Icon = item.icon;
-              const separated =
-                index > 0 &&
-                (item.name === 'taskList' ||
-                  item.name === 'image' ||
-                  item.group !== filtered[index - 1]?.group);
+              const separated = index === 0 || item.group !== filtered[index - 1]?.group;
+              const description = descriptions[item.name as keyof typeof descriptions];
               return (
+                <Fragment key={item.name}>
+                {separated && <div className={styles.groupLabel}>{knowledgeT(groupLabels[item.group])}</div>}
                 <button
-                  key={item.name}
                   id={`fob-slash-item-${item.name}`}
                   type="button"
                   role="menuitem"
@@ -186,7 +185,7 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
                   onMouseDown={(event) => event.preventDefault()}
                   onMouseEnter={() => setActiveSlashItem(editor.view, index)}
                   onClick={() => runSlashItem(editor.view, item)}
-                  className={cn('fob-menu-item', styles.item, separated && styles.separated)}
+                  className={cn('fob-menu-item', styles.item)}
                 >
                   {item.marker ? (
                     <span aria-hidden className={styles.marker}>
@@ -196,12 +195,14 @@ export function SlashMenuLayer({ editor }: { editor: Editor | null }) {
                     <Icon aria-hidden className={styles.icon} />
                   ) : null}
                   <span className={styles.title}>{item.title}</span>
+                  {description && <span className={styles.description}>{knowledgeT(description)}</span>}
                   {item.shortcut ? (
                     <span aria-hidden className={styles.shortcut}>
                       {item.shortcut}
                     </span>
                   ) : null}
                 </button>
+                </Fragment>
               );
             })
           )}

@@ -1,0 +1,161 @@
+import { afterAll, beforeAll, beforeEach, expect, test } from 'bun:test';
+import { randomUUID } from 'node:crypto';
+import { and, eq, sql } from 'drizzle-orm';
+import type { AssistantStreamEvent, PageScope } from '@fob/shared/knowledge/contracts';
+import { principal, assistantConversationSchema, assistantSettingsSchema, assistantConversationListSchema } from '@fob/shared/knowledge/contracts';
+import { knowledgeSchema } from '@fob/shared/knowledge/schema';
+import { collectSuggestions } from '@fob/shared/knowledge/schema/suggestions';
+import { createPermissionsFixture, type PermissionsFixture, type PermissionTestActor } from '../../permissions/permissions-test-fixture';
+import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
+import { docState, page, aiTask, assistantPreference, modelCredential } from '../../../../platform/database/resources/schema';
+import { prosemirrorDocToYDoc, yStateToProseMirrorDoc } from '../../import-export/y-encoding';
+import { refreshPageBlockIndex } from '../../search/indexer';
+import { replaceAuthorizedPageAcl } from '../../permissions';
+import { createModelGateway } from '../gateway';
+import type { TextCall } from '../gateway';
+import { createAssistantPreferences } from './preferences';
+import { createAssistantService, type AssistantService } from './service';
+import { createAssistantRoutes } from './http';
+
+let fixture: PermissionsFixture, service: AssistantService;
+let calls: TextCall[] = [], behaviour: 'normal' | 'cancel' = 'normal';
+const platform = { providers: { test: { apiKey: 'synthetic-test-only' } }, defaults: { fast: { source: 'platform' as const, provider: 'test', model: 'test-model' }, smart: { source: 'platform' as const, provider: 'test', model: 'test-model' } } };
+beforeAll(async () => {
+  fixture = await createPermissionsFixture({ mount(app, deps) {
+    const preferences = createAssistantPreferences({ pool: deps.pool, key: new Uint8Array(32).fill(7), platform });
+    const realGateway = createModelGateway({ platform, providers: {} });
+    const gateway = { ...realGateway, async *stream(input: TextCall) {
+      calls.push(input); yield { type: 'text-delta' as const, text: '项目六月上线。[1](fob-source:1)' };
+      if (behaviour === 'cancel') input.signal?.throwIfAborted();
+      yield { type: 'finish' as const, result: { callId: randomUUID(), model: { source: 'platform' as const, provider: 'test', model: 'test-model' }, toolCalls: [], finishReason: 'stop', usage: { inputTokens: 100, outputTokens: 20 } } };
+    } };
+    service = createAssistantService({ pool: deps.pool, gateway, preferences });
+    app.route('/', createAssistantRoutes({ authenticator: deps.authenticator, trustedOrigins: deps.auth.options.trustedOrigins as string[], service }));
+  } });
+}, 60000);
+afterAll(async () => { await fixture?.close(); }, 30000);
+beforeEach(async () => { await fixture.resetJobs(); calls = []; });
+function request(path: string, actor = fixture.owner, body?: unknown, method = 'POST', knowledgeBaseId = fixture.alpha.id) {
+  return fetch(`${fixture.server.origin}/api/knowledge/${knowledgeBaseId}/assistant/${path}`, { method: body === undefined ? 'GET' : method, headers: { origin: fixture.server.webOrigin, cookie: actor.cookie, ...(body === undefined ? {} : { 'content-type': 'application/json' }) }, body: body === undefined ? undefined : JSON.stringify(body) });
+}
+async function actorContext(actor = fixture.owner) { return fixture.authenticator.authenticate(new Request(fixture.server.origin, { headers: { origin: fixture.server.webOrigin, cookie: actor.cookie } }), fixture.alpha.id); }
+async function seed(input: PageScope, title: string, text: string) {
+  const scope = { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId };
+  const body = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node('paragraph', { blockId: 'content' }, [knowledgeSchema.text(text)])]));
+  try { await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, async db => {
+    await db.update(page).set({ title }).where(eq(page.id, scope.pageId));
+    await db.insert(docState).values({ ...scope, state: body.state, stateVector: body.stateVector });
+    await refreshPageBlockIndex(db, scope);
+  }); } finally { body.ydoc.destroy(); }
+}
+async function ask(pageId: string, actor = fixture.owner, extra: Record<string, unknown> = {}) {
+  const response = await request('ask', actor, { pageId, question: '项目上线日期', requestId: randomUUID(), mode: 'document', tier: 'fast', ...extra });
+  expect(response.status).toBe(200);
+  return (await response.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent);
+}
+function finished(events: AssistantStreamEvent[]) { const event = [...events].reverse().find(event => event.type === 'finish'); if (event?.type !== 'finish') throw new Error(JSON.stringify(events)); return event.turn; }
+function started(events: AssistantStreamEvent[]) { const event = events.find(event => event.type === 'start'); if (event?.type !== 'start') throw new Error(JSON.stringify(events)); return event.conversationId; }
+
+test('real HTTP ask persists a private conversation, validates sources and writes one reviewable suggestion', async () => {
+  const { pages } = await fixture.tree({ parents: [null] }); const scope = pages[0]!;
+  await seed(scope, '项目计划', '项目将在六月上线。'); await fixture.drain();
+  const input = { requestId: randomUUID() }, events = await ask(scope.pageId, fixture.owner, input), turn = finished(events), id = started(events);
+  expect(turn.status).toBe('done'); expect(turn.sources).toHaveLength(1); expect(turn.model).toBe('test-model'); expect(turn.outputTokens).toBe(20);
+  expect(assistantConversationSchema.parse(await (await request(`conversations/${id}`)).json()).turns[0]!.answer).toContain('六月');
+  expect((await request(`conversations/${id}`, fixture.reader)).status).toBe(404);
+  expect((await request(`conversations/${id}`, fixture.foreign)).status).toBe(401);
+  const replay = await ask(scope.pageId, fixture.owner, { ...input, conversationId: id }); expect(finished(replay).id).toBe(turn.id);
+  const reconnected = await ask(scope.pageId, fixture.owner, input); expect(started(reconnected)).toBe(id); expect(calls).toHaveLength(1);
+  expect((await request(`conversations/${id}/apply`, fixture.reader, { pageId: scope.pageId, turnId: turn.id })).status).toBe(404);
+  const applied = await request(`conversations/${id}/apply`, fixture.owner, { pageId: scope.pageId, turnId: turn.id }); expect(applied.status).toBe(200);
+  expect((await request(`conversations/${id}/apply`, fixture.owner, { pageId: scope.pageId, turnId: turn.id })).status).toBe(200);
+  const stored = await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, async db => (await db.select().from(docState).where(eq(docState.pageId, scope.pageId)))[0]!);
+  const doc = yStateToProseMirrorDoc(stored.state, knowledgeSchema); if (!doc) throw new Error('Body missing'); expect(doc.textContent).toContain('项目将在六月上线'); expect(doc.textContent).toContain('项目六月上线'); expect(collectSuggestions(doc)).toHaveLength(1);
+  expect((await request(`conversations/${id}`, fixture.owner, {}, 'DELETE')).status).toBe(200); expect((await request(`conversations/${id}`)).status).toBe(404);
+});
+
+test('knowledge-wide retrieval excludes private documents and history is redacted after revocation', async () => {
+  const publicTree = await fixture.tree({ parents: [null] }), secretTree = await fixture.tree({ defaultAccess: null, parents: [null] });
+  await seed(publicTree.root, '项目计划', '项目计划六月上线。'); await seed(secretTree.root, '秘密计划', '项目秘密预算九十九亿元。'); await fixture.drain();
+  const events = await ask(publicTree.root.pageId, fixture.reader, { mode: 'knowledgeBase' }); const id = started(events);
+  expect(finished(events).sources.every(source => source.pageId !== secretTree.root.pageId)).toBe(true);
+  expect(calls.at(-1)!.system).not.toContain('九十九亿元');
+  await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => replaceAuthorizedPageAcl(db, { ...publicTree.root, grants: [{ principal: principal('user', fixture.owner.identity.userId), level: 'full' }] }));
+  // Detach from folder defaults before removing the reader's access.
+  await fixture.admin.query('UPDATE resources.page SET inherits_permissions=false WHERE knowledge_base_id=$1 AND id=$2', [fixture.alpha.id, publicTree.root.pageId]);
+  await fixture.drain();
+  const hidden = assistantConversationSchema.parse(await (await request(`conversations/${id}`, fixture.reader)).json());
+  expect(hidden.turns[0]!.status).toBe('unavailable'); expect(hidden.turns[0]!.answer).toBe(''); expect(hidden.turns[0]!.question).toBe(''); expect(hidden.turns[0]!.sources).toEqual([]);
+});
+
+test('model choices and encrypted personal credentials do not cross accounts or knowledge bases', async () => {
+  const before = assistantSettingsSchema.parse(await (await request('settings')).json()); expect(before.ready).toBe(true); expect(JSON.stringify(before)).not.toContain('synthetic-test-only');
+  const changed = await request('settings', fixture.owner, { provider: 'zhipu-coding', model: 'glm-5.3-flash', apiKey: 'temporary-model-secret' }, 'PUT'); expect(changed.status).toBe(200);
+  const owner = assistantSettingsSchema.parse(await changed.json()); expect(owner.hasCredential).toBe(true); expect(JSON.stringify(owner)).not.toContain('temporary-model-secret');
+  const reader = assistantSettingsSchema.parse(await (await request('settings', fixture.reader)).json()); expect(reader.provider).toBe('default'); expect(reader.hasCredential).toBe(false);
+  const record = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(modelCredential).where(eq(modelCredential.userId, fixture.owner.identity.userId)))[0]!);
+  expect(Buffer.from(record.encryptedSecret).toString()).not.toContain('temporary-model-secret');
+  expect((await request('settings', fixture.owner, { provider: 'zhipu-coding', model: 'model', endpoint: 'http://127.0.0.1:22' }, 'PUT')).status).toBe(400);
+  expect((await request('settings', fixture.reader, { provider: 'zhipu-coding', model: 'model' }, 'PUT')).status).toBe(503);
+  await request('settings', fixture.owner, { provider: 'default', model: '' }, 'PUT');
+  expect((await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select().from(assistantPreference).where(and(eq(assistantPreference.userId, fixture.owner.identity.userId), eq(assistantPreference.knowledgeBaseId, fixture.alpha.id)))))[0]!.settings).toEqual({});
+});
+
+test('cancellation preserves the partial answer and the server rejects a forged answer payload', async () => {
+  const { pages } = await fixture.tree({ parents: [null] }); await seed(pages[0]!, '取消验证', '项目六月上线。'); await fixture.drain();
+  const authority = await actorContext(); const events: AssistantStreamEvent[] = []; let id = ''; behaviour = 'cancel';
+  try { await service.ask(authority, { pageId: pages[0]!.pageId, question: '项目', mode: 'document', tier: 'fast', requestId: randomUUID() }, { signal: new AbortController().signal, refresh: async () => authority, emit: async event => { events.push(event); if (event.type === 'start') id = event.conversationId; if (event.type === 'delta') service.cancel(authority, id); } }); }
+  finally { behaviour = 'normal'; }
+  expect(finished(events).status).toBe('cancelled'); expect(finished(events).answer).toContain('六月');
+  const forged = await request(`conversations/${id}/apply`, fixture.owner, { pageId: pages[0]!.pageId, turnId: finished(events).id, markdown: 'forged' }); expect(forged.status).toBe(400);
+});
+
+test('conversation retention is physically bounded and nonmembers cannot reach the assistant', async () => {
+  const { pages } = await fixture.tree({ parents: [null] }); await seed(pages[0]!, '上限验证', '项目六月上线。'); await fixture.drain();
+  for (let i = 0; i < 11; i++) await ask(pages[0]!.pageId);
+  const rows = await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select({ count: sql<number>`count(*)::int` }).from(aiTask).where(and(eq(aiTask.initiatedBy, fixture.owner.identity.userId), eq(aiTask.kind, 'chat'))));
+  expect(rows[0]!.count).toBe(10); expect(assistantConversationListSchema.parse(await (await request('conversations')).json()).length).toBe(10);
+  expect((await request('settings', fixture.foreign)).status).toBe(401);
+  expect((await request('settings', fixture.owner, { provider: 'default', model: '' }, 'PUT', fixture.beta.id)).status).toBe(401);
+}, 30000);
+
+test('opening an abandoned running conversation recovers the persisted partial answer', async () => {
+  const { pages } = await fixture.tree({ parents: [null] }); const scope = pages[0]!;
+  await seed(scope, '中断恢复', '项目六月上线。'); await fixture.drain();
+  const actor = await actorContext(), started = await service.conversations.begin(actor, { pageId: scope.pageId, question: '总结项目', requestId: randomUUID(), mode: 'document', tier: 'fast' });
+  await service.conversations.save(actor, started.id, { ...started.turn, answer: '已持久化的部分回答' });
+  await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, db => db.update(aiTask).set({ updatedAt: new Date(Date.now() - 181_000) }).where(eq(aiTask.id, started.id)));
+  const restored = assistantConversationSchema.parse(await (await request(`conversations/${started.id}`)).json());
+  expect(restored.turns[0]!.status).toBe('cancelled'); expect(restored.turns[0]!.answer).toBe('已持久化的部分回答'); expect(restored.turns[0]!.errorCode).toBe('interrupted');
+});
+
+test('editing source blocks removes stale anchors while retaining authorized conversation history', async () => {
+  const { pages } = await fixture.tree({ parents: [null] }); const scope = { knowledgeBaseId: pages[0]!.knowledgeBaseId, pageId: pages[0]!.pageId };
+  await seed(scope, '可编辑来源', '项目六月上线。'); await fixture.drain();
+  const events = await ask(scope.pageId), id = started(events);
+  const body = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node('paragraph', { blockId: 'replacement' }, [knowledgeSchema.text('更新后的正文')])]));
+  try { await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, async db => { await db.update(docState).set({ state: body.state, stateVector: body.stateVector }).where(eq(docState.pageId, scope.pageId)); await refreshPageBlockIndex(db, scope); }); } finally { body.ydoc.destroy(); }
+  const history = assistantConversationSchema.parse(await (await request(`conversations/${id}`)).json());
+  expect(history.title).toBe('项目上线日期'); expect(history.turns[0]!.status).toBe('done'); expect(history.turns[0]!.answer).toContain('项目六月上线'); expect(history.turns[0]!.answer).not.toContain('fob-source:'); expect(history.turns[0]!.sources).toEqual([]);
+});
+
+test('apply rechecks source access inside the permission fence before writing', async () => {
+  const sourceTree = await fixture.tree({ defaultAccess: 'edit', parents: [null] }), targetTree = await fixture.tree({ defaultAccess: 'edit', parents: [null] });
+  await seed(sourceTree.root, '来源', '项目六月上线。'); await seed(targetTree.root, '目标', '目标正文'); await fixture.drain();
+  const events = await ask(sourceTree.root.pageId, fixture.reader), id = started(events), turn = finished(events), reader = await actorContext(fixture.reader);
+  const originalGet = service.conversations.get; let first = true;
+  service.conversations.get = async (actor, conversationId) => {
+    const conversation = await originalGet(actor, conversationId);
+    if (first) {
+      first = false;
+      await fixture.admin.query('UPDATE resources.page SET inherits_permissions=false WHERE knowledge_base_id=$1 AND id=$2', [fixture.alpha.id, sourceTree.root.pageId]);
+      await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => replaceAuthorizedPageAcl(db, { ...sourceTree.root, grants: [{ principal: principal('user', fixture.owner.identity.userId), level: 'full' }] }));
+      await fixture.drain();
+    }
+    return conversation;
+  };
+  try { await expect(service.apply(reader, id, turn.id, targetTree.root.pageId)).rejects.toMatchObject({ code: 'answer_unavailable' }); }
+  finally { service.conversations.get = originalGet; }
+  const stored = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(docState).where(eq(docState.pageId, targetTree.root.pageId)))[0]!);
+  expect(yStateToProseMirrorDoc(stored.state, knowledgeSchema)!.textContent).toBe('目标正文');
+});

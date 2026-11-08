@@ -1,13 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import * as Y from 'yjs';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import {
   agentCreatePageToolInputSchema,
   agentSuggestDeleteToolInputSchema,
   agentSuggestInsertToolInputSchema,
   agentSuggestReplaceToolInputSchema,
   agentUpdatePagePropertiesToolInputSchema,
+  entityIdSchema,
 } from '@fob/shared/knowledge/contracts';
 import type { SuggestionMetadata, NodeAnnotation } from '@fob/shared/knowledge/schema/suggestions';
 import { newSuggestion } from '@fob/shared/knowledge/schema/suggestions';
@@ -26,6 +27,9 @@ import { createAuthorizedPage, updateAuthorizedPage } from '../../pages/tree';
 import { defineKnowledgeAgentTool } from './registry';
 import { KnowledgeAgentToolError } from './errors';
 import type { KnowledgeAgentWriteContext } from './types';
+import { requireKnowledgeScopes } from '../../access';
+import { withInsertionReceipt } from '../agent/insertion-receipts';
+import type { InsertionReceipt } from '../agent/insertion-receipts';
 
 const pipeline = createMarkdownPipeline();
 
@@ -101,42 +105,44 @@ interface BodyScope { knowledgeBaseId: string; pageId: string }
  * writes the same two records directly. There is no second body store.
  */
 async function withAgentBodyEdit(context: KnowledgeAgentWriteContext, scope: BodyScope, mutate: (fragment: Y.XmlFragment, author: string) => string): Promise<{ suggestionId: string }> {
-  const loaded = await withKnowledgeBase(context.pool, scope.knowledgeBaseId, async (db) => {
-    const decision = await authorizePageAccess(db, { userId: context.authority.userId, scope, required: 'edit' });
-    if (decision.decision !== 'allow') throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'insert');
-    const [row] = await db.select({ state: docState.state }).from(docState).where(eq(docState.pageId, scope.pageId));
-    return row?.state ?? null;
-  });
-
-  const ydoc = new Y.Doc();
-  if (loaded) Y.applyUpdate(ydoc, new Uint8Array(loaded));
-  const baseVector = Y.encodeStateVector(ydoc);
   const author = suggestionAuthor(context);
-  const suggestionId = ydoc.transact(() => mutate(ydoc.getXmlFragment(PAGE_BODY_FRAGMENT), author));
-  const update = Y.encodeStateAsUpdate(ydoc, baseVector);
   const actor = context.agent.clientName
     ? { kind: 'mcp' as const, userId: context.authority.userId, taskId: context.agent.taskId, clientName: context.agent.clientName }
     : { kind: 'agent' as const, userId: context.authority.userId, taskId: context.agent.taskId };
 
   if (context.hocuspocus) {
+    await withKnowledgeBase(context.pool, scope.knowledgeBaseId, async db => {
+      if ((await authorizePageAccess(db, { userId: context.authority.userId, scope, required: 'edit' })).decision !== 'allow') throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'insert');
+    });
     const connection = await context.hocuspocus.openDirectConnection(pageDocumentName(scope), { pageId: scope.pageId, actor });
+    let suggestionId = '';
     try {
       await connection.transact((document) => {
-        Y.applyUpdate(document, update);
+        // Mutate the current shared document. A stale detached snapshot would
+        // miss an earlier receipt or a concurrent user's latest edits.
+        suggestionId = document.transact(() => mutate(document.getXmlFragment(PAGE_BODY_FRAGMENT), author));
       });
     } finally {
       await connection.disconnect();
     }
-  } else {
-    const state = Buffer.from(Y.encodeStateAsUpdate(ydoc));
-    const stateVector = Buffer.from(Y.encodeStateVector(ydoc));
-    await withKnowledgeBase(context.pool, scope.knowledgeBaseId, async (db) => {
+    return { suggestionId };
+  }
+  return withKnowledgeBase(context.pool, scope.knowledgeBaseId, async (db) => {
+    await db.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${`fob:agent:body:${scope.knowledgeBaseId}:${scope.pageId}`},0))`);
+    if ((await authorizePageAccess(db, { userId: context.authority.userId, scope, required: 'edit' })).decision !== 'allow') throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'insert');
+    const [row] = await db.select({ state: docState.state }).from(docState).where(and(eq(docState.knowledgeBaseId, scope.knowledgeBaseId), eq(docState.pageId, scope.pageId))).for('update');
+    const ydoc = new Y.Doc();
+    try {
+      if (row) Y.applyUpdate(ydoc, new Uint8Array(row.state));
+      const suggestionId = ydoc.transact(() => mutate(ydoc.getXmlFragment(PAGE_BODY_FRAGMENT), author));
+      const state = Buffer.from(Y.encodeStateAsUpdate(ydoc));
+      const stateVector = Buffer.from(Y.encodeStateVector(ydoc));
       await db.insert(docState).values({ ...scope, state, stateVector })
         .onConflictDoUpdate({ target: [docState.knowledgeBaseId, docState.pageId], set: { state, stateVector, updatedAt: new Date() } });
       await appendKnowledgeOutbox(db, { topic: 'doc.changed', knowledgeBaseId: scope.knowledgeBaseId, pageId: scope.pageId, actor, occurredAt: new Date().toISOString() });
-    });
-  }
-  return { suggestionId };
+      return { suggestionId };
+    } finally { ydoc.destroy(); }
+  });
 }
 
 export const knowledgeAgentWriteTools = [
@@ -146,16 +152,7 @@ export const knowledgeAgentWriteTools = [
     scopes: ['write'],
     inputSchema: agentSuggestInsertToolInputSchema,
     async handler(input, context) {
-      requireWriteContext(context as KnowledgeAgentWriteContext);
-      const write = context as KnowledgeAgentWriteContext;
-      return withAgentBodyEdit(write, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId }, (fragment, author) => {
-        const suggestion = newSuggestion(author);
-        const blocks = annotateProposedBlocks(parseMarkdownBlocks(input.markdown), suggestion);
-        const anchor = input.afterBlockId ? findBlockLocation(fragment, input.afterBlockId) : undefined;
-        if (input.afterBlockId && !anchor) throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'insert');
-        insertProseMirrorBlocks(anchor ? anchor.parent : fragment, anchor ? anchor.index + 1 : fragment.length, blocks);
-        return suggestion.suggestionId;
-      });
+      return insertSuggestedMarkdown(input, context as KnowledgeAgentWriteContext);
     },
   }),
   defineKnowledgeAgentTool({
@@ -230,3 +227,19 @@ export const knowledgeAgentWriteTools = [
     },
   }),
 ] as const;
+
+/** Product answers share the existing suggestion path with a bounded 64K body. */
+export async function insertSuggestedMarkdown(input: { knowledgeBaseId: string; pageId: string; markdown: string; afterBlockId?: string | null; receipt?: InsertionReceipt }, context: KnowledgeAgentWriteContext) {
+  requireWriteContext(context); requireKnowledgeScopes(context.authority, ['write']);
+  if (input.knowledgeBaseId !== context.authority.knowledgeBaseId || !input.markdown || input.markdown.length > 64000) throw new KnowledgeAgentToolError('INVALID_TOOL_INPUT', 'insert');
+  if (input.receipt && (input.receipt.userId !== context.authority.userId || input.receipt.turnId !== context.agent.taskId || !entityIdSchema.safeParse(input.receipt.turnId).success || input.receipt.retainedTurnIds.length > 200 || input.receipt.retainedTurnIds.some(id => !entityIdSchema.safeParse(id).success))) throw new KnowledgeAgentToolError('INVALID_TOOL_INPUT', 'insert');
+  return withAgentBodyEdit(context, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId }, (fragment, author) => {
+    return withInsertionReceipt(fragment.doc!, input.receipt, () => {
+    const suggestion = newSuggestion(author), blocks = annotateProposedBlocks(parseMarkdownBlocks(input.markdown), suggestion);
+    const anchor = input.afterBlockId ? findBlockLocation(fragment, input.afterBlockId) : undefined;
+    if (input.afterBlockId && !anchor) throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'insert');
+    insertProseMirrorBlocks(anchor ? anchor.parent : fragment, anchor ? anchor.index + 1 : fragment.length, blocks);
+    return suggestion.suggestionId;
+    });
+  });
+}

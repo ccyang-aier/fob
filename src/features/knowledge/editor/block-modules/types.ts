@@ -13,6 +13,7 @@ export interface BlockChoice {
   marker?: string;
   shortcut?: string;
   keywords?: readonly string[];
+  icon?: BlockIcon;
   insert: BlockInsertCommand;
 }
 

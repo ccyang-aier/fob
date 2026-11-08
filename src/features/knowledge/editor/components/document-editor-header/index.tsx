@@ -22,6 +22,7 @@ export function DocumentEditorHeader({
   presence,
   pdfNavigation,
   interactions,
+  assistant,
 }: {
   editor: Editor | null;
   folderName: string;
@@ -37,6 +38,7 @@ export function DocumentEditorHeader({
   presence?: ReactNode;
   pdfNavigation?: { open: boolean; id: string; onToggle: () => void };
   interactions?: ReactNode;
+  assistant?: ReactNode;
 }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
 
@@ -87,6 +89,7 @@ export function DocumentEditorHeader({
         <span>{title || knowledgeT('untitledDocument')}</span>
       </div>
       <div ref={actionsRef} className={styles.actions}>
+        {assistant}
         <span className={styles.presence}>
           {presence ?? (
             <span className={styles.avatar} title={avatarName || knowledgeT('me')}>

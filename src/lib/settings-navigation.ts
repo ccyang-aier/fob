@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from 'react';
 import { replaceWorkbenchLocation, WORKBENCH_VIEW_CHANGED } from './navigation-history';
 
-export type SettingsSection = 'appearance' | 'general' | 'about';
+export type SettingsSection = 'appearance' | 'general' | 'ai' | 'about';
 
 export function openSettings(section: SettingsSection = 'general') {
   const url = new URL(window.location.href);
@@ -33,7 +33,7 @@ export function closeSettings() {
 
 function readSection(): SettingsSection {
   const section = new URLSearchParams(window.location.search).get('section');
-  return ['appearance', 'general', 'about'].includes(section ?? '')
+  return ['appearance', 'general', 'ai', 'about'].includes(section ?? '')
     ? (section as SettingsSection)
     : 'appearance';
 }

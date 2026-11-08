@@ -1,59 +1,40 @@
-# Profile enhancement and invitation-link QA
+# AI 界面验收
 
-final result: passed
+日期：2026-11-08。结果：**passed**，保留文档阅读字号与现有产品共享交互规范。
 
-2026-11-02 current revision, superseding the previous 440px gray-cover profile report. The requested flow is: account menu -> profile -> inline edit or second-level avatar picker; system-bar members -> invitation-link card.
+参考：用户提供的五张生成菜单 / 空态 / 思考 / 流式 / 完成态图片。实现是现有 Fob 产品内的真实功能。业务设计见 [知识助手](docs/knowledge-assistant-agent.md)，自动验证与真实调用证据见 [.spec 记录](.spec/tasks/knowledge-assistant-agent.md)。
 
-## Changes and reference comparison
+## 环境与证据
 
-The profile is now 560px wide. It reuses the exact login AuthBackdrop component and removes the old decorative ribbon implementation. Name and signature appear as muted single-line content by default; the top-right pencil enables inline editing, with a focus underline and compact save/cancel controls. Document, earned-coffee and received-like statistics sit above the six-month calendar and earned medals.
+先尝试内置浏览器，遇到脚本加载和 Chrome 控制故障；用户明确允许改用本地 Playwright 后，使用独立 Chrome 测试上下文、合成账户及隔离知识库完成验收。桌面视口 1600 × 900，窄屏 600 × 850、390 × 844，截图按 CSS 像素保存，未将截图缩放伪装为一致。
 
-Member evidence: user attachment codex-clipboard-95e3381c-81b1-4bfa-901a-8174626d181b.png and the earlier invitation reference. The tiny public-document note is removed. The 352px popover now always contains the rounded link-icon tile, invitation-link title/caption and pill Get link button, followed by the actual member directory. It produces a recipient-bound invitation, not an invented anonymous knowledge-base share.
+本地截图位于忽略的 `.runtime/dev/`，未提交运行快照或认证状态：
 
-24 separate imagegen avatars were generated, inspected together and encoded as local 256px WebP assets, 8 each in pets, illustrations and landscapes. The set totals 240550 bytes. The local manifest records file hashes and generation source; no remote avatar dependency is required.
+| 状态 | 证据 |
+| --- | --- |
+| 空态、胶囊和发送按钮 | `ai-empty-final.png`、`ai-empty-dark.png` |
+| 思考 | `ai-thinking-empty-final.png` |
+| 实际流式尾段 | `ai-streaming-tail-final.png` |
+| 完成、蓝色真实选区和采纳条 | `ai-review-final.png` |
+| 菜单分组与 AI 前置 | `ai-slash-final.png`、`ai-slash-narrow.png` |
+| 设置页及真实连接成功 | `ai-settings.png`、`ai-settings-connected.png` |
+| 知识助手、真实来源及插入审阅 | `ai-agent-answer.png`、`ai-agent-ui-answer.png`、`ai-agent-inserted.png` |
+| 窄屏输入、停止后的草稿 | `ai-mobile-empty.png`、`ai-mobile-review.png` |
+| 深色 | `ai-empty-dark.png` |
 
-Resolved issues found while iterating: the old boxed name field was replaced; daily likes were unsuitable for a lifetime statistic and now have a separate aggregate; duplicate accessible upload controls were removed; closing the second native dialog originally left focus on body and now explicitly closes/restores focus to the avatar trigger.
+`ai-compare-empty.png`、`ai-compare-thinking.png`、`ai-compare-review.png` 将原图与实现内容区域放在同一张图中比对。比对后修复输入聚焦黑边、全局建议侧栏重复打开、绿色建议下划线、完成未自动选择，以及星形数量；最终改用官方五角轮廓 Star，保持集中图标目录。处理中的输入固定为单行高度，长提示只在编辑时展开。
 
-## Environment and checks
+## 视觉与交互结论
 
-Existing authenticated IAB through CUA only, localhost:3001, original current document and knowledge base. Default CSS 1488x917; narrow CSS approximately 410x888. No standalone browser runner, no altered browser visibility preference. Temporary viewport override was reset and light theme restored.
+- 空态 190px、16px 圆角和浅虚线；胶囊最大宽 576px、最小高度 54px，黑色圆形发送 / 停止按钮，柔和阴影。移动端按视口缩小并保留完整点击区。
+- 完成态使用浅灰实线框、蓝色原生文字选区和下方悬浮「撤销 / 提出修改要求 / 采纳」。正文继承用户当前文档字号，避免改写阅读偏好；没有额外的全块选中背景。
+- 真实修改生成后选中新的文本；独立块采纳与原生撤销经过 UI 验证。全局审阅不消耗块内草稿。
+- 实际移动端生成 → 停止后保留部分正文；390px 视口下审阅条 x=121、宽=201，位于视口内，三个按钮可访问。空态容器宽 225、输入宽 137，无横向越界。
+- 助手输入与发送区域避让现有精灵，真实发送按钮和键盘 Enter 都可工作。Markdown 不执行 HTML，不加载模型返回的远程图片，来源跳转使用经过验证的页面 / 块。
+- 设置、助手、菜单均使用真实加载和错误状态；图标和国际化验证通过。深色控件、占位文字及选区保持对比。
 
-| Check | Result | Evidence |
-| --- | --- | --- |
-| Identity, content and overlay | Pass | Fob title, existing document remains underneath, meaningful profile content, no framework overlay after final reload |
-| Console | Pass | Final fresh-reload window has no error/warn entries |
-| Desktop profile | Pass | About 560x692px; muted read-only fields have no box shadow/border frame |
-| Inline editing | Pass | Pencil unlocks fields; focused name uses ink underline; empty-name validation, Enter save and Escape cancel work |
-| Persistence | Pass | Built-in avatar, uploaded PNG-derived WebP and test signature saved; full reload retained them; original signature/avatar subsequently restored |
-| Avatar modal | Pass | 24 local choices, live preview, confirm/reset/cancel; Escape retains parent and returns focus to avatar trigger |
-| Statistics and calendar | Pass | Real 6 documents, 0 gifted coffees received, 0 received likes; 184 dates and 6 real events; November 1 detail shows 3 creations and other categories zero |
-| Narrow layouts | Pass | Profile about 387x650px; picker about 387x723px with all 24 choices; member panel 352x267px; no horizontal overflow |
-| Light/dark | Pass | Profile background/content and invitation card inspected in both themes |
-| Invitation card | Pass | Always visible, Get link validates/focuses blank email without mutation, permission gates retained |
+## 问题与处理
 
-The profile remains a native modal, without a personal workbench page or extra navigation tabs. Sidebar collapse preserves the profile instance. The final account content is the original Local Admin name, empty signature and default initial avatar.
+开发期间连续跨文件热更新触发 Next CSS HMR 的重复样式替换及 `removeChild` 异常，完整刷新恢复；未将这些开发日志伪装成业务通过。最终稳定页面重新加载后捕获的 pageerror 列表为空，标题值正确，截图为 `ai-empty-current.png`；生成流程亦曾记录 0 个 console error，仅保留头像 LCP 提示和编辑器选区相关开发 warning。生产构建独立通过。受控组件 / 权限 / 流式协议和真实协作回归与浏览器验收共同构成证据。
 
-## Engineering and limits
-
-- Final pnpm check passed: frontend/server/shared TypeScript, architecture and copied-capability gate, bilingual messages, full ESLint, icon policy and production build.
-- 64 targeted tests passed with 1344 assertions: 38 PostgreSQL/HTTP, image/schema tests and 26 frontend API/member/calendar tests. Disposable databases were removed.
-- Existing database received only the additive signature column upgrade; database check reports ready, 37 tables and 32 forced-RLS resource tables. No database reset, new dependency, invitation API change or ACL rewrite.
-- Upload validation is bounded by the existing 16 KiB identity request limit. The browser normalizes the selected image; the server restricts formats/dimensions/catalog origins. A roughly 2 MB generated PNG became a 192px WebP payload of about 6.4 KB and was saved/reloaded successfully.
-- Received coffee counts only gifts from other people. The product currently has no gifting record source, so receivedCoffeeTotal is 0 on the server and locally; the profile never substitutes check-in rewards or account balance. Received likes are cumulative likes by others on the user's visible comments in the selected knowledge base, separately from the existing day-specific field.
-- Real account test content was restored. No new member invitation was created in the development knowledge base. No second browser engine, physical mobile device, or SMTP delivery was tested.
-- Web 3001, API 8721 and business workers remain running. Screenshots and high-resolution generated source images stay outside Git.
-
-## Evidence
-
-Directory: C:/Users/17335/.codex/visualizations/2026/11/01/01a19754-a727-7542-8e55-1378292591bf/
-
-- profile-enhanced-desktop.jpg: final default profile.
-- profile-enhanced-dark.jpg and profile-enhanced-mobile.jpg: themes and narrow layout.
-- profile-enhanced-day-details.jpg: actual daily counts.
-- profile-avatar-picker.jpg and profile-avatar-picker-mobile.jpg: 24-asset second-level picker.
-- knowledge-invitation-link.jpg, knowledge-invitation-link-dark.jpg, knowledge-invitation-link-mobile.jpg: actual link card.
-- avatar-catalog.jpg: inspection board for the generated set.
-
-Earlier profile-modal, profile-home and members-compact captures describe superseded layouts.
-
-The received-coffee correction supersedes the coffee value in the earlier profile-enhanced screenshots. Its targeted checks passed 11 tests with 136 assertions, including a real check-in award with positive balance while the profile's receivedCoffeeTotal stays zero. The full pnpm check passed again. In the existing IAB at 1488x917, a full reload preserves the actual 3-cup account balance; opening Account > Personal information shows 0 received coffees. The fresh-reload window has no error/warn entries or framework overlay. Current evidence: profile-received-coffee-zero.png in the directory above.
+没有因权限或配置依赖而虚构界面结果；本机库未支持 AI、未部署的 Ollama 和向量模型依赖均明确记录。

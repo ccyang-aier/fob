@@ -5,5 +5,5 @@ import nextTypescript from "eslint-config-next/typescript"
 export default defineConfig([
   ...nextVitals,
   ...nextTypescript,
-  globalIgnores([".next/**", ".next-build/**", "out/**", "public/vendor/**", "backend/**", "shared/**", "opensource/outline/**", "**/.venv/**", "**/.runtime/**", "**/__pycache__/**", "**/.pytest_cache/**", ".playwright-cli/**"]),
+  globalIgnores([".next/**", ".next-build/**", "out/**", "public/vendor/**", "backend/**", "shared/**", "opensource/outline/**", "opensource/pi-mono/**", "**/.venv/**", "**/.runtime/**", "**/__pycache__/**", "**/.pytest_cache/**", ".playwright-cli/**"]),
 ])

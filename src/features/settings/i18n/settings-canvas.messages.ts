@@ -8,5 +8,6 @@ export const messages = defineMessages({
   没有匹配的设置: ['没有匹配的设置', 'No matching settings'],
   外观: ['外观', 'Appearance'],
   通用: ['通用', 'General'],
+  'AI 接入': ['AI 接入', 'AI connections'],
   关于: ['关于', 'About'],
 });

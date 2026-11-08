@@ -31,3 +31,7 @@ Thumbs.db
 **/.runtime/
 public/vendor/excalidraw/
 public/vendor/plantuml/
+
+# Locally inspected upstream agent source; provenance is committed separately.
+/opensource/pi-mono/
+/opensource/pi-mono-source.tar.gz

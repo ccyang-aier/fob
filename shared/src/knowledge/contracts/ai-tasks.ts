@@ -24,7 +24,9 @@ export const startAiStreamingTaskInputSchema = knowledgeBaseScopeSchema.extend({
   insideBlockId: blockIdSchema.nullable().default(null),
   prompt: z.string().trim().min(1).max(20_000),
   tier: z.enum(['fast', 'smart']).default('fast'),
-}).refine((value) => !(value.afterBlockId && value.insideBlockId), '锚点 afterBlockId 与 insideBlockId 只能二选一');
+  replaceInside: z.boolean().optional(),
+}).refine((value) => !(value.afterBlockId && value.insideBlockId), '锚点 afterBlockId 与 insideBlockId 只能二选一')
+  .refine((value) => !value.replaceInside || Boolean(value.insideBlockId), 'replaceInside 仅适用于 AI 容器块');
 
 /** cancel / get / revoke 共用的任务选择器；taskId 由 start 返回。 */
 export const aiStreamingTaskSelectorSchema = knowledgeBaseScopeSchema.extend({
@@ -40,6 +42,7 @@ export const aiStreamingTaskSnapshotSchema = z.strictObject({
   taskId: entityIdSchema,
   pageId: entityIdSchema,
   initiatedBy: entityIdSchema,
+  insideBlockId: blockIdSchema.nullable().optional(),
   status: aiStreamingTaskStatusSchema,
   blocksWritten: z.number().int().nonnegative(),
   charsWritten: z.number().int().nonnegative(),
@@ -47,6 +50,7 @@ export const aiStreamingTaskSnapshotSchema = z.strictObject({
   startedAt: timestampSchema,
   updatedAt: timestampSchema,
   revokedAt: timestampSchema.nullable(),
+  preview: z.string().max(64000).optional(),
 });
 
 /** 整体任务撤销的结果：被移除的该任务建议块数（幂等，重复撤销返回 0）。 */

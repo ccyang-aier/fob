@@ -33,6 +33,8 @@ import { PageIconPicker } from '../navigation/page-icon-picker';
 import { DocumentEditorHeader } from './components/document-editor-header';
 import { DocumentInteractions } from './components/document-interactions';
 import { DocumentAccessIndicator } from './components/document-access-indicator';
+import { AssistantEntry, AssistantPanel } from '../ai/assistant-panel';
+import { subscribeAssistantSelection } from '../ai/assistant-bridge';
 import { DocumentSidebar } from './components/document-sidebar';
 import { AppAlert } from '@/components/app-alert';
 import { SyncIndicator } from './components/document-editor-header/sync-indicator';
@@ -185,6 +187,12 @@ export function PageEditorSurface({
 
   const [historyOpen, setHistoryOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [assistantOpen, setAssistantOpen] = useState(false);
+  const [assistantSelection, setAssistantSelection] = useState('');
+  useEffect(() => subscribeAssistantSelection(request => {
+    if (!navigationActive || request.scope.knowledgeBaseId !== scope.knowledgeBaseId || request.scope.pageId !== scope.pageId) return;
+    setAssistantSelection(request.text); setHistoryOpen(false); setCommentsOpen(false); setAssistantOpen(true);
+  }), [navigationActive, scope.knowledgeBaseId, scope.pageId]);
   const collaboration = useDocumentSharing(scope);
   useEffect(() => {
     if (!navigationActive) return;
@@ -236,11 +244,13 @@ export function PageEditorSurface({
               />
             </DocumentSidebar>
           )}
+          {assistantOpen && user && <AssistantPanel key={`${scope.knowledgeBaseId}:${scope.pageId}:${user.id}`} scope={scope} userId={user.id} editable={view.editable && !version.selectedId} selection={assistantSelection} onClearSelection={() => setAssistantSelection('')} onClose={() => setAssistantOpen(false)} />}
         </PageCommentsLayer>
       }
       header={
         <DocumentEditorHeader
           editor={displayEditor}
+          assistant={user ? <AssistantEntry open={assistantOpen} onClick={() => { setAssistantOpen(value => !value); setHistoryOpen(false); setCommentsOpen(false); }} /> : undefined}
           folderName={folderName}
           title={displayTitle}
           avatarName={user?.name ?? knowledgeT('me')}
@@ -248,7 +258,7 @@ export function PageEditorSurface({
           onOpenSidebar={onOpenSidebar}
           onToggleStar={() => toggleStar(scope.pageId)}
           interactions={<DocumentInteractions key={`${scope.knowledgeBaseId}:${scope.pageId}:${user?.id}`} scope={scope} commentsOpen={commentsOpen} onComments={() => {
-            version.select(null); setHistoryOpen(false); setCommentsOpen(value => !value);
+            version.select(null); setHistoryOpen(false); setAssistantOpen(false); setCommentsOpen(value => !value);
           }} />}
           onCreateDocument={onCreateDocument}
           canCreateDocument={canCreateDocument}
@@ -275,10 +285,12 @@ export function PageEditorSurface({
               version.select(null);
               setHistoryOpen(false);
               setCommentsOpen(true);
+              setAssistantOpen(false);
             },
             onHistory: () => {
               setCommentsOpen(false);
               setHistoryOpen(true);
+              setAssistantOpen(false);
             },
             onDelete: view.editable
               ? async () => {

@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/badlogic/pi-mono",
+  "resolvedRepository": "https://github.com/earendil-works/pi",
+  "commit": "e49b1495045f06643a7cc4c93330fabc2ab37ce4",
+  "retrievedOn": "2026-11-08",
+  "method": "git clone --depth 1 https://github.com/badlogic/pi-mono.git opensource/pi-mono",
+  "license": "MIT",
+  "licensePath": "LICENSE",
+  "referenceOnly": true,
+  "referenceFiles": [
+    "packages/agent/src/agent-loop.ts",
+    "packages/agent/src/types.ts",
+    "packages/ai/src/models.ts",
+    "packages/ai/src/providers/zai-coding-cn.ts",
+    "packages/ai/src/api/openai-completions.ts",
+    "packages/ai/src/utils/validation.ts",
+    "packages/ai/src/utils/abort.ts"
+  ]
+}

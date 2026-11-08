@@ -11,7 +11,7 @@ import { createPermissionsFixture, until, type PermissionsFixture } from '../per
 import { createPageCollaborationListener } from '../collaboration/page-collaboration-bun';
 import type { PageCollaborationListener } from '../collaboration/page-collaboration-bun';
 import { pageDocumentName } from '@fob/shared/knowledge/collaboration';
-import { yStateToProseMirrorDoc } from '../import-export/y-encoding';
+import { PAGE_BODY_FRAGMENT, yStateToProseMirrorDoc } from '../import-export/y-encoding';
 import { createModelGateway } from './gateway';
 import type { GatewayFetch } from './gateway';
 import { createKnowledgeStreamingTasks, bindKnowledgeStreamingTasks } from './streaming';
@@ -85,6 +85,22 @@ describe('block-by-block streaming AI tasks', () => {
     return document ? collectSuggestions(document) : [];
   }
 
+  async function seedAiDraft(scope: { knowledgeBaseId: string; pageId: string }, text = '') {
+    const { prosemirrorDocToYDoc } = await import('../import-export/y-encoding');
+    const { repairBlockIds } = await import('@fob/shared/knowledge/schema');
+    const draft = knowledgeSchema.nodes.aiBlock.create({ blockId: 'ai-container' }, [
+      knowledgeSchema.nodes.paragraph.create(null, text ? knowledgeSchema.text(text) : undefined),
+    ]);
+    const document = repairBlockIds(knowledgeSchema.nodes.doc.create(null, [
+      knowledgeSchema.nodes.paragraph.create(null, knowledgeSchema.text('容器之外的人写正文')),
+      draft,
+    ])).doc;
+    const encoded = prosemirrorDocToYDoc(document);
+    await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, async db => {
+      await db.insert(docState).values({ ...scope, state: Buffer.from(encoded.state), stateVector: Buffer.from(encoded.stateVector) });
+    });
+  }
+
   async function blockIdAt(scope: { knowledgeBaseId: string; pageId: string }, index: number) {
     const document = (await currentDocument(scope))!;
     let seen = -1;
@@ -106,6 +122,82 @@ describe('block-by-block streaming AI tasks', () => {
     [...(peer.provider.awareness?.getStates() ?? new Map()).values()].filter((state) => (state as { kind?: string })?.kind === 'agent') as Record<string, unknown>[];
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  test('AI container generation previews tokens, cancels partial text, and confines writes to that container', async () => {
+    const { pages } = await fixture.tree({ defaultAccess: null });
+    const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[1].pageId };
+    await grantEdit(pages[0].pageId);
+    await seedAiDraft(scope);
+    await fixture.drain();
+    const authority = await createAuthority();
+    const input = { ...scope, afterBlockId: null, insideBlockId: 'ai-container', prompt: '生成一段内容', tier: 'fast' as const, replaceInside: true };
+    const task = await service.start(authority, input);
+    await expect(service.start(authority, input)).rejects.toMatchObject({ code: 'task_running' });
+    steered.delta('已经收到但还没有空行的草稿');
+    await until(async () => (await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).preview === '已经收到但还没有空行的草稿');
+    expect((await currentDocument(scope))!.lastChild!.textContent).toBe('');
+    const ownerClient = fixture.apiClient({ cookie: fixture.owner.cookie, origin: fixture.server.webOrigin }, scope.knowledgeBaseId);
+    expect((await ownerClient.aiTask.get.query({ knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).preview).toContain('已经收到');
+    await expect(ownerClient.aiTask.cancel.mutate({ knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).rejects.toMatchObject({ data: { code: 'FORBIDDEN' } });
+    const cancelled = await service.cancel(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId });
+    expect(cancelled.status).toBe('cancelled');
+    expect(cancelled.blocksWritten).toBe(1);
+    expect(cancelled.preview).toBe('');
+    const document = (await currentDocument(scope))!;
+    expect(document.childCount).toBe(2);
+    expect(document.firstChild!.textContent).toBe('容器之外的人写正文');
+    expect(document.lastChild!.type.name).toBe('aiBlock');
+    expect(document.lastChild!.textContent).toBe('已经收到但还没有空行的草稿');
+    expect(collectSuggestions(document.lastChild!).length).toBe(1);
+    document.check();
+  }, 30_000);
+
+  test('a revision replaces the prior draft only after its first usable block and persists Mermaid content', async () => {
+    const { pages } = await fixture.tree({ defaultAccess: null });
+    const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[2].pageId };
+    await grantEdit(pages[0].pageId);
+    await seedAiDraft(scope, '保留到新内容真正到达的草稿');
+    await fixture.drain();
+    const authority = await createAuthority();
+    const task = await service.start(authority, { ...scope, afterBlockId: null, insideBlockId: 'ai-container', prompt: '改为流程图', tier: 'fast', replaceInside: true });
+    steered.delta('```mermaid\nflowchart LR\n A[记录] --> B[复用]');
+    await until(async () => Boolean((await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).preview));
+    expect((await currentDocument(scope))!.lastChild!.textContent).toBe('保留到新内容真正到达的草稿');
+    steered.delta('\n```');
+    steered.finish();
+    await until(async () => (await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).status === 'done');
+    const document = (await currentDocument(scope))!;
+    expect(document.childCount).toBe(2);
+    expect(document.firstChild!.textContent).toBe('容器之外的人写正文');
+    expect(document.lastChild!.textContent).not.toContain('保留到新内容');
+    const code = document.lastChild!.firstChild!;
+    expect(code.type.name).toBe('mermaid');
+    expect(code.attrs.source).toContain('A[记录] --> B[复用]');
+    document.check();
+  }, 30_000);
+
+  test('deleting a generating container fails closed instead of writing into a detached node', async () => {
+    const { pages } = await fixture.tree({ defaultAccess: null });
+    const scope = { knowledgeBaseId: fixture.alpha.id, pageId: pages[3].pageId };
+    await grantEdit(pages[0].pageId);
+    await seedAiDraft(scope);
+    await fixture.drain();
+    const authority = await createAuthority();
+    const task = await service.start(authority, { ...scope, afterBlockId: null, insideBlockId: 'ai-container', prompt: '等待过程中删除块', tier: 'fast' });
+    steered.delta('尚未完成');
+    await until(async () => Boolean((await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).preview));
+    const connection = await listener.hocuspocus.openDirectConnection(pageDocumentName(scope), { pageId: scope.pageId, authority, level: 'edit' });
+    try { await connection.transact(document => { document.getXmlFragment(PAGE_BODY_FRAGMENT).delete(1, 1); }); }
+    finally { await connection.disconnect(); }
+    steered.delta('，现在完成\n\n');
+    steered.finish();
+    await until(async () => (await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId })).status === 'failed');
+    const final = await service.get(authority, { knowledgeBaseId: scope.knowledgeBaseId, taskId: task.taskId });
+    expect(final.errorCode).toBe('anchor_not_found');
+    const document = (await currentDocument(scope))!;
+    expect(document.childCount).toBe(1);
+    expect(document.textContent).toBe('容器之外的人写正文');
+  }, 30_000);
 
   test('complete blocks are written to the shared doc as they arrive, with agent awareness', async () => {
     const { pages } = await fixture.tree({ defaultAccess: null });

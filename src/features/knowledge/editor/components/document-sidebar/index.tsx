@@ -9,7 +9,7 @@ import styles from './styles.module.css';
 
 export function DocumentSidebar({ defaultWidth, panel, children, ...props }: {
   defaultWidth: number;
-  panel: 'comments' | 'history';
+  panel: 'comments' | 'history' | 'assistant';
 } & ComponentProps<'aside'>) {
   const { t } = useTranslation(messages);
   const [savedWidth, saveWidth] = usePageSessionState(`sidebar-width:${panel}`, defaultWidth);
@@ -22,7 +22,7 @@ export function DocumentSidebar({ defaultWidth, panel, children, ...props }: {
       className={styles.resize}
       dragging={dragging}
       onPointerDown={startResize}
-      aria-label={t(panel === 'comments' ? 'resizeComments' : 'resizeHistory')}
+      aria-label={t(panel === 'comments' ? 'resizeComments' : panel === 'assistant' ? 'resizeAssistant' : 'resizeHistory')}
       onKeyDown={event => {
         if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
         event.preventDefault();

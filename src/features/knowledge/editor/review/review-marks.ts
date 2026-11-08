@@ -1,15 +1,17 @@
 /**
  * The suggestion rendering layer of the editor (S02, design §4.5/§9.3).
  *
- * One ProseMirror plugin renders every outstanding S01 suggestion — the same
+ * One ProseMirror plugin renders outstanding page-level S01 suggestions — the same
  * marks for humans and agents, with no rendering path of its own deciding
  * authorship: insert glows green, delete stays present with a strike, block
  * proposals carry an outline, and every suggestion gets a compact source
  * badge (人 / AI / MCP / CP) at its start. Decorations are rebuilt from
- * `collectSuggestions` on every document change, so remote CRDT updates
+ * the page review scope on every document change, so remote CRDT updates
  * (an agent streaming in new proposals) are styled by the same pass. Clicking
  * a mark or badge selects the suggestion for the card and panel; the selection
- * itself keeps the active suggestion honest when the caret moves.
+ * itself keeps the active suggestion honest when the caret moves. AI containers
+ * own their draft presentation and decisions; their stored suggestions stay
+ * available to shared semantics without joining this global review surface.
  *
  * Styles are injected by the extension (one idempotent <style> tag per
  * document) so the whole review presentation stays owned by this module.
@@ -22,7 +24,6 @@ import { Decoration, DecorationSet } from '@tiptap/pm/view';
 import type { EditorView } from '@tiptap/pm/view';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import {
-  collectSuggestions,
   isSuggestionMark,
   nodeAnnotations,
 } from '@fob/shared/knowledge/schema/suggestions';
@@ -31,6 +32,7 @@ import { authorBadgeGlyph, describeSuggestionAuthor, formatSuggestionTime } from
 import { suggestionAnchor } from './review-scroll';
 import { getLocale } from '@/lib/i18n';
 import { editorLocaleMeta } from '../use-editor-locale';
+import { collectPageReviewSuggestions, isAiDraftPosition } from './review-scope';
 
 export interface ReviewMarksState {
   /** The suggestion the card/panel act on — selection-derived or manual. */
@@ -50,6 +52,7 @@ export function activeSuggestionId(state: EditorState): string | null {
 }
 
 function suggestionIdAt(doc: ProseMirrorNode, pos: number): string | null {
+  if (isAiDraftPosition(doc, pos)) return null;
   const $pos = doc.resolve(Math.min(Math.max(pos, 0), doc.content.size));
   for (const candidate of [$pos.nodeAfter, $pos.nodeBefore, $pos.parent]) {
     if (!candidate) continue;
@@ -95,7 +98,7 @@ function buildDecorations(
   state: { activeId: string | null; flashId: string | null },
 ): DecorationSet {
   const decorations: Decoration[] = [];
-  for (const summary of collectSuggestions(doc)) {
+  for (const summary of collectPageReviewSuggestions(doc)) {
     const first = summary.ranges.reduce((min, range) => (range.from < min.from ? range : min));
     decorations.push(
       Decoration.widget(first.from, () => badgeElement(summary), {
@@ -136,10 +139,13 @@ function createReviewPlugin(): Plugin<ReviewMarksState> {
         if (meta?.type === 'select') activeId = meta.id;
         if (meta?.type === 'flash') flashId = meta.id;
         if (tr.selectionSet && !meta) {
-          const derived =
-            suggestionIdAt(newState.doc, newState.selection.from) ??
-            suggestionIdAt(newState.doc, newState.selection.to);
-          if (derived !== null) activeId = derived;
+          if (isAiDraftPosition(newState.doc, newState.selection.from)) { activeId = null; flashId = null; }
+          else {
+            const derived =
+              suggestionIdAt(newState.doc, newState.selection.from) ??
+              suggestionIdAt(newState.doc, newState.selection.to);
+            if (derived !== null) activeId = derived;
+          }
         }
         // Rebuild whenever the visible state can differ: doc changes (remote
         // or local) and selection-derived/manual active or flash transitions.
@@ -154,7 +160,7 @@ function createReviewPlugin(): Plugin<ReviewMarksState> {
           if (tr.docChanged) {
             // A resolved suggestion stops being active the moment it leaves the doc.
             const outstanding = new Set(
-              collectSuggestions(tr.doc).map((summary) => summary.suggestionId),
+              collectPageReviewSuggestions(tr.doc).map((summary) => summary.suggestionId),
             );
             if (activeId !== null && !outstanding.has(activeId)) activeId = null;
             if (flashId !== null && !outstanding.has(flashId)) flashId = null;
@@ -207,7 +213,7 @@ export function selectReviewSuggestion(
 ): void {
   let anchor: number | null = null;
   if (suggestionId) {
-    const summary = collectSuggestions(view.state.doc).find(
+    const summary = collectPageReviewSuggestions(view.state.doc).find(
       (candidate) => candidate.suggestionId === suggestionId,
     );
     if (!summary) return;

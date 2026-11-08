@@ -22,6 +22,8 @@ export type AiStreamingTaskStartInput = Omit<StartAiStreamingTaskInput, 'knowled
 export interface UseAiStreamingTaskResult {
   /** 当前任务快照；尚未发起或已重置时为 null。 */
   readonly snapshot: AiStreamingTaskSnapshot | null;
+  readonly loading: boolean;
+  readonly error: unknown;
   /** 发起一个流式任务；成功后自动开始跟踪该任务。 */
   start(input: AiStreamingTaskStartInput): Promise<AiStreamingTaskSnapshot>;
   /** 取消运行中的任务：停止写入，已写块保留供审阅。 */
@@ -40,11 +42,11 @@ export function useAiStreamingTask(knowledgeBaseId: string, initialTaskId: strin
 
   const statusQuery = useQuery({
     queryKey: taskKey,
-    enabled: taskId !== null,
+    enabled: Boolean(knowledgeBaseId && taskId),
     queryFn: ({ signal }) => runKnowledgeCall(knowledgeBaseId, signal, (client) =>
       client.aiTask.get.query({ knowledgeBaseId, taskId: taskId! }, { signal })),
     // 运行中细粒度轮询进度；终态后停表，避免空转。
-    refetchInterval: (query) => (query.state.data?.status === 'running' ? 400 : false),
+    refetchInterval: (query) => (!query.state.error && query.state.data?.status === 'running' ? 400 : false),
   });
 
   const refresh = useCallback(async () => {
@@ -54,9 +56,10 @@ export function useAiStreamingTask(knowledgeBaseId: string, initialTaskId: strin
   const start = useCallback(async (input: AiStreamingTaskStartInput) => {
     const snapshot = await runKnowledgeCall(knowledgeBaseId, undefined, (client) =>
       client.aiTask.start.mutate({ ...input, knowledgeBaseId }));
+    queryClient.setQueryData([...knowledgeQueryKeys.aiTasks(knowledgeBaseId), snapshot.taskId], snapshot);
     setTracking({ base: initialTaskId, taskId: snapshot.taskId });
     return snapshot;
-  }, [knowledgeBaseId, initialTaskId]);
+  }, [knowledgeBaseId, initialTaskId, queryClient]);
 
   const cancel = useCallback(async () => {
     if (!taskId) return null;
@@ -77,7 +80,9 @@ export function useAiStreamingTask(knowledgeBaseId: string, initialTaskId: strin
   const reset = useCallback(() => setTracking({ base: initialTaskId, taskId: null }), [initialTaskId]);
 
   return {
-    snapshot: statusQuery.data ?? null,
+    snapshot: statusQuery.isError && statusQuery.data?.status === 'running' ? null : statusQuery.data ?? null,
+    loading: Boolean(taskId && statusQuery.isPending),
+    error: statusQuery.error,
     start,
     cancel,
     revoke,

@@ -2,9 +2,11 @@ import type { ModelTier } from '@fob/shared/knowledge/contracts';
 import { createModelGateway } from '../../modules/knowledge/ai/gateway';
 import type { PlatformModels } from '../../modules/knowledge/ai/config';
 import type { FobServiceConfig } from './config';
+import type { GatewayOptions } from '../../modules/knowledge/ai/gateway';
+import { assistantProviders } from '../../modules/knowledge/ai/assistant/preferences';
 
 /** The API and worker use the copied gateway with the same explicit platform bindings. */
-export function createFobModelGateway(config: FobServiceConfig) {
+export function fobModelGatewayOptions(config: FobServiceConfig): GatewayOptions {
   const models = config.models;
   const configured = Boolean(models.apiKey && models.chatBaseUrl);
   const defaults: PlatformModels['defaults'] = {};
@@ -22,9 +24,12 @@ export function createFobModelGateway(config: FobServiceConfig) {
     defaults.embed = { source: 'platform', provider: 'zhipu', model: models.embedModel, dimensions: models.embedDimensions };
     tiers.push('embed');
   }
-  return createModelGateway({
+  return {
     platform: { providers: configured ? { zhipu: { apiKey: models.apiKey!, endpoint: models.chatBaseUrl! } } : {}, defaults },
-    providers: configured ? { zhipu: { protocol: 'openai-compatible', endpoints: [models.chatBaseUrl!], tiers } } : {},
+    providers: { ...assistantProviders, ...(configured ? { zhipu: { protocol: 'openai-compatible' as const, endpoints: [models.chatBaseUrl!], tiers } } : {}) },
     ollamaEndpoints: models.ollamaEndpoint ? [models.ollamaEndpoint] : [],
-  });
+  };
+}
+export function createFobModelGateway(config: FobServiceConfig, options: Pick<GatewayOptions, 'credentials' | 'onCall'> = {}) {
+  return createModelGateway({ ...fobModelGatewayOptions(config), ...options });
 }

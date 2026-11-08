@@ -107,6 +107,24 @@ async function click(button: HTMLElement) {
 }
 
 describe('ReviewPanel over a live editor', () => {
+  test('AI drafts do not open the page rail or join its batch decisions; external suggestions still do', async () => {
+    const editor = mountEditor(), schema = editor.schema;
+    const metadata = newSuggestion('agent:block-task', { suggestionId: 'block-draft' });
+    editor.commands.setContent(schema.nodes.doc.create(null, [
+      schema.nodes.paragraph.create(null, schema.text('正文')),
+      schema.nodes.aiBlock.create({ blockId: 'draft' }, [schema.nodes.paragraph.create({ annotations: [{ type: 'suggestion_insert', attrs: metadata }] }, schema.text('局部草稿', [schema.marks.suggestion_insert.create(metadata)]))]),
+    ]).toJSON());
+    const panel = await mountPanel(editor);
+    expect(panel.querySelector('aside')).toBeNull();
+    expect(panel.textContent).toBe('');
+    await act(async () => { propose(editor, { from: 1, to: 1, text: '外部改动', id: 'outside-change' }); });
+    expect(panel.querySelector('aside[aria-label="建议审阅"]')).not.toBeNull();
+    expect([...panel.querySelectorAll<HTMLElement>('[data-suggestion-id]')].map(card => card.dataset.suggestionId)).toEqual(['outside-change']);
+    await click(byText(panel, '全部接受'));
+    expect(collectSuggestions(editor.state.doc).map(item => item.suggestionId)).toEqual(['block-draft']);
+    expect(editor.state.doc.textContent).toContain('外部改动正文局部草稿');
+    expect(panel.querySelector('aside')).toBeNull();
+  });
   test('renders one card per suggestion with author, time and excerpt, plus batch actions', async () => {
     const editor = mountEditor();
     const at = endOfFirstParagraph(editor);

@@ -4,6 +4,7 @@ import type { Pool } from 'pg';
 import { entityIdSchema, modelEndpointSchema, modelProviderSchema } from '@fob/shared/knowledge/contracts';
 import { modelCredential } from '../../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
+import type { ResourceTransaction } from '../../../../platform/database/resources/transaction';
 import { ModelGatewayError } from './errors';
 import type { ModelCallContext } from './types';
 
@@ -44,34 +45,37 @@ export function createModelCredentialStore(pool: Pool, key: Uint8Array) {
     return context;
   }
   return {
-    async create(context: ModelCallContext, input: { provider: string; apiKey: string; endpoint?: string }) {
+    async create(context: ModelCallContext, input: { provider: string; apiKey: string; endpoint?: string }, transaction?: ResourceTransaction) {
       scope(context);
       const provider = modelProviderSchema.safeParse(input.provider);
       const endpoint = input.endpoint === undefined ? null : modelEndpointSchema.safeParse(input.endpoint);
       if (!provider.success || (endpoint !== null && !endpoint.success)) throw new ModelGatewayError('invalid_request');
       const identity = { knowledgeBaseId: context.knowledgeBaseId, userId: context.userId, id: randomUUID(), provider: provider.data, endpoint: endpoint === null ? null : endpoint.data };
-      await withKnowledgeBase(pool, context.knowledgeBaseId, async (db) => {
+      const save = async (db: ResourceTransaction) => {
         await db.insert(modelCredential).values({ ...identity, encryptedSecret: cipher.encrypt(input.apiKey, identity) });
-      });
+      };
+      if (transaction) await save(transaction); else await withKnowledgeBase(pool, context.knowledgeBaseId, save);
       return { id: identity.id, provider: identity.provider, endpoint: identity.endpoint };
     },
-    async find(context: ModelCallContext, id: string, provider: string) {
+    async find(context: ModelCallContext, id: string, provider: string, transaction?: ResourceTransaction) {
       scope(context);
       if (!entityIdSchema.safeParse(id).success || !modelProviderSchema.safeParse(provider).success) throw new ModelGatewayError('invalid_request');
-      const row = await withKnowledgeBase(pool, context.knowledgeBaseId, async (db) => (await db.select().from(modelCredential).where(and(
+      const read = async (db: ResourceTransaction) => (await db.select().from(modelCredential).where(and(
         eq(modelCredential.knowledgeBaseId, context.knowledgeBaseId), eq(modelCredential.userId, context.userId),
         eq(modelCredential.id, id), eq(modelCredential.provider, provider), isNull(modelCredential.revokedAt),
-      )))[0]);
+      )))[0];
+      const row = transaction ? await read(transaction) : await withKnowledgeBase(pool, context.knowledgeBaseId, read);
       if (!row) return null;
       return { id: row.id, knowledgeBaseId: row.knowledgeBaseId, userId: row.userId, provider: row.provider,
         endpoint: row.endpoint ?? undefined, apiKey: cipher.decrypt(row.encryptedSecret, row), revokedAt: null };
     },
-    async revoke(context: ModelCallContext, id: string) {
+    async revoke(context: ModelCallContext, id: string, transaction?: ResourceTransaction) {
       scope(context);
       if (!entityIdSchema.safeParse(id).success) throw new ModelGatewayError('invalid_request');
-      return withKnowledgeBase(pool, context.knowledgeBaseId, async (db) => (await db.update(modelCredential).set({ revokedAt: new Date(), updatedAt: new Date() }).where(and(
+      const remove = async (db: ResourceTransaction) => (await db.update(modelCredential).set({ revokedAt: new Date(), updatedAt: new Date() }).where(and(
         eq(modelCredential.knowledgeBaseId, context.knowledgeBaseId), eq(modelCredential.userId, context.userId), eq(modelCredential.id, id), isNull(modelCredential.revokedAt),
-      )).returning({ id: modelCredential.id })).length === 1);
+      )).returning({ id: modelCredential.id })).length === 1;
+      return transaction ? remove(transaction) : withKnowledgeBase(pool, context.knowledgeBaseId, remove);
     },
   };
 }

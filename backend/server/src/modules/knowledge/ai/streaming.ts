@@ -87,6 +87,7 @@ export class MarkdownStreamSplitter {
   private pending = '';
   private fenceMarker: string | null = null;
   private scannedLines = 0;
+  get preview(): string { return this.pending; }
 
   push(delta: string): string[] {
     this.pending += delta;
@@ -184,6 +185,7 @@ interface WrittenBlock { readonly blockId: string | null }
 class PageWriteSession {
   private readonly createdAt = nowIso();
   private anchorElement: Y.XmlElement | null;
+  private firstWrite = true;
 
   private constructor(
     private readonly pool: Pool,
@@ -194,6 +196,7 @@ class PageWriteSession {
     private readonly parent: Fragment,
     private readonly mode: 'after' | 'inside',
     anchorElement: Y.XmlElement | null,
+    private readonly replaceInside = false,
   ) {
     this.anchorElement = anchorElement;
   }
@@ -204,6 +207,7 @@ class PageWriteSession {
     identity: PageWriteIdentity;
     hocuspocus?: Hocuspocus;
     anchor: { afterBlockId: string | null; insideBlockId: string | null };
+    replaceInside?: boolean;
   }): Promise<PageWriteSession> {
     const { identity } = input;
     const wantsAnchor = input.anchor.afterBlockId ?? input.anchor.insideBlockId;
@@ -223,8 +227,9 @@ class PageWriteSession {
         await connection.disconnect();
         throw new KnowledgeStreamingTaskError('anchor_not_found', 'not_found');
       }
+      if (input.anchor.insideBlockId && located?.element.nodeName !== 'aiBlock') { await connection.disconnect(); throw new KnowledgeStreamingTaskError('anchor_not_found', 'not_found'); }
       return new PageWriteSession(input.pool, input.scope, identity, connection, null,
-        located ? located.parent : fragment, located ? 'after' : 'inside', located?.element ?? null);
+        input.anchor.insideBlockId && located ? located.element : located ? located.parent : fragment, input.anchor.insideBlockId ? 'inside' : located ? 'after' : 'inside', input.anchor.insideBlockId ? null : located?.element ?? null, input.replaceInside);
     }
     const mirror = new Y.Doc();
     const loaded = await withKnowledgeBase(input.pool, input.scope.knowledgeBaseId, async (db) => {
@@ -238,8 +243,9 @@ class PageWriteSession {
       mirror.destroy();
       throw new KnowledgeStreamingTaskError('anchor_not_found', 'not_found');
     }
+    if (input.anchor.insideBlockId && located?.element.nodeName !== 'aiBlock') { mirror.destroy(); throw new KnowledgeStreamingTaskError('anchor_not_found', 'not_found'); }
     return new PageWriteSession(input.pool, input.scope, identity, null, mirror,
-      located ? located.parent : fragment, located ? 'after' : 'inside', located?.element ?? null);
+      input.anchor.insideBlockId && located ? located.element : located ? located.parent : fragment, input.anchor.insideBlockId ? 'inside' : located ? 'after' : 'inside', input.anchor.insideBlockId ? null : located?.element ?? null, input.replaceInside);
   }
 
   /** 追加一个完整 Markdown 块；返回其顶层块 blockId（供 Agent 光标定位）。 */
@@ -258,6 +264,13 @@ class PageWriteSession {
   }
 
   private insert(nodes: ProseMirrorNode[]): void {
+    if (this.parent instanceof Y.XmlElement && this.parent.nodeName === 'aiBlock') {
+      const document = this.connection?.document ?? this.mirror;
+      const id = this.parent.getAttribute('blockId');
+      if (!document || typeof id !== 'string' || findBlockLocation(document.getXmlFragment(PAGE_BODY_FRAGMENT), id)?.element !== this.parent) throw new KnowledgeStreamingTaskError('anchor_not_found', 'not_found');
+    }
+    if (this.firstWrite && this.replaceInside && this.mode === 'inside' && this.parent instanceof Y.XmlElement && this.parent.nodeName === 'aiBlock') this.parent.delete(0, this.parent.length);
+    this.firstWrite = false;
     let index: number;
     if (this.mode === 'inside') index = this.parent.length;
     else if (this.anchorElement) index = Math.max(0, this.parent.toArray().lastIndexOf(this.anchorElement) + 1);
@@ -348,7 +361,7 @@ export interface KnowledgeStreamingTaskDeps {
   /** 协作宿主：提供时走 direct connection 实时广播 + Agent awareness；缺省 headless 回退。 */
   readonly hocuspocus?: Hocuspocus;
   /** 知识库模型档位设置解析；缺省使用平台默认绑定。 */
-  readonly resolveSettings?: (knowledgeBaseId: string) => Promise<ModelSettings>;
+  readonly resolveSettings?: (knowledgeBaseId: string, userId: string) => Promise<ModelSettings>;
 }
 
 export interface KnowledgeStreamingTasks {
@@ -378,6 +391,14 @@ async function requirePageEdit(pool: Pool, userId: string, scope: PageScope): Pr
   if (!allowed) throw new KnowledgeStreamingTaskError('target_not_accessible', 'forbidden');
 }
 
+async function requirePageView(pool: Pool, userId: string, scope: PageScope): Promise<void> {
+  const allowed = await withKnowledgeBase(pool, scope.knowledgeBaseId, async (db) => {
+    const decision = await authorizePageAccess(db, { userId, scope, required: 'view' });
+    return decision.decision === 'allow';
+  });
+  if (!allowed) throw new KnowledgeStreamingTaskError('target_not_accessible', 'forbidden');
+}
+
 /**
  * J04 逐块流式 AI 任务服务（§9.3）：模型流式 Markdown 经切分器按完整块写入权威
  * Y.Doc（建议模式，author `agent:{userId}:{taskId}`），B09 awareness 全程发布 Agent
@@ -399,18 +420,20 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
     const identity: PageWriteIdentity = { userId: authority.userId, taskId: snapshot.taskId, author: suggestionAuthor(snapshot.taskId) };
     let session: PageWriteSession | null = null;
     let awareness: AgentAwarenessSession | null = null;
+    let finalStatus: 'done' | 'failed' | 'cancelled' = 'done';
     const splitter = new MarkdownStreamSplitter();
     try {
       const assembled = await assembleContext(deps.pool, {
         knowledgeBaseId: input.knowledgeBaseId,
         userId: authority.userId,
-        taskKind: 'ask',
+        taskKind: 'edit',
         focus: { pageId: input.pageId, blockId: input.afterBlockId ?? input.insideBlockId ?? undefined },
       });
-      const system = assembled.segments.map((segment) => segment.text).join('\n\n');
+      const system = `${assembled.segments.map((segment) => segment.text).join('\n\n')}\n\nWrite only the requested document content in Markdown. Omit internal block anchors, suggestion metadata, explanations of your process, and surrounding conversational remarks. For a requested visualization, produce a complete, valid Mermaid fenced code block with meaningful nodes and relationships grounded in the supplied context.`;
       session = await PageWriteSession.open({
         pool: deps.pool, scope, identity, hocuspocus: deps.hocuspocus,
         anchor: { afterBlockId: input.afterBlockId, insideBlockId: input.insideBlockId },
+        replaceInside: input.replaceInside,
       });
       if (deps.hocuspocus) {
         awareness = await createAgentAwarenessSession(deps.hocuspocus, {
@@ -433,7 +456,7 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
           : { isEditing: true });
       };
 
-      const settings = (await deps.resolveSettings?.(input.knowledgeBaseId)) ?? {};
+      const settings = (await deps.resolveSettings?.(input.knowledgeBaseId, authority.userId)) ?? {};
       const stream = deps.gateway.stream({
         context: { knowledgeBaseId: input.knowledgeBaseId, userId: authority.userId, taskId: snapshot.taskId },
         settings,
@@ -445,29 +468,41 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
         signal: task.controller.signal,
       });
       for await (const part of stream) {
-        if (part.type === 'text-delta') for (const block of splitter.push(part.text)) await writeBlock(block);
-        if (part.type === 'finish') {
-          const tail = splitter.flush();
-          if (tail) await writeBlock(tail);
+        if (part.type === 'text-delta') {
+          for (const block of splitter.push(part.text)) await writeBlock(block);
+          snapshot.preview = splitter.preview.slice(0, 64000);
+          snapshot.updatedAt = nowIso();
         }
       }
-      snapshot.status = 'done';
+      const tail = splitter.flush();
+      if (tail) await writeBlock(tail);
+      if (!snapshot.blocksWritten) throw new KnowledgeStreamingTaskError('invalid_response', 'unavailable');
     } catch (error) {
       const cancelled = task.controller.signal.aborted
         || (error instanceof ModelGatewayError && error.code === 'cancelled')
         || (error instanceof Error && error.name === 'AbortError');
-      if (cancelled) snapshot.status = 'cancelled';
+      if (cancelled) {
+        finalStatus = 'cancelled';
+        const tail = splitter.flush();
+        if (tail && session) {
+          try { await requirePageEdit(deps.pool, authority.userId, scope); await session.append(tail); snapshot.blocksWritten += 1; snapshot.charsWritten += utf8Chars(tail); }
+          catch { /* Revoked access must never flush a partial draft. */ }
+        }
+      }
       else {
-        snapshot.status = 'failed';
+        finalStatus = 'failed';
         snapshot.errorCode = safeErrorCode(error);
       }
     } finally {
+      try { await awareness?.stop(); }
+      catch (error) { finalStatus = 'failed'; snapshot.errorCode = safeErrorCode(error); }
+      try { await session?.close(); }
+      catch (error) { finalStatus = 'failed'; snapshot.errorCode = safeErrorCode(error); }
+      // Terminal status is a durability promise: disconnect flushes the shared
+      // document before a caller can observe completion, cancellation or failure.
+      snapshot.status = finalStatus;
+      snapshot.preview = '';
       snapshot.updatedAt = nowIso();
-      try {
-        await awareness?.stop();
-      } finally {
-        await session?.close();
-      }
       enforceRetention();
     }
   }
@@ -475,6 +510,9 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
   return {
     async start(authority, input) {
       await requirePageEdit(deps.pool, authority.userId, { knowledgeBaseId: input.knowledgeBaseId, pageId: input.pageId });
+      if (input.insideBlockId && [...tasks.values()].some(({ snapshot }) => snapshot.status === 'running'
+        && snapshot.knowledgeBaseId === input.knowledgeBaseId && snapshot.pageId === input.pageId
+        && snapshot.insideBlockId === input.insideBlockId)) throw new KnowledgeStreamingTaskError('task_running', 'conflict');
       const taskId = randomUUID();
       const snapshot: AiStreamingTaskSnapshot = {
         knowledgeBaseId: input.knowledgeBaseId,
@@ -488,6 +526,7 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
         startedAt: nowIso(),
         updatedAt: nowIso(),
         revokedAt: null,
+        insideBlockId: input.insideBlockId,
       };
       let settle: () => void = () => {};
       const settled = new Promise<void>((resolve) => { settle = resolve; });
@@ -511,7 +550,7 @@ export function createKnowledgeStreamingTasks(deps: KnowledgeStreamingTaskDeps):
     async get(authority, input) {
       const task = tasks.get(input.taskId);
       if (!task || task.snapshot.knowledgeBaseId !== input.knowledgeBaseId) throw new KnowledgeStreamingTaskError('task_not_found', 'not_found');
-      requireInitiator(task, authority);
+      await requirePageView(deps.pool, authority.userId, { knowledgeBaseId: input.knowledgeBaseId, pageId: task.snapshot.pageId });
       return copySnapshot(task);
     },
 

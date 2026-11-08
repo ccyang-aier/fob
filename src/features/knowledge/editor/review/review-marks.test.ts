@@ -21,12 +21,14 @@ import {
   newSuggestion,
   reviewSuggestions,
   suggestText,
+  collectSuggestions,
 } from '@fob/shared/knowledge/schema/suggestions';
 import {
   activeSuggestionId,
   createReviewMarksExtension,
   selectReviewSuggestion,
 } from './review-marks';
+import { selectAiDraft } from '../block-modules/ai-block/ai-block-decisions';
 
 let window: Window;
 
@@ -94,6 +96,29 @@ afterAll(() => {
 });
 
 describe('review marks over a real editor instance', () => {
+  test('AI draft suggestions keep their storage but have no page decorations, badge or active review', () => {
+    const editor = mountEditor(), schema = editor.schema;
+    const draft = newSuggestion('agent:local-generation', { suggestionId: 'draft-only', createdAt });
+    const external = newSuggestion('agent:other-task', { suggestionId: 'outside-only', createdAt });
+    editor.commands.setContent(schema.nodes.doc.create(null, [
+      schema.nodes.aiBlock.create({ blockId: 'draft' }, [schema.nodes.paragraph.create({ annotations: [{ type: 'suggestion_insert', attrs: draft }] }, schema.text('本块草稿', [schema.marks.suggestion_insert.create(draft)]))]),
+      schema.nodes.paragraph.create(null, schema.text('块外建议', [schema.marks.suggestion_insert.create(external)])),
+    ]).toJSON());
+    const dom = editor.view.dom as unknown as HTMLElement;
+    expect(collectSuggestions(editor.state.doc).map(item => item.suggestionId)).toEqual(['draft-only', 'outside-only']);
+    expect(dom.querySelectorAll('.fob-suggest-badge')).toHaveLength(1);
+    expect(dom.querySelector('.fob-suggest-badge')?.getAttribute('data-suggestion-id')).toBe('outside-only');
+    expect(dom.querySelector('.fob-suggest-insert[data-suggestion-id="draft-only"]')).toBeNull();
+    expect(dom.querySelector('.fob-suggest-block-insert[data-suggestion-id="draft-only"]')).toBeNull();
+    selectReviewSuggestion(editor.view, 'outside-only');
+    expect(activeSuggestionId(editor.state)).toBe('outside-only');
+    expect(selectAiDraft(editor, 'draft')).toBe(true);
+    expect(editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to)).toBe('本块草稿');
+    expect(activeSuggestionId(editor.state)).toBeNull();
+    selectReviewSuggestion(editor.view, 'draft-only');
+    expect(activeSuggestionId(editor.state)).toBeNull();
+    expect(collectSuggestions(editor.state.doc)).toHaveLength(2);
+  });
   test('language-only transactions refresh an existing author badge without changing suggestions', () => {
     const editor = mountEditor();
     editor.commands.setContent('<p>原始名称 Alpha</p>');

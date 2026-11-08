@@ -28,8 +28,8 @@
     "sha256": "520a979294198a024112801642bbea30920e8d386cb877a4d20c36a7b3c42f34"
   },
   "src/features/knowledge/editor/editor-surface.tsx": {
-    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar. Update imports for component ownership without changing behavior. Record bounded foreground learning time for the active knowledge document; pause in background, dialogs and idle periods. See docs/ui/personal-profile.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md. Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md. Use two activity tabs, aligned reader rows and main-document historical views. Add real document likes and quantity-based coffee gifts with immutable account balances, idempotency, permission checks and shared animated left-side controls. See docs/document-collaboration.md and .spec/tasks/document-interactions.md. Move read-only and authorization notices to an accessible metadata warning icon with a full shared tooltip, outside the document body. See docs/document-collaboration.md.",
-    "sha256": "c3e5cf96a77a0e9a1826334f1b3dbfbc8368dd1d55941121761bb7f187070950"
+    "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Use real creator metadata, live collaboration profiles, recorded visits and the functioning history rail. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Wire permitted import and full-access moves and use the shared persistent-width history sidebar. Update imports for component ownership without changing behavior. Record bounded foreground learning time for the active knowledge document; pause in background, dialogs and idle periods. See docs/ui/personal-profile.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md. Preserve editor identity across same-account focus refreshes so native file selection and in-flight uploads are not discarded; recheck editability when selection completes. See .spec/tasks/editor-rich-content.md. Use two activity tabs, aligned reader rows and main-document historical views. Add real document likes and quantity-based coffee gifts with immutable account balances, idempotency, permission checks and shared animated left-side controls. See docs/document-collaboration.md and .spec/tasks/document-interactions.md. Move read-only and authorization notices to an accessible metadata warning icon with a full shared tooltip, outside the document body. See docs/document-collaboration.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "64cfd279a95510343c3efe64777bc0d7fab91887ea17209ed28ef67d193b3ef9"
   },
   "src/features/knowledge/knowledge-base-header.messages.ts": {
     "reason": "Remove duplicated lower knowledge-base selector/header and its old selection hook; the top same-style knowledge-base switcher is the only workspace entry.",
@@ -246,8 +246,8 @@
     "sha256": "e18ec69cbb689ad313d6b7902ac5c718251fd46cf3be4319ccc1506912d6f944"
   },
   "src/features/knowledge/editor/components/document-editor-header.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Render the current document title in a noninteractive centered reading-header slot revealed after the main heading scrolls away. See docs/editor-rich-content.md. Measure both action groups to reserve equal clearance around the geometric center and hide the duplicate title when less than 80px remains. Align the outline scrollbar with its right inner border and remove the duplicate body-outline toolbar entry while preserving PDF thumbnails. See docs/editor-heading-navigation.md. Use two activity tabs, aligned reader rows and main-document historical views. Add real document likes and quantity-based coffee gifts with immutable account balances, idempotency, permission checks and shared animated left-side controls. See docs/document-collaboration.md and .spec/tasks/document-interactions.md.",
-    "sha256": "b93e87180f1b2958c36c16726574087a1b27a16f526cdce0b258582c8a1d538a",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Connect the reference Share button to real page collaboration and publication controls. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the outline control so expansion retains ARIA semantics without a persistent background; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Render the current document title in a noninteractive centered reading-header slot revealed after the main heading scrolls away. See docs/editor-rich-content.md. Measure both action groups to reserve equal clearance around the geometric center and hide the duplicate title when less than 80px remains. Align the outline scrollbar with its right inner border and remove the duplicate body-outline toolbar entry while preserving PDF thumbnails. See docs/editor-heading-navigation.md. Use two activity tabs, aligned reader rows and main-document historical views. Add real document likes and quantity-based coffee gifts with immutable account balances, idempotency, permission checks and shared animated left-side controls. See docs/document-collaboration.md and .spec/tasks/document-interactions.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "6a049c9b4a77aded78c0816a97c12288d96be004cd9e8c31c8f4bdd0bced8902",
     "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/index.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
@@ -261,8 +261,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/index.tsx"
   },
   "src/features/knowledge/editor/components/selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "748a2608c9cb761c1477c01be9dd5d5066b920788168c35271a3ed98e97618e4",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Bind view-dependent listeners on Tiptap mount and detach on unmount so editor remounts during development do not access an absent view. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Use the same official solid comment-dots icon as other comment entry points while preserving selected-text comment behavior. Add a hoverable pastel and custom highlight palette while retaining the editor selection and existing formatting, link and comment actions. See docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "e84962e9495cebae43ab4bded93a46a445cfa8b2a2c46dac631df3c2e768d784",
     "relocatedTo": "src/features/knowledge/editor/components/selection-toolbar/index.tsx"
   },
   "src/features/knowledge/editor/document-reference.messages.ts": {
@@ -319,8 +319,8 @@
     "sha256": "c0d32085666f97683a97f790290ff60c39d7ab005b1797475ac5ea1ba5d1ae92"
   },
   "backend/server/src/modules/knowledge/ai/tools/write.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
-    "sha256": "f7fdbe24f83e32d388a4698dd332dd3cd880995e4a564adb070ed70715be7829"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Align member administration, folder metadata visibility, direct creator grants and invitations with Outline policies; preserve scope locks, revisions, last-manager safety and transactional revocation. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "7c13066fae0ba396ad9501146468d2cf8548e30c4c4c4d3976a8d96f7d4b583d"
   },
   "backend/server/src/modules/knowledge/api/page-routes.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Add explicit cross-folder transfer, retaining the existing within-folder move protocol, source full/destination edit authorization, credential revalidation, stable subtree identity and permission fencing. Add an authorized atomic native text import mutation that persists initial Y.Doc content and creator ACL without overwriting retries or accepting standalone internal asset claims. Align destination, edit, transfer, recycle and recovery authorization with current role-aware resource grants; recheck live writers under the resource lock and retain fail-closed visibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md. Owner-only member management and invitation authority; preserve actual resource grants and scoped collaborators. Compact role, checkbox filter and permission controls. See .spec/tasks/member-management-owner-only.md.",
@@ -467,12 +467,12 @@
     "sha256": "dbe79ffdbf044af471608e2fa94e26572be4b2a93e00a688b5a001aae81624bb"
   },
   "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "aebda15902ddce2e6cbb032e9b92f706e602e582ea42e5aacc9ec4a4b7d50d73"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "be0cddb4fb2475b5902e497fc3a8112bd1cf2a9ff3b58235ad5afe179554b104"
   },
   "src/features/knowledge/editor/block-modules/ai-block/index.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "1ae2eeb2138ff2fece179be1fdd79d7dd10708d10b4d019d91f9421ec8d9f585"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "1fcb8f3b90a74bf81b6ce97851a2ac100dc98817280e930b22b4dc867b79d5c5"
   },
   "src/features/knowledge/editor/block-modules/audio/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
@@ -619,8 +619,8 @@
     "sha256": "c3c6d87d4d56cbe9e8b94da90175357ef8a3fb387222530e580b2ad465334088"
   },
   "src/features/knowledge/editor/commands/slash-items.ts": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
-    "sha256": "0b080c1459fb88bb27a0f94c96ec18745b0efec35bd0f8644e4b91b0b7283057"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "e25a21d034f6d99e4568698d43a27246333506cb8849eadbd09c4b95c9b0bc38"
   },
   "src/features/knowledge/editor/comments-integration.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Read comment capability from the authenticated page policy independently of the three resource grants; retain guest restrictions and align file move controls and permission copy. See docs/architecture/knowledge-permissions.md.",
@@ -748,8 +748,8 @@
     "sha256": "27c837924aed53e754b0755cd1288a9429217d17fe2c4613db0997255cf733ae"
   },
   "shared/src/knowledge/contracts/index.ts": {
-    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose the runtime-neutral personal profile contract for ACL-filtered activity, resources, exact daily counts and pagination. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Publish the validated local-library transfer contract for the independent Web client and business service. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Expose scoped per-member resource access contracts and real direct-grant counts while retaining historical ownership and persisted ACL compatibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md.",
-    "sha256": "e7dda78ce9b2e4f35379d21fe85fbdc5469b6d4b1d7d67ac074349ed42c7ddcb"
+    "reason": "Export strict document collaboration, publication, invitation and statistics contracts. Export pure discovery, folder overview and revision-checked update contracts shared by independent Fob layers. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose the runtime-neutral personal profile contract for ACL-filtered activity, resources, exact daily counts and pagination. Implement the selected compact member directory and folder permission matrix; retire group management while retaining legacy authorization reads, add scoped individual folder access, inheritance, atomic role changes and regression coverage. See docs/ui/knowledge-base-members.md and .spec/tasks/knowledge-base-members.md. Publish the validated local-library transfer contract for the independent Web client and business service. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Expose scoped per-member resource access contracts and real direct-grant counts while retaining historical ownership and persisted ACL compatibility. See docs/architecture/knowledge-permissions.md and docs/ui/knowledge-base-members.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "3fedf738f1732e09d9c754894fc06302e3095145a7bea51b07adbf686f5337f6"
   },
   "src/features/knowledge/editor/components/document-star-button.tsx": {
     "reason": "Retain the copied Fob capability. Refine approved icon roles, sidebar alignment, daily-card lifecycle and title/toolbar presentation per user review. Apply the reviewed shared hover variant to the star control while preserving its icon, aria-pressed state and actual star operation; see docs/editor-rich-content.md. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -800,8 +800,8 @@
     "sha256": "21c708fde4c4e63ba3e73ab44c166b55f4015a880a197389f45e5aacdff7312d"
   },
   "src/features/knowledge/editor/block-modules/types.ts": {
-    "reason": "Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource.",
-    "sha256": "0cb7d5c5aed815030f068bd9b74580eea85bdbcef9af6e7ceee7419cc5c40b03"
+    "reason": "Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "1a233269ec4d5068b6562fd3c34f23adc40cfeae0ffc3b670de81b4fd531658c"
   },
   "src/features/knowledge/navigation/tree-model.ts": {
     "reason": "Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
@@ -846,12 +846,12 @@
     "sha256": "cde726fc797e65d36f76482de333264a429fa075d1ca87914cb5fb3cbd7138c1"
   },
   "src/features/knowledge/editor/commands/block-labels.messages.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Expose the bilingual PlantUML block label through the existing registry-driven slash menu. See docs/editor-rich-content.md.",
-    "sha256": "ff2523a70d3ade2ac326707b76165f584cb677055280f0c0fec9d97ac7975184"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Expose the bilingual PlantUML block label through the existing registry-driven slash menu. See docs/editor-rich-content.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "e08c9ce93f0f9376c091910b69e511ea957d9ccc63785aef89c775a3ec6e0344"
   },
   "src/features/knowledge/editor/commands/slash-items.test.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering.",
-    "sha256": "fbbc87edaaa92289a3ef7d06ec542be209ee21d2da12a96f6af4ec2449923d79"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "559c11dadc6f2b988c63bbdfa6dd10a74c62d7c9157555fa58bfac1e8d514e49"
   },
   "src/features/knowledge/editor/commands/slash-paste.instance.test.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Cover zero-length empty-line insertion, clean cancellation and readonly/code/nonempty guards alongside the existing slash and paste tests.",
@@ -1516,8 +1516,8 @@
     "reason": "Owner-only member management and invitation authority; preserve actual resource grants and scoped collaborators. Compact role, checkbox filter and permission controls. See .spec/tasks/member-management-owner-only.md."
   },
   "src/features/knowledge/editor/commands/slash-menu.tsx": {
-    "sha256": "466f10f03e3943dd9810fab90c1070fd1816bcccbe0a32e2f0f4c3df9f6bc6d0",
-    "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md."
+    "sha256": "b1035c835b5c516e3e6ac04f8c208392bb4fa6519cd828aa2dbebc54be3b4a0b",
+    "reason": "Retry authorized media resolution across collaboration persistence debounce, cancel stale resource work, and keep slash portals in the visible page. See .spec/tasks/editor-rich-content.md. Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md."
   },
   "src/features/knowledge/editor/block-modules/media-core/insert-media.test.ts": {
     "sha256": "2cccec12943b3bae275cf1b0acb891980bd45616efc1c8139f575be97f256db2",
@@ -1566,5 +1566,69 @@
   "src/features/knowledge/local/use-local-library.ts": {
     "sha256": "df5eb8ec25d84c0b984bd0ed898900846a27f1bfa948f49481ea563227cee643",
     "reason": "Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md."
+  },
+  "src/features/knowledge/ai/use-ai-streaming-task.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "52263ab73e2760e65ddbf876ce690c687fcdc7ca829e9d2b372d496e5ab899be"
+  },
+  "src/features/knowledge/editor/block-modules/ai-block/ai-block-node-view.messages.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "62623619d76f7f98abb9ac72cda710b1d9311d50161dfadb256263a7ec835d63"
+  },
+  "src/features/knowledge/editor/block-modules/ai-block/ai-block.module.css": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "8a69cd06e3fe3da190531884048622ce9194e5f9baac27d995c2c9d32e76ed2f"
+  },
+  "src/features/knowledge/editor/commands/slash-menu.messages.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "68b126b3cd52bc42e4b1d8371fe5366fe20f0971dcb9eca00a9ee0c9b972bc29"
+  },
+  "src/features/knowledge/editor/commands/slash-menu.module.css": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "0c9881371ad06bc86850b25304c5e6ac7913b0b267736f6ecfea2e8094be3dcf"
+  },
+  "src/features/knowledge/editor/review/review-decisions.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "bc1e60e269d7acb387a4c1ecc9f9df064f7ce21bf2bd2b9ea6ef514c75a1d14a"
+  },
+  "src/features/knowledge/editor/review/review-marks.test.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "91cd6e119187775214796f829608fd324d22e75f92b167de93452040ac14b592"
+  },
+  "src/features/knowledge/editor/review/review-marks.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "4083cb2e7816fa42b4a9362a46178e737dc13b30ffd99d291366a39f9704cecb"
+  },
+  "src/features/knowledge/editor/review/review-panel.test.tsx": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "40bba48116622f8c558c487ff65a7925837a4e70b906b714b21e3fbeb5556a7d"
+  },
+  "src/features/knowledge/editor/review/use-review-panel.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "0bd1c6685c10d1122c7642684e48cf090e7e5ea227aae9453a40cce0434ee6b5"
+  },
+  "backend/server/src/modules/knowledge/ai/gateway/credentials.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "f5b5f0f19ed537f4151a15875911d94bf320a44f1ebe9810b56398ffcaa4cce1"
+  },
+  "backend/server/src/modules/knowledge/ai/streaming.integration.test.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "3cdb75fd2a548421101bb7bf1cc00f1cf42274faa0624a70798a1f1279fec102"
+  },
+  "backend/server/src/modules/knowledge/ai/streaming.test.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "736121100d9ced1fc555f00a37a2acd56870dc41e13c70a6da733330fd76b6f4"
+  },
+  "backend/server/src/modules/knowledge/ai/streaming.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "2576b997910da14b17de3263a04b018072886c82b1742a189b2225c5288bb99b"
+  },
+  "backend/server/src/modules/knowledge/ai/tools/errors.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "262b41b94c0deb67503bcd241a0a1ee193999b722c2f03d8b072887c7d76e536"
+  },
+  "shared/src/knowledge/contracts/ai-tasks.ts": {
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
+    "sha256": "ca0936274158f47d90243bdc01dedc3933f5c7e82616f2d5a26014204ee44627"
   }
 }

@@ -12,7 +12,9 @@ export type KnowledgeAgentToolErrorCode =
   /** query_database 的筛选/排序/游标不合法。 */
   | 'INVALID_TOOL_QUERY'
   /** search 所需的模型依赖（网关/绑定）未随调用装配。 */
-  | 'MODEL_DEPENDENCY_UNAVAILABLE';
+  | 'MODEL_DEPENDENCY_UNAVAILABLE'
+  /** Refuse admission rather than evict a still-retriable insertion receipt. */
+  | 'WRITE_RECEIPT_CAPACITY';
 
 /**
  * 工具层的唯一对外错误形态：产品内 AI（J04）与 MCP（K01）按 `code` 归一处理。

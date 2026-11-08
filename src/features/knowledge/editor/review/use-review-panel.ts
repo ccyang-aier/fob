@@ -5,10 +5,11 @@
  *
  * The hook owns no state of its own beyond a re-render tick: every visible
  * fact — rows, statistics, the disabled matrix, the active suggestion — is
- * derived on each editor event from the document (via `collectSuggestions`)
+ * derived on each editor event from the document's page-level review scope
  * and from the review plugin's selection-derived `activeId`. That keeps the
  * panel honest under remote CRDT updates: an agent streaming in a new
- * proposal re-renders the same pass that renders it in the text.
+ * proposal re-renders the same pass that renders it in the text. AI container
+ * drafts retain their separate block-local review controls.
  *
  * Actions return to the modules that own them: locate goes through
  * `selectReviewSuggestion` (caret + selection-derived state) and the scroll
@@ -18,13 +19,13 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { Editor } from '@tiptap/react';
-import { collectSuggestions } from '@fob/shared/knowledge/schema/suggestions';
 import type { SuggestionDecision } from '@fob/shared/knowledge/schema/suggestions';
 import { activeSuggestionId, selectReviewSuggestion } from './review-marks';
 import { applyReviewDecision } from './review-decisions';
 import { reviewActionsView, reviewRows, reviewStats } from './review-model';
 import type { ReviewActionsView, ReviewRow, ReviewStats } from './review-model';
 import { suggestionAnchor, scrollSuggestionIntoView } from './review-scroll';
+import { collectPageReviewSuggestions } from './review-scope';
 
 export interface ReviewPanelView {
   rows: ReviewRow[];
@@ -42,7 +43,7 @@ const emptyStats: ReviewStats = { total: 0, inserts: 0, deletes: 0, replaces: 0,
 
 function deriveFrame(editor: Editor | null): { rows: ReviewRow[]; stats: ReviewStats; activeId: string | null } {
   if (!editor || editor.isDestroyed) return { rows: [], stats: emptyStats, activeId: null };
-  const summaries = collectSuggestions(editor.state.doc);
+  const summaries = collectPageReviewSuggestions(editor.state.doc);
   return {
     rows: reviewRows(summaries, editor.state.doc),
     stats: reviewStats(summaries),
@@ -80,7 +81,7 @@ export function useReviewPanel(editor: Editor | null, editable: boolean): Review
   const locate = useCallback(
     (suggestionId: string) => {
       if (!editor || editor.isDestroyed) return;
-      const summary = collectSuggestions(editor.state.doc).find((candidate) => candidate.suggestionId === suggestionId);
+      const summary = collectPageReviewSuggestions(editor.state.doc).find((candidate) => candidate.suggestionId === suggestionId);
       if (!summary) return;
       const anchor = suggestionAnchor(summary);
       selectReviewSuggestion(editor.view, suggestionId, { flash: true });
