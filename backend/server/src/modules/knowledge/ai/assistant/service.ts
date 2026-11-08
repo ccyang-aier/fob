@@ -7,13 +7,14 @@ import { KnowledgeAccessError, requireKnowledgeScopes } from '../../access';
 import type { ModelGateway } from '../gateway';
 import { ModelGatewayError } from '../gateway';
 import { insertSuggestedMarkdown } from '../tools/write';
+import { KnowledgeAgentToolError } from '../tools/errors';
 import { AssistantError, createAssistantConversations } from './conversations';
-import { assembleAssistantContext } from './context';
+import { assembleAssistantContext, assembleAssistantHistory } from './context';
 import type { AssistantPreferences } from './preferences';
 import { eq, sql } from 'drizzle-orm';
 import { knowledgeBase } from '../../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
-import { assistantHistoryMessages, createGatewayAgentModel, createKnowledgeAgentTools, knowledgeAgentSystem, runKnowledgeAgent } from '../agent';
+import { createGatewayAgentModel, createKnowledgeAgentTools, knowledgeAgentSystem, runKnowledgeAgent } from '../agent';
 import type { KnowledgeAgentSearchModels } from '../tools/types';
 
 const codeOf = (error: unknown) => error instanceof ModelGatewayError || error instanceof AssistantError ? error.code : 'provider_unavailable';
@@ -23,6 +24,7 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
   async function ask(actor: KnowledgeRequestContext, raw: unknown, options: { signal: AbortSignal; refresh: () => Promise<KnowledgeRequestContext>; emit: (event: AssistantStreamEvent) => Promise<void> }) {
     const input = assistantAskSchema.parse(raw);
     options.signal.throwIfAborted();
+    requireKnowledgeScopes(actor, ['read']);
     // Read authorization and actual configuration both precede creation/model work.
     const context = await assembleAssistantContext(deps.pool, actor, input);
     options.signal.throwIfAborted();
@@ -78,16 +80,17 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
       await options.emit({ type: 'sources', sources: context.sources, truncated: context.truncated });
       await conversations.save(authority, started.id, turn);
       const history = (await conversations.get(actor, started.id)).turns.filter(item => item.id !== turn.id && item.status === 'done').slice(-6);
-      const messages = assistantHistoryMessages(history, input.mode, input.pageId, item => context.ledger.metadata({}, [...new Set([item.pageId, ...item.contextPageIds ?? [], ...item.sources.map(source => source.pageId)])], 256) !== null);
+      const preparedHistory = await assembleAssistantHistory(context.ledger, history, input, signal);
       syncLedger();
+      if (turn.sources.length !== context.sources.length || context.ledger.truncated !== context.truncated) await options.emit({ type: 'sources', sources: turn.sources, truncated: context.ledger.truncated });
       const tools = createKnowledgeAgentTools({ pool: deps.pool, authority: () => authority, mode: input.mode, pageId: input.pageId, ledger: context.ledger, search: deps.search });
       const model = createGatewayAgentModel({ gateway: deps.gateway, tier: input.tier,
         context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, taskId: started.id }, resolveSettings: () => deps.preferences.resolveFor(authority, input.selection) });
       let publishedSources = turn.sources.length, publishedTruncated = context.truncated;
       await runKnowledgeAgent({ model, tools, signal, check: recheck,
         ...(input.tier === 'fast' ? { limits: { modelSteps: 6, toolCalls: 12, timeoutMs: 120_000 } } : {}),
-        system: knowledgeAgentSystem({ mode: input.mode, title: context.title, context: context.text }),
-        messages: [...messages, { role: 'user', content: input.question }],
+        system: knowledgeAgentSystem({ mode: input.mode, title: context.title, context: [context.text, preparedHistory.text].filter(Boolean).join('\n\n') }),
+        messages: [...preparedHistory.messages, { role: 'user', content: input.question }],
         onText: async text => { turn.answer += text; await options.emit({ type: 'delta', text }); },
         onUsage: (name, usage) => { turn.model = name; turn.inputTokens = usage.inputTokens; turn.outputTokens = usage.outputTokens; },
         onTool: async step => {
@@ -103,7 +106,7 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
       });
       if (!turn.answer.trim()) throw new ModelGatewayError('invalid_response');
       // A model cannot manufacture a clickable citation to an undisclosed source.
-      turn.answer = turn.answer.replace(/\[([^\]]+)\]\(fob-source:(\d+)\)/g, (all, label: string, id: string) => turn.sources.some(source => source.id === Number(id)) ? all : label);
+      turn.answer = turn.answer.replace(/\[([^\]]+)\]\(fob-source:(\d+)\)/g, (all, label: string, id: string) => turn.sources.some(source => source.id === Number(id)) ? all : /^\d+$/.test(label) ? '' : label);
       await recheck(true);
       turn.status = 'done';
     } catch (error) {
@@ -142,9 +145,14 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
         const source = latest.sources.find(source => source.id === Number(id));
         return source ? `[${label}](/?view=knowledge&knowledgeBase=${actor.knowledgeBaseId}&document=${source.pageId}&source=server&block=${source.blockId})` : label;
       });
-      await insertSuggestedMarkdown({ knowledgeBaseId: actor.knowledgeBaseId, pageId, markdown,
-        receipt: { userId: actor.userId, turnId: turn.id, retainedTurnIds: await conversations.pendingApplyTurnIds(actor) } },
-      { pool: deps.pool, authority: actor, agent: { taskId: turn.id }, hocuspocus: deps.hocuspocus });
+      try {
+        await insertSuggestedMarkdown({ knowledgeBaseId: actor.knowledgeBaseId, pageId, markdown,
+          receipt: { userId: actor.userId, turnId: turn.id, retainedTurnIds: await conversations.pendingApplyTurnIds(actor) } },
+        { pool: deps.pool, authority: actor, agent: { taskId: turn.id }, hocuspocus: deps.hocuspocus });
+      } catch (error) {
+        if (error instanceof KnowledgeAgentToolError && error.code === 'TARGET_NOT_ACCESSIBLE') throw new AssistantError('access_changed', 403);
+        throw error;
+      }
       await conversations.save(actor, conversationId, { ...latest, appliedPageId: pageId });
       return { applied: true, pageId };
     });

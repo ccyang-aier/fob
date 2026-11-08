@@ -1,6 +1,6 @@
 # Fob 知识助手 Agent
 
-本文是知识助手运行内核的当前设计。产品和权限总边界见 [Fob 产品边界](architecture/fob-product-boundaries.md)，编辑器块生成、检索与模型配置的总体说明见 [知识发现](knowledge-discovery.md)。
+本文是知识助手运行内核的当前设计。产品和权限总边界见 [Fob 产品边界](architecture/fob-product-boundaries.md)，编辑器块生成、检索与模型配置的总体说明见 [知识发现](knowledge-discovery.md)。煤球聊天的当前产品设计见 [煤球 AI 对话](companion-ai-chat.md)，执行与验收状态见 [煤球对话任务](../.spec/tasks/companion-ai-chat.md)。
 
 ## 接入与使用
 
@@ -10,17 +10,25 @@
 
 现有数据库执行一次幂等升级：`bun --env-file=.env.fob.local backend/server/scripts/upgrade-assistant.ts`。新数据库直接使用当前规范 schema，表拥有组合作用域外键、FORCE RLS 与应用角色授权。
 
-正文 `/` 菜单顶部提供「生成」「创建可视化」；生成内容保留为块内草稿，可停止、提出修改要求、撤销或采纳，采纳后成为普通文档块。可视化输出原生 Mermaid 节点。独立聊天弹窗及其文档顶栏和选区入口已按用户要求删除；当前没有独立 AI 对话界面。
+正文 `/` 菜单顶部提供「生成」「创建可视化」；生成内容保留为块内草稿，可停止、提出修改要求、撤销或采纳，采纳后成为普通文档块。可视化输出原生 Mermaid 节点。旧独立聊天弹窗及其文档顶栏和选区入口已按用户要求删除。用户选定煤球 UX 方案 1 后，聊天改由点击全局煤球精灵打开锚定在精灵附近的轻量气泡，作为当前唯一聊天入口。
 
 块菜单宽 360px、行高 32px，沿用 13px 产品控件字号；生成空态高 120px、胶囊输入条高 38px、操作圆钮 30px，正文阅读字号保持原有设置。生成菜单、块、设置和协作光标继续使用集中目录的用户指定五角斜星与右下长尖，固定摘要防止回退到四角 Sparkle；可视化共用官方四形组合。模型选择和协议菜单复用共享 Radix 控件，增长清单支持搜索；没有原生 select。
 
-### 当前前端范围与后续 UX
+### 独立窗口撤回与当前煤球入口
 
 独立聊天窗口实现已撤回，包括窗口/位置记忆、对话编排、输入区、历史、回答展示、弹窗设置包装、选区事件桥、专用 React 控制器、样式、文案及其专用测试。编辑器不再挂载助手 Portal，也不再向文档顶栏或选区工具栏提供打开旧窗口的入口。删除的是界面代码，不清空用户已保存的服务器会话或模型连接。
 
-保留 `assistant-api.ts` 的纯鉴权 transport、响应 schema 与流式解析，它们也服务于全局 AI 接入设置；保留模型选择器、错误映射、编辑器流式任务和所有后端知识助手能力。服务端协议、权限与 Agent Harness 是下一步可能复用的基础，不代表已有可用的聊天产品入口。
+保留 `assistant-api.ts` 的纯鉴权 transport、响应 schema 与流式解析，它们也服务于全局 AI 接入设置；保留模型选择器、错误映射、编辑器流式任务和所有后端知识助手能力。当前煤球对话通过 `src/features/companion/chat/` 的气泡界面、会话控制器和工作区上下文适配复用同一套后端协议与 Agent Harness，不恢复旧窗口代码。
 
-后续方向是点击已有煤球精灵进入轻量对话；当前仅使用 imagegen 探索数版 UX，等待用户选择，不实现新聊天界面、不修改煤球精灵现有交互。此前独立弹窗的视觉和验收记录仅为历史，不再作为当前设计目标。
+气泡支持流式多轮问答、停止、重试、私有历史、来源跳转和全局 AI 设置入口。当前用户、知识库和可选文档由活动工作区发布，不从页面正文或 URL 文本推测授权。没有当前文档时使用整个知识库范围；本机知识库、未登录、无知识库及错误状态明确显示真实限制。气泡设计、交互和本轮 UI 验收证据统一维护在 [煤球 AI 对话](companion-ai-chat.md) 与对应任务中；此前独立弹窗的视觉和验收记录仅为历史。
+
+### 人设与无当前页对话
+
+模型系统指令使用「煤球，Fob 中陪伴用户的知识伙伴」。日常问候和闲聊自然、友好、简洁地回应；用户没有要求时，不主动介绍或总结当前文档，也不罗列工具过程、检索算法或模型配置。涉及知识库事实时仍需真实资料支持与可验真的引用，不能编造资料、来源或已执行操作。参考正文、历史回答和工具结果继续被当作不可信数据，不能覆盖系统指令和权限边界。
+
+`assistantAsk.pageId` 接受 UUID、显式 `null` 或省略，后两种归一为 `null`，且仅允许 `mode: 'knowledgeBase'`。默认模式和显式文档模式都必须提供有效页面 UUID；缺失页面返回 `invalid_request`，不会静默扩大任务范围。`AssistantTurn.pageId` 同样可空，旧 UUID 请求与已存历史保持兼容。
+
+知识库模式无当前页时，从空来源账本开始按需检索，不创建占位页面、不读取未经授权的首页，空知识库仍可正常日常对话。模式、用户与知识库始终明确传入原服务；可空页面不是绕过身份、知识库成员资格、令牌 scope 或页面 ACL 的条件。
 
 ## Pi 源码依据
 
@@ -43,16 +51,19 @@ Pi 的通用循环提供可扩展的运行时基础。Fob 将这套分层收敛�
 
 ```mermaid
 sequenceDiagram
-  participant UI as 受授权调用方（协议示意）
+  participant UI as 煤球气泡 / 受授权调用方
   participant HTTP as 已认证 NDJSON 路由
   participant Service as AssistantService / Conversations
   participant Harness as Knowledge Agent Harness
   participant Gateway as ModelGateway
   participant Tools as 只读工具 / SourceLedger
   participant DB as PostgreSQL / 权威 doc_state
-  UI->>HTTP: ask(pageId, mode, question, requestId)
+  UI->>HTTP: ask(pageId 或 null, mode, question, requestId)
   HTTP->>Service: 服务端身份、可刷新授权、AbortSignal
-  Service->>DB: 当前页面授权与权威正文；创建有界私有会话
+  opt 本轮指定当前页面
+    Service->>DB: 当前页面授权与权威正文
+  end
+  Service->>DB: 创建有界私有会话
   Service->>Harness: 当前上下文、经过净化的历史、工具白名单
   loop 至多 8 次模型调用
     Harness->>Service: 刷新身份与所有已披露页面权限
@@ -76,7 +87,7 @@ sequenceDiagram
 
 | 模块 | 职责 |
 | --- | --- |
-| `assistant/context.ts` | 授权读取当前文档，构建种子上下文；知识库模式为后续检索保留来源名额 |
+| `assistant/context.ts` | 有当前页时授权读取权威正文；知识库无页时建立空上下文和来源账本，按需检索 |
 | `agent/harness.ts` | 有界模型/工具循环、消息配对、工具执行顺序、累计 usage、停止和错误边界 |
 | `agent/model-adapter.ts` | 将 harness 的模型接口映射到现有 Gateway；每步重新解析个人设置 |
 | `agent/knowledge-tools.ts` | 复用产品/MCP 的只读 schema 与 handler，增加范围收敛、真实关键词降级、输出投影 |
@@ -91,7 +102,7 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 
 ## 工具与任务范围
 
-文档模式只声明 `read_page`，输入 JSON Schema 的 `pageId` 固定为当前文档，运行时还会再次比较页面 ID。历史只带入同一文档、同一文档模式的已完成回答，避免切回文档模式时继承旧的跨页资料。
+文档模式要求有效当前页面，只声明 `read_page`，输入 JSON Schema 的 `pageId` 固定为当前文档，运行时还会再次比较页面 ID。历史只带入同一文档、同一文档模式的已完成回答，避免切回文档模式时继承旧的跨页资料。知识库模式可以没有当前页；旧轮无页不产生虚假披露记录，实际经工具和历史进入模型的页面仍全部记账和复验权限。
 
 知识库模式声明以下工具：
 
@@ -161,13 +172,15 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 
 ## 持久化、权限与并发
 
-会话延续使用 `ai_task(kind=chat, state.assistantVersion=1)`，不写 provider 内部 transcript 或工具原始结果。持久化用户问题、答案、可用来源、全部 `contextPageIds`、最多 16 条实际工具步骤及累计 usage。工具步骤只保存通用状态和耗时，不保存正文、标题、查询词或原始参数。每用户/知识库物理保留最多 10 个会话，每会话最多 20 轮；删除旧会话时先解除 `ai_usage.taskId` 关联。
+会话延续使用 `ai_task(kind=chat, state.assistantVersion=1)`，不写 provider 内部 transcript 或工具原始结果。持久化用户问题、答案、可空的当前页、模式、可用来源、全部 `contextPageIds`、最多 16 条实际工具步骤及累计 usage。当前页保存在 turn JSON 中，表没有聊天专用 `page_id` 列，本次可空契约不需要数据库迁移。工具步骤只保存通用状态和耗时，不保存正文、标题、查询词或原始参数。每用户/知识库物理保留最多 10 个会话，每会话最多 20 轮；删除旧会话时先解除 `ai_usage.taskId` 关联。
 
-会话读取时逐一重验文档页、全部披露页及正文来源所属页面的权限。任一资料撤权后，旧回答不再通过历史接口泄露，标题列表/数据库值也使用同一规则。普通正文修改造成旧块消失时，历史回答保留，失效的可点击来源移除；这与页面权限撤销分开处理。下一轮带入旧历史时，将旧轮的全部披露页继续记入新轮账本，保证衍生回答同样可在撤权后净化。列表只验证到首个可见标题便停止，不为展示标题而扫描全部历史回答。
+会话查询、恢复、列表、取消和删除始终按用户与知识库共同限定。读取时逐一重验非空当前页、全部披露页及正文来源所属页面的权限；`null` 只表示没有当前页，不参与页面授权查询。任一资料撤权后，旧回答不再通过历史接口泄露，标题列表/数据库值也使用同一规则。普通正文修改造成旧块消失时，历史回答保留，失效的可点击来源移除；这与页面权限撤销分开处理。下一轮带入旧历史时，将旧轮的全部披露页继续记入新轮账本，保证衍生回答同样可在撤权后净化。没有披露页面的日常对话仍须通过知识库身份刷新，凭据失效同样清空部分输出。列表只验证到首个可见标题便停止，不为展示标题而扫描全部历史回答。
+
+历史引用编号属于各自的 turn，不能把上一轮编号直接用于本轮。先按模式、完整对话对和字节预算选择历史，再对其中实际引用的权威块重新验真、分配或复用本轮 ledger 编号；重映射后的链接留在历史回答中，相应来源摘录和 `sources` 事件一同交给本轮模型与界面。无当前页的知识库续问也能继续引用真实来源。未知或失效的数字引用标记整体移除，避免把裸数字当作下一轮的引用示范；不会猜测并自动链接普通答案中的数字。
 
 数据库 advisory lock 管理跨节点每用户/知识库的至多 2 个运行会话及 requestId 幂等。取消端点先终止本地 AbortController，再将当前 turn 的取消请求写入用户私有会话状态；其他节点的生产者每 1.5 秒轻量查询该标记，同时在正常运行检查点读取它。因此 Stop 不依赖负载均衡器把请求发回原节点。checkpoint 保存保留取消标记，新 turn 清除旧标记；其他用户无法取消本用户会话。浏览器断开连接则由原请求节点直接传播 AbortSignal。15 秒权限/租约心跳与取消轮询相互独立。
 
-`apply` 仅从服务端持久化的完成回答生成 Markdown，不信任客户端提交的答案；采用每轮 advisory lock 与知识库 `KEY SHARE` 权限围栏，继续走共享协作文档的建议写入和审阅流程。模型没有直接写入接口。
+`apply` 仅从服务端持久化的完成回答生成 Markdown，不信任客户端提交的答案；采用每轮 advisory lock 与知识库 `KEY SHARE` 权限围栏，继续走共享协作文档的建议写入和审阅流程。模型没有直接写入接口。无当前页的回答也必须明确选择具有编辑权限的目标；目标不可见、不存在或权限不足统一为 `access_changed / 403`，不会被误报为模型或认证服务故障。
 
 建议插入在当前 live Y.Doc 的同一事务内写入 `fob:assistant:insertion-receipts` 私有 map；headless 回退路径在同一行锁事务中加载最新正文、写正文和收据、追加 outbox。收据以用户/turn 为键，持久化随文档状态一起完成。正文已提交、会话 `appliedPageId` 尚未保存时重试会返回同一建议 ID；用户随后接受/拒绝建议去掉 annotations，也不会使收据失效。旧版本遗留的待审阅建议还可由 `agent:<turnId>` 作者归因恢复收据。
 
@@ -176,10 +189,14 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 ## 验证与演进边界
 
 ```powershell
-bun test --env-file=.env.fob.local backend/server/src/modules/knowledge/ai/agent backend/server/src/modules/knowledge/ai/assistant/assistant.integration.test.ts
+bun --env-file=.env.fob.local test --isolate backend/server/src/modules/knowledge/ai --test-name-pattern '^(?!.*a real local Ollama model streams blocks end to end)'
+bun test --isolate shared/src/knowledge/contracts/assistant.test.ts backend/server/src/modules/knowledge/ai/agent/sources.test.ts
 pnpm server:typecheck
+pnpm --filter @fob/shared typecheck
 ```
 
-测试使用合成 provider stream 与真正的隔离 PostgreSQL/身份/ACL/索引/协作建议路径；不消耗生产模型凭据。覆盖多步工具结果回填、累计 usage、无 embedding 的真实关键词检索、文档范围收敛、标题/数据库行元数据撤权、工具边界撤权、凭据失效、跨服务实例取消、checkpoint/取消标记竞态、超时、输出前重试、Unicode/JSON/上下文预算、物理留存，以及正文提交后会话标记失败、用户接受建议后的重试去重。真实供应商连接与编辑器视效由产品集成验证另行完成。
+2026-11-09 上述后端全目录最终回归为 118 通过、730 断言、16 文件，仅筛除依赖真实本地 Ollama 的 1 项；契约与来源定向回归为 10 通过、153 断言，服务端与共享 TypeScript 检查通过。日志分别为忽略目录下的 `.runtime/dev/coal-chat-backend-final.log` 与 `.runtime/dev/coal-chat-contracts-final.log`。UI 和真实模型验收结果以 [煤球对话任务](../.spec/tasks/companion-ai-chat.md) 为准，这组后端结果不代表视觉验收完成。
+
+测试使用合成 provider stream 与真正的隔离 PostgreSQL/身份/ACL/索引/协作建议路径；不消耗生产模型凭据。除既有多步工具回填、用量、预算、物理留存和建议幂等回归外，本轮增加空知识库无页聊天、显式 `null` 幂等重放、私有恢复和跨库拒绝、文档空页拒绝、无页真实检索及撤权、空披露账本凭据失效、无页跨实例取消、目标编辑权限校验，以及同文档续问引用保留和无页续问来源重映射/撤权。真实供应商连接与编辑器视效由产品集成验证另行完成。
 
 当前保留的边界：没有后台自主写作或无人确认的变更；没有通用终端、文件、浏览器工具。客户端可以管理私有公开 HTTPS 连接，实际网络访问仍受服务器 DNS/IP、TLS、重定向及凭据范围约束。知识检索的语义能力依赖实际 embedding 绑定及对应索引，不会用关键词结果冒充。更多可审阅写操作与长任务的自动恢复可在不改动 provider/工具权限边界的前提下继续扩展。

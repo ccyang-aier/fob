@@ -38,7 +38,7 @@ export const assistantToolStepSchema = z.strictObject({
 });
 export const assistantTurnSchema = z.strictObject({
   id: entityIdSchema, question: z.string().max(8000), answer: z.string().max(64000),
-  mode: z.enum(['document', 'knowledgeBase']), pageId: entityIdSchema,
+  mode: z.enum(['document', 'knowledgeBase']), pageId: entityIdSchema.nullable(),
   status: z.enum(['running', 'done', 'cancelled', 'failed', 'unavailable']),
   sources: z.array(assistantSourceSchema).max(30), errorCode: z.string().nullable(),
   createdAt: timestampSchema, appliedPageId: entityIdSchema.nullable(),
@@ -59,9 +59,13 @@ export const assistantSettingsSchema = z.strictObject({
 });
 export const assistantAskSchema = z.strictObject({
   conversationId: entityIdSchema.optional(), requestId: entityIdSchema,
-  pageId: entityIdSchema, question: z.string().trim().min(1).max(8000),
+  pageId: entityIdSchema.nullable().default(null), question: z.string().trim().min(1).max(8000),
   mode: z.enum(['document', 'knowledgeBase']).default('document'), tier: z.enum(['fast', 'smart']).default('fast'),
   selection: assistantModelSelectionSchema.optional(),
+}).superRefine((input, context) => {
+  if (input.mode === 'document' && input.pageId === null) context.addIssue({
+    code: 'custom', path: ['pageId'], message: 'Document conversations require a current page',
+  });
 });
 export const assistantStreamEventSchema = z.discriminatedUnion('type', [
   z.strictObject({ type: z.literal('start'), conversationId: entityIdSchema, turn: assistantTurnSchema }),

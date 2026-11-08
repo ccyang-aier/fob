@@ -1,6 +1,6 @@
 # AI 界面验收
 
-> 当前决定：独立 AI 助手弹窗、顶栏入口及专用前端已按用户要求删除。下述 Golo 和更早弹窗验收仅保留历史，不再是当前产品目标。最新撤回验收见文末；煤球精灵的三张 imagegen 图仅为 UX 备选，未实现新聊天代码。
+> 当前目标：用户已明确选择煤球 UX 展示第 1 张 Whisper Bubbles 并要求完整实现。当前验收见文末「煤球气泡对话」。下述 Golo 和更早独立弹窗仅为已撤回的历史，不是当前实现目标；独立窗口与顶栏入口保持删除。
 
 日期：2026-11-08。用户指出首版尺寸过大、设置结构不合理后，重新验收紧凑版和多服务商配置；首版截图不作为本次视觉通过的依据。保留文档阅读字号与现有产品共享交互规范。
 
@@ -116,5 +116,51 @@ final result: passed
 运行界面证据位于忽略目录 `.runtime/dev/`：`assistant-retirement-page.png`、`assistant-retirement-selection.png`、`assistant-retirement-slash.png`、`assistant-retirement-inline-ai.png`、`assistant-retirement-settings.png`、`assistant-retirement-pet.png`、`assistant-retirement-mobile.png`。100 项 / 501 断言、定向选区 6 项 / 39 断言、类型、图标、国际化、架构、ESLint 和生产构建通过；未更改用户已有文档和模型连接。
 
 三张 imagegen 预览按在会话中实际展示顺序保存为 `companion-ai-ux-01.png`、`companion-ai-ux-02.png`、`companion-ai-ux-03.png`，使用相同的本地产品截图与煤球外观作参考。生成记录与提示词摘要为 `.runtime/dev/companion-ai-ux-record.md`。这些是未选定的图像方案，不是运行界面截图，不作实现通过声明，也不引入任何新煤球聊天代码。
+
+final result: passed
+
+
+## 煤球气泡对话（当前，2026-11-09）
+
+**Source visual truth**：`.runtime/dev/companion-ai-ux-01.png`，即本会话实际展示顺序的第 1 张 Whisper Bubbles。原始 imagegen 输出及序号映射留在忽略的 `.runtime/dev/companion-ai-ux-record.md`。选择已明确，不使用第 2 张或旧助手窗口。
+
+**Rendered implementation**：真实 Fob + 已配置 GLM 模型 + verified 合成账户的两个独占知识库，不是静态 mock。主截图 `.runtime/dev/coal-chat-reference-final.png`。视口 1190 × 846，deviceScaleFactor=1，截图 CSS 像素 1190 × 846。原参考位图 1487 × 1058，没有可验证的 CSS/DPR 元数据；为对齐原图中的字号、控件和精灵比例，以约 0.8 倍统一归一化为 1190 × 846，未拉伸或改变实际产品尺寸。不能将这个推定比例宣称为原图的真实 DPR。
+
+状态均为浅色、当前文档、用户「帮我总结这篇文档」及完成回答。参考含两个格式要点；真实测试文档额外包含负责人和日期，模型相应给出三个要点，回答不是复制的固定文案。实际知识库名、页签和正文也来自隔离数据，未把它们伪装为参考里的极光项目。
+
+**Combined evidence**：已把参考和实际截图放在同一张图中查看，整体为 `.runtime/dev/coal-chat-full-comparison.png`，聚焦气泡/胶囊/精灵的可读细节为 `.runtime/dev/coal-chat-focused-comparison.png`；两者都不是只凭源代码或先后看图作判断。截图不提交。
+
+**Findings / comparison history**
+
+1. [P2，已修复] 长消息的气泡尾部超出滚动区，引起横向滚动条。朝精灵一侧增加留白，禁止横向滚动并处理镜像。真实长多轮实测 scrollWidth 与 clientWidth 相同；模拟键盘最终也为 320/320。
+2. [P2，已修复] 无引用的短答被隐藏菜单撑出空 footer。回答操作脱离正文流，没有引用则完全不渲染 footer。短答保持内容高度，菜单仍可键盘访问。
+3. [P2，已修复] 原尾部几何和阴影导致在白底上只见小角。最终使用 48×44 的 UI 尾部、外层阴影和内层 clip-path，避免阴影被三角自身裁掉；深浅色与窄屏重新捕获，完整尖尾指向精灵。最终同图对照为上列两张 comparison，已实际打开复核。
+4. [P2，已修复] 真实追问出现无链接数字引用。历史消息现在重新验证权威块并映射本轮 sourceId，真实二轮答复已包含可点击的负责人/日期来源。无当前页面的知识库追问也有集成覆盖。
+
+**Required fidelity surfaces**
+
+- 字体：使用现有 Fob 本地 sans 和代码字体，回答 14px/1.6、提问 13px、小范围控件 11px、原文链接 12px。源图经同一比例归一化后为相近的阅读层级；不缩放整个产品控件。
+- 间距与布局：304px 透明列、约 40px 独立胶囊、20px 回答圆角、浅灰右侧提问。无外围窗口/标题栏/侧栏。主文档开合聊天前后实测宽度均 1137.33px。长回答仅消息区增长和滚动。
+- 颜色与材质：沿用 panel、control-border、floating-border/shadow、interaction-hover-bg 与 info 引用色，兼容深色，输入聚焦只变描边。没有把品牌/图表或正文改色。
+- 资产：直接复用产品原有毛发 canvas 与眼睛，没有用 Emoji、图片截图或新绘制吉祥物代替。标准控件来自统一图标入口；尾部是气泡自身的 UI 形状。没有替换 GenerateStar。
+- 文案：系统入口、错误和菜单均双语。回答来自真实模型和授权资料，引用不是虚构链接；内容长度随问题和资料变化，不能要求与一张固定 mock 的字数相同。
+
+**Behavioral evidence**
+
+- 连续两轮真实文档问答、负责人/日期引用、无页面知识库检索「海棠密语」和实际引用打开第二篇原文。
+- 生成中停止保留部分正文；关闭重开不中断；刷新后从服务端恢复已停止的会话。
+- 最近对话搜索、取消删除、确认删除；设置跳转后草稿保留，返回后配置重新读取。
+- 实际知识库 A/B 切换不显示另一库的回答或未发送草稿，切回重新授权恢复；对应 actor/ACL/撤权边界还有后端真实 PG 回归。
+- 精灵拖动四角不误触开合，气泡选择左右位置；390 × 844 窄屏和保持 layout 390 × 844、visualViewport 390 × 320 的模拟键盘测试均通过。后者气泡 x=12/y=12、294 × 296，精灵也在可见区；恢复键盘前位置不丢失。没有声称物理手机验收。
+- 最终源代码稳定后 fresh navigation + 真实模型流式调用捕获 pageerror=[]、console error=[]，旧 assistant-window 节点数量为 0。早期开发中的 CSS HMR 重载和业务服务 watch 短暂重启日志未充作稳定验证。
+
+**Implementation checklist**
+
+- [x] 用户选定来源、完整和聚焦同图对比。
+- [x] 核心真实模型/权限/恢复/菜单流程。
+- [x] 类型、图标、国际化、Lint、架构、构建和相关回归。
+- [x] 尾部阴影最终截图复核，等待真实主题动画结束后重抓深色。证据为 `coal-chat-dark-final.png`、`coal-chat-mobile-final.png`、`coal-chat-keyboard-final.png`。
+
+当前无待修复 P0/P1/P2。可接受的差异：真实模型回答多一个事实要点，气泡按内容增高；原产品精灵的眼神、眨眼与小动作随运行状态变化。P3：三角根部仍有非常细的接合轮廓，可在后续视觉微调时继续平滑，不阻塞对话。
 
 final result: passed

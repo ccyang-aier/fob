@@ -18,7 +18,7 @@ import { createAssistantService, type AssistantService } from './service';
 import { createAssistantRoutes } from './http';
 
 let fixture: PermissionsFixture, service: AssistantService;
-let calls: TextCall[] = [], checks: TextCall[] = [], behaviour: 'normal' | 'cancel' = 'normal';
+let calls: TextCall[] = [], checks: TextCall[] = [], behaviour: 'normal' | 'cancel' | 'hello' = 'normal';
 const platform = { providers: { test: { apiKey: 'synthetic-test-only' } }, defaults: { fast: { source: 'platform' as const, provider: 'test', model: 'test-model' }, smart: { source: 'platform' as const, provider: 'test', model: 'test-model' } } };
 beforeAll(async () => {
   fixture = await createPermissionsFixture({ mount(app, deps) {
@@ -28,7 +28,7 @@ beforeAll(async () => {
       checks.push(input);
       return { callId: randomUUID(), model: { source: 'platform' as const, provider: 'test', model: input.settings.fast?.model ?? 'test-model' }, text: 'OK', toolCalls: [], finishReason: 'stop', usage: { inputTokens: 2, outputTokens: 1 } };
     }, async *stream(input: TextCall) {
-      calls.push(input); yield { type: 'text-delta' as const, text: '项目六月上线。[1](fob-source:1)' };
+      calls.push(input); yield { type: 'text-delta' as const, text: behaviour === 'hello' ? '我在，想聊点什么？' : '项目六月上线。[1](fob-source:1)' };
       if (behaviour === 'cancel') input.signal?.throwIfAborted();
       yield { type: 'finish' as const, result: { callId: randomUUID(), model: { source: 'platform' as const, provider: 'test', model: 'test-model' }, toolCalls: [], finishReason: 'stop', usage: { inputTokens: 100, outputTokens: 20 } } };
     } };
@@ -37,7 +37,7 @@ beforeAll(async () => {
   } });
 }, 60000);
 afterAll(async () => { await fixture?.close(); }, 30000);
-beforeEach(async () => { await fixture.resetJobs(); calls = []; checks = []; });
+beforeEach(async () => { await fixture.resetJobs(); calls = []; checks = []; behaviour = 'normal'; });
 function request(path: string, actor = fixture.owner, body?: unknown, method = 'POST', knowledgeBaseId = fixture.alpha.id) {
   return fetch(`${fixture.server.origin}/api/knowledge/${knowledgeBaseId}/assistant/${path}`, { method: body === undefined ? 'GET' : method, headers: { origin: fixture.server.webOrigin, cookie: actor.cookie, ...(body === undefined ? {} : { 'content-type': 'application/json' }) }, body: body === undefined ? undefined : JSON.stringify(body) });
 }
@@ -58,6 +58,54 @@ async function ask(pageId: string, actor = fixture.owner, extra: Record<string, 
 }
 function finished(events: AssistantStreamEvent[]) { const event = [...events].reverse().find(event => event.type === 'finish'); if (event?.type !== 'finish') throw new Error(JSON.stringify(events)); return event.turn; }
 function started(events: AssistantStreamEvent[]) { const event = events.find(event => event.type === 'start'); if (event?.type !== 'start') throw new Error(JSON.stringify(events)); return event.conversationId; }
+
+test('an empty knowledge base supports page-less private chat, replay and restored follow-up history', async () => {
+  const counts = await fixture.admin.query('SELECT count(*)::int AS count FROM resources.page WHERE knowledge_base_id=$1', [fixture.beta.id]);
+  expect(counts.rows[0].count).toBe(0);
+  behaviour = 'hello';
+  const input = { requestId: randomUUID(), question: '你好，煤球', mode: 'knowledgeBase' };
+  const response = await request('ask', fixture.foreign, input, 'POST', fixture.beta.id);
+  expect(response.status).toBe(200);
+  const events = (await response.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent), turn = finished(events), id = started(events);
+  expect(turn.pageId).toBeNull(); expect(turn.status).toBe('done'); expect(turn.sources).toEqual([]); expect(turn.contextPageIds).toEqual([]);
+  expect(turn.answer).toBe('我在，想聊点什么？'); expect(calls).toHaveLength(1);
+  expect(calls[0]!.system).toContain('你叫煤球'); expect(calls[0]!.system).not.toContain('当前文档：');
+  const replay = await request('ask', fixture.foreign, { ...input, pageId: null }, 'POST', fixture.beta.id);
+  const replayEvents = (await replay.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent);
+  expect(started(replayEvents)).toBe(id); expect(finished(replayEvents).id).toBe(turn.id); expect(calls).toHaveLength(1);
+  const restored = assistantConversationSchema.parse(await (await request(`conversations/${id}`, fixture.foreign, undefined, 'GET', fixture.beta.id)).json());
+  expect(restored.turns[0]!.pageId).toBeNull(); expect(restored.turns[0]!.answer).toBe(turn.answer);
+  const follow = await request('ask', fixture.foreign, { conversationId: id, requestId: randomUUID(), pageId: null, question: '可以陪我讨论想法吗？', mode: 'knowledgeBase' }, 'POST', fixture.beta.id);
+  expect(finished((await follow.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent)).status).toBe('done');
+  expect(JSON.stringify(calls.at(-1)!.messages)).toContain('你好，煤球'); expect(JSON.stringify(calls.at(-1)!.messages)).toContain('我在，想聊点什么');
+  expect((await request(`conversations/${id}`, fixture.owner, undefined, 'GET', fixture.beta.id)).status).toBe(401);
+  expect((await request(`conversations/${id}`, fixture.owner)).status).toBe(404);
+  expect((await fixture.admin.query('SELECT count(*)::int AS count FROM resources.page WHERE knowledge_base_id=$1', [fixture.beta.id])).rows[0].count).toBe(0);
+});
+
+test('missing document pages fail before persistence or model calls rather than widening the scope', async () => {
+  const before = await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select({ count: sql<number>`count(*)::int` }).from(aiTask));
+  for (const input of [{ mode: 'document', pageId: null }, { mode: 'document' }, {}]) {
+    const response = await request('ask', fixture.owner, { requestId: randomUUID(), question: '总结当前文档', ...input });
+    expect(response.status).toBe(200);
+    expect((await response.text()).trim().split('\n').map(line => JSON.parse(line))).toEqual([{ type: 'error', code: 'invalid_request' }]);
+  }
+  const after = await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select({ count: sql<number>`count(*)::int` }).from(aiTask));
+  expect(after).toEqual(before); expect(calls).toHaveLength(0);
+});
+
+test('a page-less answer still requires permission on an explicitly chosen suggestion target', async () => {
+  const viewTarget = (await fixture.tree({ parents: [null], defaultAccess: 'view' })).root, editTarget = (await fixture.tree({ parents: [null], defaultAccess: 'edit' })).root;
+  await seed(viewTarget, '只读目标', '只读正文。'); await seed(editTarget, '可编辑目标', '可编辑正文。'); await fixture.drain();
+  behaviour = 'hello';
+  const response = await request('ask', fixture.reader, { requestId: randomUUID(), pageId: null, question: '你好', mode: 'knowledgeBase' });
+  const events = (await response.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent), id = started(events), turn = finished(events);
+  expect(turn.pageId).toBeNull();
+  expect((await request(`conversations/${id}/apply`, fixture.reader, { pageId: viewTarget.pageId, turnId: turn.id })).status).toBe(403);
+  expect((await request(`conversations/${id}/apply`, fixture.reader, { pageId: editTarget.pageId, turnId: turn.id })).status).toBe(200);
+  const state = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(docState).where(eq(docState.pageId, editTarget.pageId)))[0]!);
+  expect(yStateToProseMirrorDoc(state.state, knowledgeSchema)!.textContent).toContain('我在，想聊点什么');
+});
 
 test('private provider HTTP lifecycle routes explicit and default model choices without exposing credentials', async () => {
   const input = { name: 'Personal gateway', protocol: 'openai-compatible', baseUrl: 'https://models.example/v1', apiKey: 'http-synthetic-only', models: [{ id: 'chosen-model', name: 'Chosen' }] };

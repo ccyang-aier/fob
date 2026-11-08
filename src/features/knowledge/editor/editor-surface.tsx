@@ -1,6 +1,8 @@
 'use client';
 
 import { useKnowledgeNavigationActive } from '../navigation/system-navigation';
+import { usePageVisible } from '@/lib/page-visibility';
+import { usePublishCompanionDocument } from '@/features/companion/chat/companion-context';
 import { useProfileLearning } from '../profile/use-profile-learning';
 
 import { useTranslation } from '@/lib/i18n';
@@ -162,6 +164,7 @@ export function PageEditorSurface({
   }, [editor, view.editable, version.selectedId]);
 
   const navigationActive = useKnowledgeNavigationActive();
+  const pageVisible = usePageVisible();
   useProfileLearning(scope,navigationActive && Boolean(user));
   // L02: a block-reference click that lands on this page reveals the block —
   // a pre-mount navigation consumes its staged highlight, later targets ride
@@ -203,6 +206,9 @@ export function PageEditorSurface({
     : knowledgeT('document');
   const displayEditor = version.selectedId ? version.editor : editor;
   const displayTitle = version.selectedId ? version.preview.data?.title ?? pageTitle.title : pageTitle.title;
+  usePublishCompanionDocument(navigationActive && pageVisible && user && !version.selectedId
+    ? { userId: user.id, knowledgeBaseId: scope.knowledgeBaseId, document: { pageId: scope.pageId, title: displayTitle, editable: view.editable } }
+    : null);
   const closeHistory = () => { version.select(null); setHistoryOpen(false); };
 
   return (

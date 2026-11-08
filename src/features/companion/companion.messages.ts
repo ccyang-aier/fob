@@ -3,6 +3,8 @@ import { defineMessages } from '@/lib/i18n/messages';
 export const messages = defineMessages({
   精灵: ['小精灵', 'Companion'],
   互动: ['和 Feather 互动', 'Interact with Feather'],
+  对话: ['和煤球对话', 'Chat with the soot sprite'],
+  对话提示: ['点击对话，右键或 Shift+F10 打开精灵互动。', 'Click to chat. Right-click or press Shift+F10 for companion interactions.'],
   收起: ['收起精灵工具栏', 'Collapse companion toolbar'],
   工具栏: ['精灵工具栏', 'Companion toolbar'],
   表情: ['表情', 'Expressions'],

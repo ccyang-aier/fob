@@ -41,8 +41,9 @@ beforeAll(async () => {
 }, 60_000);
 afterAll(async () => { await fixture?.close(); }, 30_000);
 beforeEach(async () => { await fixture.resetJobs(); calls = []; waitForCancellation = false; modelEntered = barrier(); });
-async function seed(scope: PageScope, title: string, text: string) {
-  const body = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [knowledgeSchema.node('paragraph', { blockId: 'content' }, [knowledgeSchema.text(text)])]));
+async function seed(scope: PageScope, title: string, text: string | string[]) {
+  const blocks = (Array.isArray(text) ? text : [text]).map((value, index) => knowledgeSchema.node('paragraph', { blockId: index ? `content-${index}` : 'content' }, [knowledgeSchema.text(value)]));
+  const body = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, blocks));
   try { await withKnowledgeBase(fixture.pool, scope.knowledgeBaseId, async db => {
     await db.update(page).set({ title }).where(eq(page.id, scope.pageId));
     await db.insert(docState).values({ ...scope, state: body.state, stateVector: body.stateVector });
@@ -50,7 +51,7 @@ async function seed(scope: PageScope, title: string, text: string) {
   }); } finally { body.ydoc.destroy(); }
 }
 async function authority(actor: PermissionTestActor = fixture.reader) { return fixture.authenticator.authenticate(new Request(fixture.server.origin, { headers: { origin: fixture.server.webOrigin, cookie: actor.cookie } }), fixture.alpha.id); }
-async function ask(pageId: string, mode: 'document' | 'knowledgeBase' = 'knowledgeBase', onEvent?: (event: AssistantStreamEvent) => Promise<void>) {
+async function ask(pageId: string | null, mode: 'document' | 'knowledgeBase' = 'knowledgeBase', onEvent?: (event: AssistantStreamEvent) => Promise<void>) {
   const actor = await authority(), events: AssistantStreamEvent[] = [];
   await service.ask(actor, { pageId, question: '星海项目何时上线？', mode, tier: 'fast', requestId: randomUUID() }, {
     signal: new AbortController().signal, refresh: () => fixture.authenticator.refresh(actor, ['read']),
@@ -79,6 +80,57 @@ test('real ACL keyword search → read_page → grounded answer persists sources
   expect(result.turn.toolSteps?.map(step => [step.name, step.status])).toEqual([['search', 'done'], ['read_page', 'done']]);
   expect(result.turn.inputTokens).toBe(30); expect(result.turn.outputTokens).toBe(6);
   expect((await service.conversations.get(result.actor, result.id)).turns[0]!.toolSteps).toHaveLength(2);
+});
+
+test('page-less knowledge-base chat searches authorized resources and rechecks disclosed pages on restore', async () => {
+  const target = (await fixture.tree({ parents: [null] })).root, secret = (await fixture.tree({ parents: [null], defaultAccess: null })).root;
+  await seed(target, '晨星计划', '晨星计划在九月上线。'); await seed(secret, '晨星计划保密资料', '隐藏的发布密钥。'); await fixture.drain();
+  script = index => index === 1 ? [tool('search', { query: '晨星计划' })] : index === 2 ? [tool('read_page', { pageId: target.pageId })] : answer('晨星计划在九月上线。[1](fob-source:1)');
+  const result = await ask(null);
+  expect(result.turn.pageId).toBeNull(); expect(result.turn.status).toBe('done'); expect(calls).toHaveLength(3);
+  expect(Object.keys(calls[0]!.tools!)).toContain('search');
+  expect(JSON.stringify(calls)).not.toContain('隐藏的发布密钥');
+  expect(result.turn.sources.map(source => source.pageId)).toEqual([target.pageId]);
+  expect(result.turn.contextPageIds).toEqual([target.pageId]); expect(result.turn.contextPageIds).not.toContain(secret.pageId);
+  await revoke(target);
+  const restored = (await service.conversations.get(result.actor, result.id)).turns[0]!;
+  expect(restored.status).toBe('unavailable'); expect(restored.answer).toBe(''); expect(restored.sources).toEqual([]);
+});
+
+test('document follow-up retains real citation links instead of teaching the model bare source numbers', async () => {
+  const current = (await fixture.tree({ parents: [null] })).root;
+  await seed(current, '验收计划', ['支持 Markdown 和 TXT 导入。', '负责人林青，计划2026年11月20日验收。']); await fixture.drain();
+  script = () => answer('林青，2026年11月20日。[2](fob-source:2)');
+  const first = await ask(current.pageId, 'document'), events: AssistantStreamEvent[] = [];
+  await service.ask(first.actor, { pageId: current.pageId, conversationId: first.id, question: '那负责人是谁？', mode: 'document', tier: 'fast', requestId: randomUUID() }, {
+    signal: new AbortController().signal, refresh: () => fixture.authenticator.refresh(first.actor, ['read']), emit: async event => { events.push(structuredClone(event)); },
+  });
+  expect(calls[1]!.messages.find(message => message.role === 'assistant')?.content).toBe('林青，2026年11月20日。[2](fob-source:2)');
+  const last = events.at(-1); expect(last?.type).toBe('finish');
+  if (last?.type === 'finish') { expect(last.turn.answer).toContain('[2](fob-source:2)'); expect(last.turn.sources[1]!.pageId).toBe(current.pageId); }
+});
+
+test('page-less follow-up revalidates and remaps cited historical evidence into its own source ledger', async () => {
+  const current = (await fixture.tree({ parents: [null] })).root, target = (await fixture.tree({ parents: [null] })).root;
+  await seed(current, '工作台', '欢迎。'); await seed(target, '海棠计划', '负责人许宁，复核日期2026年11月24日。'); await fixture.drain();
+  script = index => index === 1 ? [tool('read_page', { pageId: target.pageId })] : answer('许宁，2026年11月24日。[2](fob-source:2)');
+  const first = await ask(current.pageId), events: AssistantStreamEvent[] = [];
+  script = () => answer('许宁。[1](fob-source:1)');
+  await service.ask(first.actor, { pageId: null, conversationId: first.id, question: '那负责人是谁？', mode: 'knowledgeBase', tier: 'fast', requestId: randomUUID() }, {
+    signal: new AbortController().signal, refresh: () => fixture.authenticator.refresh(first.actor, ['read']), emit: async event => { events.push(structuredClone(event)); },
+  });
+  const request = calls.at(-1)!;
+  expect(request.messages.find(message => message.role === 'assistant')?.content).toBe('许宁，2026年11月24日。[1](fob-source:1)');
+  expect(request.system).toContain('来源 1：海棠计划'); expect(request.system).toContain('负责人许宁');
+  const last = events.at(-1); expect(last?.type).toBe('finish');
+  if (last?.type === 'finish') {
+    expect(last.turn.pageId).toBeNull(); expect(last.turn.answer).toBe('许宁。[1](fob-source:1)');
+    expect(last.turn.sources.map(source => source.pageId)).toEqual([target.pageId]);
+    expect(last.turn.contextPageIds).toContain(current.pageId); expect(last.turn.contextPageIds).toContain(target.pageId);
+  }
+  expect(events.some(event => event.type === 'sources' && event.sources.some(source => source.pageId === target.pageId))).toBe(true);
+  await revoke(target);
+  expect((await service.conversations.get(first.actor, first.id)).turns.at(-1)!.status).toBe('unavailable');
 });
 
 test('document mode exposes only read_page and rejects a model-supplied cross-page target', async () => {
@@ -124,11 +176,22 @@ test('credential refresh failure redacts partial output even while page ACL rema
   if (last?.type === 'finish') { expect(last.turn.status).toBe('unavailable'); expect(last.turn.answer).toBe(''); }
 });
 
+test('credential refresh failure also redacts page-less chat with an empty disclosure ledger', async () => {
+  script = () => answer('Private partial output');
+  const actor = await authority(), events: AssistantStreamEvent[] = []; let revoked = false;
+  await service.ask(actor, { pageId: null, question: '你好', mode: 'knowledgeBase', tier: 'fast', requestId: randomUUID() }, {
+    signal: new AbortController().signal,
+    refresh: async () => { if (revoked) throw new KnowledgeAccessError('UNAUTHENTICATED'); return actor; },
+    emit: async event => { events.push(structuredClone(event)); if (event.type === 'delta') revoked = true; },
+  });
+  const last = events.at(-1); expect(last?.type).toBe('finish');
+  if (last?.type === 'finish') { expect(last.turn.status).toBe('unavailable'); expect(last.turn.answer).toBe(''); expect(last.turn.question).toBe(''); }
+});
+
 test('a separate service instance cancels long model thinking through a durable flag', async () => {
-  const current = (await fixture.tree({ parents: [null] })).root; await seed(current, '当前文档', '当前正文。'); await fixture.drain();
   waitForCancellation = true; script = () => answer('Must not complete');
   let id = '';
-  const pending = ask(current.pageId, 'document', async event => { if (event.type === 'start') id = event.conversationId; });
+  const pending = ask(null, 'knowledgeBase', async event => { if (event.type === 'start') id = event.conversationId; });
   await modelEntered.promise;
   const actor = await authority();
   // A different user's Stop never affects this private conversation.
@@ -136,7 +199,8 @@ test('a separate service instance cancels long model thinking through a durable 
   expect(await service.conversations.cancellationRequested(actor, id, (await service.conversations.get(actor, id)).turns[0]!.id)).toBe(false);
   await otherService.cancel(actor, id);
   const result = await pending;
-  expect(result.turn.status).toBe('cancelled'); expect(result.turn.answer).toBe(''); expect(calls).toHaveLength(1);
+  expect(result.turn.status).toBe('cancelled'); expect(result.turn.answer).toBe(''); expect(result.turn.pageId).toBeNull(); expect(calls).toHaveLength(1);
+  expect((await otherService.conversations.get(actor, id)).turns[0]!.pageId).toBeNull();
 }, 10_000);
 
 test('checkpoint saves preserve a concurrent cancel flag and a new turn clears it', async () => {

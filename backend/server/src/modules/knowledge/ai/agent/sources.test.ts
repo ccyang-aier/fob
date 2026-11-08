@@ -4,7 +4,7 @@ import type { Pool } from 'pg';
 import type { KnowledgeRequestContext } from '../../access';
 import type { CitationVerdict, AssistantTurn } from '@fob/shared/knowledge/contracts';
 import { createAgentSourceLedger } from './sources';
-import { assistantHistoryMessages } from './prompts';
+import { assistantHistoryMessages, knowledgeAgentSystem } from './prompts';
 import { utf8Bytes } from './budget';
 
 const actor = { knowledgeBaseId: randomUUID(), userId: randomUUID() } as KnowledgeRequestContext;
@@ -39,10 +39,33 @@ test('large property values stay valid JSON and disclose truncation', () => {
   expect(JSON.stringify(value)).not.toContain('�');
 });
 
-test('document history cannot import prior knowledge-base answers or another document', () => {
+test('document history cannot import prior knowledge-base answers or another document', async () => {
   const pageId = randomUUID(), other = randomUUID();
   const turn = (id: string, mode: 'document' | 'knowledgeBase', answer: string) => ({ pageId: id, mode, status: 'done', question: 'Q', answer } as AssistantTurn);
-  const messages = assistantHistoryMessages([turn(pageId, 'document', '允许 [1](fob-source:1)'), turn(pageId, 'knowledgeBase', '跨页秘密'), turn(other, 'document', '其他文档')], 'document', pageId);
+  const messages = await assistantHistoryMessages([turn(pageId, 'document', '允许 [1](fob-source:1)'), turn(pageId, 'knowledgeBase', '跨页秘密'), turn(other, 'document', '其他文档')], 'document', pageId);
   expect(messages).toHaveLength(2); expect(JSON.stringify(messages)).not.toContain('跨页秘密'); expect(JSON.stringify(messages)).not.toContain('fob-source:');
-  expect(assistantHistoryMessages([turn(pageId, 'document', '正文')], 'document', pageId, () => false)).toEqual([]);
+  expect(await assistantHistoryMessages([turn(pageId, 'document', '正文')], 'document', pageId, () => null)).toEqual([]);
+});
+
+test('page-less knowledge-base history keeps complete pairs and does not become document context', async () => {
+  const turn = { pageId: null, mode: 'knowledgeBase', status: 'done', question: '你好', answer: '我在。' } as AssistantTurn;
+  expect(await assistantHistoryMessages([turn], 'knowledgeBase', null)).toEqual([{ role: 'user', content: '你好' }, { role: 'assistant', content: '我在。' }]);
+  expect(await assistantHistoryMessages([turn], 'document', randomUUID())).toEqual([]);
+  expect(await assistantHistoryMessages([turn], 'knowledgeBase', null, () => null)).toEqual([]);
+});
+
+test('history only prepares selected complete pairs and never teaches bare numeric citations', async () => {
+  const pageId = randomUUID(), selected: string[] = [];
+  const turn = { pageId, mode: 'document', status: 'done', question: '问', answer: '有依据 [2](fob-source:2)' } as AssistantTurn;
+  expect((await assistantHistoryMessages([turn], 'document', pageId))[1]!.content).toBe('有依据 ');
+  const messages = await assistantHistoryMessages([turn, { ...turn, question: '超预算', answer: '😀'.repeat(20_000) }], 'document', pageId, async item => { selected.push(item.question); return '已验证 [1](fob-source:1)'; });
+  expect(messages).toEqual([]); expect(selected).toEqual([]);
+  expect((await assistantHistoryMessages([turn], 'document', pageId, async () => '已验证 [1](fob-source:1)'))[1]!.content).toBe('已验证 [1](fob-source:1)');
+});
+
+test('companion persona treats conversation naturally while preserving evidence and tool boundaries', () => {
+  const prompt = knowledgeAgentSystem({ mode: 'knowledgeBase', title: '', context: '' });
+  expect(prompt).toContain('你叫煤球'); expect(prompt).toContain('日常问候和闲聊直接回应');
+  expect(prompt).toContain('本轮没有指定当前文档'); expect(prompt).not.toContain('当前文档：');
+  expect(prompt).toContain('不可信的数据'); expect(prompt).toContain('工具只能读取资料'); expect(prompt).toContain('真实 sourceId');
 });

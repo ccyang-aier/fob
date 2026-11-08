@@ -16,7 +16,8 @@ export function createAssistantConversations(pool: Pool) {
   const own = (actor: KnowledgeRequestContext, id?: string) => and(eq(aiTask.knowledgeBaseId, actor.knowledgeBaseId), eq(aiTask.initiatedBy, actor.userId), eq(aiTask.kind, 'chat'), sql`${aiTask.state}->>'assistantVersion' = '1'`, id ? eq(aiTask.id, id) : undefined);
   async function visible(actor: KnowledgeRequestContext, turn: AssistantTurn) {
     const readable = await withKnowledgeBase(pool, actor.knowledgeBaseId, async db => {
-      for (const pageId of new Set([turn.pageId, ...(turn.contextPageIds ?? []), ...turn.sources.map(source => source.pageId)])) {
+      const pageIds = [turn.pageId, ...(turn.contextPageIds ?? []), ...turn.sources.map(source => source.pageId)].filter((pageId): pageId is string => pageId !== null);
+      for (const pageId of new Set(pageIds)) {
         if ((await authorizePageAccess(db, { userId: actor.userId, scope: { knowledgeBaseId: actor.knowledgeBaseId, pageId }, required: 'view' })).decision !== 'allow') return false;
       }
       return true;
@@ -51,7 +52,7 @@ export function createAssistantConversations(pool: Pool) {
       // conversation. Keep the answer and remove only stale clickable sources.
       const verdicts = await validateCitations(pool, { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, citedBlockIds: turn.sources });
       const sources = turn.sources.filter(source => verdicts.some(verdict => verdict.status === 'valid' && verdict.pageId === source.pageId && verdict.blockId === source.blockId));
-      turns.push({ ...turn, sources, answer: turn.answer.replace(/\[([^\]]+)\]\(fob-source:(\d+)\)/g, (all, label: string, sourceId: string) => sources.some(source => source.id === Number(sourceId)) ? all : label) });
+      turns.push({ ...turn, sources, answer: turn.answer.replace(/\[([^\]]+)\]\(fob-source:(\d+)\)/g, (all, label: string, sourceId: string) => sources.some(source => source.id === Number(sourceId)) ? all : /^\d+$/.test(label) ? '' : label) });
     }
     return { id, title: turns.find(turn => turn.status !== 'unavailable')?.question.slice(0, 60) ?? '', turns, updatedAt: row.updatedAt.toISOString() };
   }

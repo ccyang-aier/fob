@@ -1,6 +1,6 @@
 # AI 接入、生成块与知识助手
 
-日期：2026-11-08。当前设计：[知识助手](../../docs/knowledge-assistant-agent.md)。
+日期：2026-11-09。内核当前设计：[知识助手](../../docs/knowledge-assistant-agent.md)。当前聊天入口的产品设计与本轮 UI 验收分别见 [煤球 AI 对话](../../docs/companion-ai-chat.md) 和 [煤球对话任务](companion-ai-chat.md)。下文早期独立助手实现与验收保留为历史，不代表当前界面。
 
 ## 实现范围
 
@@ -97,9 +97,9 @@
 
 验收结束后已关闭独立浏览器，按知识库归属和合成账户前缀核对后清理测试知识库、账户、会话任务和用量；删除临时认证状态。Web 与业务服务继续运行。
 
-## 当前决定：删除独立聊天弹窗
+## 历史决定：删除独立聊天弹窗
 
-用户明确撤回独立 AI 助手弹窗与文档顶栏入口，后续只先做煤球精灵聊天的 imagegen UX 方案。本节为当前执行范围，前面已完成的独立弹窗实现与视觉验收仅保留历史记录。
+用户在上一阶段明确撤回独立 AI 助手弹窗与文档顶栏入口，当时只制作煤球精灵聊天的 imagegen UX 方案。本节保留该阶段执行与验收事实；用户随后选择方案 1，当前实现范围见末尾「煤球气泡与内核补齐」。
 
 - [x] 删除旧聊天 panel / conversation / composer / history / window / geometry / answer / settings wrapper、样式、专用文案、选区事件桥和 React 控制器，共 19 个前端文件及其专用测试。
 - [x] 清理服务端文档编辑器里的挂载、状态和订阅，移除文档头 `assistant` 插槽及选区工具栏打开旧窗口的入口，没有保留不可点击的占位。
@@ -115,3 +115,27 @@
 以上自动化和浏览器验收没有调用真实产品模型，也未修改用户已有文档。Web 和业务服务继续运行。
 
 验收完成后已关闭独立 Chrome 上下文；在事务内核对合成账户前缀、知识库 owner 及无外部成员关联后清理 fixture 的任务、用量、知识库和认证账户，并删除临时认证状态。三张 UX 预览及生成记录继续留在忽略目录供选择。
+
+## 当前实现：煤球气泡与内核补齐
+
+用户已选定 imagegen 方案 1，要求完整实现煤球 AI 对话。当前唯一聊天入口是点击全局煤球精灵打开轻量气泡；不恢复已撤回的独立助手窗口、顶栏 AI 按钮或选区打开聊天入口。产品设计与前端执行证据统一见 [煤球 AI 对话](../../docs/companion-ai-chat.md) 和 [煤球对话任务](companion-ai-chat.md)。本节只记录已经落盘的接入和后端验证，不把早期窗口验收套用到新气泡。
+
+- [x] 煤球气泡及私有会话控制器复用现有 `assistant-api.ts`、NDJSON 路由、Conversations、ModelGateway 和 Agent Harness，没有第二套模型请求栈。
+- [x] 活动工作区提供用户、知识库和可选文档上下文；没有当前文档时显式使用知识库模式，页面值为 `null`，不伪造文档 ID 或读取未经授权的首页。
+- [x] 共享契约允许知识库 ask 省略或显式传入 `pageId: null`，默认及显式文档模式仍要求有效 UUID；空页文档请求在持久化和模型调用前返回 `invalid_request`。Turn 可空并保留旧 UUID 请求与历史兼容，无需数据库迁移。
+- [x] 空知识库可以正常日常对话；后续资料读取仍通过原只读工具、ACL/RLS 和披露账本。日常对话使用「煤球，Fob 中的知识伙伴」人设，不主动总结打开的文档或讲述工具过程，不编造知识事实和引用。
+- [x] 私有会话、列表、恢复、取消和删除保持用户 + 知识库作用域。无页历史不制造空页面授权，但实际披露页仍逐一复验；空账本也执行身份刷新，凭据失效会清空部分输出。
+- [x] 旧工具只读、调用/消息/输出预算、流式用量、心跳、取消及留存上限保持。跨实例 Stop 可中止无页知识库对话，恢复保持 `pageId: null`。
+- [x] 服务端显式应用建议仍要求目标编辑权限和权限围栏。新增用例发现只读目标原被误报为 503，现归一为 `access_changed / 403`；有编辑权限的显式目标仍可写入可审阅建议。
+- [x] 本轮真实续问检查发现旧历史引用被变成裸数字示范。现先按完整对话对和字节预算选历史，再将其中实际引用经权威正文重新验真、映射为本轮编号；来源摘录与 `sources` 事件同步发布。未知或失效数字标记整体移除，不把普通数字猜作引用。
+- [x] 2026-11-09 全 AI 后端最终回归：118 通过、730 断言、16 文件；筛除依赖真实本地 Ollama 的 1 项。日志 `.runtime/dev/coal-chat-backend-final.log`，命令如下。
+- [x] 共享契约与来源账本定向回归：10 通过、153 断言，日志 `.runtime/dev/coal-chat-contracts-final.log`；`server:typecheck`、共享 TypeScript 和限定改动 `git diff --check` 通过。
+
+```powershell
+bun --env-file=.env.fob.local test --isolate backend/server/src/modules/knowledge/ai --test-name-pattern '^(?!.*a real local Ollama model streams blocks end to end)'
+bun test --isolate shared/src/knowledge/contracts/assistant.test.ts backend/server/src/modules/knowledge/ai/agent/sources.test.ts
+pnpm server:typecheck
+pnpm --filter @fob/shared typecheck
+```
+
+新增集成覆盖空库无页聊天、`null` 幂等重放、多轮私有恢复、跨知识库拒绝、文档空页拒绝、无页授权检索与撤权、空披露账本凭据失效、跨服务实例取消、目标编辑权限与实际建议写入。同文档续问保留真实引用链接，无当前页续问将历史 source 2 重映射为本轮 source 1，撤权后衍生回答不可读取；未入选的超预算历史不会触发来源读取。数据库集成使用临时隔离库，测试结束已自动删除。真实模型与图 1 视觉验收状态由 [煤球对话任务](companion-ai-chat.md) 单独记录，此处不提前宣称 UI 验收通过。

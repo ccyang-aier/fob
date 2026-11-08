@@ -1,29 +1,35 @@
 import { useCallback, useEffect, useRef, type MouseEvent as ReactMouseEvent, type PointerEvent as ReactPointerEvent, type RefObject } from 'react';
+import { companionDragPosition } from './companion-drag-bounds';
 
 /** Drag the embedding shell, leaving Feather's hop/squash/tilt transforms untouched. */
 export function useCompanionDrag(ref: RefObject<HTMLElement | null>) {
   const offset = useRef({ right: 16, bottom: 24 });
+  const desired = useRef({ right: 16, bottom: 24 });
   const drag = useRef<{ id: number; x: number; y: number; right: number; bottom: number; handle: Element } | null>(null);
   const moved = useRef(false);
 
-  const place = useCallback((right: number, bottom: number) => {
+  const place = useCallback((right: number, bottom: number, remember = false) => {
     const node = ref.current;
     if (!node) return;
     const rect = node.getBoundingClientRect();
-    offset.current = {
-      right: Math.max(16, Math.min(right, innerWidth - rect.width - 16)),
-      bottom: Math.max(16, Math.min(bottom, innerHeight - rect.height - 16)),
-    };
+    const viewport = window.visualViewport;
+    if (remember) desired.current = { right, bottom };
+    offset.current = companionDragPosition({ right, bottom }, rect, { width: window.innerWidth, height: window.innerHeight }, {
+      left: viewport?.offsetLeft ?? 0, top: viewport?.offsetTop ?? 0, width: viewport?.width || window.innerWidth, height: viewport?.height || window.innerHeight,
+    });
     node.style.right = offset.current.right + 'px'; node.style.bottom = offset.current.bottom + 'px';
   }, [ref]);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    const clamp = () => place(offset.current.right, offset.current.bottom);
+    const clamp = () => place(desired.current.right, desired.current.bottom);
     const observer = new ResizeObserver(clamp); observer.observe(node);
     window.addEventListener('resize', clamp);
-    return () => { observer.disconnect(); window.removeEventListener('resize', clamp); };
+    const viewport = window.visualViewport;
+    viewport?.addEventListener('resize', clamp); viewport?.addEventListener('scroll', clamp);
+    clamp();
+    return () => { observer.disconnect(); window.removeEventListener('resize', clamp); viewport?.removeEventListener('resize', clamp); viewport?.removeEventListener('scroll', clamp); };
   }, [ref, place]);
 
   function onPointerDown(event: ReactPointerEvent<HTMLElement>) {
@@ -41,7 +47,7 @@ export function useCompanionDrag(ref: RefObject<HTMLElement | null>) {
     const dx = event.clientX - start.x, dy = event.clientY - start.y;
     if (!moved.current && Math.hypot(dx, dy) < 5) return;
     moved.current = true; event.currentTarget.dataset.dragging = 'true';
-    place(start.right - dx, start.bottom - dy);
+    place(start.right - dx, start.bottom - dy, true);
   }
   function finish(event: ReactPointerEvent<HTMLElement>) {
     if (drag.current?.id !== event.pointerId) return;

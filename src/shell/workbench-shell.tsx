@@ -23,6 +23,7 @@ import { WorkbenchTabBar } from './workbench-tab-bar';
 import { WorkbenchPanels } from './workbench-panels';
 import { useWorkbenchTabs } from './use-workbench-tabs';
 import { createWorkbenchStartup } from './workbench-tabs';
+import { CompanionContextBridge } from './companion-context-bridge';
 import styles from './workbench-shell.module.css';
 
 export function WorkbenchShell() {
@@ -83,6 +84,7 @@ function WorkbenchChrome() {
     else tabs.open(next);
   }
   return <KnowledgeNavigationProvider onExpand={expandSidebar}><TooltipProvider>
+    <CompanionContextBridge />
     <div className="h-dvh w-full py-[var(--win-frame-inset)] pl-[var(--win-frame-inset)]">
       <div ref={frameRef} className={`${styles.frame} flex h-full w-full min-h-[320px] flex-col overflow-hidden text-[var(--ink)] shadow-[var(--win-shadow)]`}>
         <div className="flex min-h-0 flex-1">

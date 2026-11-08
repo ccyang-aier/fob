@@ -25,10 +25,11 @@ export function createKnowledgeAgentTools(input: {
   pool: Pool;
   authority(): KnowledgeRequestContext;
   mode: 'document' | 'knowledgeBase';
-  pageId: string;
+  pageId: string | null;
   ledger: AgentSourceLedger;
   search?: KnowledgeAgentSearchModels;
 }): Record<string, AgentReadTool> {
+  if (input.mode === 'document' && input.pageId === null) throw new KnowledgeAgentToolError('TARGET_NOT_ACCESSIBLE', 'read_page');
   const tools: Record<string, AgentReadTool> = {};
   for (const definition of knowledgeAgentReadTools) {
     if (input.mode === 'document' && definition.name !== 'read_page') continue;
