@@ -163,7 +163,7 @@ describe('transactional knowledge queue on real PostgreSQL', () => {
       await utils.rescheduleJobs(pending.map((job) => job.id), { runAt: new Date(), attempts: 0 });
       let calls = 0;
       await start([{ name: 'later_route', topic: 'doc.changed', handle: async () => { calls++; } }]);
-      await until(async () => (await jobs()).filter((job) => job.last_error).length === 2);
+      await until(async () => calls === 1 && (await jobs()).filter((job) => job.last_error).length === 2);
       expect(calls).toBe(1);
       expect((await jobs()).map((job) => job.last_error).join()).toContain('event_missing');
       expect((await jobs()).map((job) => job.last_error).join()).toContain('invalid_job');

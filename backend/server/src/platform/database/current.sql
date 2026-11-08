@@ -263,6 +263,15 @@ CREATE TABLE "resources"."doc_state" (
 	CONSTRAINT "doc_state_knowledge_base_id_page_id_pk" PRIMARY KEY("knowledge_base_id","page_id")
 );
 
+CREATE TABLE "resources"."document_edit" (
+	"knowledge_base_id" uuid NOT NULL,
+	"page_id" uuid NOT NULL,
+	"id" uuid NOT NULL,
+	"user_id" uuid,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "document_edit_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id")
+);
+
 CREATE TABLE "resources"."document_invitation" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
@@ -568,6 +577,8 @@ ALTER TABLE "resources"."comment_thread" ADD CONSTRAINT "comment_thread_page_fk"
 ALTER TABLE "resources"."database_definition" ADD CONSTRAINT "database_definition_page_fk" FOREIGN KEY ("knowledge_base_id","teamspace_id","page_id","page_kind") REFERENCES "resources"."page"("knowledge_base_id","teamspace_id","id","kind") ON DELETE cascade ON UPDATE cascade;
 ALTER TABLE "resources"."doc_checkpoint" ADD CONSTRAINT "doc_checkpoint_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."doc_state" ADD CONSTRAINT "doc_state_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."document_edit" ADD CONSTRAINT "document_edit_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;
+ALTER TABLE "resources"."document_edit" ADD CONSTRAINT "document_edit_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."document_invitation" ADD CONSTRAINT "document_invitation_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."document_visit" ADD CONSTRAINT "document_visit_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
@@ -625,7 +636,9 @@ CREATE INDEX "comment_thread_time_idx" ON "resources"."comment" USING btree ("kn
 CREATE INDEX "comment_author_idx" ON "resources"."comment" USING btree ("author_id");
 CREATE INDEX "comment_thread_page_idx" ON "resources"."comment_thread" USING btree ("knowledge_base_id","page_id","status");
 CREATE INDEX "doc_checkpoint_page_time_idx" ON "resources"."doc_checkpoint" USING btree ("knowledge_base_id","page_id","created_at");
+CREATE INDEX "document_edit_recent_idx" ON "resources"."document_edit" USING btree ("knowledge_base_id","page_id","created_at","id");
 CREATE INDEX "document_invitation_page_idx" ON "resources"."document_invitation" USING btree ("knowledge_base_id","page_id");
+CREATE INDEX "document_visit_recent_idx" ON "resources"."document_visit" USING btree ("knowledge_base_id","page_id","last_viewed_at","user_id");
 CREATE INDEX "group_member_user_idx" ON "resources"."group_member" USING btree ("knowledge_base_id","user_id");
 CREATE UNIQUE INDEX "knowledge_base_invitation_pending_email_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","email") WHERE "resources"."knowledge_base_invitation"."accepted_at" IS NULL AND "resources"."knowledge_base_invitation"."revoked_at" IS NULL;
 CREATE INDEX "knowledge_base_invitation_expiry_idx" ON "resources"."knowledge_base_invitation" USING btree ("knowledge_base_id","expires_at");

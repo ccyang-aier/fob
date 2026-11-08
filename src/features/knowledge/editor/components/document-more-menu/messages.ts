@@ -29,7 +29,7 @@ export const knowledgeMessages = defineMessages({
   permissions: ['权限', 'Permissions'],
   createTemplate: ['模板化', 'Create template'],
   comments: ['评论', 'Comments'],
-  history: ['历史记录', 'History'],
+  history: ['动态', 'Activity'],
   importAndOutput: ['导入与输出', 'Import and output'],
   export: ['导出', 'Export'],
   exportHtml: ['导出为 HTML', 'Export HTML'],

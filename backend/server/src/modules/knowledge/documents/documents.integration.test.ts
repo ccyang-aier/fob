@@ -244,17 +244,18 @@ describe('document sharing, permissions, history and statistics over real HTTP a
       expect((await request(`${history(wrongScope)}/${versionA.checkpointId}`, fixture.foreign)).status).toBe(403);
     } finally { await writer.destroy(); }
   }, 30_000);
-  test('history pagination does not lose timestamp ties or accept another page cursor', async () => {
+  test('history retention preserves fifteen timestamp-tied versions and rejects another page cursor', async () => {
     const { root } = await tree(), other = await tree();
     const snapshot = prosemirrorDocToYDoc(knowledgeSchema.node('doc', null, [paragraph('Snapshot')]));
     try {
       await withKnowledgeBase(fixture.pool, root.knowledgeBaseId, db => db.insert(docCheckpoint).values(Array.from({ length: 55 }, () => ({ ...root, id: randomUUID(), state: snapshot.state, stateVector: snapshot.stateVector, createdAt: new Date('2026-01-01T00:00:00Z'), authors: [fixture.owner.identity.userId] }))));
       const first = await (await request(history(root), fixture.owner)).json() as { checkpoints: { checkpointId: string }[]; nextCursor: string };
-      expect(first.checkpoints).toHaveLength(50); expect(first.nextCursor).toBe(first.checkpoints[49]!.checkpointId);
-      const last = await (await request(`${history(root)}?cursor=${first.nextCursor}`, fixture.owner)).json() as { checkpoints: { checkpointId: string }[]; nextCursor: string | null };
-      expect(last.checkpoints).toHaveLength(5); expect(last.nextCursor).toBeNull();
-      expect(new Set([...first.checkpoints, ...last.checkpoints].map(version => version.checkpointId)).size).toBe(55);
-      expect((await request(`${history(other.root)}?cursor=${first.nextCursor}`, fixture.owner)).status).toBe(404);
+      expect(first.checkpoints).toHaveLength(15); expect(first.nextCursor).toBeNull();
+      const cursor = first.checkpoints[14]!.checkpointId;
+      const last = await (await request(`${history(root)}?cursor=${cursor}`, fixture.owner)).json() as { checkpoints: { checkpointId: string }[]; nextCursor: string | null };
+      expect(last.checkpoints).toHaveLength(0); expect(last.nextCursor).toBeNull();
+      expect(new Set([...first.checkpoints, ...last.checkpoints].map(version => version.checkpointId)).size).toBe(15);
+      expect((await request(`${history(other.root)}?cursor=${cursor}`, fixture.owner)).status).toBe(404);
     } finally { snapshot.ydoc.destroy(); }
   });
   test('deletion-only edits create a distinct version even when the Yjs state vector is unchanged', async () => {

@@ -12,8 +12,7 @@ export async function recordDocumentVisit(db: ResourceTransaction, scope: PageSc
   await requireDocument(db, scope, userId);
   await db.insert(documentVisit).values({ ...scope, userId }).onConflictDoUpdate({
     target: [documentVisit.knowledgeBaseId, documentVisit.pageId, documentVisit.userId],
-    set: { views: sql`${documentVisit.views} + 1`, lastViewedAt: sql`clock_timestamp()` },
-    setWhere: sql`${documentVisit.lastViewedAt} < clock_timestamp() - interval '30 minutes'`,
+    set: { views: sql`${documentVisit.views} + CASE WHEN ${documentVisit.lastViewedAt} < clock_timestamp() - interval '30 minutes' THEN 1 ELSE 0 END`, lastViewedAt: sql`clock_timestamp()` },
   });
   return { recorded: true };
 }
@@ -35,5 +34,5 @@ export async function readDocumentStatistics(db: ResourceTransaction, scope: Pag
     ...documentTextStatistics(state ? yStateToProseMirrorDoc(state.state, knowledgeSchema)?.toJSON() : null),
     versions: checkpoints.length, views: visits.reduce((total, visit) => total + visit.views, 0), uniqueReaders: visits.length,
     contributors: [...authorVersions].map(([id, versions]) => ({ ...person(id), creator: id === record.createdBy, versions })),
-    readers: visits.slice(0, 50).map(visit => ({ ...person(visit.userId), lastViewedAt: visit.lastViewedAt.toISOString(), views: visit.views })) };
+    readers: visits.slice(0, 20).map(visit => ({ ...person(visit.userId), lastViewedAt: visit.lastViewedAt.toISOString(), views: visit.views })) };
 }

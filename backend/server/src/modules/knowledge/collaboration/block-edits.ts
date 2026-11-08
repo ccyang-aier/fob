@@ -1,9 +1,11 @@
 import * as Y from 'yjs';
-import type { Extension } from '@hocuspocus/server';
+import type { Extension, LocalTransactionOrigin } from '@hocuspocus/server';
 import { BLOCK_EDITS_MAP, blockEditFingerprint, snapshotDocumentBlocks, type BlockEdit } from '@fob/shared/knowledge/collaboration';
 import type { PageCollaborationContext } from './page-collaboration';
 
-const provenanceOrigin = Symbol('fob-block-edit-provenance');
+// Derived metadata is persisted with the originating body write. Scheduling a
+// second unattributed store here would replace that write's authenticated context.
+const provenanceOrigin: LocalTransactionOrigin = { source: 'local', skipStoreHooks: true };
 
 /** Attribute body changes to the authenticated connection, never to a document creator. */
 export function blockEditsExtension(): Extension<PageCollaborationContext> {

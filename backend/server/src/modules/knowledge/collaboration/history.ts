@@ -25,14 +25,14 @@ export class PageHistoryError extends Error {
   }
 }
 
-/** §5.3 history: newest first; 200 entries is far beyond any real review session. */
+/** The newest fifteen retained snapshots; no unbounded history payloads. */
 export async function listPageCheckpoints(pool: Pool, scope: PageScope): Promise<PageCheckpointSummary[]> {
   const rows = await withKnowledgeBase(pool, scope.knowledgeBaseId, (db) => db
     .select({ id: docCheckpoint.id, pageId: docCheckpoint.pageId, label: docCheckpoint.label, authors: docCheckpoint.authors, createdAt: docCheckpoint.createdAt, title: docCheckpoint.title })
     .from(docCheckpoint)
     .where(and(eq(docCheckpoint.knowledgeBaseId, scope.knowledgeBaseId), eq(docCheckpoint.pageId, scope.pageId)))
     .orderBy(desc(docCheckpoint.createdAt), desc(docCheckpoint.id))
-    .limit(200));
+    .limit(15));
   return rows.map((row) => ({ checkpointId: row.id, pageId: row.pageId, label: row.label, authors: [...row.authors], createdAt: row.createdAt.toISOString(), title: row.title }));
 }
 
@@ -41,11 +41,11 @@ export async function listPageCheckpointPage(pool: Pool, scope: PageScope, curso
     const [anchor] = cursor ? await db.select().from(docCheckpoint).where(and(eq(docCheckpoint.knowledgeBaseId, scope.knowledgeBaseId), eq(docCheckpoint.pageId, scope.pageId), eq(docCheckpoint.id, cursor))) : [];
     if (cursor && !anchor) throw new PageHistoryError('CHECKPOINT_NOT_FOUND', 'Version cursor unavailable.');
     const rows = await db.select().from(docCheckpoint).where(and(eq(docCheckpoint.knowledgeBaseId, scope.knowledgeBaseId), eq(docCheckpoint.pageId, scope.pageId),
-      anchor ? sql`(${docCheckpoint.createdAt}, ${docCheckpoint.id}) < (${anchor.createdAt}::timestamptz, ${anchor.id}::uuid)` : undefined)).orderBy(desc(docCheckpoint.createdAt), desc(docCheckpoint.id)).limit(51);
+      anchor ? sql`(${docCheckpoint.createdAt}, ${docCheckpoint.id}) < (${anchor.createdAt}::timestamptz, ${anchor.id}::uuid)` : undefined)).orderBy(desc(docCheckpoint.createdAt), desc(docCheckpoint.id)).limit(15);
     const ids = [...new Set(rows.flatMap(row => row.authors))];
     const people = ids.length ? await db.select({ id: authUser.id, name: authUser.name, image: authUser.image }).from(authUser).where(inArray(authUser.id, ids)) : [];
-    return { checkpoints: rows.slice(0, 50).map(row => ({ checkpointId: row.id, pageId: row.pageId, label: row.label, title: row.title, authors: row.authors,
-      authorDetails: row.authors.map(id => people.find(person => person.id === id)).filter((value): value is typeof people[number] => Boolean(value)), createdAt: row.createdAt.toISOString() })), nextCursor: rows.length > 50 ? rows[49]!.id : null };
+    return { checkpoints: rows.map(row => ({ checkpointId: row.id, pageId: row.pageId, label: row.label, title: row.title, authors: row.authors,
+      authorDetails: row.authors.map(id => people.find(person => person.id === id)).filter((value): value is typeof people[number] => Boolean(value)), createdAt: row.createdAt.toISOString() })), nextCursor: null };
   });
 }
 

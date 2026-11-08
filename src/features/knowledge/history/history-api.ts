@@ -11,6 +11,7 @@ import { knowledgeMessages } from './history-api.messages';
 import { authenticatedFetch } from '@/lib/authenticated-fetch';
 import { getFobApiOrigin } from '@/lib/fob-api-endpoint';
 import { KnowledgeDataError } from '../data/errors';
+import { documentActivitySchema } from '@fob/shared/knowledge/contracts';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -107,6 +108,9 @@ export function createHistoryApi(
   const base = (knowledgeBaseId: string, pageId: string) =>
     `/api/knowledge/${knowledgeBaseId}/pages/${pageId}/checkpoints`;
   return {
+    activity(knowledgeBaseId: string, pageId: string, signal?: AbortSignal) {
+      return request<unknown>(`/api/knowledge/${knowledgeBaseId}/pages/${pageId}/collaboration/activity`, { signal }).then(payload => documentActivitySchema.parse(payload));
+    },
     list(knowledgeBaseId: string, pageId: string, cursor?: string): Promise<{ checkpoints: PageCheckpointEntry[]; nextCursor: string | null }> {
       return request<unknown>(`${base(knowledgeBaseId, pageId)}${cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''}`).then((payload) => ({
         checkpoints: parseCheckpointList(payload),

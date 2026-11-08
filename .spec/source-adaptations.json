@@ -251,8 +251,8 @@
     "relocatedTo": "src/features/knowledge/editor/components/document-editor-header/index.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.test.tsx": {
-    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder. Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "8b3493cdb3ead7ec12692d9dbdf052e4fa34f176a249a1c57dd219e1ca1e2645",
+    "reason": "Replace template/subscription placeholders with real resource-scoped actions and shared dialogs; retain existing document actions and deterministic menu tests. Verify Permissions is an implemented resource action rather than a disabled placeholder. Install a consistent DOM realm for Escape capture and independently reset star scenarios; verify menu dismissal and deferred focus restoration. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "0c7348632b7914486696200963021c5cadaf5238170c96f766ab0e66aa48e770",
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/document-more-menu.test.tsx"
   },
   "src/features/knowledge/editor/components/document-more-menu.tsx": {
@@ -351,8 +351,8 @@
     "sha256": "39e45ba7fe08c2b6fe3540e0706f1af5a04d6dd9a2a2c6722737c4ef1b5ccaee"
   },
   "backend/server/src/modules/knowledge/workers/outbox.ts": {
-    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
-    "sha256": "dce930a61457b6e5a4203db8e3d7a1d979299733217070d82312d2c87724a8b2"
+    "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "3153475a72d7ab8e84a3003512c34a4ababb98eead0ddb5412be744dfa964c85"
   },
   "shared/src/knowledge/notifications/index.ts": {
     "reason": "Add knowledge-scoped template snapshots and authorized page/folder subscription notifications at existing resource/persistence boundaries; preserve comment notices, ACL checks and independent data ownership.",
@@ -655,8 +655,8 @@
     "sha256": "92bdceb5186b0868da4b449d1e21e8e2da6d4e194eb9b85956b3de90a86e4b41"
   },
   "src/features/knowledge/history/history-panel.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Implement the reference history controls with version timeline, preview, difference highlighting, naming and confirmed restoration.",
-    "sha256": "b6d85995e82930100fc5eb1c52a0e07c390572949343c2d1b338caaa5f70f9fe"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Implement the reference history controls with version timeline, preview, difference highlighting, naming and confirmed restoration. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "2fdb6b90dd93b166e349651239253845aaedd651df52a5ece216e4aea7c9530a"
   },
   "src/features/knowledge/knowledge-empty-state.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -716,8 +716,8 @@
     "sha256": "bf420deb4b35774cc476438adc64a7a48f799e4189f03a51c00fef486161db23"
   },
   "src/features/knowledge/history/history-api.ts": {
-    "reason": "Add abortable version pagination, author metadata, comparison and durable server restoration.",
-    "sha256": "8b9f2318eb807b02367f0d8953eddd4ae0fefbe7928bfdb58c8750152d9dbcd0"
+    "reason": "Add abortable version pagination, author metadata, comparison and durable server restoration. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "b7258a38072a2294bfd6bffd8e0ea3ebbea2831eb38cea7eeb5b90056468d580"
   },
   "backend/server/src/modules/knowledge/api/checkpoint-routes.ts": {
     "reason": "Authorize and expose scoped history pagination, comparison and durable live restoration with session revalidation.",
@@ -728,8 +728,8 @@
     "sha256": "873553451acfced9766036890fdf22a73bd96e7d44d9308fdcc17ec900f9cffe"
   },
   "backend/server/src/modules/knowledge/collaboration/history.ts": {
-    "reason": "Read scope-bound cursor pages with authors and titles, including valid empty document previews.",
-    "sha256": "7282ac89f2bd2afddd881d7d559d804bb63f41a16f531251776f43d9fd0da8cf"
+    "reason": "Read scope-bound cursor pages with authors and titles, including valid empty document previews. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "c0afd5b5cf9cf1d8a64d83694f2256aec907bb1cef424c729de6ddb2e77a4a9f"
   },
   "backend/server/src/modules/knowledge/collaboration/page-collaboration.ts": {
     "reason": "Load profile data from the verified collaboration identity and knowledge-base membership.",
@@ -1185,9 +1185,9 @@
     "sha256": "ce760874c848e431a04e676e2d299235b59fc0d4b0a99669e120ac882e61ab70"
   },
   "src/features/knowledge/editor/components/document-more-menu.messages.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
     "relocatedTo": "src/features/knowledge/editor/components/document-more-menu/messages.ts",
-    "sha256": "1c874f3c099051a5a5453b91876cddfd3f36e046d5ef458d0bf7ad30708b91ab"
+    "sha256": "746e28a1d6172798d434c545033e41ace3dbe43dd5e14b982be53b608c789460"
   },
   "src/features/knowledge/editor/components/document-more-menu.module.css": {
     "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -1542,5 +1542,17 @@
   "src/features/knowledge/editor/block-modules/table/use-table-geometry.ts": {
     "sha256": "a9dfc5638bddfd48d0e6ce28672386742f065b29f5bbc31de3bb425dc0b3ac9e",
     "reason": " Reuse text-selection toolbar presentation and the shared overlay host; clamp the table toolbar to its editor scroll area and comments boundary. See .spec/tasks/editor-table-controls.md."
+  },
+  "backend/server/src/modules/knowledge/collaboration/persistence.integration.test.ts": {
+    "reason": "Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "c6aa993c0fc973b147a92fd8e83262e54227c1edb1c6fe39d79aa7e7ab9a4117"
+  },
+  "backend/server/src/modules/knowledge/workers/workers.integration.test.ts": {
+    "reason": "Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "cc330fe31c204f08b1194be5f3e87172b5dca5f64e68c6ef197ff4d150d56277"
+  },
+  "backend/server/src/modules/knowledge/collaboration/history.integration.test.ts": {
+    "reason": "Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
+    "sha256": "bf65c036cdf125fbf62705ac091459bbb36f90d5a5ef09469cfd0b4ff806009a"
   }
 }

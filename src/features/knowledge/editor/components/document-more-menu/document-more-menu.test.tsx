@@ -94,7 +94,7 @@ describe('document menu rendered interaction', () => {
       '权限',
       '模板化',
       '评论',
-      '历史记录',
+      '动态',
       '导出',
       '打印',
       '删除',
@@ -184,7 +184,7 @@ describe('document menu rendered interaction', () => {
     expect(comments).toBe(1);
     await open();
     await act(async () =>
-      item('历史记录').dispatchEvent(new MouseEvent('click', { bubbles: true })),
+      item('动态').dispatchEvent(new MouseEvent('click', { bubbles: true })),
     );
     expect(history).toBe(1);
   });
@@ -192,7 +192,7 @@ describe('document menu rendered interaction', () => {
     await open();
     await act(async () => item('删除').dispatchEvent(new MouseEvent('click', { bubbles: true })));
     expect(deletes).toBe(0);
-    expect(document.querySelector('[role="dialog"]')?.textContent).toContain('可以从回收站恢复');
+    expect(document.querySelector('dialog[open], [role="dialog"]')?.textContent).toContain('可以从回收站恢复');
     const confirm = Array.from(document.querySelectorAll('button')).find(
       (button) => button.textContent === '移至回收站',
     )!;
@@ -200,7 +200,7 @@ describe('document menu rendered interaction', () => {
       confirm.click();
     });
     expect(deletes).toBe(1);
-    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
+    expect(document.querySelector('dialog[open], [role="dialog"]')).not.toBeNull();
     expect(document.querySelector('[role="alert"]')?.textContent).toContain('文档已保留');
     const cancel = Array.from(document.querySelectorAll('button')).find(
       (button) => button.textContent === '取消',
@@ -208,6 +208,6 @@ describe('document menu rendered interaction', () => {
     await act(async () => {
       cancel.click();
     });
-    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.querySelector('dialog[open], [role="dialog"]')).toBeNull();
   });
 });

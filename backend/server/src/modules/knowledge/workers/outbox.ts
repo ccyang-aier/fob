@@ -3,7 +3,7 @@ import { entityIdSchema, outboxEventSchema } from '@fob/shared/knowledge/contrac
 import type { OutboxEvent } from '@fob/shared/knowledge/contracts';
 import { and, eq, sql } from 'drizzle-orm';
 import type { ResourceTransaction } from '../../../platform/database/resources/transaction';
-import { outbox } from '../../../platform/database/resources/schema';
+import { documentEdit, outbox } from '../../../platform/database/resources/schema';
 import { KnowledgeJobError } from './types';
 import type { OutboxReference } from './types';
 import { recordSubscriptionChange } from '../subscriptions/service';
@@ -39,6 +39,10 @@ export async function appendKnowledgeOutbox(
   const inserted = await db.insert(outbox).values({ id, knowledgeBaseId: event.knowledgeBaseId, topic: event.topic, payload: event })
     .onConflictDoNothing().returning({ id: outbox.id });
   if (inserted.length) {
+    if (event.topic === 'doc.changed') await db.insert(documentEdit).values({
+      id, knowledgeBaseId: event.knowledgeBaseId, pageId: event.pageId, userId: event.actor.userId,
+      createdAt: new Date(event.occurredAt),
+    });
     await enqueueKnowledgeJob(db, DISPATCH_TASK, { knowledgeBaseId: event.knowledgeBaseId, outboxId: id });
     if (event.topic === 'doc.changed') for (const notice of await recordSubscriptionChange(db, { knowledgeBaseId: event.knowledgeBaseId, pageId: event.pageId, actorId: event.actor.userId, change: 'updated' })) await appendKnowledgeOutbox(db, notice);
     return { id, created: true };

@@ -19,6 +19,7 @@ import { knowledgeAssetStorage } from '../assets/runtime';
 import { DocumentServiceError, changeDocumentInheritance, changeDocumentPermission, documentDirectory, readDocumentSharing, requireDocument } from './service';
 import { changeDocumentPublication, readPublicDocument, requirePublicAsset } from './publication';
 import { readDocumentStatistics, recordDocumentVisit } from './statistics';
+import { readDocumentActivity } from './activity';
 import { acceptDocumentInvitation, inviteToDocument } from './invitations';
 
 type Environment = { Variables: { identity: FobIdentity } };
@@ -92,6 +93,13 @@ export function createDocumentCollaborationRoutes(deps: KnowledgeAccessDependenc
     return context.json(await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
       await activeSessionMember(db, scope.knowledgeBaseId, context.get('identity'));
       return readDocumentStatistics(db, scope, context.get('identity').userId);
+    }));
+  });
+  app.get(`${base}/activity`, async context => {
+    const scope = scopeOf(context.req.param());
+    return context.json(await withKnowledgeBase(deps.pool, scope.knowledgeBaseId, async db => {
+      await activeSessionMember(db, scope.knowledgeBaseId, context.get('identity'));
+      return readDocumentActivity(db, scope, context.get('identity').userId);
     }));
   });
   app.post(accept, async context => {

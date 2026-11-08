@@ -44,6 +44,11 @@ export const documentStatisticsSchema = z.object({
   readers: z.array(documentPersonSchema.extend({ lastViewedAt: timestampSchema, views: z.number().int() })),
 });
 export type DocumentStatistics = z.infer<typeof documentStatisticsSchema>;
+export const documentActivitySchema = z.object({
+  readers: z.array(z.object({ userId: entityIdSchema, name: z.string().nullable(), image: z.string().nullable(), occurredAt: timestampSchema })).max(20),
+  edits: z.array(z.object({ id: entityIdSchema, userId: entityIdSchema.nullable(), name: z.string().nullable(), image: z.string().nullable(), occurredAt: timestampSchema })).max(20),
+});
+export type DocumentActivity = z.infer<typeof documentActivitySchema>;
 export const publicDocumentSchema = z.object({
   title: z.string(), body: z.unknown(), updatedAt: timestampSchema,
   assets: z.record(z.string(), z.string()),

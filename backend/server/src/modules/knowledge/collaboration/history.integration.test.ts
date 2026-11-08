@@ -39,6 +39,10 @@ describe('page history service and checkpoint routes (V03)', () => {
     await fixture.close();
   });
   beforeEach(async () => {
+    // Closing the client precedes the host's final debounced store. Let it
+    // finish before clearing this fixture's queue, including real doc.changed.
+    listener.hocuspocus.flushPendingStores();
+    await until(async () => listener.hocuspocus.getDocumentsCount() === 0);
     await fixture.resetJobs();
   });
 

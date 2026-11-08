@@ -17,6 +17,19 @@ export const documentVisit = resourcesNamespace.table('document_visit', {
   foreignKey({ name: 'document_visit_page_fk', columns: [table.knowledgeBaseId, table.pageId], foreignColumns: [page.knowledgeBaseId, page.id] }).onDelete('cascade'),
   check('document_visit_views_positive', sql`${table.views} > 0`),
   check('document_visit_study_nonnegative', sql`${table.studySeconds} >= 0`),
+  index('document_visit_recent_idx').on(table.knowledgeBaseId, table.pageId, table.lastViewedAt, table.userId),
+]);
+
+/** A persisted content change, independent of the durable job/outbox dedup log. */
+export const documentEdit = resourcesNamespace.table('document_edit', {
+  knowledgeBaseId: uuid('knowledge_base_id').notNull(), pageId: uuid('page_id').notNull(),
+  id: uuid('id').notNull(),
+  userId: uuid('user_id').references(() => authUser.id, { onDelete: 'set null' }),
+  createdAt: instant('created_at').notNull().defaultNow(),
+}, table => [
+  primaryKey({ columns: [table.knowledgeBaseId, table.id] }),
+  foreignKey({ name: 'document_edit_page_fk', columns: [table.knowledgeBaseId, table.pageId], foreignColumns: [page.knowledgeBaseId, page.id] }).onDelete('cascade'),
+  index('document_edit_recent_idx').on(table.knowledgeBaseId, table.pageId, table.createdAt, table.id),
 ]);
 
 export const documentInvitation = resourcesNamespace.table('document_invitation', {

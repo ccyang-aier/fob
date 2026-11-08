@@ -3,6 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import * as Y from 'yjs';
 import { principal } from '@fob/shared/knowledge/contracts';
 import { docState } from '../../../platform/database/resources/schema';
+import { BLOCK_EDITS_MAP } from '@fob/shared/knowledge/collaboration';
 import { withKnowledgeBase } from '../../../platform/database/resources/transaction';
 import { replaceAuthorizedPageAcl } from '../permissions/mutations';
 import { createPermissionsFixture, until, type PermissionsFixture } from '../permissions/permissions-test-fixture';
@@ -57,7 +58,12 @@ describe('authoritative page document persistence', () => {
     const name = pageDocumentName({ knowledgeBaseId: fixture.alpha.id, pageId: pages[2].pageId });
     const writer = client(name);
     await until(async () => writer.scope() === 'read-write' && writer.synced());
-    writer.document.getText('body').insert(0, 'durable body');
+    writer.document.transact(() => {
+      const paragraph = new Y.XmlElement('paragraph');
+      paragraph.setAttribute('blockId', 'persisted-paragraph');
+      paragraph.insert(0, [new Y.XmlText('durable body')]);
+      writer.document.getXmlFragment('default').insert(0, [paragraph]);
+    });
 
     await new Promise((resolve) => setTimeout(resolve, 40));
     expect(await storedState(pages[2].pageId)).toEqual([]);
@@ -66,7 +72,8 @@ describe('authoritative page document persistence', () => {
     const [row] = await storedState(pages[2].pageId);
     const decoded = new Y.Doc();
     Y.applyUpdate(decoded, new Uint8Array(row!.state));
-    expect(decoded.getText('body').toString()).toBe('durable body');
+    expect(decoded.getXmlFragment('default').toString()).toContain('durable body');
+    expect(decoded.getMap(BLOCK_EDITS_MAP).get('persisted-paragraph')).toMatchObject({ actorId: fixture.reader.identity.userId });
     expect(row!.vector.length).toBeGreaterThan(0);
 
     const events = await docChangedEvents(pages[2].pageId);
