@@ -10,4 +10,9 @@ export const knowledgeMessages = defineMessages({
   insertAtValuePositionValue: ['在第 {v0} {v1}位置插入', 'Insert at {v1} position {v0}'],
   moveToThisValuePosition: ['移动到此{v0}位置', 'Move to this {v0} position'],
   cannotDropHere: ['此处不可放置', 'Cannot drop here'],
+  addRow: ['添加行', 'Add rows'],
+  addColumn: ['添加列', 'Add columns'],
+  addRowHint: ['点击添加一行，拖动可添加更多行', 'Click to add a row, drag to add more rows'],
+  addColumnHint: ['点击添加一列，拖动可添加更多列', 'Click to add a column, drag to add more columns'],
+  addCount: ['添加 {count} {axis}', 'Add {count} {axis}'],
 });

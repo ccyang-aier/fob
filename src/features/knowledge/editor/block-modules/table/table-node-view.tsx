@@ -11,13 +11,15 @@ import type {
 import { useEffect, useRef, useState } from 'react';
 import { CellSelection, columnResizingPluginKey, selectedRect } from '@tiptap/pm/tables';
 import { TextSelection } from '@tiptap/pm/state';
-import { Plus } from '@/components/icons';
+import { DotsThree, Plus } from '@/components/icons';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { NodeViewProps } from '@tiptap/react';
 import { NodeViewContent, NodeViewWrapper, useEditorState } from '@tiptap/react';
-import { insertTableAxis, selectTableAxis, tableNodeAt, type TableCommand } from './table-commands';
+import { selectTableAxis, tableNodeAt, type TableCommand } from './table-commands';
 import { TableStyleMenu, type TableMenuAnchor } from './table-style-menu';
 import { useTableGeometry } from './use-table-geometry';
 import { useTableReorder } from './use-table-reorder';
+import { useTableGrow } from './use-table-grow';
 import { TableSelectionToolbar } from './table-selection-toolbar';
 import { canComposeSelectionComment } from '../../../comments/comment-compose-bridge';
 import styles from './table.module.css';
@@ -39,7 +41,6 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
   const geometry = useTableGeometry(shellRef, node);
   const [menu, setMenu] = useState<TableMenuAnchor | null>(null);
   const [active, setActive] = useState(false);
-  const [insertion, setInsertion] = useState<{ axis: Axis; index: number } | null>(null);
   const [selectionSource, setSelectionSource] = useState<'cells' | 'axis'>('cells');
   const [selectingCells, setSelectingCells] = useState(false);
   useEffect(() => {
@@ -55,7 +56,6 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
         return;
       setActive(false);
       setMenu(null);
-      setInsertion(null);
     };
     ownerDocument.addEventListener('pointerdown', close);
     const finishSelection = () => setSelectingCells(false);
@@ -116,30 +116,16 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
     if (resize && resize.activeHandle >= 0 && !resize.dragging)
       editor.view.dispatch(editor.state.tr.setMeta(columnResizingPluginKey, { setHandle: -1 }));
   };
-  const open = (axis: Axis | 'table', index: number) => {
+  const open = (axis: Axis, index: number) => {
     if (!geometry) return;
     setSelectionSource('axis');
     select(axis, index);
-    setInsertion(null);
     setMenu({
       target: axis,
       side: axis === 'row' ? 'left' : 'top',
-      style:
-        axis === 'row'
-          ? {
-              left: geometry.viewportLeft - 17,
-              top: geometry.top + geometry.rows[index],
-              width: 10,
-              height: geometry.rows[index + 1] - geometry.rows[index],
-            }
-          : axis === 'column'
-            ? {
-                left: geometry.left + geometry.columns[index],
-                top: geometry.top - 17,
-                width: geometry.columns[index + 1] - geometry.columns[index],
-                height: 10,
-              }
-            : { left: geometry.viewportLeft - 18, top: geometry.top - 18, width: 12, height: 12 },
+      style: axis === 'row'
+        ? { left: geometry.viewportLeft - 12, top: geometry.top + (geometry.rows[index] + geometry.rows[index + 1]) / 2 - 12, width: 24, height: 24 }
+        : { left: geometry.left + (geometry.columns[index] + geometry.columns[index + 1]) / 2 - 12, top: geometry.top - 12, width: 24, height: 24 },
     });
   };
   const reorder = useTableReorder({
@@ -151,45 +137,41 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
     onStart: () => {
       setSelectionSource('axis');
       setMenu(null);
-      setInsertion(null);
     },
   });
-  const insert = (axis: Axis, index: number) => {
-    const pos = getPos();
-    if (typeof pos !== 'number') return;
-    setInsertion(null);
+  const grow = useTableGrow(editor, getPos, () => {
+    clearResizeHover();
+    setActive(true);
     setMenu(null);
-    run((state, dispatch) => insertTableAxis(state, dispatch, pos, axis, index));
-    editor.view.focus();
-  };
+  });
 
   const viewportWidth = geometry?.pageWidth ?? 1024;
-  const toolbarWidth = Math.min(372, viewportWidth - 24);
-  const toolbarHeight = 8 + 30 * Math.ceil(12 / Math.max(1, Math.floor((toolbarWidth - 12) / 30)));
+  const toolbarWidth = Math.min(402, viewportWidth - 24, geometry ? geometry.contentRight - geometry.contentLeft - 16 : 402);
+  const toolbarHeight = 39;
   const center =
     geometry && selection
       ? geometry.left + (geometry.columns[selection.left] + geometry.columns[selection.right]) / 2
       : 0;
-  const toolbarLeft = Math.max(
-    12 + toolbarWidth / 2 - (geometry?.rootLeft ?? 0),
-    Math.min(center, viewportWidth - 12 - toolbarWidth / 2 - (geometry?.rootLeft ?? 0)),
-  );
+  const toolbarLeft = geometry ? Math.max(
+    Math.max(12, geometry.contentLeft + 8) + toolbarWidth / 2,
+    Math.min(geometry.rootLeft + center, Math.min(viewportWidth - 12, geometry.contentRight - 8) - toolbarWidth / 2),
+  ) : 0;
   const selectionTop = geometry && selection ? geometry.top + geometry.rows[selection.top] : 0;
   const selectionBottom =
     geometry && selection ? geometry.top + geometry.rows[selection.bottom] : 0;
+  const selectionLeft = geometry && selection ? geometry.left + geometry.columns[selection.left] : 0;
+  const selectionRight = geometry && selection ? geometry.left + geometry.columns[selection.right] : 0;
+  const visibleSelectionLeft = geometry ? Math.max(selectionLeft, geometry.viewportLeft) : 0;
+  const visibleSelectionRight = geometry ? Math.min(selectionRight, geometry.viewportLeft + geometry.viewportWidth) : 0;
   const selectionVisible =
     geometry &&
-    geometry.rootTop + selectionBottom > 0 &&
-    geometry.rootTop + selectionTop < geometry.pageHeight;
-  const toolbarTop = geometry
-    ? Math.max(
-        12 + toolbarHeight / 2 - geometry.rootTop,
-        Math.min(
-          (selectionTop + selectionBottom) / 2,
-          geometry.pageHeight - 12 - toolbarHeight / 2 - geometry.rootTop,
-        ),
-      )
-    : 0;
+    geometry.rootTop + selectionBottom > geometry.contentTop &&
+    geometry.rootTop + selectionTop < geometry.contentBottom;
+  const above = geometry ? geometry.rootTop + selectionTop - toolbarHeight - 9 : 0;
+  const toolbarTop = geometry ? Math.max(geometry.contentTop + 8, Math.min(
+    above >= geometry.contentTop + 8 ? above : geometry.rootTop + selectionBottom + 9,
+    geometry.contentBottom - toolbarHeight - 8,
+  )) : 0;
   const dropLeft =
     geometry && reorder.drop
       ? reorder.drop.axis === 'column'
@@ -214,10 +196,7 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
           setMenu(null);
         }
       }}
-      onMouseLeave={() => {
-        setInsertion(null);
-        clearResizeHover();
-      }}
+      onMouseLeave={clearResizeHover}
       onDragStart={(event: ReactMouseEvent<HTMLDivElement>) => {
         if (selectingCells && event.target instanceof Element && event.target.closest('td,th'))
           event.preventDefault();
@@ -257,7 +236,19 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
           style={{ backgroundColor: node.attrs.background ?? undefined }}
         />
       </div>
-      {editor.isEditable && geometry && active && (selection || menu) ? (
+      {editor.isEditable && geometry && selection && (active || menu) && visibleSelectionRight > visibleSelectionLeft ? (
+        <div className={styles.selectionOutline} data-table-selection contentEditable={false} data-document-export-omit aria-hidden
+          style={{
+            left: visibleSelectionLeft - 1,
+            top: selectionTop - 1,
+            width: visibleSelectionRight - visibleSelectionLeft + 1,
+            height: selectionBottom - selectionTop + 1,
+            borderLeftWidth: selectionLeft < geometry.viewportLeft - 1 ? 0 : undefined,
+            borderRightWidth: selectionRight > geometry.viewportLeft + geometry.viewportWidth + 1 ? 0 : undefined,
+          }}
+        />
+      ) : null}
+      {editor.isEditable && geometry ? (
         <div
           contentEditable={false}
           data-document-export-omit
@@ -265,135 +256,64 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
           aria-label={knowledgeT('tableRowAndColumnControls')}
           onPointerEnter={clearResizeHover}
         >
-          <button
-            type="button"
-            className={styles.corner}
-            aria-label={knowledgeT('selectWholeTable')}
-            aria-haspopup="menu"
-            aria-pressed={!!selection?.rowsSelected && !!selection?.columnsSelected}
-            data-selected={(selection?.rowsSelected && selection?.columnsSelected) || undefined}
-            style={{ left: geometry.viewportLeft - 18, top: geometry.top - 18 }}
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => open('table', 0)}
-          />
-          <div
-            className={styles.columnRail}
-            style={{
-              left: geometry.viewportLeft,
-              top: geometry.top - 17,
-              width: geometry.viewportWidth,
-            }}
-          >
-            {geometry.columns.slice(0, -1).map((left, index) => (
-              <button
-                key={index}
-                type="button"
-                className={styles.columnHandle}
-                aria-label={knowledgeT('columnValueActions', { v0: index + 1 })}
-                aria-haspopup="menu"
-                aria-expanded={
-                  menu?.target === 'column' && menu.style.left === geometry.left + left
-                }
-                data-selected={
-                  (selectionSource === 'axis' &&
-                    selection?.columnsSelected &&
-                    index >= selection.left &&
-                    index < selection.right) ||
-                  undefined
-                }
-                style={{
-                  left: geometry.left - geometry.viewportLeft + left,
-                  width: geometry.columns[index + 1] - left,
-                }}
-                onPointerDown={(event) => reorder.start(event, 'column', index)}
-                onClick={() => {
-                  if (!reorder.suppressClick()) open('column', index);
-                }}
-              />
-            ))}
-          </div>
-          <div
-            className={styles.rowRail}
-            style={{ left: geometry.viewportLeft - 17, top: geometry.top, height: geometry.height }}
-          >
-            {geometry.rows.slice(0, -1).map((top, index) => (
-              <button
-                key={index}
-                type="button"
-                className={styles.rowHandle}
-                aria-label={knowledgeT('rowValueActions', { v0: index + 1 })}
-                aria-haspopup="menu"
-                aria-expanded={menu?.target === 'row' && menu.style.top === geometry.top + top}
-                data-selected={
-                  (selectionSource === 'axis' &&
-                    selection?.rowsSelected &&
-                    index >= selection.top &&
-                    index < selection.bottom) ||
-                  undefined
-                }
-                style={{ top, height: geometry.rows[index + 1] - top }}
-                onPointerDown={(event) => reorder.start(event, 'row', index)}
-                onClick={() => {
-                  if (!reorder.suppressClick()) open('row', index);
-                }}
-              />
-            ))}
-          </div>
-          {(['column', 'row'] as const).map((axis) =>
-            (axis === 'column' ? geometry.columns : geometry.rows).map((offset, index) =>
-              axis === 'column' &&
-              (geometry.left + offset < geometry.viewportLeft - 1 ||
-                geometry.left + offset >
-                  geometry.viewportLeft + geometry.viewportWidth + 1) ? null : (
-                <button
-                  key={axis + index}
-                  type="button"
-                  className={styles.insertButton}
-                  aria-label={knowledgeT('insertAtValuePositionValue', {
-                    v0: index + 1,
-                    v1: axis === 'column' ? knowledgeT('columns') : knowledgeT('rows'),
-                  })}
-                  data-active={(insertion?.axis === axis && insertion.index === index) || undefined}
-                  style={
-                    axis === 'column'
-                      ? { left: geometry.left + offset - 10, top: geometry.top - 40 }
-                      : { left: geometry.viewportLeft - 40, top: geometry.top + offset - 10 }
-                  }
-                  onPointerEnter={() => {
-                    if (!menu && !reorder.drop) setInsertion({ axis, index });
-                  }}
-                  onPointerLeave={() => setInsertion(null)}
-                  onFocus={() => setInsertion({ axis, index })}
-                  onBlur={() => setInsertion(null)}
-                  onMouseDown={(event) => event.preventDefault()}
-                  onClick={() => insert(axis, index)}
-                >
-                  <span className={styles.boundaryDot} />
+          {(['column', 'row'] as const).map(axis => {
+            const edges = axis === 'column' ? geometry.columns : geometry.rows;
+            return edges.slice(0, -1).map((offset, index) => {
+              const center = (offset + edges[index + 1]) / 2;
+              if (axis === 'column' && (geometry.left + center < geometry.viewportLeft || geometry.left + center > geometry.viewportLeft + geometry.viewportWidth)) return null;
+              const current = !!selection && index === (axis === 'column' ? selection.left : selection.top);
+              const expanded = menu?.target === axis && current;
+              const label = knowledgeT(axis === 'column' ? 'columnValueActions' : 'rowValueActions', { v0: index + 1 });
+              return <Tooltip key={axis + index}>
+                <TooltipTrigger asChild>
+                  <button type="button" className={`fob-action ${styles.axisHandle}`} data-surface="plain"
+                    data-axis={axis} data-current={current || undefined}
+                    aria-label={label} aria-haspopup="menu" aria-expanded={expanded}
+                    style={axis === 'column'
+                      ? { left: geometry.left + center - 12, top: geometry.top - 12 }
+                      : { left: geometry.viewportLeft - 12, top: geometry.top + center - 12 }}
+                    onPointerDown={event => reorder.start(event, axis, index)}
+                    onClick={() => { if (!reorder.suppressClick()) open(axis, index); }}>
+                    <span className={styles.axisMark} aria-hidden />
+                    <DotsThree size={14} className={styles.axisMore} aria-hidden />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side={axis === 'column' ? 'top' : 'left'}>{label}</TooltipContent>
+              </Tooltip>;
+            });
+          })}
+          {(['column', 'row'] as const).map(axis => {
+            const isColumn = axis === 'column';
+            const hint = knowledgeT(isColumn ? 'addColumnHint' : 'addRowHint');
+            const growing = grow.growth?.axis === axis;
+            const size = isColumn
+              ? Math.max(90, geometry.columns[geometry.columns.length - 1] - geometry.columns[geometry.columns.length - 2])
+              : Math.max(32, geometry.rows[geometry.rows.length - 1] - geometry.rows[geometry.rows.length - 2]);
+            return <Tooltip key={axis}>
+              <TooltipTrigger asChild>
+                <button type="button" className={`fob-action ${styles.addTrack}`} data-surface="muted"
+                  data-axis={axis} data-growing={growing || undefined}
+                  aria-label={knowledgeT(isColumn ? 'addColumn' : 'addRow')}
+                  style={isColumn
+                    ? { left: geometry.viewportLeft + geometry.viewportWidth + 5, top: geometry.top, height: geometry.height }
+                    : { left: geometry.viewportLeft, top: geometry.top + geometry.height + 5, width: geometry.viewportWidth }}
+                  onMouseDown={event => event.preventDefault()}
+                  onPointerDown={event => grow.start(event, axis, size)}
+                  onClick={event => { if (event.detail === 0) grow.append(axis); }}>
                   <Plus size={16} aria-hidden />
                 </button>
-              ),
-            ),
-          )}
-          {insertion ? (
-            <div
-              aria-hidden
-              className={styles.insertLine}
-              data-axis={insertion.axis}
-              style={
-                insertion.axis === 'column'
-                  ? {
-                      left: geometry.left + geometry.columns[insertion.index],
-                      top: geometry.top - 30,
-                      height: geometry.height + 30,
-                    }
-                  : {
-                      left: geometry.viewportLeft - 30,
-                      top: geometry.top + geometry.rows[insertion.index],
-                      width: geometry.viewportWidth + 30,
-                    }
-              }
-            />
-          ) : null}
+              </TooltipTrigger>
+              <TooltipContent side="top">{hint}</TooltipContent>
+            </Tooltip>;
+          })}
+          {grow.growth ? <div className={styles.growthPreview} data-axis={grow.growth.axis}
+            style={grow.growth.axis === 'column'
+              ? { left: geometry.viewportLeft + geometry.viewportWidth + 1, top: geometry.top, width: grow.growth.count * grow.growth.size, height: geometry.height, '--growth-step': `${grow.growth.size}px` } as CSSProperties
+              : { left: geometry.viewportLeft, top: geometry.top + geometry.height + 1, width: geometry.viewportWidth, height: grow.growth.count * grow.growth.size, '--growth-step': `${grow.growth.size}px` } as CSSProperties}>
+            <span className={styles.growthLabel} role="status">
+              {knowledgeT('addCount', { count: grow.growth.count, axis: knowledgeT(grow.growth.axis === 'column' ? 'columns' : 'rows') })}
+            </span>
+          </div> : null}
           {reorder.drop ? (
             <div
               className={styles.dropLine}
@@ -432,18 +352,20 @@ export function TableNodeView({ node, editor, getPos, HTMLAttributes }: NodeView
       active &&
       geometry &&
       selectionVisible &&
+      toolbarWidth >= 80 &&
       selection?.cells &&
       selectionSource === 'cells' &&
       !selectingCells &&
       !menu &&
-      !reorder.drop ? (
+      !reorder.drop &&
+      !grow.growth ? (
         <TableSelectionToolbar
           editor={editor}
           tableId={node.attrs.blockId}
           run={run}
           background={selection.background}
           canComment={selection.canComment}
-          style={{ left: toolbarLeft, top: toolbarTop }}
+          style={{ left: toolbarLeft, top: toolbarTop, width: toolbarWidth }}
         />
       ) : null}
       {menu ? (

@@ -223,7 +223,7 @@ test('list handles stay outside markers and retain their target across the marke
   host.remove();
 });
 
-test('a table handle aligns with its first row and hides immediately when table controls activate', async () => {
+test('a table handle stays aligned and available while table cells and controls are active', async () => {
   const host = document.createElement('div');
   document.body.append(host);
   const editor = new Editor({ element: host, extensions: createKnowledgeExtensions(), content: '<p>Before</p><table><tr><td><p>A</p></td></tr></table>' });
@@ -235,19 +235,25 @@ test('a table handle aligns with its first row and hides immediately when table 
   table.getBoundingClientRect = () => box(130, 150, 600, 80);
   row.getBoundingClientRect = () => box(130, 170, 600, 44);
   editor.registerPlugin(createBlockDragPlugin(elements));
-  const hover = () => row.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 170, clientY: 180 }) as unknown as Event);
+  const hover = () => {
+    const currentTable = editor.view.dom.querySelector('table')!, currentRow = currentTable.querySelector('tr')!;
+    currentTable.getBoundingClientRect = () => box(130, 150, 600, 80);
+    currentRow.getBoundingClientRect = () => box(130, 170, 600, 44);
+    currentRow.dispatchEvent(new browser.MouseEvent('mousemove', { bubbles: true, clientX: 170, clientY: 180 }) as unknown as Event);
+  };
   hover();
   expect(elements.handle.hidden).toBe(false);
   expect(elements.handle.style.top).toBe('180px');
   table.setAttribute('data-active', 'true');
   await new Promise((resolve) => setTimeout(resolve, 0));
-  expect(elements.handle.hidden).toBe(true);
+  expect(elements.handle.hidden).toBe(false);
   table.removeAttribute('data-active');
   hover();
   expect(elements.handle.hidden).toBe(false);
   const pos = blockDragKey.getState(editor.state)!.hovered!;
   editor.commands.setTextSelection(pos + 4);
-  expect(elements.handle.hidden).toBe(true);
+  hover();
+  expect(elements.handle.hidden).toBe(false);
   editor.destroy();
   host.remove();
 });

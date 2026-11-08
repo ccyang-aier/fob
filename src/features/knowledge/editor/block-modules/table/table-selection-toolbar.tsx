@@ -2,21 +2,19 @@
 import { useTranslation } from '@/lib/i18n';
 import { knowledgeMessages } from './table-selection-toolbar.messages';
 import { useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
+import { getOverlayRoot } from '@/lib/overlay-root';
 import * as Menu from '@radix-ui/react-dropdown-menu';
 import {
   ArrowsInLineHorizontal,
   ArrowsOutLineHorizontal,
-  ChatText,
+  ChatCircleDots,
   Code,
-  Link,
+  LinkSimple,
   Palette,
   TextB,
-  TextHOne,
-  TextHThree,
-  TextHTwo,
   TextItalic,
   TextStrikethrough,
-  Triangle,
 } from '@/components/icons';
 import type { Editor } from '@tiptap/core';
 import { mergeCells, splitCell } from '@tiptap/pm/tables';
@@ -74,9 +72,10 @@ function SelectionLink({
           aria-label={knowledgeT('setLink')}
           title={knowledgeT('setLink')}
           data-on={tableSelectionHasMark(editor.state, 'link') || undefined}
+          aria-pressed={tableSelectionHasMark(editor.state, 'link')}
           disabled={!setTableSelectionLink(editor.state, undefined, null)}
         >
-          <Link size={16} aria-hidden />
+          <LinkSimple size={16} aria-hidden />
         </button>
       </Menu.Trigger>
       <Menu.Portal>
@@ -187,9 +186,10 @@ export function TableSelectionToolbar({
       (s, d) => toggleTableSelectionMark(s, d, name),
       tableSelectionHasMark(editor.state, name),
     );
-  return (
+  return createPortal(
     <div
       contentEditable={false}
+      data-fob-table-menu={tableId}
       role="toolbar"
       aria-label={knowledgeT('selectedCellFormatting')}
       className={styles.selectionToolbar}
@@ -199,30 +199,30 @@ export function TableSelectionToolbar({
       }}
     >
       <div className={styles.toolbarGroup}>
-        {([TextHOne, TextHTwo, TextHThree] as const).map((Icon, index) => (
+        {[1, 2, 3].map((level) => (
           <button
-            key={index}
+            key={level}
             type="button"
             className={styles.toolbarButton}
-            aria-label={knowledgeT('headingValue', { v0: index + 1 })}
-            title={knowledgeT('headingValue', { v0: index + 1 })}
+            aria-label={knowledgeT('headingValue', { v0: level })}
+            title={knowledgeT('headingValue', { v0: level })}
             aria-pressed={
               blocks.length > 0 &&
               blocks.every(
-                ({ node }) => node.type.name === 'heading' && node.attrs.level === index + 1,
+                ({ node }) => node.type.name === 'heading' && node.attrs.level === level,
               )
             }
             data-on={
               (blocks.length > 0 &&
                 blocks.every(
-                  ({ node }) => node.type.name === 'heading' && node.attrs.level === index + 1,
+                  ({ node }) => node.type.name === 'heading' && node.attrs.level === level,
                 )) ||
               undefined
             }
-            disabled={!setTableSelectionHeading(editor.state, undefined, index + 1)}
-            onClick={() => run((s, d) => setTableSelectionHeading(s, d, index + 1))}
+            disabled={!setTableSelectionHeading(editor.state, undefined, level)}
+            onClick={() => run((s, d) => setTableSelectionHeading(s, d, level))}
           >
-            <Icon size={16} aria-hidden />
+            H{level}
           </button>
         ))}
       </div>
@@ -281,10 +281,10 @@ export function TableSelectionToolbar({
             requestSelectionComment(editor, { x: bounds.left, y: bounds.bottom + 12 });
           }}
         >
-          <ChatText size={16} aria-hidden />
+          <ChatCircleDots size={16} aria-hidden />
         </button>
       </div>
-      <Triangle className={styles.toolbarArrow} size={16} aria-hidden />
-    </div>
+    </div>,
+    getOverlayRoot() ?? editor.view.dom.ownerDocument.body,
   );
 }

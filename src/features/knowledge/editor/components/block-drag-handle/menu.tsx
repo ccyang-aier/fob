@@ -6,7 +6,7 @@ import type { Transaction } from '@tiptap/pm/state';
 import { closeHistory } from '@tiptap/pm/history';
 import { yUndoPluginKey } from 'y-prosemirror';
 import { BLOCK_EDITS_MAP, blockEditFingerprint, documentBlockContent, readBlockEdit } from '@fob/shared/knowledge/collaboration';
-import { ArrowLeft, ArrowsClockwise, CaretRight, Code, Info, LinkSimple, ListBullets, ListChecks, ListNumbers, Plus, Quotes, SelectionCheck, TextHOne, TextHTwo, TextHThree, TextHFour, TextT, Trash } from '@/components/icons';
+import { ArrowLeft, ArrowsClockwise, CaretRight, Code, Copy, Info, LinkSimple, ListBullets, ListChecks, ListNumbers, Plus, Quotes, SelectionCheck, TextHOne, TextHTwo, TextHThree, TextHFour, TextT, Trash } from '@/components/icons';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTranslation } from '@/lib/i18n';
@@ -14,6 +14,8 @@ import { useBlockMenuContext } from '../../block-menu-context';
 import { documentBlockLink } from '../../document-link';
 import { convertMenuBlock, deleteMenuBlock, insertBelowMenuBlock, menuBlockFormat, resolveMenuBlock, type MenuBlock } from '../../extensions/block-menu';
 import { openBlockInsertMenu } from '../../commands/slash-paste';
+import { TableStyleMenuItems } from '../../block-modules/table/table-style-menu';
+import { selectTableAxis, type TableCommand } from '../../block-modules/table/table-commands';
 import { blockDragMessages } from './messages';
 import styles from './styles.module.css';
 
@@ -65,6 +67,9 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
   }, [editor, target, context?.document, onClose]);
   const pos = target ? resolveMenuBlock(editor.state, target) : null;
   const node = pos === null ? null : editor.state.doc.nodeAt(pos);
+  const table = node?.type.name === 'table';
+  const tableSelection = table && pos !== null ? selectTableAxis(editor.state, pos, 'table', 0) : null;
+  const tableState = tableSelection ? editor.state.apply(tableSelection) : editor.state;
   const active = node && pos !== null ? menuBlockFormat(node, editor.state.doc.resolve(pos).parent) : null;
   const record = target ? readBlockEdit(context?.document?.getMap(BLOCK_EDITS_MAP).get(target.blockId) ?? context?.entries?.[target.blockId]) : null;
   const currentContent = record && node && target ? context?.document ? documentBlockContent(context.document, target.blockId) : JSON.stringify(node.toJSON()) : null;
@@ -84,6 +89,24 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
     const link = documentBlockLink(window.location.href, context.target, target.blockId);
     try { await navigator.clipboard.writeText(link); notify('success', t('linkCopied')); }
     catch { notify('error', t('copyFailed')); }
+  };
+  const copyMarkdown = async () => {
+    if (!target) return;
+    const currentPos = resolveMenuBlock(editor.state, target);
+    if (currentPos === null) { notify('error', t('actionFailed')); return; }
+    const current = editor.state.doc.nodeAt(currentPos)!;
+    try {
+      const { createMarkdownPipeline } = await import('@fob/shared/knowledge/markdown');
+      const markdown = createMarkdownPipeline({ schema: editor.schema }).serialize(editor.schema.nodes.doc.create(null, current));
+      await navigator.clipboard.writeText(markdown);
+      notify('success', t('markdownCopied'));
+    } catch { notify('error', t('copyFailed')); }
+  };
+  const runTable = (command: TableCommand) => {
+    const currentPos = target ? resolveMenuBlock(editor.state, target) : null;
+    const selection = currentPos !== null ? selectTableAxis(editor.state, currentPos, 'table', 0) : null;
+    if (selection) command(editor.state.apply(selection), transaction => act(transaction));
+    else { notify('error', t('actionFailed')); onClose(); }
   };
   const convertible = target && formats.some(({ format }) => convertMenuBlock(editor.state, target, format) !== null);
   const formatItems = target && formats.map(({ key, format, icon: Icon }) => {
@@ -105,7 +128,7 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
         <DropdownMenuSeparator className={styles.separator} />
         {formatItems}
       </> : <>
-      {narrow ? <DropdownMenuItem className={styles.menuItem} disabled={!convertible} title={!convertible ? t('conversionUnavailable') : undefined}
+      {!table && (narrow ? <DropdownMenuItem className={styles.menuItem} disabled={!convertible} title={!convertible ? t('conversionUnavailable') : undefined}
         onSelect={event => { event.preventDefault(); setConversionFor(target); }}
         onKeyDown={event => { if (event.key === 'ArrowRight') { event.preventDefault(); setConversionFor(target); } }}>
         <ArrowsClockwise size={14} />{t('convertTo')}<CaretRight className={styles.selected} />
@@ -114,11 +137,14 @@ export function BlockMenu({ id, editor, target, anchor, handle, onClose }: {
         <DropdownMenuSubContent className={`${styles.menu} ${styles.submenu}`} collisionPadding={8}>
           {formatItems}
         </DropdownMenuSubContent>
-      </DropdownMenuSub>}
+      </DropdownMenuSub>)}
       <DropdownMenuItem className={styles.menuItem} onSelect={() => act(insertBelowMenuBlock(editor.state, target), true)}><Plus size={16} />{t('insertBelow')}</DropdownMenuItem>
       <DropdownMenuItem className={styles.menuItem} disabled={!context} title={!context ? t('linkUnavailable') : undefined} onSelect={() => { void copyLink(); }}><LinkSimple size={14} />{t('copyLink')}</DropdownMenuItem>
+      {table && <DropdownMenuItem className={styles.menuItem} onSelect={() => { void copyMarkdown(); }}><Copy size={14} />{t('copyMarkdown')}</DropdownMenuItem>}
       <DropdownMenuSeparator className={styles.separator} />
-      <DropdownMenuItem className={styles.menuItem} variant="destructive" onSelect={() => act(deleteMenuBlock(editor.state, target))}><Trash size={14} />{t('deleteBlock')}</DropdownMenuItem>
+      {table && node ? <TableStyleMenuItems tableId={target.blockId} target="table" editor={editor} state={tableState}
+        run={runTable} align={undefined} background={node.attrs.background} />
+        : <DropdownMenuItem className={styles.menuItem} variant="destructive" onSelect={() => act(deleteMenuBlock(editor.state, target))}><Trash size={14} />{t('deleteBlock')}</DropdownMenuItem>}
       <DropdownMenuSeparator className={styles.separator} />
       <div className={styles.metadata}>{edit ? <><span>{t('lastEditedBy', { name: edit.actorId === 'local' ? t('you') : edit.actorName ?? t('unknownEditor') })}</span><time dateTime={edit.editedAt}>{new Intl.DateTimeFormat(locale === 'zh-CN' ? 'zh-CN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(edit.editedAt))}</time></> : <span>{t('noEditRecord')}</span>}</div>
       </>}

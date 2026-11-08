@@ -28,6 +28,7 @@ import {
   Trash,
 } from '@/components/icons';
 import type { Editor } from '@tiptap/core';
+import type { EditorState } from '@tiptap/pm/state';
 import { mergeCells, splitCell } from '@tiptap/pm/tables';
 import {
   addColumn,
@@ -83,23 +84,9 @@ export function TableStyleMenu({
   align: TableAlignment | null | undefined;
   background: string | null | undefined;
 }) {
-  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
-
-  const target = anchor.target;
-  const column = target === 'column';
-  const row = target === 'row';
-  const structure = row || column;
-  const item = (label: string, Icon: typeof ArrowDown, command: TableCommand, danger = false) => (
-    <Menu.Item
-      className={`${styles.menuItem} fob-menu-item`}
-      data-variant={danger ? 'destructive' : undefined}
-      disabled={!command(editor.state)}
-      onSelect={() => run(command)}
-    >
-      <Icon size={16} aria-hidden />
-      <span>{label}</span>
-    </Menu.Item>
-  );
+  const { t: knowledgeT } = useTranslation(knowledgeMessages);
+  const column = anchor.target === 'column';
+  const row = anchor.target === 'row';
   return (
     <Menu.Root
       open
@@ -135,6 +122,34 @@ export function TableStyleMenu({
           onCloseAutoFocus={(event) => event.preventDefault()}
           onPointerDownOutside={onClose}
         >
+          <TableStyleMenuItems tableId={tableId} target={anchor.target} editor={editor} run={run} align={align} background={background} />
+        </Menu.Content>
+      </Menu.Portal>
+    </Menu.Root>
+  );
+}
+
+export function TableStyleMenuItems({ tableId, target, editor, state = editor.state, run, align, background }: {
+  tableId: string; target: TableStyleTarget; editor: Editor; run: (command: TableCommand) => void;
+  state?: EditorState;
+  align: TableAlignment | null | undefined; background: string | null | undefined;
+}) {
+  const { locale, t: knowledgeT } = useTranslation(knowledgeMessages);
+  const column = target === 'column';
+  const row = target === 'row';
+  const structure = row || column;
+  const item = (label: string, Icon: typeof ArrowDown, command: TableCommand, danger = false) => (
+    <Menu.Item
+      className={`${styles.menuItem} fob-menu-item`}
+      data-variant={danger ? 'destructive' : undefined}
+      disabled={!command(state)}
+      onSelect={() => run(command)}
+    >
+      <Icon size={16} aria-hidden />
+      <span>{label}</span>
+    </Menu.Item>
+  );
+  return <>
           <Menu.Sub>
             <Menu.SubTrigger className={`${styles.menuItem} fob-menu-item`}>
               <TextAlignLeft size={16} aria-hidden />
@@ -259,7 +274,7 @@ export function TableStyleMenu({
               <Menu.Item
                 className={`${styles.menuItem} fob-menu-item`}
                 onSelect={() => {
-                  const hit = tableNodeAt(editor.state.selection.$from);
+                  const hit = tableNodeAt(state.selection.$from);
                   if (hit) downloadTableCsv(hit.table, editor.view.dom.ownerDocument);
                 }}
               >
@@ -284,8 +299,5 @@ export function TableStyleMenu({
                     },
             true,
           )}
-        </Menu.Content>
-      </Menu.Portal>
-    </Menu.Root>
-  );
+  </>;
 }

@@ -7,6 +7,8 @@ export const blockDragMessages = defineMessages({
   backToBlockMenu: ['返回块操作', 'Back to block actions'],
   insertBelow: ['在下方插入', 'Insert below'],
   copyLink: ['复制链接', 'Copy link'],
+  copyMarkdown: ['复制为 Markdown', 'Copy as Markdown'],
+  markdownCopied: ['已复制 Markdown', 'Markdown copied'],
   deleteBlock: ['删除', 'Delete'],
   lastEditedBy: ['上次由 {name} 编辑', 'Last edited by {name}'],
   noEditRecord: ['暂无此块的编辑记录', 'No edit record for this block yet'],

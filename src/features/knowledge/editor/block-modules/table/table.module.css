@@ -1,5 +1,5 @@
-.root { position: relative; margin: 32px 0 26px; padding-top: 20px; }
-.shell { overflow-x: auto; border: var(--separator-width) solid var(--separator-color); border-radius: 7px; background: var(--panel); scrollbar-width: thin; }
+.root { position: relative; margin: 24px 0 28px; padding-bottom: 8px; }
+.shell { overflow-x: auto; border: var(--separator-width) solid var(--separator-color); border-radius: 0; background: var(--panel); scrollbar-width: thin; }
 .table { width: 100%; border-collapse: collapse; table-layout: fixed; color: var(--ink-soft); font-size: 14px; line-height: 22px; cursor: text; }
 .root .table :global(th), .root .table :global(td) { position: relative; min-width: 90px; height: 43px; border: var(--separator-width) solid var(--separator-color); padding: 10px 12px; background: transparent; text-align: left; vertical-align: top; }
 .root .table :global(p) { margin: 0; min-height: 22px; line-height: 22px; }
@@ -14,33 +14,38 @@
 .root .table :global([align="right"]) { text-align: right; }
 .table[data-variant="striped"] :global(tr:nth-child(even)) { background: var(--surface-subtle); }
 .table[data-variant="minimal"] :global(th), .table[data-variant="minimal"] :global(td) { border-left: 0; border-right: 0; }
-.root .table :global(.selectedCell)::after { position: absolute; inset: 0; z-index: 2; background: color-mix(in srgb, var(--ink) 10%, transparent); content: ''; pointer-events: none; }
+.root .table :global(.selectedCell)::after { content: none; }
+.selectionOutline { position: absolute; z-index: 3; box-sizing: border-box; border: 2px solid #2863dc; background: transparent; pointer-events: none; }
 .root .table :global(.selectedCell)::selection { background: transparent; }
 .root .table :global(.column-resize-handle) { position: absolute; top: 0; right: -1px; bottom: 0; z-index: 7; width: var(--drag-indicator-width); background: var(--drag-indicator-color); pointer-events: none; }
 .root .table :global(.column-resize-dragging) { user-select: none; }
 /* The editor-root cursor rule lives in the shared resize stylesheet. */
 .controls { pointer-events: none; }
-.corner { position: absolute; z-index: 4; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; background: var(--accent-soft-line); cursor: pointer; pointer-events: auto; }
-.columnRail, .rowRail { position: absolute; z-index: 3; overflow: hidden; border-radius: 4px; background: var(--accent-soft-line); pointer-events: auto; }
-.columnRail { height: 10px; }
-.rowRail { width: 10px; }
-.columnHandle, .rowHandle { position: absolute; border: 0; padding: 0; background: var(--accent-soft-line); cursor: grab; touch-action: none; }
-.columnHandle { top: 0; height: 10px; border-right: 1px solid var(--control-border); }
-.rowHandle { left: 0; width: 10px; border-bottom: 1px solid var(--control-border); }
-.columnHandle:active, .rowHandle:active { cursor: grabbing; }
-.columnHandle:last-child, .rowHandle:last-child { border: 0; }
-.columnHandle:hover, .rowHandle:hover, .corner:hover { background: var(--control-border); }
-.columnHandle[data-selected], .rowHandle[data-selected], .corner[data-selected] { background: var(--accent); }
-.corner:focus-visible, .columnHandle:focus-visible, .rowHandle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.insertButton { position: absolute; z-index: 6; display: grid; width: 20px; height: 20px; padding: 0; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--accent-foreground); cursor: pointer; pointer-events: auto; }
-.boundaryDot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent-soft-line); }
-.insertButton svg { display: none; }
-.insertButton[data-active], .insertButton:focus-visible { background: var(--accent); outline: none; }
-.insertButton[data-active] .boundaryDot, .insertButton:focus-visible .boundaryDot { display: none; }
-.insertButton[data-active] svg, .insertButton:focus-visible svg { display: block; }
-.insertLine { position: absolute; z-index: 5; background: var(--drag-indicator-color); pointer-events: none; }
-.insertLine[data-axis="column"] { width: 2px; }
-.insertLine[data-axis="row"] { height: 2px; }
+.axisHandle { position: absolute; z-index: 5; display: grid; place-items: center; width: 24px; height: 24px; padding: 0; border: 1px solid transparent; border-radius: 9px; color: var(--ink-soft); background: transparent; opacity: 0; pointer-events: none; cursor: grab; touch-action: none; }
+.root[data-active] .axisHandle { pointer-events: auto; }
+.root[data-active] .axisHandle[data-current], .axisHandle:is(:hover, :focus-visible, [aria-expanded="true"]) { opacity: 1; pointer-events: auto; }
+.axisMark { width: 12px; height: 2px; border-radius: 1px; background: var(--ink-soft); box-shadow: 0 0 0 2px var(--panel); }
+.axisHandle[data-axis="row"] .axisMark { width: 2px; height: 12px; }
+.axisMore { display: none; }
+.axisHandle:is(:hover, :focus-visible, [aria-expanded="true"]) { border-color: var(--control-border); background: var(--panel); }
+.axisHandle:is(:hover, :focus-visible, [aria-expanded="true"]) .axisMark { display: none; }
+.axisHandle:is(:hover, :focus-visible, [aria-expanded="true"]) .axisMore { display: block; }
+.axisHandle[data-axis="row"] .axisMore { transform: rotate(90deg); }
+.axisHandle:active { cursor: grabbing; }
+.axisHandle:focus-visible, .addTrack:focus-visible { outline: 1px solid var(--control-border); outline-offset: 2px; }
+.addTrack { position: absolute; z-index: 4; display: grid; place-items: center; padding: 0; border: 1px solid var(--control-border); border-radius: 6px; color: var(--muted-strong); background: var(--surface-subtle); opacity: 0; pointer-events: auto; cursor: pointer; touch-action: none; }
+.addTrack[data-axis="column"] { width: 16px; }
+.addTrack[data-axis="row"] { height: 16px; }
+.root:hover .addTrack:hover, .root:focus-within .addTrack:focus-visible, .addTrack[data-growing] { opacity: 1; }
+/* The transparent bridge keeps the narrow gap to the table easy to cross. */
+.addTrack::before { position: absolute; content: ''; }
+.addTrack[data-axis="column"]::before { inset: 0 0 0 -7px; }
+.addTrack[data-axis="row"]::before { inset: -7px 0 0; }
+.growthPreview { position: absolute; z-index: 6; border: 1px dashed var(--control-border); background-color: var(--surface-subtle); opacity: .85; pointer-events: none; }
+.growthPreview[data-axis="row"] { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--growth-step) - 1px), var(--control-border) calc(var(--growth-step) - 1px), var(--control-border) var(--growth-step)); }
+.growthPreview[data-axis="column"] { background-image: repeating-linear-gradient(to right, transparent 0, transparent calc(var(--growth-step) - 1px), var(--control-border) calc(var(--growth-step) - 1px), var(--control-border) var(--growth-step)); }
+.growthLabel { position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: 5px; background: var(--tooltip-bg); color: var(--tooltip-ink); font-size: 12px; white-space: nowrap; }
+@media (hover: none) { .root[data-active] .addTrack { opacity: 1; } }
 .root[data-reordering], .root[data-reordering] * { cursor: grabbing !important; }
 .dropLine { position: absolute; z-index: 8; background: var(--drag-indicator-color); pointer-events: none; }
 .dropLine[data-axis="column"] { width: var(--drag-indicator-width); transform: translateX(-1px); }
@@ -48,13 +53,9 @@
 .dropLabel { position: absolute; left: 6px; top: -28px; padding: 2px 8px; border-radius: 5px; background: var(--drag-indicator-color); color: white; font-size: 12px; line-height: 20px; white-space: nowrap; }
 .dropLabel[data-left] { left: -6px; transform: translateX(-100%); }
 .dropLine[data-invalid] .dropLabel { background: var(--err-ink); color: white; }
-.selectionToolbar { position: absolute; z-index: 90; display: flex; flex-wrap: wrap; justify-content: center; width: 372px; max-width: calc(100vw - 24px); padding: 4px 6px; border-radius: 6px; background: var(--panel); color: var(--ink-soft); box-shadow: 0 1px 3px rgb(0 0 0 / 0.071), 0 10px 20px rgb(0 0 0 / 0.071); transform: translate(-50%, -50%); cursor: default; }
-.toolbarGroup { display: contents; }
-.toolbarButton { display: grid; width: 30px; height: 30px; place-items: center; padding: 0; border: 0; border-radius: 4px; background: transparent; color: inherit; cursor: pointer; }
-.toolbarButton:hover, .toolbarButton[data-on] { background: #edf3fc; color: #2863dc; }
-.toolbarButton:disabled { color: var(--muted-strong); cursor: default; }
-.toolbarButton:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-.toolbarArrow { position: absolute; bottom: -10px; left: calc(50% - 8px); color: var(--panel); transform: rotate(180deg); pointer-events: none; }
+.selectionToolbar { composes: toolbar from '../../components/selection-toolbar/styles.module.css'; position: fixed; z-index: 90; max-width: calc(100vw - 24px); transform: translateX(-50%); cursor: default; }
+.toolbarGroup { composes: group from '../../components/selection-toolbar/styles.module.css'; }
+.toolbarButton { composes: tool from '../../components/selection-toolbar/styles.module.css'; }
 .menu.linkMenu { width: 260px; max-width: calc(100vw - 24px); padding: 12px; }
 .linkLabel { display: block; margin-bottom: 8px; font-size: 13px; }
 .linkMenu input { width: 100%; }

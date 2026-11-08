@@ -41,7 +41,8 @@ export function BlockDragHandle({ editor }: { editor: Editor | null }) {
           const blockId = view.state.doc.nodeAt(pos)?.attrs.blockId;
           if (typeof blockId !== 'string') return;
           opened.current = true;
-          view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, pos)).setMeta('addToHistory', false));
+          if (view.state.doc.nodeAt(pos)?.type.name !== 'table')
+            view.dispatch(view.state.tr.setSelection(NodeSelection.create(view.state.doc, pos)).setMeta('addToHistory', false));
           setMenu({ pos, blockId });
         },
       }));

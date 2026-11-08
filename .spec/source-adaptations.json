@@ -587,16 +587,16 @@
     "sha256": "c3d41b66a7a525a2baa214f6787133d63af207af8bdac93cfe17fbfb48ecaeda"
   },
   "src/features/knowledge/editor/block-modules/table/table-node-view.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "3e36bdd0baf6b4bf8d9ea617978498edc5f3934749080e6f89ece45f5c77b78f"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Move whole-table actions into the shared left block grip without changing the caret; replace table axis rails with compact handles and edge append controls with atomic drag growth. Preserve existing table context menus and data semantics. See docs/editor-rich-content.md and .spec/tasks/editor-table-controls.md. Render selections as a single transparent blue outline as explicitly requested. Reuse the text-selection toolbar styles, heading labels and common icons for consistent cell-selection formatting controls. See .spec/tasks/editor-table-controls.md. Reuse text-selection toolbar presentation and the shared overlay host; clamp the table toolbar to its editor scroll area and comments boundary. See .spec/tasks/editor-table-controls.md.",
+    "sha256": "190ac053aedebed0dc9f2f0197123fcf26fd59924b8e5715e023f7a03f8d68f4"
   },
   "src/features/knowledge/editor/block-modules/table/table-selection-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "58da4c34b61aa90811a8d4e9b3211e11219686db324d666dd175a111bed325ef"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Reuse the text-selection toolbar styles, heading labels and common icons for consistent cell-selection formatting controls. See .spec/tasks/editor-table-controls.md. Reuse text-selection toolbar presentation and the shared overlay host; clamp the table toolbar to its editor scroll area and comments boundary. See .spec/tasks/editor-table-controls.md.",
+    "sha256": "663a69cf8cd53dcbdd6ace7fa5c8b7adbe95c394c4e211312c143c652b5d81b6"
   },
   "src/features/knowledge/editor/block-modules/table/table-style-menu.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Dropdown selection refinement (docs/ui/icon-system.md): Use the shared 18px SelectionCheck for selected table alignment without changing cell or axis operations.",
-    "sha256": "49e133cbcdfc9ea96c006a4e3c239998de98c88dcd748c59c537982f90fe2691"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Dropdown selection refinement (docs/ui/icon-system.md): Use the shared 18px SelectionCheck for selected table alignment without changing cell or axis operations. Move whole-table actions into the shared left block grip without changing the caret; replace table axis rails with compact handles and edge append controls with atomic drag growth. Preserve existing table context menus and data semantics. See docs/editor-rich-content.md and .spec/tasks/editor-table-controls.md.",
+    "sha256": "6c60227ccf529d82b374a6045236b7c7645b7f8302fa69725df518d803547902"
   },
   "src/features/knowledge/editor/block-modules/task-list/index.ts": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
@@ -761,8 +761,8 @@
     "sha256": "3fcca9a662824f9f3f452edee4b8ddd8e1e945c63d65daac63b634ea36c84f07"
   },
   "src/features/knowledge/editor/block-modules/table/table.module.css": {
-    "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification.",
-    "sha256": "887eb4b8a7397fbeb10c558ce783b532747d1940be0fd7d45ed17da37287d5e0"
+    "reason": "Move the editor-root resize cursor rule into the shared global resize stylesheet so CSS Modules remain pure in Webpack development. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Move whole-table actions into the shared left block grip without changing the caret; replace table axis rails with compact handles and edge append controls with atomic drag growth. Preserve existing table context menus and data semantics. See docs/editor-rich-content.md and .spec/tasks/editor-table-controls.md. Render selections as a single transparent blue outline as explicitly requested. Reuse the text-selection toolbar styles, heading labels and common icons for consistent cell-selection formatting controls. See .spec/tasks/editor-table-controls.md. Reuse text-selection toolbar presentation and the shared overlay host; clamp the table toolbar to its editor scroll area and comments boundary. See .spec/tasks/editor-table-controls.md.",
+    "sha256": "9ed68d9bc883c4e7fdf10739a3bfab028ca8660dfc85bcae242d7873fe7c4f3c"
   },
   "src/features/knowledge/editor/components/document-outline.module.css": {
     "reason": "Use shared hover feedback with a single full-width accessible button per outline row. Apply the reviewed editor controls and persisted media/callout attributes; see .spec/tasks/editor-polish.md for scope and verification. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Add personal heading-section folding and the reference-style floating outline, with hidden-target reveal and complete HTML snapshots. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md. Keep the outline rail transparent and add pointer-proximity Dock magnification with directory hover and keyboard preview; see docs/editor-heading-navigation.md. Add opt-in center alignment for the taller outline, preserving existing start/end placements. See docs/editor-heading-navigation.md and .spec/tasks/editor-heading-navigation.md. Set the outline container height to 720px, narrow it to 300px and use muted text with a dark current chapter, preserving centered placement. See docs/editor-heading-navigation.md. Align the outline scrollbar with its right inner border and remove the duplicate body-outline toolbar entry while preserving PDF thumbnails. See docs/editor-heading-navigation.md. Persist validated image sizing and image/diagram alignment, share permission-aware layout controls and proportional resize gestures, and support direct outline-line navigation without an outer focus frame. See docs/editor-rich-content.md, docs/editor-heading-navigation.md and .spec/tasks/editor-rich-content.md.",
@@ -1534,5 +1534,13 @@
   "shared/src/knowledge/schema/attributes.ts": {
     "reason": "Persist validated image sizing and image/diagram alignment, share permission-aware layout controls and proportional resize gestures, and support direct outline-line navigation without an outer focus frame. See docs/editor-rich-content.md, docs/editor-heading-navigation.md and .spec/tasks/editor-rich-content.md.",
     "sha256": "83f848d1378ebd5de5b6a18335e16817fbd1c38e5b3643236bb70ec7527eb94c"
+  },
+  "src/features/knowledge/editor/block-modules/table/table-node-view.messages.ts": {
+    "reason": "Move whole-table actions into the shared left block grip without changing the caret; replace table axis rails with compact handles and edge append controls with atomic drag growth. Preserve existing table context menus and data semantics. See docs/editor-rich-content.md and .spec/tasks/editor-table-controls.md.",
+    "sha256": "8393661a486de1224413825225f9c0b4f9418edb4653fac16f086fbd31bcf280"
+  },
+  "src/features/knowledge/editor/block-modules/table/use-table-geometry.ts": {
+    "sha256": "a9dfc5638bddfd48d0e6ce28672386742f065b29f5bbc31de3bb425dc0b3ac9e",
+    "reason": " Reuse text-selection toolbar presentation and the shared overlay host; clamp the table toolbar to its editor scroll area and comments boundary. See .spec/tasks/editor-table-controls.md."
   }
 }

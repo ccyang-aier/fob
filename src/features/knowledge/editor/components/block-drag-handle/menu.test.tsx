@@ -98,3 +98,35 @@ test('Escape returns focus to the visible grip and keeps document content unchan
   expect(handle.hidden).toBe(false); expect(document.activeElement).toBe(handle);
   expect(editor.getJSON()).toEqual(initial);
 });
+
+test('the table grip exposes whole-table actions without changing the caret and targets that table on execution', async () => {
+  await act(async () => editor.commands.setContent({ type: 'doc', content: [
+    { type: 'paragraph', attrs: { blockId: 'before-table' }, content: [{ type: 'text', text: 'Before' }] },
+    { type: 'table', attrs: { blockId: 'menu-table' }, content: [
+      { type: 'tableRow', content: ['A', 'B'].map(text => ({ type: 'tableHeader', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })) },
+      { type: 'tableRow', content: ['C', 'D'].map(text => ({ type: 'tableCell', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })) },
+    ] },
+  ] }));
+  editor.commands.setTextSelection(2);
+  const initial = editor.getJSON(), selection = editor.state.selection;
+  const box = { left: 120, top: 100, right: 420, bottom: 144, width: 300, height: 44, x: 120, y: 100, toJSON: () => ({}) };
+  const table = editor.view.dom.querySelector('table')!, row = table.querySelector('tr')!;
+  table.getBoundingClientRect = () => box;
+  row.getBoundingClientRect = () => box;
+  await act(async () => {
+    row.dispatchEvent(new MouseEvent('mousemove', { bubbles: true, clientX: 150, clientY: 110 }));
+    document.querySelector<HTMLButtonElement>('[data-block-drag-handle]')!.click();
+  });
+  const menu = document.querySelector('[data-block-menu]')!;
+  expect(menu.textContent).toContain('复制为 Markdown');
+  expect(menu.textContent).toContain('导出为 CSV');
+  expect(menu.textContent).not.toContain('转换为');
+  expect(editor.state.selection.eq(selection)).toBe(true);
+  expect(editor.getJSON()).toEqual(initial);
+  const toggle = [...menu.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent === '切换标题')!;
+  expect(toggle.getAttribute('data-disabled')).toBeNull();
+  await act(async () => toggle.click());
+  expect(editor.state.doc.child(0).textContent).toBe('Before');
+  expect(editor.state.doc.child(1).firstChild!.firstChild!.type.name).toBe('tableCell');
+  expect(editor.state.doc.child(1).textContent).toBe('ABCD');
+});

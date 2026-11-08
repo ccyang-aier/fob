@@ -3,7 +3,7 @@ import { useLayoutEffect, useState, type RefObject } from 'react';
 import type { Node as ProseMirrorNode } from '@tiptap/pm/model';
 import { TableMap, updateColumnsOnResize } from '@tiptap/pm/tables';
 
-export interface TableGeometry { left: number; top: number; width: number; height: number; viewportLeft: number; viewportWidth: number; rootLeft: number; rootTop: number; pageWidth: number; pageHeight: number; columns: number[]; rows: number[] }
+export interface TableGeometry { left: number; top: number; width: number; height: number; viewportLeft: number; viewportWidth: number; rootLeft: number; rootTop: number; pageWidth: number; pageHeight: number; contentLeft: number; contentRight: number; contentTop: number; contentBottom: number; columns: number[]; rows: number[] }
 
 export function useTableGeometry(shellRef: RefObject<HTMLDivElement | null>, node: ProseMirrorNode): TableGeometry | null {
   const [geometry, setGeometry] = useState<TableGeometry | null>(null);
@@ -35,7 +35,9 @@ export function useTableGeometry(shellRef: RefObject<HTMLDivElement | null>, nod
         rows[rowIndex] = rowBounds.top - bounds.top;
         rows[rowIndex + 1] = rowBounds.bottom - bounds.top;
       });
-      const next = { left: bounds.left - root.left, top: bounds.top - root.top, width: bounds.width, height: bounds.height, viewportLeft: shell.getBoundingClientRect().left - root.left + 1, viewportWidth: shell.clientWidth, rootLeft: root.left, rootTop: root.top, pageWidth: shell.ownerDocument.documentElement.clientWidth, pageHeight: shell.ownerDocument.documentElement.clientHeight, columns, rows };
+      const scroll = shell.closest('[data-document-scroll]')?.getBoundingClientRect();
+      const comments = shell.closest('[data-knowledge-editor]')?.querySelector('[data-knowledge-comments]')?.getBoundingClientRect();
+      const next = { left: bounds.left - root.left, top: bounds.top - root.top, width: bounds.width, height: bounds.height, viewportLeft: shell.getBoundingClientRect().left - root.left + 1, viewportWidth: shell.clientWidth, rootLeft: root.left, rootTop: root.top, pageWidth: shell.ownerDocument.documentElement.clientWidth, pageHeight: shell.ownerDocument.documentElement.clientHeight, contentLeft: scroll?.left ?? 0, contentRight: Math.min(scroll?.right ?? shell.ownerDocument.documentElement.clientWidth, comments?.left ?? Infinity), contentTop: scroll?.top ?? 0, contentBottom: scroll?.bottom ?? shell.ownerDocument.documentElement.clientHeight, columns, rows };
       setGeometry(current => JSON.stringify(current) === JSON.stringify(next) ? current : next);
     };
     const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(measure); };

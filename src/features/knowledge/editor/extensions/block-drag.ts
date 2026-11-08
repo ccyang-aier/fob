@@ -137,12 +137,6 @@ export function createBlockDragPlugin(elements: DragElements): Plugin<DragState>
         const table = pos !== null && view.state.doc.nodeAt(pos)?.type.name === 'table'
           ? target.matches('[data-fob-node="table"]') ? target : target.querySelector<HTMLElement>('[data-fob-node="table"]')
           : null;
-        const { $from } = view.state.selection;
-        let tableSelected = false;
-        if (table) for (let depth = $from.depth; depth > 0; depth--) {
-          if ($from.node(depth).type.name === 'table' && $from.before(depth) === pos) tableSelected = true;
-        }
-        if (table && (tableSelected || table.hasAttribute('data-active') || table.hasAttribute('data-reordering'))) { hide(); return; }
         const computed = win.getComputedStyle(target);
         const lineHeight = Number.parseFloat(computed.lineHeight) || 24;
         const firstRow = table?.querySelector('tr')?.getBoundingClientRect();
