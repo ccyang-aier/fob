@@ -5,7 +5,7 @@ import { createTranslator } from '@/lib/i18n';
 import { knowledgeAssetsApi } from '../assets/assets-api';
 import { listLocalKnowledgeBaseAssets } from '../assets/local-assets';
 import type { LocalLibrary } from '../local/local-library';
-import { localTemplatesKey, type LocalTemplate } from '../templates/local-templates';
+import { getLocalFolderSession } from '../local/local-folder-session';
 import { messages } from '../knowledge-base-switcher.messages';
 import { knowledgeCatalogClient } from './knowledge-catalog-client';
 import { localKnowledgeBaseSnapshot, rebindLocalKnowledgeLinks } from '../local/knowledge-base-conversion';
@@ -14,10 +14,10 @@ const t = createTranslator(messages);
 
 export async function convertLocalKnowledgeBase({ library, id, name, principal, signal, unchanged, commit }: {
   library: LocalLibrary; id: string; name: string; principal: string; signal: AbortSignal;
-  unchanged(): boolean; commit(target: { id: string; name: string }): void;
+  unchanged(): Promise<boolean>; commit(target: { id: string; name: string }): Promise<void>;
 }) {
   const snapshot = localKnowledgeBaseSnapshot(library, id);
-  const templates = (JSON.parse(window.localStorage.getItem(localTemplatesKey) ?? '[]') as LocalTemplate[]).filter(item => item.template.knowledgeBaseId === id);
+  const templates = (library.templates ?? []).filter(item => item.template.knowledgeBaseId === id);
   const originalTemplates = JSON.stringify(templates);
   const parsed = localKnowledgeBaseImportSchema.safeParse({ sourceKnowledgeBaseId: id, ...snapshot, templates });
   if (!parsed.success) throw new Error(t('conversionInvalid'));
@@ -45,13 +45,13 @@ export async function convertLocalKnowledgeBase({ library, id, name, principal, 
     const result = await response.json() as { id?: string; imported?: { documents?: number; folders?: number; templates?: number } };
     if (result.id !== target.id || result.imported?.documents !== input.documents.length || result.imported.folders !== input.folders.length || result.imported.templates !== input.templates.length) throw new Error(t('conversionFailed'));
     signal.throwIfAborted();
-    const currentTemplates = (JSON.parse(window.localStorage.getItem(localTemplatesKey) ?? '[]') as LocalTemplate[]).filter(item => item.template.knowledgeBaseId === id);
-    if (!unchanged() || JSON.stringify(currentTemplates) !== originalTemplates) throw new Error(t('conversionChanged'));
+    const currentTemplates = (getLocalFolderSession().store.getSnapshot().templates ?? []).filter(item => item.template.knowledgeBaseId === id);
+    if (!await unchanged() || JSON.stringify(currentTemplates) !== originalTemplates) throw new Error(t('conversionChanged'));
     // Personal navigation preferences retain their original resource IDs.
     const key = `fob.knowledge.collections:${principal}:${target.id}`;
     window.localStorage.setItem(key, JSON.stringify({ starred: snapshot.documents.filter(item => item.starred).map(item => item.id), tags: snapshot.tags.map(({ id: tagId, name: tagName, pageIds }) => ({ id: tagId, name: tagName, pageIds })) }));
     window.localStorage.setItem(`${key}:drafts`, JSON.stringify(snapshot.documents.filter(item => item.draft).map(item => item.id)));
-    commit(target);
+    await commit(target);
     return target;
   } catch (cause) {
     // The original library remains authoritative until commit. Never delete a caller's existing team library.

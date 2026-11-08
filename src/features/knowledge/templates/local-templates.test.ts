@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { createLocalTemplatesStore, localDocumentFromTemplate, localTemplateSnapshot } from './local-templates';
-import { newLocalDocument } from '../local/local-library';
+import { createLocalLibraryStore, newLocalDocument } from '../local/local-library';
 
 test('template snapshots and each new page own independent content and block identities', () => {
   const source = newLocalDocument('base-a', 'Research');
@@ -20,7 +20,7 @@ test('template snapshots and each new page own independent content and block ide
 });
 
 test('quota failures never publish an unsaved template catalog', () => {
-  const store = createLocalTemplatesStore({ getItem: () => null, setItem: () => { throw new Error('Quota'); } });
+  const store = createLocalTemplatesStore(createLocalLibraryStore({ save: () => { throw new Error('Quota'); } }));
   let updates = 0; store.subscribe(() => updates++);
   const snapshot = localTemplateSnapshot(newLocalDocument('base-a', 'Research'), 'Template', '');
   expect(() => store.update(items => [...items, snapshot])).toThrow('Quota');

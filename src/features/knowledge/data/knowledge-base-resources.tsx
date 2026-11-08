@@ -3,17 +3,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { MemberRole } from '@fob/shared/resources';
 import { useIdentity } from '@/features/identity/identity-context';
+import { useAppAlert } from '@/components/app-alert-provider';
 import { createTranslator } from '@/lib/i18n';
 import { replaceWorkbenchLocation, WORKBENCH_VIEW_CHANGED } from '@/lib/navigation-history';
 import { useLocalLibrary } from '../local/use-local-library';
-import { createLocalLibraryStore } from '../local/local-library';
 import { knowledgeCatalogClient } from './knowledge-catalog-client';
 import { organizationErrorTextOf } from '../organization/errors';
 import { KnowledgeBaseDialog } from '../knowledge-base-dialog';
 import { messages } from '../knowledge-base-switcher.messages';
 import type { KnowledgeBaseResource, KnowledgeBaseSource } from '../knowledge-base';
-import { removeLocalKnowledgeBaseAssets } from '../assets/local-assets';
-import { removeLocalKnowledgeBaseTemplates } from '../templates/use-local-templates';
 import { localKnowledgeBaseSnapshot } from '../local/knowledge-base-conversion';
 
 export type { KnowledgeBaseResource, KnowledgeBaseSource } from '../knowledge-base';
@@ -31,6 +29,7 @@ export type KnowledgeBaseResources = {
   removeKnowledgeBase: (id: string) => Promise<boolean>;
   convertToTeam: (id: string, name: string) => Promise<KnowledgeBaseResource | null>;
   openCreateKnowledgeBase: () => void;
+  openLocalKnowledgeBase: () => Promise<boolean>;
 };
 const Context = createContext<KnowledgeBaseResources | null>(null);
 const resourceT = createTranslator(messages);
@@ -66,6 +65,7 @@ export function KnowledgeBaseProvider({ children }: { children: ReactNode }) {
 
 function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarget }: { children: ReactNode; principal: string; initialTarget: Selection | null; onConsumeTarget: () => void }) {
   const local = useLocalLibrary();
+  const { notify } = useAppAlert();
   const [serverBases, setServerBases] = useState<KnowledgeBaseResource[]>([]);
   const [selection, setSelection] = useState<Selection | null>(() => initialTarget ?? readSelection(principal));
   const [inbound, setInbound] = useState(initialTarget !== null);
@@ -175,6 +175,12 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
     const resource = knowledgeBases.find(item => item.id === id && (!options?.source || item.source === options.source));
     if (resource) persistSelection(resource, options?.preserveDocument);
   }, [knowledgeBases, persistSelection]);
+  useEffect(() => {
+    if (!local.ready || inbound || selection?.source !== 'local' || local.library.bases.some(base => base.id === selection.id)) return;
+    let cancelled = false;
+    queueMicrotask(() => { if (!cancelled) persistSelection(null); });
+    return () => { cancelled = true; };
+  }, [local.ready, local.library.bases, inbound, selection, persistSelection]);
   const createKnowledgeBase = useCallback(async (name: string, source: KnowledgeBaseSource = selectedKnowledgeBase?.source ?? (principal === 'guest' ? 'local' : 'server')) => {
     const title = name.trim(), signal = scope.current?.signal;
     if (!title || title.length > 120) { setError(resourceT('invalidName')); return null; }
@@ -182,20 +188,17 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
     setError(null);
     try {
       if (source === 'server' && principal === 'guest') throw new Error(resourceT('signInRequired'));
-      const base = source === 'server' ? await knowledgeCatalogClient.createKnowledgeBase({ name: title }) : { id: crypto.randomUUID(), name: title };
+      const base = source === 'server' ? await knowledgeCatalogClient.createKnowledgeBase({ name: title }) : await local.session!.open(title);
       if (signal.aborted) return null;
       const created: KnowledgeBaseResource = { id: base.id, name: base.name, source };
-      if (source === 'local') {
-        if (!local.store) throw new Error(resourceT('localUnavailable'));
-        local.store.update(library => ({ ...library, bases: [...library.bases, { id: created.id, name: created.name }] }));
-      } else {
+      if (source === 'server') {
         ++catalogRevision.current;
         setServerBases(current => [...current.filter(item => item.id !== created.id), created]);
         void refreshKnowledgeBases();
       }
       persistSelection(created); return created;
     } catch (cause) { if (!signal.aborted) setError(cause instanceof Error ? cause.message : organizationErrorTextOf(cause)); return null; }
-  }, [local.store, persistSelection, principal, refreshKnowledgeBases, selectedKnowledgeBase?.source]);
+  }, [local.session, persistSelection, principal, refreshKnowledgeBases, selectedKnowledgeBase?.source]);
   const renameKnowledgeBase = useCallback(async (id: string, name: string) => {
     const resource = selectedKnowledgeBase?.id === id ? selectedKnowledgeBase : knowledgeBases.find(item => item.id === id);
     const title = name.trim(), signal = scope.current?.signal;
@@ -206,6 +209,7 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
       if (resource.source === 'local') {
         if (!local.store) throw new Error(resourceT('localUnavailable'));
         local.store.update(library => ({ ...library, bases: library.bases.map(item => item.id === id ? { ...item, name: title } : item) }));
+        await local.session!.flush(id);
       } else {
         const updated = await knowledgeCatalogClient.updateKnowledgeBase(id, { name: title });
         if (signal.aborted) return false;
@@ -215,7 +219,7 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
       }
       return true;
     } catch (cause) { if (!signal.aborted) setError(cause instanceof Error ? cause.message : organizationErrorTextOf(cause)); return false; }
-  }, [knowledgeBases, local.store, refreshKnowledgeBases, selectedKnowledgeBase]);
+  }, [knowledgeBases, local.store, local.session, refreshKnowledgeBases, selectedKnowledgeBase]);
   const removeKnowledgeBase = useCallback(async (id: string) => {
     const resource = selectedKnowledgeBase?.id === id ? selectedKnowledgeBase : knowledgeBases.find(item => item.id === id);
     const signal = scope.current?.signal;
@@ -224,9 +228,7 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
     try {
       if (resource.source === 'local') {
         if (!local.store) throw new Error(resourceT('localUnavailable'));
-        removeLocalKnowledgeBaseTemplates(id);
-        await removeLocalKnowledgeBaseAssets(id);
-        local.store.update(library => ({ ...library, bases: library.bases.filter(item => item.id !== id), folders: library.folders.filter(item => item.knowledgeBaseId !== id), documents: library.documents.filter(item => item.baseId !== id), tags: library.tags.filter(item => item.baseId !== id) }));
+        await local.session!.remove(id);
       } else {
         await knowledgeCatalogClient.removeKnowledgeBase(id);
         if (signal.aborted) return false;
@@ -236,8 +238,18 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
       if (selectedKnowledgeBase?.id === id && selectedKnowledgeBase.source === resource.source) persistSelection(knowledgeBases.find(item => item.id !== id || item.source !== resource.source) ?? null);
       return true;
     } catch (cause) { if (!signal.aborted) setError(cause instanceof Error ? cause.message : organizationErrorTextOf(cause)); return false; }
-  }, [knowledgeBases, local.store, persistSelection, refreshKnowledgeBases, selectedKnowledgeBase]);
+  }, [knowledgeBases, local.store, local.session, persistSelection, refreshKnowledgeBases, selectedKnowledgeBase]);
   const openCreateKnowledgeBase = useCallback(() => setCreating(true), []);
+  const openLocalKnowledgeBase = useCallback(async () => {
+    try {
+      const base = await local.session!.open();
+      persistSelection({ id: base.id, source: 'local' }); setError(null); return true;
+    } catch (cause) {
+      if (cause instanceof DOMException && cause.name === 'AbortError') return false;
+      const message = cause instanceof Error ? cause.message : resourceT('localUnavailable');
+      setError(message); notify('error', message); return false;
+    }
+  }, [local.session, persistSelection, notify]);
   const convertToTeam = useCallback(async (id: string, name: string) => {
     const signal = scope.current?.signal, store = local.store;
     if (!store || !signal || signal.aborted || converting.current) return null;
@@ -246,21 +258,23 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
     if (!base || !name.trim() || name.trim().length > 120) return null;
     converting.current = true; setError(null);
     const perform = async () => {
+      await local.session!.flush(id);
       const library = store.getSnapshot(), snapshot = JSON.stringify(localKnowledgeBaseSnapshot(library, id));
-      const readPersisted = () => createLocalLibraryStore(window.localStorage).getSnapshot();
-      const unchanged = () => {
-        const current = readPersisted(), base = current.bases.find(item => item.id === id);
-        return Boolean(base && !base.convertedTo) && JSON.stringify(localKnowledgeBaseSnapshot(store.getSnapshot(), id)) === snapshot && JSON.stringify(localKnowledgeBaseSnapshot(current, id)) === snapshot;
+      const unchanged = async () => {
+        await local.session!.unchanged(id);
+        const base = store.getSnapshot().bases.find(item => item.id === id);
+        return Boolean(base && !base.convertedTo) && JSON.stringify(localKnowledgeBaseSnapshot(store.getSnapshot(), id)) === snapshot;
       };
-      if (!unchanged()) throw new Error(resourceT('conversionChanged'));
+      if (!await unchanged()) throw new Error(resourceT('conversionChanged'));
       const { convertLocalKnowledgeBase } = await import('./convert-local-knowledge-base');
       return convertLocalKnowledgeBase({ library, id, name: name.trim(), principal, signal,
         unchanged,
-        commit: target => {
+        commit: async target => {
           signal.throwIfAborted();
           // Retain an inaccessible recovery snapshot; converted libraries never reappear as personal libraries.
-          const current = readPersisted();
+          const current = store.getSnapshot();
           store.update(() => ({ ...current, bases: current.bases.map(item => item.id === id ? { ...item, convertedTo: { id: target.id, principal } } : item) }));
+          try { await local.session!.flush(id); } catch (cause) { store.replace(current); throw cause; }
           const created = { ...target, source: 'server' as const };
           ++catalogRevision.current; setServerBases(current => [...current.filter(item => item.id !== target.id), created]);
           setServerDirectoryStatus('ready');
@@ -276,17 +290,17 @@ function KnowledgeBaseScope({ children, principal, initialTarget, onConsumeTarge
       return { ...target, source: 'server' as const };
     } catch (cause) { if (!signal.aborted) setError(cause instanceof Error ? cause.message : resourceT('conversionFailed')); return null; }
     finally { converting.current = false; }
-  }, [local.store, persistSelection, principal]);
+  }, [local.store, local.session, persistSelection, principal]);
   const clearUnavailableSelection = useCallback(() => persistSelection(knowledgeBases[0] ?? null), [knowledgeBases, persistSelection]);
-  const status: Status = !selectedKnowledgeBase && (waitingForSelectedServer || (!knowledgeBases.length && serverDirectoryStatus === 'loading')) ? 'loading'
+  const status: Status = !local.ready ? 'loading' : !selectedKnowledgeBase && (waitingForSelectedServer || (!knowledgeBases.length && serverDirectoryStatus === 'loading')) ? 'loading'
     : !knowledgeBases.length && (local.error || serverDirectoryStatus === 'error') ? 'error' : 'ready';
   const value = useMemo<KnowledgeBaseResources>(() => ({
     knowledgeBases, selectedKnowledgeBase, selectedKnowledgeBaseRole: selectedKnowledgeBase?.source === 'local' ? 'owner' : role?.key === key ? role.value : null,
-    principal, scopeKey: key, status, serverDirectoryStatus, error: error ?? (local.error ? resourceT('localUnavailable') : null),
+    principal, scopeKey: key, status, serverDirectoryStatus, error: error ?? local.error,
     requestedKnowledgeBase: selectedKnowledgeBase === null ? selection : null,
     unavailableSelection: selection !== null && selectedKnowledgeBase === null && (selection.source === 'local' || serverDirectoryStatus !== 'loading'), clearUnavailableSelection,
-    selectKnowledgeBase, refreshKnowledgeBases, createKnowledgeBase, renameKnowledgeBase, removeKnowledgeBase, convertToTeam, openCreateKnowledgeBase,
-  }), [knowledgeBases, selectedKnowledgeBase, role, key, principal, status, serverDirectoryStatus, error, local.error, selection, clearUnavailableSelection, selectKnowledgeBase, refreshKnowledgeBases, createKnowledgeBase, renameKnowledgeBase, removeKnowledgeBase, convertToTeam, openCreateKnowledgeBase]);
+    selectKnowledgeBase, refreshKnowledgeBases, createKnowledgeBase, renameKnowledgeBase, removeKnowledgeBase, convertToTeam, openCreateKnowledgeBase, openLocalKnowledgeBase,
+  }), [knowledgeBases, selectedKnowledgeBase, role, key, principal, status, serverDirectoryStatus, error, local.error, selection, clearUnavailableSelection, selectKnowledgeBase, refreshKnowledgeBases, createKnowledgeBase, renameKnowledgeBase, removeKnowledgeBase, convertToTeam, openCreateKnowledgeBase, openLocalKnowledgeBase]);
   return <Context.Provider value={value}>{children}{creating && <KnowledgeBaseDialog action={{ kind: 'create' }} resources={value} onClose={() => setCreating(false)} />}</Context.Provider>;
 }
 

@@ -14,6 +14,7 @@ import { moveKnowledgePage, transferKnowledgePage } from '../data/pages-api';
 import { knowledgeQueryKeys } from '../data/query-keys';
 import { organizationQueryKeys } from '../organization/keys';
 import { useLocalLibrary } from '../local/use-local-library';
+import { getLocalFolderSession } from '../local/local-folder-session';
 import { moveLocalDocument } from '../local/local-document-operations';
 import { DocumentMoveForm } from './management/document-move-form';
 import { messages } from './management/document-management.messages';
@@ -80,6 +81,7 @@ function LocalDocumentManagement({ target, onClose, onBusyChange }: ManagementPr
   const destinations = [...folders, ...(document.folderId ? [{ id: 'unfiled', name: t('unfiled') }] : [])].filter(item => item.id !== document.folderId);
   return <DocumentMoveForm folders={destinations} server={false} onClose={onClose} onBusyChange={onBusyChange} onMove={async id => {
     moveLocalDocument(store, target, id === 'unfiled' ? undefined : id, t('missing'));
+    await getLocalFolderSession().flush(target.knowledgeBaseId);
     notify('success', t('moved'));
   }} />;
 }

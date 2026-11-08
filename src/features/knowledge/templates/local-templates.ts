@@ -1,23 +1,16 @@
 import { materializeKnowledgeTemplateDocument, type KnowledgeTemplateDetail, type KnowledgeTemplateSummary } from '@fob/shared/knowledge/templates';
 import type { LocalDocument } from '../local/local-library';
-import { newLocalDocument } from '../local/local-library';
+import { newLocalDocument, type createLocalLibraryStore } from '../local/local-library';
 
-export const localTemplatesKey = 'fob.local-templates';
 export type LocalTemplate = KnowledgeTemplateDetail;
 export const emptyTemplates: LocalTemplate[] = [];
 
-export function createLocalTemplatesStore(storage: Pick<Storage, 'getItem' | 'setItem'>) {
-  let snapshot = JSON.parse(storage.getItem(localTemplatesKey) ?? '[]') as LocalTemplate[];
-  if (!Array.isArray(snapshot)) throw new TypeError('Invalid template catalog');
-  const listeners = new Set<() => void>();
+export function createLocalTemplatesStore(library: ReturnType<typeof createLocalLibraryStore>) {
   return {
-    getSnapshot: () => snapshot,
-    subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
+    getSnapshot: () => library.getSnapshot().templates ?? emptyTemplates,
+    subscribe: library.subscribe,
     update(change: (templates: LocalTemplate[]) => LocalTemplate[]) {
-      const next = change(snapshot);
-      storage.setItem(localTemplatesKey, JSON.stringify(next));
-      snapshot = next;
-      for (const listener of listeners) listener();
+      library.update(current => ({ ...current, templates: change(current.templates ?? []) }));
     },
   };
 }

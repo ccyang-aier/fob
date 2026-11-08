@@ -24,9 +24,9 @@ export function useKnowledgeDocumentTarget(enabled: boolean) {
   const { session } = useIdentity();
   const local = useLocalLibrary();
   const base = target ? resources.knowledgeBases.find(item => item.id === target.knowledgeBaseId && item.source === target.source) : null;
-  const loading = (!base && (resources.status === 'loading' || (target?.source === 'server' && resources.serverDirectoryStatus === 'loading'))) || session.status === 'checking' || (target?.source === 'local' && local.store === null && !local.error);
+  const loading = (!base && (resources.status === 'loading' || (target?.source === 'server' && resources.serverDirectoryStatus === 'loading'))) || session.status === 'checking' || (target?.source === 'local' && !local.ready && !local.error);
   const signIn = target?.source === 'server' && session.status !== 'authenticated' && session.status !== 'checking';
-  const localDocumentAvailable = target?.source !== 'local' || local.library.documents.some(item => item.id === target.pageId && item.baseId === target.knowledgeBaseId && !item.deleted);
+  const localDocumentAvailable = target?.source !== 'local' || (base && local.state.folders[base.id]?.state !== 'ready') || local.library.documents.some(item => item.id === target.pageId && item.baseId === target.knowledgeBaseId && !item.deleted);
   const allowed = Boolean(target && base && !signIn && localDocumentAvailable);
   const selected = resources.selectedKnowledgeBase;
   const selectedTarget = Boolean(target && selected?.id === target.knowledgeBaseId && selected.source === target.source);

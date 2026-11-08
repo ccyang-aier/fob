@@ -46,8 +46,7 @@ test('editing either local pane updates the other pane without echo writes or er
   const { LocalDocumentEditor } = await import('./local-document-editor');
   let writes = 0;
   const store = createLocalLibraryStore({
-    getItem: () => null,
-    setItem: () => {
+    save: () => {
       writes++;
     },
   });
@@ -128,7 +127,7 @@ test('inserting and editing a rich block survives intermediate local echoes in b
   const { LocalDocumentEditor } = await import('./local-document-editor');
   const { buildSlashItems } = await import('../editor/commands/slash-items');
   const { runSlashItem } = await import('../editor/commands/slash-paste');
-  const store = createLocalLibraryStore({ getItem: () => null, setItem: () => {} });
+  const store = createLocalLibraryStore({});
   const page = { ...newLocalDocument('rich-base', 'Rich content'), body: { type: 'doc', content: [{ type: 'paragraph', attrs: { blockId: 'trigger' } }] } };
   store.update(current => ({ ...current, documents: [page] }));
   function Pane() {
@@ -163,7 +162,7 @@ test('inserting and editing a rich block survives intermediate local echoes in b
 
 test('local page links and block references retain and open a target in another knowledge base', async () => {
   const { LocalDocumentEditor } = await import('./local-document-editor');
-  const store = createLocalLibraryStore({ getItem: () => null, setItem: () => {} });
+  const store = createLocalLibraryStore({});
   const own = newLocalDocument('local-a', '主文档');
   const target = {
     ...newLocalDocument('local-b', '另一个知识库的文档'),

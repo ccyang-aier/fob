@@ -16,8 +16,8 @@ export const knowledgeMessages = defineMessages({
   close: ['关闭', 'Close'],
   me: ['我', 'Me'],
   theOriginalFileIsStoredOnlyInThis: [
-    '原文件仅保存在当前浏览器。',
-    'The original file is stored only in this browser.',
+    '原文件保存在你选择的本地文件夹。',
+    'The original file is stored in your chosen folder.',
   ],
   unableToSave: ['保存失败', 'Unable to save'],
 });

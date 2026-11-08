@@ -8,12 +8,12 @@ export const knowledgeMessages = defineMessages({
   returnToKnowledgeLibrary: ['返回知识库', 'Return to the library'],
   loadingKnowledgeResources: ['正在加载知识资源', 'Loading knowledge resources'],
   unableToReadLocalDocumentsCheckYourBrowser: [
-    '无法读取本机文档，请检查浏览器存储设置。',
-    'Unable to read local documents. Check your browser storage settings.',
+    '无法读取本机文档，请检查文件夹读写权限。',
+    'Unable to read local documents. Check folder permissions.',
   ],
   localStorageUnavailable: ['本机存储不可用', 'Local storage unavailable'],
   unableToOpenLocalKnowledgeBase: ['本机知识库无法打开', 'Unable to open local knowledge base'],
-  unableToReadBrowserStorage: ['无法读取浏览器存储', 'Unable to read browser storage'],
+  unableToReadBrowserStorage: ['无法读取知识库文件夹', 'Unable to read the knowledge folder'],
   document: ['文档', 'Document'],
   unableToCreateDocumentPleaseRetry: [
     '创建文档失败，请重试',

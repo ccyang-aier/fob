@@ -20,7 +20,7 @@ export const messages = defineMessages({
   add: ['添加', 'Add'], invite: ['邀请', 'Invite'], inviteEmail: ['邀请 {email}', 'Invite {email}'],
   inviteCreated: ['邀请链接已生成，复制后发送给受邀者', 'Invitation link ready. Copy it and send it to the invitee.'],
   invitationLink: ['邀请链接', 'Invitation link'], pending: ['待接受', 'Pending'], revoke: ['撤销邀请', 'Revoke invitation'],
-  localShare: ['本机文档保存在当前浏览器，移至团队知识库后可邀请成员和发布至网络', 'Local documents are stored in this browser. Move to a team knowledge base to invite people or publish.'],
+  localShare: ['本机文档保存在你选择的文件夹，移至团队知识库后可邀请成员和发布至网络', 'Local documents are stored in your chosen folder. Move to a team knowledge base to invite people or publish.'],
   owner: ['所有者', 'Owner'], admin: ['管理员', 'Admin'], guest: ['访客', 'Guest'], member: ['成员', 'Member'],
   statistics: ['统计', 'Statistics'], source: ['源', 'Source'], contributors: ['贡献者', 'Contributors'], creator: ['创建者', 'Creator'],
   created: ['创建日期', 'Created'], updatedAt: ['最后更新', 'Last updated'], characters: ['字符', 'Characters'], words: ['词数', 'Words'],

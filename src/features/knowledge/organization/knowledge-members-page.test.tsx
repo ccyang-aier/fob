@@ -37,10 +37,10 @@ test('members and permissions manage exactly the current knowledge base and foll
   expect(mounted).toEqual(['alpha', 'beta']);
 });
 
-test('browser-local knowledge has a truthful personal state and does not mount team management', async () => {
+test('folder-local knowledge has a truthful personal state and does not mount team management', async () => {
   selected = { id: 'local', name: 'Local', source: 'local' }; await render();
   expect(host.textContent).toContain('个人知识库');
-  expect(host.textContent).toContain('当前浏览器');
+  expect(host.textContent).toContain('你选择的文件夹');
   expect(host.querySelector('[data-managed-knowledge-base]')).toBeNull();
   expect(mounted).toEqual([]);
 });

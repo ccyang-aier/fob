@@ -14,6 +14,6 @@ export const messages = defineMessages({
   reinvite: ['重新邀请', 'Invite again'], reissue: ['重新生成', 'Regenerate'], replacing: ['重新生成后，该邮箱的旧邀请链接将失效。', 'Regenerating replaces the previous invitation link for this email.'],
   pendingFailed: ['暂时无法加载待接受邀请', 'Could not load pending invitations'], empty: ['暂无已加入成员', 'No joined members'],
   expiresOn: ['有效期至 {date}', 'Expires {date}'], duplicate: ['该成员已加入当前知识库', 'This person is already a member'],
-  select: ['请先选择知识库', 'Select a knowledge base first'], local: ['本机知识库仅供当前浏览器使用，邀请成员需要服务端知识库。', 'Local knowledge bases are personal to this browser. A server knowledge base is required to invite members.'],
+  select: ['请先选择知识库', 'Select a knowledge base first'], local: ['本机知识库保存在你选择的文件夹，仅供个人使用，邀请成员需要服务端知识库。', 'Local knowledge bases are personal and stored in your chosen folder. A server knowledge base is required to invite members.'],
   createBase: ['新建知识库', 'Create knowledge base'], login: ['登录后查看成员', 'Sign in to view members'],
 });

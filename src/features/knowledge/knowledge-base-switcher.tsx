@@ -10,6 +10,7 @@ import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
 import type { KnowledgeBaseResource } from './knowledge-base';
 import { KnowledgeBaseDialog, type KnowledgeBaseAction } from './knowledge-base-dialog';
 import { messages } from './knowledge-base-switcher.messages';
+import { messages as folderMessages } from './local/local-folder.messages';
 import { KnowledgeBaseAvatar } from './knowledge-base-avatar';
 import { useKnowledgeBaseAvatarPalette } from './knowledge-base-avatar-preferences';
 import { KnowledgeBaseSettings } from './knowledge-base-settings';
@@ -17,6 +18,7 @@ import styles from './knowledge-base-switcher.module.css';
 
 export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: { compact?: boolean; onSwitch?: () => void }) {
   const { t } = useTranslation(messages);
+  const { t: folderT } = useTranslation(folderMessages);
   const resources = useKnowledgeBaseResources();
   const { knowledgeBases, selectedKnowledgeBase, selectedKnowledgeBaseRole, principal, selectKnowledgeBase, status, error, refreshKnowledgeBases, openCreateKnowledgeBase } = resources;
   const [query, setQuery] = useState('');
@@ -51,6 +53,7 @@ export function KnowledgeBaseSwitcher({ compact = false, onSwitch = () => {} }: 
         {error && <DropdownMenuItem onSelect={event => { event.preventDefault(); void refreshKnowledgeBases(); }}>{t('retry')}</DropdownMenuItem>}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={openCreateKnowledgeBase}><Plus size={16} />{t('create')}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => { void resources.openLocalKnowledgeBase().then(ok => { if (ok) onSwitch(); }); }}><BookOpenText size={16} />{folderT('open')}</DropdownMenuItem>
         {selectedKnowledgeBase && <>
           <DropdownMenuItem onSelect={() => setSettings(selectedKnowledgeBase)}><GearSix size={16} />{t('settings')}</DropdownMenuItem>
           {selectedKnowledgeBaseRole === 'owner' && <DropdownMenuItem variant="destructive" onSelect={() => setAction({ kind: 'remove', knowledgeBase: selectedKnowledgeBase })}><Trash size={16} />{t('remove')}</DropdownMenuItem>}

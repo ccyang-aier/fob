@@ -45,6 +45,7 @@ import { useKnowledgeBaseResources } from './data/knowledge-base-resources';
 import { useKnowledgeDocumentTarget } from './data/use-knowledge-document-target';
 import { useLocalLibrary } from './local/use-local-library';
 import type { KnowledgeBaseResource } from './knowledge-base';
+import { LocalFolderAccess } from './local/local-folder-status';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 const LocalKnowledgeResource = dynamic(() => import('./local/local-knowledge-resource').then(module => module.LocalKnowledgeResource), { ssr: false, loading: () => <CanvasSpinner label={knowledgeT('loadingKnowledgeResources')} /> });
@@ -69,15 +70,15 @@ export function KnowledgePage() {
   </>} />;
   if (!base) {
     if (resources.status === 'loading') return <CanvasSpinner label={t('loadingKnowledgeResources')} />;
-    if (resources.error) return <CanvasError title={t('unableToLoadKnowledgeBases')} detail={resources.error} onRetry={() => void resources.refreshKnowledgeBases()} />;
+    if (resources.error) return <CanvasError title={t('unableToLoadKnowledgeBases')} detail={resources.error} onRetry={() => { if (local.error) void local.session?.restart(); else void resources.refreshKnowledgeBases(); }} />;
     if (resources.unavailableSelection) return <CanvasState title={t('unableToAccessThisKnowledgeBase')} hint={t('thisKnowledgeBaseWasRemovedOrYourAccount')} actions={<>
       {resources.requestedKnowledgeBase?.source === 'server' && resources.principal === 'guest' && <Button onClick={() => openSignIn()}>{t('signInAndContinue')}</Button>}
       <Button variant="outline" onClick={resources.clearUnavailableSelection}>{t('returnToKnowledgeLibrary')}</Button>
     </>} />;
-    return <KnowledgeEmptyState onCreate={openCreateKnowledgeBase} />;
+    return <KnowledgeEmptyState onCreate={openCreateKnowledgeBase} onOpenLocal={() => { void resources.openLocalKnowledgeBase(); }} />;
   }
   return <KnowledgeQueryProvider key={scopeKey}><PageSessionNamespace name={'knowledge:' + base.source + ':' + base.id}>
-    {base.source === 'local' ? local.store ? <LocalKnowledgeResource store={local.store} selectedKnowledgeBaseId={base.id} onCreateKnowledgeBase={openCreateKnowledgeBase} /> : <CanvasError title={t('unableToOpenLocalKnowledgeBase')} detail={local.error ? t('unableToReadBrowserStorage') : t('loadingKnowledgeResources')} /> :
+    {base.source === 'local' ? local.state.folders[base.id]?.state !== 'ready' ? <LocalFolderAccess knowledgeBaseId={base.id} /> : local.store ? <LocalKnowledgeResource store={local.store} selectedKnowledgeBaseId={base.id} onCreateKnowledgeBase={openCreateKnowledgeBase} /> : <CanvasError title={t('unableToOpenLocalKnowledgeBase')} detail={local.error ?? t('loadingKnowledgeResources')} /> :
       <ServerKnowledgeResource activeBaseId={base.id} baseAvailable directoryState={{ status: 'success', count: knowledgeBases.filter(item => item.source === 'server').length, errorCode: null }} directoryError={null} retryDirectory={() => void resources.refreshKnowledgeBases()} knowledgeBases={knowledgeBases} onCreateKnowledgeBase={openCreateKnowledgeBase} />}
   </PageSessionNamespace></KnowledgeQueryProvider>;
 }

@@ -4,6 +4,7 @@ import { knowledgeMessages } from './local-document-import.messages';
 import { useState } from 'react';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { saveLocalAsset } from '../../assets/local-assets';
+import { getLocalFolderSession } from '../../local/local-folder-session';
 import { documentFileAccept, documentAttachmentAccept, documentFileFormat, type DocumentFile } from '../previews/file-format';
 import { FilePlus } from '@/components/icons';
 import type { JSONContent } from '@tiptap/core';
@@ -48,7 +49,8 @@ export function LocalDocumentImport({
           };
         }),
       );
-      if (onImport(items))
+      if (onImport(items)) {
+        await getLocalFolderSession().flush(knowledgeBaseId);
         notify(
           'success',
           knowledgeT(
@@ -58,7 +60,7 @@ export function LocalDocumentImport({
             { v0: items.length },
           ),
         );
-      else notify('error', knowledgeT('unableToSaveCheckBrowserStorageSpace'));
+      } else notify('error', knowledgeT('unableToSaveCheckBrowserStorageSpace'));
     } catch (error) {
       notify(
         'error',

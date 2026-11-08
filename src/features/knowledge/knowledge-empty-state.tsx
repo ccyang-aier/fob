@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button';
 import { NavigationDialogPortal } from './navigation/navigation-dialog-portal';
 import { DialogButton, ModalDialog } from './organization/ui';
 import styles from './knowledge-empty-state.module.css';
+import { messages as folderMessages } from './local/local-folder.messages';
 
-export function KnowledgeEmptyState({ onCreate }: { onCreate: () => void }) {
+export function KnowledgeEmptyState({ onCreate, onOpenLocal }: { onCreate: () => void; onOpenLocal?: () => void }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
+  const { t: folderT } = useTranslation(folderMessages);
 
   const [helpOpen, setHelpOpen] = useState(false);
   const learnButton = useRef<HTMLButtonElement>(null);
@@ -42,6 +44,7 @@ export function KnowledgeEmptyState({ onCreate }: { onCreate: () => void }) {
             <Plus size={16} aria-hidden />
             {knowledgeT('newKnowledgeBase')}
           </Button>
+          {onOpenLocal && <Button variant="outline" className={styles.learn} onClick={onOpenLocal}>{folderT('open')}</Button>}
           <Button
             ref={learnButton}
             variant="ghost"

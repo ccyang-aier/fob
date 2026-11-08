@@ -43,7 +43,7 @@ beforeAll(async () => {
   mock.module('../local/use-local-library', () => ({ useLocalLibrary: () => ({
     store,
     library: useSyncExternalStore(store?.subscribe ?? emptySubscribe, store?.getSnapshot ?? emptySnapshot, emptySnapshot),
-    error: false,
+    error: false, ready: store !== null, state: { folders: { alpha: { state: 'ready' }, beta: { state: 'ready' } } },
   }) }));
   readTarget = (await import('./use-knowledge-document-target')).useKnowledgeDocumentTarget;
   const { createRoot } = await import('react-dom/client');
@@ -53,8 +53,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await act(async () => root.render(null));
   browser.history.replaceState({}, '', 'http://localhost:3001/');
-  const values = new Map<string, string>();
-  store = createLocalLibraryStore({ getItem: key => values.get(key) ?? null, setItem: (key, value) => { values.set(key, value); } });
+  store = createLocalLibraryStore();
   store.update(() => ({
     bases: [{ id: alpha.id, name: alpha.name }, { id: beta.id, name: beta.name }], folders: [], tags: [],
     documents: [

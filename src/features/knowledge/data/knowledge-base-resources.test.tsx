@@ -36,8 +36,16 @@ beforeAll(async () => {
   const globals = globalThis as Record<string, unknown>;
   for (const name of ['document', 'navigator', 'HTMLElement', 'Element', 'Node', 'Event', 'MutationObserver', 'getComputedStyle', 'localStorage']) globals[name] = (browser as unknown as Record<string, unknown>)[name];
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
+  mock.module('@/components/app-alert-provider', () => ({ useAppAlert: () => ({ notify: () => {} }) }));
   mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session }) }));
-  mock.module('../local/use-local-library', () => ({ useLocalLibrary: () => ({ store, library: useSyncExternalStore(store.subscribe, store.getSnapshot, () => emptyLocalLibrary), error: false }) }));
+  mock.module('../local/use-local-library', () => ({ useLocalLibrary: () => ({ store, library: useSyncExternalStore(store.subscribe, store.getSnapshot, () => emptyLocalLibrary), error: false, ready: true, session: {
+    open: async (name: string) => { const base = { id: crypto.randomUUID(), name }; store.update(current => ({ ...current, bases: [...current.bases, base] })); return base; },
+    flush: async () => {},
+    remove: async (id: string) => {
+      if (assetCleanupFailure) throw assetCleanupFailure;
+      store.update(current => ({ ...current, bases: current.bases.filter(base => base.id !== id), documents: current.documents.filter(document => document.baseId !== id), folders: current.folders.filter(folder => folder.knowledgeBaseId !== id), tags: current.tags.filter(tag => tag.baseId !== id) }));
+    },
+  } }) }));
   mock.module('../knowledge-base-dialog', () => ({ KnowledgeBaseDialog: () => { renderedDialogs++; return <div role="dialog">Shared creation form</div>; } }));
   mock.module('../assets/local-assets', () => ({ removeLocalKnowledgeBaseAssets: async () => { if (assetCleanupFailure) throw assetCleanupFailure; } }));
   mock.module('./knowledge-catalog-client', () => ({ knowledgeCatalogClient: {
@@ -58,7 +66,7 @@ beforeEach(async () => {
   browser.history.replaceState({}, '', 'http://localhost:3001/'); localStorage.clear();
   serverRole = 'owner'; roleFailure = false; session = { status: 'anonymous' }; listRequests = []; pendingCreate = pendingRename = null;
   createFailure = renameFailure = removeFailure = assetCleanupFailure = null; mutations = { created: [], renamed: [], removed: [] }; renderedDialogs = 0;
-  store = createLocalLibraryStore(localStorage);
+  store = createLocalLibraryStore();
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 async function render(strict = false) { await act(async () => root.render(strict ? <StrictMode>{renderResources()}</StrictMode> : renderResources())); }
@@ -127,7 +135,7 @@ test('local creation writes only the real KB record and a delayed server catalog
   await act(async () => { created = (await resources.createKnowledgeBase('New local', 'local'))!; });
   await publish([{ id: 'server-a', name: 'Private server' }]);
   expect(store.getSnapshot().bases.at(-1)).toEqual({ id: created.id, name: 'New local' });
-  expect(resources.scopeKey).toBe(`alice:local:${created.id}`); expect(localStorage.getItem('fob.local-library')).not.toContain('Private server');
+  expect(resources.scopeKey).toBe(`alice:local:${created.id}`); expect(localStorage.getItem('fob.local-library')).toBeNull();
 });
 
 test('server creation sends name only and invalidates a catalog request started before the write', async () => {

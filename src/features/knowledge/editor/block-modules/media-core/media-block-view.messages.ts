@@ -13,8 +13,8 @@ export const knowledgeMessages = defineMessages({
   video: ['视频', 'Video'],
   audio: ['音频', 'Audio'],
   localAssetNotFoundTheBrowserMayHave: [
-    '本机资源不存在，可能已被浏览器清理',
-    'Local asset not found. The browser may have removed it.',
+    '本机资源不存在，请检查知识库文件夹',
+    'Local asset not found. Check the knowledge folder.',
   ],
   unableToReadLocalAsset: ['无法读取本机资源', 'Unable to read local asset'],
   unableToReadTeamAssetCheckPermissionsOr: [

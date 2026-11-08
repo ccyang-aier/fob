@@ -25,7 +25,7 @@ export const messages = defineMessages({
   conversionInProgress: ['此知识库正在另一个窗口转换，请稍后重试。', 'This library is being converted in another window. Try again later.'],
   conversionInvalid: ['本机内容存在不完整或不兼容的记录，请修复后再转换。', 'The local library contains incomplete or incompatible records. Repair them before converting.'],
   selectionSessionOnly: ['知识库选择仅在当前会话生效', 'Knowledge base selection is only kept for this session'],
-  localUnavailable: ['无法读取浏览器本机知识库，请检查存储权限与可用空间。', 'Browser knowledge storage is unavailable. Check its permissions and available space.'],
+  localUnavailable: ['无法读取本地知识库文件夹，请检查读写权限与可用空间。', 'The local knowledge folder is unavailable. Check its permissions and available space.'],
   signInRequired: ['登录后才能创建团队知识库', 'Sign in to create a team knowledge base'],
   invalidName: ['名称需要 1 至 120 个字符', 'Names must contain 1 to 120 characters'],
   lagoon: ['青柠湖泊', 'Lime lagoon'], iris: ['鸢尾暮色', 'Iris dusk'], sky: ['蓝色晴空', 'Blue sky'], citrus: ['柑橘薄荷', 'Citrus mint'], meadow: ['晴日草甸', 'Sunlit meadow'], coral: ['珊瑚日落', 'Coral sunset'],

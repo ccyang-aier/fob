@@ -6,6 +6,7 @@ import type { JSONContent } from '@tiptap/core';
 import type { KnowledgeTemplateSummary } from '@fob/shared/knowledge/templates';
 import { useKnowledgeBaseResources } from '../data/knowledge-base-resources';
 import { useLocalLibrary } from '../local/use-local-library';
+import { getLocalFolderSession } from '../local/local-folder-session';
 import { templatesApi } from './client';
 import { localDocumentFromTemplate, localTemplateSnapshot } from './local-templates';
 import { useLocalTemplates } from './use-local-templates';
@@ -33,6 +34,7 @@ export function useTemplateLibrary(q = '') {
     if (!document || !local.store) throw new Error('Document unavailable');
     const result = localTemplateSnapshot(document, name, description, body);
     local.store.update(current => [result, ...current]);
+    await getLocalFolderSession().flush(base.id);
     return result.template;
   }
   function localDetail(id: string) {
@@ -43,11 +45,11 @@ export function useTemplateLibrary(q = '') {
   async function detail(id: string) { return base?.source === 'server' ? templatesApi.detail(base.id, id) : localDetail(id); }
   async function update(id: string, values: { name: string; description: string }) {
     if (base?.source === 'server') { await templatesApi.update(base.id, id, values); await refresh(); }
-    else { localDetail(id); local.store!.update(items => items.map(item => item.template.id === id && item.template.knowledgeBaseId === base?.id ? { ...item, template: { ...item.template, ...values, updatedAt: new Date().toISOString() } } : item)); await refresh(); }
+    else { localDetail(id); local.store!.update(items => items.map(item => item.template.id === id && item.template.knowledgeBaseId === base?.id ? { ...item, template: { ...item.template, ...values, updatedAt: new Date().toISOString() } } : item)); await getLocalFolderSession().flush(base?.id); await refresh(); }
   }
   async function remove(id: string) {
     if (base?.source === 'server') { await templatesApi.remove(base.id, id); await refresh(); }
-    else { localDetail(id); local.store!.update(items => items.filter(item => item.template.id !== id || item.template.knowledgeBaseId !== base?.id)); await refresh(); }
+    else { localDetail(id); local.store!.update(items => items.filter(item => item.template.id !== id || item.template.knowledgeBaseId !== base?.id)); await getLocalFolderSession().flush(base?.id); await refresh(); }
   }
   async function apply(template: KnowledgeTemplateSummary, title: string, folderId: string) {
     if (!base || template.knowledgeBaseId !== base.id) throw new Error('Template unavailable');
@@ -57,6 +59,7 @@ export function useTemplateLibrary(q = '') {
       if (!current.bases.some(item => item.id === base.id) || (folderId && !current.folders.some(folder => folder.id === folderId && folder.knowledgeBaseId === base.id))) throw new Error('Folder unavailable');
       return { ...current, documents: [document, ...current.documents] };
     });
+    await getLocalFolderSession().flush(base.id);
     return document.id;
   }
   return { base, items, query, error: base?.source === 'local' ? local.error || library.error : query.error, loading: base?.source === 'server' && query.isPending, save, detail, update, remove, apply, refresh };

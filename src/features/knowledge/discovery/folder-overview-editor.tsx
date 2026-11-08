@@ -27,12 +27,13 @@ export function FolderOverviewEditor({ content, revision, contentId, draftKey, c
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const key = `fob.folder.overview-draft:${draftKey}`;
   const initial = useMemo(() => {
-    if (editable) try { const saved = JSON.parse(localStorage.getItem(key) ?? 'null'); if (saved && Number.isInteger(saved.revision) && saved.content) return { content: validContent(saved.content), revision: saved.revision, restored: true }; } catch { /* Server content remains available when browser storage is unavailable. */ }
+    if (editable && !draftKey.startsWith('local:')) try { const saved = JSON.parse(localStorage.getItem(key) ?? 'null'); if (saved && Number.isInteger(saved.revision) && saved.content) return { content: validContent(saved.content), revision: saved.revision, restored: true }; } catch { /* Server content remains available when browser storage is unavailable. */ }
     return { content: validContent(content), revision, restored: false };
     // A folder owns one editor lifetime. Later remote values are reconciled below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
   const [queue] = useState(() => createOverviewAutosave(initial, onSave, (next, _cause, draft) => {
+    if (draftKey.startsWith('local:')) return;
     try { if (next === 'saved') localStorage.removeItem(key); else localStorage.setItem(key, JSON.stringify(draft)); } catch { /* The live editor keeps the unsaved content and reports server failures. */ }
   }));
   const editor = useStandaloneEditor({ content: initial.content, contentId, context, label: t('description'), editable, synchronize: false, placeholder: t('overviewPlaceholder'), onChange: value => {

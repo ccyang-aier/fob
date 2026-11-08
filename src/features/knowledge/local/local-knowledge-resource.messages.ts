@@ -10,7 +10,7 @@ export const knowledgeMessages = defineMessages({
   documentDeletedOrInaccessible: ['文档已删除或无法访问', 'Document deleted or inaccessible'],
   folderUnavailable: ['文件夹不存在或已被移除', 'This folder does not exist or was removed'],
   returnToDocuments: ['返回文档', 'Back to documents'],
-  readStatisticsSaveFailed: ['本机阅读统计未保存，请检查浏览器存储空间', 'Device reading statistics were not saved. Check browser storage.'],
+  readStatisticsSaveFailed: ['本机阅读统计未保存，请检查文件夹权限和磁盘空间', 'Reading statistics were not saved. Check folder permissions and disk space.'],
   me: ['我', 'Me'],
   documentActions: ['文档操作', 'Document actions'],
   openEdit: ['打开 / 编辑', 'Open / Edit'],
@@ -23,8 +23,8 @@ export const knowledgeMessages = defineMessages({
   document: ['文档', 'Document'],
   newDocument: ['新建文档', 'New document'],
   localDocumentsAreStoredOnlyInThisBrowser: [
-    '本机文档仅保存在当前浏览器。登录不会自动上传内容；团队知识库、成员授权与云端协作需要 Fob 账户。',
-    'Local documents are stored only in this browser. Signing in does not upload them. A Fob account is required for team knowledge bases, member permissions and cloud collaboration.',
+    '本机文档保存在你选择的本地文件夹。登录不会自动上传内容；团队知识库、成员授权与云端协作需要 Fob 账户。',
+    'Local documents are stored in your chosen folder. Signing in does not upload them. A Fob account is required for team knowledge bases, member permissions and cloud collaboration.',
   ],
   accountServiceUnavailableLocalKnowledgeBasesRemainAvailable: [
     '账户服务暂不可用，本机知识库仍可使用。',

@@ -1,9 +1,9 @@
 import { expect, test } from 'bun:test';
-import { createLocalLibraryStore, newLocalDocument } from './local-library';
+import { createLocalLibraryStore, emptyLocalLibrary, newLocalDocument, type LocalLibrary } from './local-library';
 
 function memoryStorage() {
   const values = new Map<string, string>();
-  return { values, getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => { values.set(key, value); } };
+  return { values, load: () => JSON.parse(values.get('snapshot') ?? JSON.stringify(emptyLocalLibrary)) as LocalLibrary, save: (value: LocalLibrary) => { values.set('snapshot', JSON.stringify(value)); } };
 }
 
 test('local documents survive reload without inventing a server user', () => {
@@ -17,7 +17,7 @@ test('local documents survive reload without inventing a server user', () => {
 });
 
 test('a storage write failure does not publish content as saved', () => {
-  const store = createLocalLibraryStore({ getItem: () => null, setItem: () => { throw new Error('quota'); } });
+  const store = createLocalLibraryStore({ save: () => { throw new Error('quota'); } });
   expect(() => store.update(current => ({ ...current, documents: [newLocalDocument('base-a', '未保存')] }))).toThrow('quota');
   expect(store.getSnapshot().documents).toEqual([]);
 });
@@ -47,7 +47,7 @@ test('each knowledge base is a standalone workspace without an additional projec
 
 test('knowledge base content survives loading without any separate project association', () => {
   const storage = memoryStorage();
-  storage.setItem('fob.local-library', JSON.stringify({ bases: [{ id: 'unscoped', name: 'Old fixture' }], folders: [], documents: [newLocalDocument('unscoped', 'Old')], tags: [] }));
+  storage.save({ bases: [{ id: 'unscoped', name: 'Old fixture' }], folders: [], documents: [newLocalDocument('unscoped', 'Old')], tags: [] });
   const library = createLocalLibraryStore(storage).getSnapshot();
   expect(library.bases).toEqual([{ id: 'unscoped', name: 'Old fixture' }]);
   expect(library.documents[0].title).toBe('Old');

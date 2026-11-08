@@ -6,8 +6,8 @@ export const knowledgeMessages = defineMessages({
     'Previews support files up to 100 MB. Download the original to view larger files.',
   ],
   theOriginalFileIsNotInThisBrowser: [
-    '当前浏览器中没有这份原文件，请重新关联。',
-    'The original file is not in this browser. Attach it again.',
+    '知识库文件夹中没有这份原文件，请重新关联。',
+    'The original file is missing from the knowledge folder. Attach it again.',
   ],
   unableToReadOriginalFileCheckAccessPermissions: [
     '无法读取原文件，请检查访问权限后重试。',

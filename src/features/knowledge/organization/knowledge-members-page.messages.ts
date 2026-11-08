@@ -8,5 +8,5 @@ export const messages = defineMessages({
   selectKnowledgeBase: ['请选择知识库', 'Select a knowledge base'],
   selectKnowledgeBaseHint: ['在左上角选择或创建知识库。', 'Choose or create a knowledge base at the top left.'],
   personalKnowledgeBase: ['个人知识库', 'Personal knowledge base'],
-  personalOnly: ['本机知识库仅供当前浏览器使用。成员与邀请适用于团队知识库。', 'This local knowledge base is personal to this browser. Members and invitations are available in team knowledge bases.'],
+  personalOnly: ['本机知识库保存在你选择的文件夹，仅供个人使用。成员与邀请适用于团队知识库。', 'This local knowledge base is personal and stored in your chosen folder. Members and invitations are available in team knowledge bases.'],
 });

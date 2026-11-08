@@ -19,8 +19,8 @@ export const knowledgeMessages = defineMessages({
     'Imported {v0} document and saved it locally.',
   ],
   unableToSaveCheckBrowserStorageSpace: [
-    '保存失败，请检查浏览器存储空间。',
-    'Unable to save. Check browser storage space.',
+    '保存失败，请检查文件夹权限和磁盘空间。',
+    'Unable to save. Check folder permissions and disk space.',
   ],
   unableToReadChooseTheFileAgain: [
     '读取失败，请重新选择文件。',
@@ -31,8 +31,8 @@ export const knowledgeMessages = defineMessages({
     'Drop documents here or choose PDF, PPTX, Word, spreadsheet or text files.',
   ],
   contentIsStoredOnlyInThisBrowserUp: [
-    '内容仅保存至当前浏览器，每个文件最大 100 MB。',
-    'Content is stored only in this browser. Up to 100 MB per file.',
+    '内容保存至所选知识库文件夹，每个文件最大 100 MB。',
+    'Content is saved to the chosen knowledge folder. Up to 100 MB per file.',
   ],
   importing: ['正在导入…', 'Importing…'],
   chooseFiles: ['选择文件', 'Choose files'],

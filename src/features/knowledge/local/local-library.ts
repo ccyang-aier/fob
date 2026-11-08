@@ -6,6 +6,7 @@ import type { DocumentIndexStatus, DocumentSource } from '../documents/document-
 import type { JSONContent } from '@tiptap/core';
 import type { FolderMetadata } from '@fob/shared/knowledge/contracts';
 import type { BlockEdits } from '@fob/shared/knowledge/collaboration';
+import type { KnowledgeTemplateDetail } from '@fob/shared/knowledge/templates';
 
 const knowledgeT = createTranslator(knowledgeMessages);
 
@@ -30,25 +31,19 @@ export type LocalDocument = {
   indexStatus?: DocumentIndexStatus;
 };
 export type LocalTag = { id: string; baseId: string; name: string; pageIds: string[] };
-export type LocalKnowledgeBase = { id: string; name: string; convertedTo?: { id: string; principal: string } };
+export type LocalKnowledgeBase = { id: string; name: string; learningSeconds?: number; convertedTo?: { id: string; principal: string } };
 export type LocalLibrary = {
   bases: LocalKnowledgeBase[];
   folders: { id: string; knowledgeBaseId: string; name: string; parentId?: string | null; metadata?: FolderMetadata }[];
   documents: LocalDocument[];
   tags: LocalTag[];
+  templates?: KnowledgeTemplateDetail[];
 };
-export const localLibraryKey = 'fob.local-library';
 export const emptyLocalLibrary: LocalLibrary = { bases: [], folders: [], documents: [], tags: [] };
 
-/** Local content stays on this device regardless of sign-in; it is never uploaded implicitly. */
-export function createLocalLibraryStore(storage: Pick<Storage, 'getItem' | 'setItem'>) {
-  let snapshot = emptyLocalLibrary;
-  const key = localLibraryKey;
-  const stored = storage.getItem(key);
-  if (stored) {
-    const library = JSON.parse(stored) as LocalLibrary;
-    snapshot = library;
-  }
+/** In-memory editing model. The folder session owns asynchronous durability and its visible status. */
+export function createLocalLibraryStore(persistence: { load?(): LocalLibrary; save?(library: LocalLibrary): void } = {}) {
+  let snapshot = persistence.load?.() ?? emptyLocalLibrary;
   const listeners = new Set<() => void>();
   return {
     getSnapshot: () => snapshot,
@@ -60,7 +55,12 @@ export function createLocalLibraryStore(storage: Pick<Storage, 'getItem' | 'setI
     },
     update(change: (library: LocalLibrary) => LocalLibrary) {
       const next = change(snapshot);
-      storage.setItem(key, JSON.stringify(next));
+      if (next === snapshot) return;
+      persistence.save?.(next);
+      snapshot = next;
+      for (const listener of listeners) listener();
+    },
+    replace(next: LocalLibrary) {
       snapshot = next;
       for (const listener of listeners) listener();
     },

@@ -5,7 +5,7 @@ import { parseTextDocument } from '@fob/shared/knowledge/text-import';
 
 function fixture() {
   let saved = '';
-  const store = createLocalLibraryStore({ getItem: () => null, setItem: (_, value) => { saved = value; } });
+  const store = createLocalLibraryStore({ save: value => { saved = JSON.stringify(value); } });
   const source = { ...newLocalDocument('a', 'Original'), folderId: 'first', body: { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'Preserve this body' }] }] } };
   const other = { ...newLocalDocument('b', 'Foreign document'), id: source.id, folderId: 'foreign' };
   store.update(() => ({ bases: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }], folders: [{ id: 'first', knowledgeBaseId: 'a', name: 'First' }, { id: 'second', knowledgeBaseId: 'a', name: 'Second' }, { id: 'foreign', knowledgeBaseId: 'b', name: 'Foreign' }], documents: [source, other], tags: [{ id: 'tag', baseId: 'a', name: 'Keep tag', pageIds: [source.id] }] }));

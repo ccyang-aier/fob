@@ -18,8 +18,8 @@ export const knowledgeMessages = defineMessages({
   gotIt: ['知道了', 'Got it'],
   localKnowledgeBase: ['本机知识库', 'Local knowledge base'],
   storedInThisBrowserForPersonalUseSigning: [
-    '保存在当前浏览器，适合个人整理。登录不会自动上传内容。',
-    'Stored in this browser for personal use. Signing in does not upload your content.',
+    '保存在你选择的本地文件夹，适合个人整理。登录不会自动上传内容。',
+    'Stored in your chosen folder for personal use. Signing in does not upload your content.',
   ],
   serverKnowledgeBase: ['服务端知识库', 'Server knowledge base'],
   createOneAfterSigningInThenShareAnd: [

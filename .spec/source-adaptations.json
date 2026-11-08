@@ -1,7 +1,7 @@
 {
   "src/features/knowledge/assets/local-assets.ts": {
-    "reason": "Add scoped local library asset cleanup used by explicit confirmed whole-library deletion; other libraries retain their attachment bytes. Add scoped attachment enumeration for an explicit personal-to-team library transfer; preserve original bytes and other libraries. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md.",
-    "sha256": "aa9e186f1fed002b56b45c9e3f534f923673e02c240408e0d728f6e278433f6b"
+    "reason": "Add scoped local library asset cleanup used by explicit confirmed whole-library deletion; other libraries retain their attachment bytes. Add scoped attachment enumeration for an explicit personal-to-team library transfer; preserve original bytes and other libraries. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "97277e3fa54e1c0831baebe22879c92f3e36ff38c8a3396b3de7ceb62d6f4307"
   },
   "src/features/knowledge/data/catalog-queries.ts": {
     "reason": "Knowledge base is the sole workspace: remove project-filtered catalog/association APIs and cache keys; keep pagination, identity and resource authorization. Continue folder directory pagination so every existing folder can be resolved from a direct link. Consume the independent identity context to remove the provider/account-view initialization cycle.",
@@ -40,12 +40,12 @@
     "deleted": true
   },
   "src/features/knowledge/knowledge-page.messages.ts": {
-    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact. Describe unavailable folder targets with a localized recovery state.",
-    "sha256": "1d1ebdfb45f9923de7972198e436eee37debd3f8907def0576a4807a724f44c5"
+    "reason": "Enter the top-selected knowledge workspace directly, resolve source/library/page links under actual visibility, and keep existing server/local feature queries and content intact. Describe unavailable folder targets with a localized recovery state. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "551f3fe61f0a6bb2706232a3ba950ae990ec02a4544ff0bd29541eb60c02355e"
   },
   "src/features/knowledge/knowledge-page.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Let the current knowledge navigation owner open profile folder targets and restore its correct overview mode, preserving scoped resource actions and editor hosts.",
-    "sha256": "e23f5b7d60def3859a2980852186127309f4abb45da5c600ea20d3f0f41b0443"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Resolve folder routes independently per workbench tab, preserve document navigation, and open scoped folder overviews with explicit unavailable states. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Let the current knowledge navigation owner open profile folder targets and restore its correct overview mode, preserving scoped resource actions and editor hosts. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "f4b6d0326ebcb9bf28c88385b32f14d43797f56b4850ededce5832c3f5f0f3cb"
   },
   "src/features/knowledge/knowledge-workbench.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -56,24 +56,24 @@
     "sha256": "833e91a1843e97c854784de27a6e7d65fb3e84362b68414b8ddcd645ea4e4839"
   },
   "src/features/knowledge/local/local-document-editor.instance.test.tsx": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "6ddda358eb4d3f8fcb16e2602de305f2d29228987cbdeb6a31c378edb6bddb68"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "4d02d0956153beaab52a2912965912bf3c8f476612303d658bbf7d6975ac08a7"
   },
   "src/features/knowledge/local/local-document-editor.tsx": {
     "reason": "Only the navigation-owning knowledge tab handles open-target events and editor block navigation, preserving hidden editor drafts and correct library ownership. Reuse the full document editor assembly, body styles, slash menu and selection toolbar for inline folder overviews; allow knowledge-base scoped media without fabricating a page resource. Expose native import and scoped move actions on local document headers. Record bounded foreground learning time for the active knowledge document; pause in background, dialogs and idle periods. See docs/ui/personal-profile.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md.",
     "sha256": "4367c1b0ce79dc47d2e5e206c09a8ad6d4f101426b4c568f0ebdb234f74e164b"
   },
   "src/features/knowledge/local/local-knowledge-resource.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Unify starred, drafts and trash with the shared scoped collection surface, real document metadata and existing actions; remove redundant knowledge-base eyebrows. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Replace the basic collection rows with scoped preview cards and a compact list, folder filters and paged visible previews; retain existing actions and account for local bodies. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Replace the rejected card mode with the existing folder-home list layout; remove card-only preview loading while retaining scoped search, filters, dates and operations. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Let the current knowledge navigation owner open profile folder targets and restore its correct overview mode, preserving scoped resource actions and editor hosts.",
-    "sha256": "3727aa8d221fcc7ea3b62b788859476cf8cee76631c58f8d5848bd668d481329"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Integrate persistent local folder overviews, real device readership, scoped import and recoverable folder routes without uploading local data. Connect the Outline-reference collection selection toolbar to real local star, draft, folder move and recoverable delete operations. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Reuse the user-approved shared document empty-state illustration and layout across local and team document collections; preserve contextual copy, filtering and permission-aware actions. Preserve parsed native import bodies in list and folder paths, keep explicit source-file reassociation, and avoid classifying ordinary text titles as file previews. Update imports for component ownership without changing behavior. Consume the independent identity context to remove the provider/account-view initialization cycle. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Unify starred, drafts and trash with the shared scoped collection surface, real document metadata and existing actions; remove redundant knowledge-base eyebrows. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Replace the basic collection rows with scoped preview cards and a compact list, folder filters and paged visible previews; retain existing actions and account for local bodies. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Replace the rejected card mode with the existing folder-home list layout; remove card-only preview loading while retaining scoped search, filters, dates and operations. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Let the current knowledge navigation owner open profile folder targets and restore its correct overview mode, preserving scoped resource actions and editor hosts. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "35b55b5d80d5f063524208fcfa1e7a3dc8afd52ddb981ab04ba177b09861b961"
   },
   "src/features/knowledge/local/local-library.test.ts": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior.",
-    "sha256": "49f5a092c2917e3679f7d2fd4196bda08a1b1b3def57f958f92c1325d874168b"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "fb1bf685071a61c913d2c2887872d15022909825533e7550ce3037dff4d45798"
   },
   "src/features/knowledge/local/local-library.ts": {
-    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents. Update imports for component ownership without changing behavior. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Retain a one-way, account-bound conversion marker and recovery snapshot; converted libraries cannot reappear as personal resources. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md.",
-    "sha256": "205210333c4dcf879885c6a8dfa1f32af4c80a8710d7d1f1f33c389dfca68884"
+    "reason": "Local knowledge bases stand alone without projectIds; preserve real browser content, independent library ownership, reload and failed-write behavior. Store optional folder overview metadata and real creation/read timestamps while retaining existing local documents. Update imports for component ownership without changing behavior. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Retain a one-way, account-bound conversion marker and recovery snapshot; converted libraries cannot reappear as personal resources. See docs/ui/knowledge-base-settings.md and .spec/tasks/knowledge-settings-and-presence.md. Add stable-ID block actions, document-scoped block links and persisted, content-checked edit provenance; preserve shared menus, ACLs, body schema and existing drag/undo behavior. See docs/editor-block-drag.md and .spec/tasks/editor-block-drag.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "841c989b7ceabf0e52a67edfe28b29cea9f600c6024145e09fd4dcebb390cb25"
   },
   "src/features/knowledge/navigation/knowledge-sidebar.module.css": {
     "reason": "Consolidate knowledge navigation into the shell portal with one collapse state; content workbench no longer draws another product sidebar.",
@@ -448,8 +448,8 @@
     "sha256": "0bef7dc7d3627d56ac3cb99b94dda7dbef46e65f43e96d4da4a8b1378f055cdc"
   },
   "src/features/knowledge/documents/local-document-import.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
-    "sha256": "8d34b731a6c4f9bda3e2f0e5e7cd17161b51ced8afa5d96315fa08da0d3a8fbb",
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Import text and Markdown as native editor bodies while retaining explicit file reassociation and original non-text file imports. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Import into the active editor without creating pages, retain folder-scoped document creation, and remove obsolete text-file preview rendering. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "fadd47aed1fccc8255f8edd145228acafb72bb7cc6a946a56febba328e57fa45",
     "relocatedTo": "src/features/knowledge/documents/import/local-document-import.tsx"
   },
   "src/features/knowledge/documents/pdf-file-view.tsx": {
@@ -659,8 +659,8 @@
     "sha256": "2caf530d932aec3a5382cb0f6670345fc7d9c774083ddaa7212d315f82f1e941"
   },
   "src/features/knowledge/knowledge-empty-state.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "7c116ff793b1d28257cefed669f300e3fdcd47bddddaf1a39a82688b6a79ffa4"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "9034506c7a31fbf470db739da31c22a9737a62750d90ccc1a495fe507558d6e0"
   },
   "src/features/knowledge/navigation/page-icon-picker.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow collection-sized preview icons and the original collection fallback without changing document icon defaults. Connect the Outline-reference folder UI and inline overview editor to current resource navigation and real local operations. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. OpenMoji and control refinement (docs/ui/emoji-system.md, .spec/tasks/editor-block-actions.md): Render emoji choices with the shared OpenMoji component while preserving existing glyph selection, save, read-only and failure behavior. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -775,8 +775,8 @@
     "relocatedTo": "src/features/knowledge/navigation/page-icon/page-icon.test.tsx"
   },
   "src/features/knowledge/local/local-knowledge-resource.messages.ts": {
-    "reason": "Localize unavailable local folder links and document-list recovery. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md.",
-    "sha256": "761420c7be7cd2f453d89b89767c9bb81654a37d73ab58990983cc53082602b8"
+    "reason": "Localize unavailable local folder links and document-list recovery. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "903cf8e45d851b7eda0c0ac810fda5c98d1fcb86eec92afa98ffe03674dbb31e"
   },
   "src/features/knowledge/navigation/tree-stage.tsx": {
     "reason": "Let the current navigation owner open folder routes once, avoiding a second generic navigation that clears the folder target. Preserve folder chrome during list queries within the same knowledge-base, folder and principal scope; synchronize removable folder artwork with navigation, share favorite color, distinguish pinned state, and place sorting beside tabs using shared permission controls. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Expose scoped folder import and child-folder creation through the existing resource owner and render the saved hierarchy. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Support scoped folder reparenting and document drag moves, with cycle rejection, explicit root targets and existing permission boundaries. See docs/knowledge-discovery.md and .spec/tasks/knowledge-discovery.md. Owner-only member management and invitation authority; preserve actual resource grants and scoped collaborators. Compact role, checkbox filter and permission controls. See .spec/tasks/member-management-owner-only.md.",
@@ -842,8 +842,8 @@
     "sha256": "b72da79ca6351cad9d5203ad0a5afa0d658de6302d9b07bf9e77ee120f351ac5"
   },
   "src/features/knowledge/editor/block-modules/media-core/media-block-view.messages.ts": {
-    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md.",
-    "sha256": "991026091d04782afbd96b0a2ab41eb7d37c0fa07abb75718cf0d8896db08750"
+    "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "cde726fc797e65d36f76482de333264a429fa075d1ca87914cb5fb3cbd7138c1"
   },
   "src/features/knowledge/editor/commands/block-labels.messages.ts": {
     "reason": "Support first-batch editor rich content, portable source data, authorized PDF assets and stable local synchronization; see docs/editor-rich-content.md and .spec/tasks/editor-rich-content.md. Expose and localize the standalone emoji block in slash insertion and verify search ordering. Expose the bilingual PlantUML block label through the existing registry-driven slash menu. See docs/editor-rich-content.md.",
@@ -951,8 +951,8 @@
     "relocatedTo": "src/features/knowledge/documents/previews/file-document-surface.tsx"
   },
   "src/features/knowledge/documents/local-document-import.messages.ts": {
-    "reason": "Describe the bounded native text import limit in both supported locales. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
-    "sha256": "7725d5355d34f2fcf9eafb856a19aaa6d6dd7409041493e6a84323a3662fec23",
+    "reason": "Describe the bounded native text import limit in both supported locales. Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
+    "sha256": "90c97a645e704053fc24374ff741b61c78197f7a2bd3cafc3a500efda7e43ddc",
     "relocatedTo": "src/features/knowledge/documents/import/local-document-import.messages.ts"
   },
   "src/features/knowledge/documents/server-document-import.messages.ts": {
@@ -1045,9 +1045,9 @@
     "sha256": "71ae8c0f4fe3a5f4e7d50190f54db9134b129fb6855b164ee8e1e2a188568b3c"
   },
   "src/features/knowledge/documents/file-document-surface.messages.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
     "relocatedTo": "src/features/knowledge/documents/previews/file-document-surface.messages.ts",
-    "sha256": "0247abc8abab9235f7894624745ed3f706e0e20dc9042662dffe64ee3aa6d512"
+    "sha256": "cefd15b3284e71ef2d0a435ee86ee606fb445a4b00c922e559a2b88b0f65596e"
   },
   "src/features/knowledge/documents/file-format.messages.ts": {
     "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -1070,9 +1070,9 @@
     "sha256": "6065a7313341f811151625675d15600665f786c655bbc523823a7ad27d742574"
   },
   "src/features/knowledge/documents/file-source.messages.ts": {
-    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
+    "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports. Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md.",
     "relocatedTo": "src/features/knowledge/documents/previews/file-source.messages.ts",
-    "sha256": "a66d25878a83da47f2cde6b55d507574c7f41f79bd213e4c5c3d8d4896746e68"
+    "sha256": "87438cc636dee2449516f15478523daeae01582e3e2097a1aae21ba5946d3b9a"
   },
   "src/features/knowledge/documents/file-source.ts": {
     "reason": "Co-locate component-owned implementation, styles, messages and tests; preserve behavior and update imports.",
@@ -1554,5 +1554,17 @@
   "backend/server/src/modules/knowledge/collaboration/history.integration.test.ts": {
     "reason": "Provide the scoped Page Activity rail with reader/edit/version tabs, real identity and permission checks, and physical per-page retention of 20 readers, 20 edits and 15 versions. Preserve live body authority, durable job deduplication and version restore safety; derived block provenance must retain the body write actor. See docs/document-collaboration.md and .spec/tasks/page-activity.md.",
     "sha256": "bf65c036cdf125fbf62705ac091459bbb36f90d5a5ef09469cfd0b4ff806009a"
+  },
+  "src/features/knowledge/knowledge-empty-state.messages.ts": {
+    "sha256": "baabdaf0c48e9d09c65de4f0bf22221e8d35e7a37d2521476643d84cd56cac07",
+    "reason": "Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md."
+  },
+  "src/features/knowledge/local/local-document-editor.messages.ts": {
+    "sha256": "1913cb03eb1f36b1839a8cedf6aa0c985826d373fa6615d85f69051cf0767686",
+    "reason": "Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md."
+  },
+  "src/features/knowledge/local/use-local-library.ts": {
+    "sha256": "df5eb8ec25d84c0b984bd0ed898900846a27f1bfa948f49481ea563227cee643",
+    "reason": "Store local knowledge in explicitly selected user folders, retire browser content storage without migration, and retain server resource boundaries. See docs/local-knowledge-folders.md and .spec/tasks/local-knowledge-folders.md."
   }
 }
