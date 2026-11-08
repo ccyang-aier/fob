@@ -7,7 +7,7 @@
 - 默认使用 [Font Awesome 7 Solid](https://www.shadcn.io/icons/fa7-solid)，官方 `@fortawesome/free-solid-svg-icons`，以官方 React 组件渲染，固定版本。多个候选时优先圆润、饱满、轮廓简单且小尺寸易识别的造型，避免复杂细节和无意义的外框。
 - 只有明确需要轻量轮廓的控制，使用 [Lucide](https://www.shadcn.io/icons/lucide)。不把导航实体、通知、设置等默认退回轮廓风格，也不把所有动作一刀切成厚实图标。
 - 业务组件只从 `@/components/icons` 引用。官方依赖、语义映射及轮廓例外集中在 `src/components/icons/index.ts`；渲染和尺寸在同目录的 `solid-icon.tsx`、`metrics.ts`。
-- 不新增第三套图标包、远程图标服务、混合 PNG 图标包、手写 SVG/path 或用 CSS 给轮廓图标强制填色。唯一保留例外是用户明确要求恢复的主导航双栏图标，集中在 `sidebar-toggle-icon.tsx`，脚本校验其固定文件摘要，禁止在例外中增加其它几何。用户上传图片、用户文档内容、Emoji 和产品品牌图形是内容资源，不能作为引入另一套 UI 图标的借口。
+- 不新增第三套图标包、远程图标服务、混合 PNG 图标包、手写 SVG/path 或用 CSS 给轮廓图标强制填色。用户明确指定几何的两项例外是主导航双栏图标 `sidebar-toggle-icon.tsx`，以及反复要求与原图一致的生成星形 `generate-star-icon.tsx`；后者按原参考的倾斜五角轮廓和右下长尖实现，不再使用相近的 Lucide 四角星。脚本校验两个固定文件摘要，禁止在例外中增加其它几何。用户上传图片、用户文档内容、Emoji 和产品品牌图形是内容资源，不能作为引入另一套 UI 图标的借口。
 - 用户明确指定 OpenMoji 作为 Fob 默认 Emoji，精选 8 类共 448 个本地原版资源，经统一目录的 `Emoji` 渲染。该内容资源例外不改变系统操作图标的选型；资源来源和摘要同样由图标检查脚本验证，完整规范见 [Emoji 系统](emoji-system.md)。
 - 用户于 2026-11-03 明确要求所有收藏勋章采用 imagegen 生成素材，并扩充到 30 枚，因此这 30 枚成就内容插图统一通过 `MedalArt` 显示 `public/medals/v2/` 的本地 WebP，完整提示词、来源和摘要保存在同目录 `manifest.json`。该范围仅为勋章内容，关闭、对勾、统计和其它系统控件继续使用本图标目录；不将勋章图片作为另一套 UI 图标。当前设计见 [个人资料弹窗](personal-profile.md)。
 - shadcn CLI 的 `components.json` 保持 `iconLibrary: lucide`，用于生成轻量基础控件；生成后仍须把导入收口到本地目录，按语义选择 FA7 或已批准的 Lucide。
@@ -32,9 +32,9 @@
 | 主题月亮 | FA7 Solid `moon`，使用官方实心造型 |
 | 星标/点赞等切换状态 | 未选中 Lucide 轮廓，已选中 FA7 Solid，保留状态含义 |
 | H1/H2/H3 等编辑指令 | 保留区别明确的 Lucide 标题级别；其他格式、媒体和资源类型使用 FA7 对应语义 |
-| AI 生成块与可视化入口 | `GenerateStar` 统一使用官方 Lucide 单颗 `Sparkle`，用于生成菜单、生成块空态及文档助手；参考的非对称星形采用最接近的官方单星，不复用收藏 `Star`。`ShapesOutline` 按参考的四格排列组合官方 `Diamond` / `Circle` / `Triangle` / `Square`，不绘制 SVG/path；两者同为 16px 请求尺寸、1.75 标准画布线宽。四格单元占整体 7/16，内部原版 glyph 的 4px 画布线宽等效于整体 1.75px，保持缩放后实际笔画一致。 |
+| AI 生成块与可视化入口 | `GenerateStar` 使用用户指定的倾斜五角轮廓和右下长尖，集中于固定摘要的 `generate-star-icon.tsx`，生成菜单、生成块及文档助手共用；不复用收藏星或 Lucide 四角 `Sparkle`。`ShapesOutline` 按参考的四格排列组合官方 `Diamond` / `Circle` / `Triangle` / `Square`；两者同为 16px 请求尺寸、等效 1.75 标准画布线宽。四格单元占整体 7/16，内部原版 glyph 的 4px 画布线宽等效于整体 1.75px，保持缩放后实际笔画一致。 |
 | AI 草稿修改要求 | 参考中的轻量指针控制使用官方 Lucide `MousePointer2`，集中导出 `SelectionEdit`；与既有轮廓撤销、上箭头及勾选配套使用 |
-| AI 接入设置、选区 AI 操作与协作者身份 | 同样复用 `GenerateStar`；非 React 的协作光标旗标经 `createGenerateStarElement` 克隆该官方组件的静态渲染结果，保留既有 9px 角色尺寸，不保存另一份路径或强制填色。 |
+| AI 接入设置、选区 AI 操作与协作者身份 | 同样复用 `GenerateStar`；非 React 的协作光标旗标经 `createGenerateStarElement` 克隆该共享组件的静态渲染结果，保留既有 9px 角色尺寸，不保存另一份路径或强制填色。 |
 | 文档块拖拽手柄 | FA7 `grip-vertical`，集中导出 `DotsSixVertical`；六点造型，14px 图形、24px 拖拽区域 |
 | 块操作菜单 | 链接、删除与格式类型复用系统默认 FA7 Solid（`LinkSimple` / `Trash` 等）；加号、转换、方向、选中标记及 H1–H4 沿用已有系统控制和编辑符号，不再为块菜单设置专用轮廓图标 |
 | 评论入口与选中文字评论 | 统一使用 FA7 Solid `comment-dots`，集中导出 `ChatCircleDots` |
@@ -42,7 +42,7 @@
 | 图片／图形块排布 | Lucide `AlignLeft` / `AlignCenter` / `AlignRight`，集中导出 `BlockAlignLeft` / `BlockAlignCenter` / `BlockAlignRight`；与放大、替换统一为 14px、1.75 线宽，菜单中沿用对应的紧凑尺寸；正文格式工具仍使用原实心图标 |
 | 提示框自定义主题 | `ColorPalette` 保留 FA7 Solid `palette` 官方几何，以官方生成的 SVG 作为本地遮罩呈现炫彩色；仅用于用户指定的自定义颜色功能入口 |
 
-轮廓例外必须在集中目录中明确导出并在此记录用途；不能在业务组件随手导入。旧语义名称可作为兼容别名，实际几何必须来自上述官方包。文件夹与页面图标的持久化 ID、颜色、Emoji 继续兼容已有数据。
+轮廓例外必须在集中目录中明确导出并在此记录用途；不能在业务组件随手导入。旧语义名称可作为兼容别名，除用户指定并固定摘要的参考图形外，实际几何必须来自上述官方包。文件夹与页面图标的持久化 ID、颜色、Emoji 继续兼容已有数据。
 
 ## 尺寸与材质
 

@@ -6,7 +6,7 @@ import { GenerateStar } from './index';
 
 const templates = new WeakMap<Document, SVGElement>();
 
-/** A detached copy of the official renderer output for imperative cursor widgets. */
+/** A detached copy of the shared generation glyph for imperative cursor widgets. */
 export function createGenerateStarElement(ownerDocument: Document, className: string): SVGElement {
   let template = templates.get(ownerDocument);
   if (!template) {

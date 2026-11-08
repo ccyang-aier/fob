@@ -33,8 +33,8 @@ test('the shared renderer reduces every numeric glyph one step without resizing 
 test('AI glyphs share the standard optical box and the four-shape reference uses official components', () => {
   const generation = renderToStaticMarkup(<GenerateStar size={16} aria-hidden />);
   const visualization = renderToStaticMarkup(<ShapesOutline size={16} aria-hidden />);
-  expect(generation).toContain('lucide-sparkle');
-  expect(generation).toContain('stroke-width="1.75"');
+  expect(generation).toContain('data-icon-library="fob-reference"');
+  expect(generation).toContain('data-icon="generate-star"');
   expect(generation).toContain('width:14px;height:14px');
   expect(visualization).toContain('width:14px;height:14px');
   expect(visualization).toContain('data-icon-composition="four-shapes"');

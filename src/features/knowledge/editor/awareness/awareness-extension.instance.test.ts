@@ -183,10 +183,10 @@ describe('awareness cursors across two real editors', () => {
     expect(caret.dataset.awarenessEditing).toBe('true');
     const glyph = caret.querySelector('svg.fob-awareness-agent-icon');
     expect(glyph).not.toBe(null);
-    expect(glyph?.getAttribute('data-icon-library')).toBe('lucide');
-    expect(glyph?.classList.contains('lucide-sparkle')).toBe(true);
+    expect(glyph?.getAttribute('data-icon-library')).toBe('fob-reference');
+    expect(glyph?.getAttribute('data-icon')).toBe('generate-star');
     expect(glyph?.getAttribute('fill')).toBe('none');
-    expect(glyph?.getAttribute('viewBox')).toBe('0 0 24 24');
+    expect(glyph?.getAttribute('viewBox')).toBe('0 0 28 28');
     const flag = caret.querySelector<HTMLElement>('.fob-awareness-flag');
     expect(flag?.textContent).toBe('正在编辑');
     expect(flag?.title).toBe('研究智能体 · 正在编辑');

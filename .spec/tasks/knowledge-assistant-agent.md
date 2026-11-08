@@ -64,4 +64,8 @@
 - [x] 390px 设置导航改为顶部四分区，配置区宽 324px 无横向溢出；生成审阅胶囊 226 × 36px，三个操作完整位于胶囊和视口内；浅深色截图已检查。
 - [x] 最终独立设置与生成流程 fresh navigation 的 pageerror 均为 0；类型、图标、国际化、架构、ESLint、生产构建通过。日志 `ai-provider-boundaries.log`、`ai-refinement-lint.log`、`ai-refinement-build.log`。
 
-本轮使用新的合成账户、知识库、文档，未修改用户原有文档或账户模型配置。独立浏览器已关闭，合成知识库、账户、测试密钥及用量记录已在校验归属后清理。参考星形在允许的官方目录中没有同款，采用最接近的单星，不声称逐像素复刻。当前视觉证据见 [design-qa.md](../../design-qa.md)。
+本轮使用新的合成账户、知识库、文档，未修改用户原有文档或账户模型配置。独立浏览器已关闭，合成知识库、账户、测试密钥及用量记录已在校验归属后清理。当前视觉证据见 [design-qa.md](../../design-qa.md)。
+
+### 后续生成图标纠正
+
+用户再次指出四角星仍与原图不一致，已撤掉 Lucide Sparkle，按最早参考实现倾斜五角轮廓与右下长尖。菜单、生成块、助手、设置和协作光标共用 `GenerateStar`，检查脚本固定该组件摘要，例外不扩展到其它图标。原尺寸与放大对照为 `.runtime/dev/generate-icon-shape-compare.png`。既有图标与双编辑器协作回归 11 项 / 79 断言通过；图标检查、定向 ESLint、类型及架构检查通过。独立账户的实际菜单与生成块截图为 `generate-icon-menu.png` / `generate-icon-block.png`，浏览器校验两者 SVG 路径一致，pageerror 为 0；未调用模型或修改用户原有文档。

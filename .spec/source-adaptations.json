@@ -1632,8 +1632,8 @@
     "sha256": "ca0936274158f47d90243bdc01dedc3933f5c7e82616f2d5a26014204ee44627"
   },
   "src/features/knowledge/editor/awareness/awareness-extension.instance.test.ts": {
-    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "c8265d176ebcda6c8740377520f414bc846aea65f21ee2dce999ba2417e487e6"
+    "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Verify the user-requested oblique five-point generation glyph and lower-right ray instead of the rejected four-point approximation. See docs/ui/icon-system.md.",
+    "sha256": "ff04371f637f4b21bcbfff21792127450fc44ca5fd9a1e3a66e68c9866361adb"
   },
   "src/features/knowledge/editor/awareness/awareness-extension.ts": {
     "reason": "Refine compact AI controls and unified official icons, with private multi-provider connections and scoped model routing. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",

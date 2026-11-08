@@ -7,8 +7,10 @@ import ts from 'typescript';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const issues = [];
-// Sole user-requested legacy glyph; file pin prevents new custom geometry in this exception.
+// Explicit user reference exceptions; file pins prevent unrelated custom geometry.
 const retainedToggle = { path: 'src/components/icons/sidebar-toggle-icon.tsx', sha256: '3b669a42891104441972cade67bb74f017141b55c81b68726ea47f6e3a7f04ed' };
+const generationReference = { path: 'src/components/icons/generate-star-icon.tsx', sha256: 'e9cf11ef8df2caedf23297dfbede39c65567cb209d4ff6a2d3947db4a9c82912' };
+const pinnedGlyphs = [retainedToggle, generationReference];
 const libraries = /^(?:lucide-react|@fortawesome\/|@phosphor-icons\/|@iconify\/|@heroicons\/|@tabler\/icons|react-icons(?:\/|$)|@radix-ui\/react-icons)/;
 const approved = new Set(['src/components/icons/index.ts', 'src/components/icons/solid-icon.tsx']);
 // Exact collection-page reference requested by the user; original BSD artwork only.
@@ -51,14 +53,16 @@ for (const file of sources) {
     }
   }
   function visit(node) {
-    if ((ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) && node.tagName.getText(tree) === 'svg' && relative !== retainedToggle.path) {
+    if ((ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) && node.tagName.getText(tree) === 'svg' && !pinnedGlyphs.some(glyph => glyph.path === relative)) {
       issues.push(`${relative}:${tree.getLineAndCharacterOfPosition(node.getStart()).line + 1}: handwritten UI SVG; choose an official catalog icon`);
     }
     if (ts.isJsxAttribute(node) && node.name.getText(tree) === 'weight') issues.push(`${relative}: obsolete per-call icon weight; choose solid/outline in the catalog`);
     ts.forEachChild(node, visit);
   }
   visit(tree);
-  if (relative === retainedToggle.path && createHash('sha256').update(source.replace(/\r\n?/g, '\n')).digest('hex') !== retainedToggle.sha256) issues.push('Retained original sidebar toggle changed; the exception is limited to its pinned geometry.');
+  for (const glyph of pinnedGlyphs) {
+    if (relative === glyph.path && createHash('sha256').update(source.replace(/\r\n?/g, '\n')).digest('hex') !== glyph.sha256) issues.push(`User reference glyph changed: ${glyph.path}; the exception is limited to its pinned geometry.`);
+  }
   if (source.includes('/assets/project-icons/')) issues.push(`${relative}: retired mixed-style icon artwork`);
 }
 
