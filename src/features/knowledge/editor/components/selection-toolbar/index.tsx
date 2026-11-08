@@ -17,11 +17,7 @@ import {
   TextB,
   TextItalic,
   TextStrikethrough,
-  GenerateStar as Sparkle,
 } from '@/components/icons';
-import { useBlockMenuContext } from '../../block-menu-context';
-import { requestAssistantSelection } from '../../../ai/assistant-bridge';
-import { assistantMessages } from '../../../ai/assistant.messages';
 import { safeKnowledgeUrl } from '@fob/shared/knowledge/schema';
 import {
   DropdownMenu,
@@ -141,8 +137,6 @@ function SelectionLink({
 /** The shared text-selection surface uses the editor's existing format commands. */
 export function SelectionToolbar({ editor }: { editor: Editor | null }) {
   const { t: knowledgeT } = useTranslation(knowledgeMessages);
-  const { t: assistantT } = useTranslation(assistantMessages);
-  const target = useBlockMenuContext()?.target;
 
   const toolbar = useRef<HTMLDivElement>(null);
   const linkOpen = useRef(false);
@@ -262,7 +256,6 @@ export function SelectionToolbar({ editor }: { editor: Editor | null }) {
       }}
     >
       <div className={styles.group}>
-        {target?.source === 'server' && <button type="button" className={styles.tool} aria-label={assistantT('selectionAction')} title={assistantT('selectionAction')} onClick={() => requestAssistantSelection({ scope: { knowledgeBaseId: target.knowledgeBaseId, pageId: target.pageId }, text: editor.state.doc.textBetween(editor.state.selection.from, editor.state.selection.to, '\n').slice(0,6000) })}><Sparkle size={16} /></button>}
         {[1, 2, 3].map((level) => (
           <button
             key={level}

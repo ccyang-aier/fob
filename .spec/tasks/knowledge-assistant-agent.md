@@ -96,3 +96,22 @@
 当前视觉核对、密度说明和浏览器证据见 [design-qa.md](../../design-qa.md)。不把预览画布、示例对话、品牌差异或开发热更新中间态冒充为逐像素一致。
 
 验收结束后已关闭独立浏览器，按知识库归属和合成账户前缀核对后清理测试知识库、账户、会话任务和用量；删除临时认证状态。Web 与业务服务继续运行。
+
+## 当前决定：删除独立聊天弹窗
+
+用户明确撤回独立 AI 助手弹窗与文档顶栏入口，后续只先做煤球精灵聊天的 imagegen UX 方案。本节为当前执行范围，前面已完成的独立弹窗实现与视觉验收仅保留历史记录。
+
+- [x] 删除旧聊天 panel / conversation / composer / history / window / geometry / answer / settings wrapper、样式、专用文案、选区事件桥和 React 控制器，共 19 个前端文件及其专用测试。
+- [x] 清理服务端文档编辑器里的挂载、状态和订阅，移除文档头 `assistant` 插槽及选区工具栏打开旧窗口的入口，没有保留不可点击的占位。
+- [x] 保留编辑器内生成、可视化、流式草稿、采纳与撤销；保留全局多服务商 AI 设置、共享模型选择器、鉴权 transport 和流式解析，以及后端权限/会话 API 与 Agent Harness。没有清空用户会话、连接或凭据。
+- [x] 煤球精灵代码和现有交互没有修改，新聊天代码未实现；待用户选择 UX 方案后再开发。
+- [x] 更新当前设计和三个源适配摘要。架构检查通过：1161 个运行时模块，无循环和公开包边界违规；国际化通过：219 个目录、3160 条双语文案。
+- [x] 相关前端回归 100 项 / 501 断言、TypeScript 与生产构建通过，日志 `assistant-retirement-tests.log`、`assistant-retirement-types.log`、`assistant-retirement-build.log`。
+- [x] 全量 ESLint 与图标检查通过（820 个源文件），日志 `assistant-retirement-lint.log`；清理选区工具栏剩余 context 引用后，定向复验 6 项 / 39 断言通过，日志 `assistant-retirement-selection.log`。
+
+- [x] 根任务 Chrome 验收：1050 × 917 与 390 × 844 中旧顶栏入口和 Portal 均不存在；选区格式正常；实际插入正文 AI 工作块、打开全局 AI 接入设置、展开煤球原有互动工具通过；pageerror / console error 均为 0。证据见 `assistant-retirement-*.png` 和 [design-qa.md](../../design-qa.md)。
+- [x] 内置 imagegen 独立生成并展示三张煤球聊天 UX 方案，顺序固定为当前会话的展示顺序，仅设计，不实现代码。预览和生成记录位于忽略的 `.runtime/dev/companion-ai-ux-*`。
+
+以上自动化和浏览器验收没有调用真实产品模型，也未修改用户已有文档。Web 和业务服务继续运行。
+
+验收完成后已关闭独立 Chrome 上下文；在事务内核对合成账户前缀、知识库 owner 及无外部成员关联后清理 fixture 的任务、用量、知识库和认证账户，并删除临时认证状态。三张 UX 预览及生成记录继续留在忽略目录供选择。

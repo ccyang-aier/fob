@@ -1,5 +1,7 @@
 # AI 界面验收
 
+> 当前决定：独立 AI 助手弹窗、顶栏入口及专用前端已按用户要求删除。下述 Golo 和更早弹窗验收仅保留历史，不再是当前产品目标。最新撤回验收见文末；煤球精灵的三张 imagegen 图仅为 UX 备选，未实现新聊天代码。
+
 日期：2026-11-08。用户指出首版尺寸过大、设置结构不合理后，重新验收紧凑版和多服务商配置；首版截图不作为本次视觉通过的依据。保留文档阅读字号与现有产品共享交互规范。
 
 参考：用户提供的五张生成菜单 / 空态 / 思考 / 流式 / 完成态图片。实现是现有 Fob 产品内的真实功能。业务设计见 [知识助手](docs/knowledge-assistant-agent.md)，自动验证与真实调用证据见 [.spec 记录](.spec/tasks/knowledge-assistant-agent.md)。
@@ -102,5 +104,17 @@
 **Implementation Checklist**：本节列出的 P1 / P2 均已修正并复拍；Fob 品牌、中文、模型业务操作和参考交互状态差异已明确记录。
 
 **Follow-up Polish**：参考为栅格设计图，原始字体参数不可获取；不提供逐像素一致的虚假百分比。
+
+final result: passed
+
+## 当前范围：撤回独立弹窗，煤球聊天仅做概念图
+
+2026-11-09 收尾。已删除旧窗口、输入、历史、回答、设置包装、专用 hook / 文案 / 测试共 19 个前端文件，以及编辑器挂载、顶栏插槽、选区打开入口和事件桥。后端 Agent / API、纯 transport、全局 AI 接入设置和编辑器内 AI 工作块继续保留；煤球代码没有修改。
+
+独立合成账户和知识库的 Chrome 验收：1050 × 917 稳定页面中，`打开 AI 助手` 数量为 0，`data-assistant-window` / `data-assistant-host` 数量均为 0。选中段落后格式工具栏正常且没有指向已删窗口的 AI 操作；实际打开 slash 生成菜单并插入 AI 工作块，任务说明输入可见且未调用模型；AI 接入页与添加服务商入口仍可访问。点击煤球仍打开原有互动工具，没有被接入新聊天。390 × 844 下旧入口同样不存在，煤球可见。pageerror 和 console error 均为空。
+
+运行界面证据位于忽略目录 `.runtime/dev/`：`assistant-retirement-page.png`、`assistant-retirement-selection.png`、`assistant-retirement-slash.png`、`assistant-retirement-inline-ai.png`、`assistant-retirement-settings.png`、`assistant-retirement-pet.png`、`assistant-retirement-mobile.png`。100 项 / 501 断言、定向选区 6 项 / 39 断言、类型、图标、国际化、架构、ESLint 和生产构建通过；未更改用户已有文档和模型连接。
+
+三张 imagegen 预览按在会话中实际展示顺序保存为 `companion-ai-ux-01.png`、`companion-ai-ux-02.png`、`companion-ai-ux-03.png`，使用相同的本地产品截图与煤球外观作参考。生成记录与提示词摘要为 `.runtime/dev/companion-ai-ux-record.md`。这些是未选定的图像方案，不是运行界面截图，不作实现通过声明，也不引入任何新煤球聊天代码。
 
 final result: passed
