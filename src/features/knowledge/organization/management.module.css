@@ -121,7 +121,7 @@
 .selectCompact { flex:none; justify-content:flex-end; gap:6px; width:104px; min-height:30px; padding:3px 5px; border-color:transparent; }
 .selectCompact .selectValue { flex:initial; }
 .selectMenu { min-width:max(248px,var(--radix-dropdown-menu-trigger-width)); max-width:calc(100vw - 32px); padding:4px; }
-.roleMenu { width:184px; min-width:184px; max-width:calc(100vw - 32px); padding:4px; }
+.roleMenu { width:128px; min-width:128px; max-width:calc(100vw - 32px); padding:4px; }
 .roleOption { display:flex; align-items:center; justify-content:space-between; min-height:32px; height:32px; gap:10px; padding:4px 10px; }
 .roleFilterMenu { width:144px; min-width:144px; padding:4px; }
 .selectOptions { max-height:min(320px,var(--radix-dropdown-menu-content-available-height)); overflow-y:auto; }

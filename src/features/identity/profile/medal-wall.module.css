@@ -37,7 +37,17 @@
 .medalCard:is(:hover,:focus-visible) .foil::before { animation:foil-hover 950ms ease-out; }
 .detailPanel { min-width:0; min-height:520px; padding:17px 20px 14px; border-radius:12px; background:var(--surface-subtle); }
 .detailTopline { display:flex; align-items:center; justify-content:space-between; color:var(--muted-strong); font-size:10px; }
-.detailTopline > span:last-child { padding:2px 6px; border:1px solid var(--line); border-radius:5px; }
+.tierBadge { padding:2px 6px; border:1px solid var(--tier-border); border-radius:5px; color:var(--tier-ink); background:var(--tier-surface); font-weight:600; }
+.tierBadge[data-tier='1'] { --tier-ink:#87562f; --tier-surface:#f6ede4; --tier-border:#e8d0b7; }
+.tierBadge[data-tier='2'] { --tier-ink:#526075; --tier-surface:#edf1f6; --tier-border:#d7dee8; }
+.tierBadge[data-tier='3'] { --tier-ink:#805b10; --tier-surface:#fff3cf; --tier-border:#ebd28a; }
+.tierBadge[data-tier='4'] { --tier-ink:#754598; --tier-surface:#f0e8f9; --tier-border:#d9c6eb; }
+.tierBadge[data-tier='5'] { --tier-ink:#9c3a5e; --tier-surface:#fbe8f0; --tier-border:#efc1d3; }
+:global(html[data-theme='dark']) .tierBadge[data-tier='1'] { --tier-ink:#eac39f; --tier-surface:#3a2b22; --tier-border:#62462f; }
+:global(html[data-theme='dark']) .tierBadge[data-tier='2'] { --tier-ink:#cad3e0; --tier-surface:#292f3a; --tier-border:#46546a; }
+:global(html[data-theme='dark']) .tierBadge[data-tier='3'] { --tier-ink:#f0d17d; --tier-surface:#3b321c; --tier-border:#6d5925; }
+:global(html[data-theme='dark']) .tierBadge[data-tier='4'] { --tier-ink:#d3b6f0; --tier-surface:#332542; --tier-border:#61467b; }
+:global(html[data-theme='dark']) .tierBadge[data-tier='5'] { --tier-ink:#f0b8cc; --tier-surface:#412534; --tier-border:#7a435a; }
 .medalHero { display:grid; grid-template-columns:68px minmax(0,1fr); align-items:center; column-gap:10px; row-gap:3px; padding:12px 0 0; }
 .medalHero > .art { grid-column:1; grid-row:1 / 4; }
 .medalHero h3 { grid-column:2; margin:0; font-size:15px; font-weight:600; line-height:20px; letter-spacing:-.02em; }
@@ -58,7 +68,6 @@
 .recipientScroll:focus-visible { border-color:var(--control-border); }
 .people { margin:0; padding:0; list-style:none; }
 .people li { display:flex; position:relative; align-items:center; gap:9px; height:40px; box-sizing:border-box; padding:4px 0; }
-.people li:not(:last-child)::before { position:absolute; top:33px; bottom:-7px; left:12px; width:1px; background:var(--line); content:''; }
 .avatar { position:relative; width:26px; height:26px; font-size:10px; flex:0 0 auto; }
 .personInfo { display:flex; min-width:0; flex:1; flex-direction:column; gap:2px; }
 .personName { display:flex; min-width:0; align-items:center; gap:5px; font-size:11px; color:var(--ink-soft); }

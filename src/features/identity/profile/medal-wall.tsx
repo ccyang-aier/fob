@@ -43,7 +43,7 @@ export function MedalWall({ awards,progress,initialMedal,onClose }:{awards:reado
         {onlyEarned && !earned.size ? <div className={styles.emptyCollection}><Trophy size={28} aria-hidden /><p>{t('noEarnedMedals')}</p><Button type="button" variant="outline" size="sm" onClick={() => setOnlyEarned(false)}>{t('viewAllMedals')}</Button></div> : null}
       </section>
       <aside className={styles.detailPanel} aria-label={t(selected)}>
-        <div className={styles.detailTopline}><span>{t(medalFamilyLabels[medal.family])}</span><span>{t(tierLabels[medal.tier])}</span></div>
+        <div className={styles.detailTopline}><span>{t(medalFamilyLabels[medal.family])}</span><span className={styles.tierBadge} data-tier={medal.tier}>{t(tierLabels[medal.tier])}</span></div>
         <div className={styles.medalHero}><MedalArt id={selected} hero /><h3>{t(selected)}</h3><p>{t(medalRules[medal.family],{ count:medal.target })}</p>
           <span className={styles.unlockState} data-earned={Boolean(selectedDate)}>{selectedDate ? <Check size={12} aria-hidden /> : <LockSimple size={12} aria-hidden />}{t(selectedDate ? 'earned' : 'locked')}</span>
         </div>

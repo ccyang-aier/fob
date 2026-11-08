@@ -29,7 +29,6 @@ export function RoleMenuItems({ roles, value, onChange }: {
     {roles.map(role => <DropdownMenuRadioItem key={role} value={role} textValue={labels[role]}
       indicator="none" emphasizeSelection={false} className={styles.roleOption} title={descriptions[role]}>
       <RoleLabel role={role} />
-      <span className={styles.optionCheck} aria-hidden>{value === role ? <SelectionCheck /> : null}</span>
     </DropdownMenuRadioItem>)}
   </DropdownMenuRadioGroup>;
 }

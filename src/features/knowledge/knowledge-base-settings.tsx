@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
-import { SelectionCheck, X } from '@/components/icons';
+import { X } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAppAlert } from '@/components/app-alert-provider';
 import { useIdentity } from '@/features/identity/identity-context';
 import { useTranslation } from '@/lib/i18n';
@@ -50,10 +51,13 @@ export function KnowledgeBaseSettings({ base, resources, onClose }: { base: Know
       <div className={`${common.body} ${styles.body}`}>
         <div className={styles.identity}><KnowledgeBaseAvatar seed={base.id} palette={palette} className={styles.avatar} /><label className={common.field}>{t('name')}<input type="text" value={name} disabled={saving || !canRename} maxLength={120} autoComplete="off" onChange={event => setName(event.target.value)} /></label></div>
         <fieldset className={styles.palettes} disabled={saving}><legend>{t('palette')}</legend><div className={styles.paletteGrid}>
-          {KNOWLEDGE_BASE_AVATAR_PALETTES.map(option => <label key={option.id} className={`fob-action ${styles.palette}`} data-selected={palette === option.id}>
-            <input type="radio" name="knowledge-palette" value={option.id} checked={palette === option.id} onChange={() => setPalette(option.id)} />
-            <KnowledgeBaseAvatar seed={base.id} palette={option.id} preview className={styles.swatch} /><span>{t(option.id)}</span>{palette === option.id && <SelectionCheck className={styles.check} />}
-          </label>)}
+          {KNOWLEDGE_BASE_AVATAR_PALETTES.map(option => <Tooltip key={option.id}>
+            <label className={`fob-action ${styles.palette}`} data-surface="plain" data-active={palette === option.id}>
+              <TooltipTrigger asChild><input type="radio" name="knowledge-palette" aria-label={t(option.id)} value={option.id} checked={palette === option.id} onChange={() => setPalette(option.id)} /></TooltipTrigger>
+              <KnowledgeBaseAvatar seed={base.id} palette={option.id} preview className={styles.swatch} />
+            </label>
+            <TooltipContent side="top">{t(option.id)}</TooltipContent>
+          </Tooltip>)}
         </div></fieldset>
         <div className={styles.collaboration}>
           <div className={styles.teamRow}><div><label htmlFor={`${id}-team`}>{t('teamCollaboration')}</label><p id={`${id}-team-help`}>{t(base.source === 'server' ? 'teamLocked' : 'teamDescription')}</p></div>
