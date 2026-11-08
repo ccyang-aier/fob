@@ -1,8 +1,8 @@
 import { expect, test } from 'bun:test';
 import { assistantWindowRect, parseAssistantWindowPosition } from './assistant-window-geometry';
 
-test('opens as a 400 by 600 surface near the upper right on desktop', () => {
-  expect(assistantWindowRect({ left: 0, top: 0, width: 1440, height: 900 })).toEqual({ left: 1016, top: 104, width: 400, height: 600 });
+test('opens as a compact landscape surface near the upper right on desktop', () => {
+  expect(assistantWindowRect({ left: 0, top: 0, width: 1440, height: 900 })).toEqual({ left: 896, top: 104, width: 520, height: 432 });
 });
 
 test('clamps saved positions and drags after monitors or viewport dimensions change', () => {
@@ -22,7 +22,7 @@ test('clamps saved positions and drags after monitors or viewport dimensions cha
 
 test('fits the complete surface into the mobile keyboard viewport including its pan offset', () => {
   expect(assistantWindowRect({ left: 0, top: 140, width: 390, height: 320 }, { left: 1000, top: -1000 })).toEqual({ left: 8, top: 148, width: 374, height: 304 });
-  expect(assistantWindowRect({ left: 0, top: 0, width: 390, height: 844 })).toEqual({ left: 8, top: 104, width: 374, height: 600 });
+  expect(assistantWindowRect({ left: 0, top: 0, width: 390, height: 844 })).toEqual({ left: 8, top: 104, width: 374, height: 432 });
 });
 
 test('accepts only finite numeric stored coordinates and discards unrelated persisted fields', () => {

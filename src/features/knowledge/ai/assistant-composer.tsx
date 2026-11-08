@@ -36,15 +36,16 @@ export function AssistantComposer({ draft, onChange, settings, defaultModel, sel
     const input = inputRef.current;
     if (!input) return;
     input.style.height = '0px';
-    input.style.height = `${Math.max(56, Math.min(input.scrollHeight, 132))}px`;
+    input.style.height = `${Math.max(44, Math.min(input.scrollHeight, 120))}px`;
   }, [draft.prompt, inputRef]);
   return <form className={styles.composer} onSubmit={event => { event.preventDefault(); onSend(); }}>
     {notice && <div className={styles.notices}>{notice}</div>}
-    {selection && <div className={styles.selection}>
-      <div><span><FileText size={12} aria-hidden />{t('selected')}</span><button type="button" className={`fob-action ${styles.iconButton}`} aria-label={t('clearSelection')} disabled={locked} onClick={onClearSelection}><X size={12} aria-hidden /></button></div>
-      <p>{selection}</p><div className={styles.selectionActions}>{(['improve', 'translate'] as const).map(action => <button key={action} type="button" className="fob-action" disabled={locked} onClick={() => { onChange({ prompt: t(action === 'improve' ? 'improvePrompt' : 'translatePrompt') }); inputRef.current?.focus(); }}>{t(action)}</button>)}</div>
-    </div>}
     <div className={styles.inputBox} data-busy={busy || undefined}>
+      {selection && <div className={styles.selection} role="group" aria-label={t('selected')}>
+        <FileText size={12} aria-hidden /><p title={selection}>{selection}</p>
+        <div className={styles.selectionActions}>{(['improve', 'translate'] as const).map(action => <button key={action} type="button" className="fob-action" aria-label={t(action)} disabled={locked} onClick={() => { onChange({ prompt: t(action === 'improve' ? 'improvePrompt' : 'translatePrompt') }); inputRef.current?.focus(); }}>{t(action === 'improve' ? 'polishAction' : 'translateAction')}</button>)}</div>
+        <button type="button" className={`fob-action ${styles.iconButton}`} aria-label={t('clearSelection')} disabled={locked} onClick={onClearSelection}><X size={12} aria-hidden /></button>
+      </div>}
       <textarea ref={inputRef} aria-label={t('placeholder')} placeholder={t('placeholder')} maxLength={selection ? Math.max(1, 7998 - selection.length) : 8000} rows={2}
         value={draft.prompt} readOnly={locked} onChange={event => onChange({ prompt: event.target.value })}
         onKeyDown={event => {
@@ -60,6 +61,6 @@ export function AssistantComposer({ draft, onChange, settings, defaultModel, sel
         </TooltipTrigger><TooltipContent>{t(busy ? 'stop' : 'send')}</TooltipContent></Tooltip>
       </div>
     </div>
-    <div className={styles.composerHint}><span>{t(truncated ? 'truncated' : 'review')}</span><span aria-hidden>{t('enterHint')}</span></div>
+    {truncated && <p className={styles.composerHint} role="status">{t('truncated')}</p>}
   </form>;
 }

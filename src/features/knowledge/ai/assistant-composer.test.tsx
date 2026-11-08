@@ -72,8 +72,8 @@ test('Enter sends once while Shift+Enter and both IME composition signals remain
 test('grows with multiline drafts within bounds and shrinks when the draft is cleared', async () => {
   await render(); expect(input().style.height).toBe('60px');
   measuredHeight = 95; await type('A\nB\nC'); expect(input().style.height).toBe('95px');
-  measuredHeight = 500; await type('Long\n'.repeat(60)); expect(input().style.height).toBe('132px');
-  measuredHeight = 0; await type(''); expect(input().style.height).toBe('56px');
+  measuredHeight = 500; await type('Long\n'.repeat(60)); expect(input().style.height).toBe('120px');
+  measuredHeight = 0; await type(''); expect(input().style.height).toBe('44px');
 });
 
 test('busy mode keeps the prompt readable, locks context controls and replaces send with an enabled stop', async () => {
@@ -107,10 +107,9 @@ test('selected text quick actions populate the draft and focus it, and clearing 
   const selected = 'The original selected paragraph.';
   await render({ selection: selected });
   expect(document.body.textContent).toContain(selected); expect(input().maxLength).toBe(7998 - selected.length);
-  const action = (label: string) => [...document.querySelectorAll<HTMLButtonElement>('button')].find(item => item.textContent === label)!;
-  await act(async () => action('Polish selected text').click());
+  await act(async () => control('Polish selected text').click());
   expect(input().value).toContain('Polish the following selected text.'); expect(document.activeElement).toBe(input());
-  await act(async () => action('Translate selected text').click()); expect(input().value).toContain('Translate the selected text into English');
+  await act(async () => control('Translate selected text').click()); expect(input().value).toContain('Translate the selected text into English');
   const draft = input().value;
   await act(async () => control('Remove selected text').click());
   expect(cleared).toBe(1); expect(document.body.textContent).not.toContain(selected); expect(input().value).toBe(draft); expect(input().maxLength).toBe(8000); expect(sent).toBe(0);

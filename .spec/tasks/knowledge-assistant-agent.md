@@ -83,3 +83,16 @@
 - [x] 最终稳定页面 pageerror / console error 均为 0，正文边界不变；真实 Fullscreen API 进入退出保留输入。生产构建与架构检查通过，日志 `assistant-floating-build.log` / `assistant-floating-boundaries.log` / `assistant-floating-lint.log`。
 
 布局评估与机械扫描由两个独立子代理完成，机械结果为空；人工评估仍发现并修复输入区 80px 空白、信息层级及重复控件。设计与交互证据见 [design-qa.md](../../design-qa.md)，当前设计仍以 [知识助手](../../docs/knowledge-assistant-agent.md) 为准。
+
+## 按单一 Golo 参考重做聊天界面
+
+- [x] 实际打开并截图 Golo 的 [AI Chat Interface in Light Theme](https://dribbble.com/shots/24101037-AI-Chat-Interface-in-Light-Theme)，以该图作为当前唯一视觉基准；旧版混合参考不作为本轮通过依据。
+- [x] 520 × 432px 横向浮窗、32px 标题栏、12px 正文与标题；移除大空态、介绍段落和独立文档栏，文档名放进标题标签。
+- [x] 建议问题使用一个轻描边浮层、四行箭头操作；白底输入、随内容收缩的模型胶囊、24px 细圆框发送、30px 引用条。完成回答移除重复助手标题，检索步骤移到末尾。
+- [x] 通过真实文档选区入口带入上下文；润色和移除引用可用，移除不丢草稿。390 × 320 视口的建议列表首尾均可滚动到，不用底对齐制造不可达内容。
+- [x] 真实模型回答负责人和日期并带来源；实际测试发送、停止、三类菜单、设置返回、拖拽和历史搜索。测试隔离账户及知识库，不修改用户已有资料。
+- [x] 71 项 / 511 断言通过；类型、ESLint、图标、国际化（3258 条文案）、架构和生产构建通过。日志 `assistant-golo-tests-final.log`、`assistant-golo-types-final.log`、`assistant-golo-lint-final.log`、`assistant-golo-i18n.log`、`assistant-golo-boundaries.log`、`assistant-golo-build-final.log`。
+
+当前视觉核对、密度说明和浏览器证据见 [design-qa.md](../../design-qa.md)。不把预览画布、示例对话、品牌差异或开发热更新中间态冒充为逐像素一致。
+
+验收结束后已关闭独立浏览器，按知识库归属和合成账户前缀核对后清理测试知识库、账户、会话任务和用量；删除临时认证状态。Web 与业务服务继续运行。

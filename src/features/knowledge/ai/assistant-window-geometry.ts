@@ -19,8 +19,8 @@ export function assistantWindowRect(viewport: AssistantWindowViewport, position?
   const gutter = viewport.width <= 600 ? 8 : 16;
   const insetX = Math.min(gutter, viewport.width / 2);
   const insetY = Math.min(gutter, viewport.height / 2);
-  const width = Math.min(400, Math.max(0, viewport.width - insetX * 2));
-  const height = Math.min(600, Math.max(0, viewport.height - insetY * 2));
+  const width = Math.min(520, Math.max(0, viewport.width - insetX * 2));
+  const height = Math.min(432, Math.max(0, viewport.height - insetY * 2));
   const minLeft = viewport.left + insetX, minTop = viewport.top + insetY;
   const maxLeft = viewport.left + viewport.width - width - insetX;
   const maxTop = viewport.top + viewport.height - height - insetY;

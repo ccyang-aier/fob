@@ -94,28 +94,28 @@ test('drags the title, clamps both viewport edges and persists only the final po
   await act(async () => pointer(header, 'pointermove', -1000, -1000));
   expect(panel().style.left).toBe('16px'); expect(panel().style.top).toBe('16px');
   await act(async () => pointer(header, 'pointermove', 10000, 10000));
-  expect(panel().style.left).toBe('1024px'); expect(panel().style.top).toBe('284px');
+  expect(panel().style.left).toBe('904px'); expect(panel().style.top).toBe('452px');
   expect(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)).toBeNull();
   await act(async () => pointer(header, 'pointerup', 10000, 10000));
   expect(captured).toBe(-1); expect(panel().dataset.dragging).toBeUndefined();
-  expect(JSON.parse(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)!)).toEqual({ left: 1024, top: 284 });
+  expect(JSON.parse(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)!)).toEqual({ left: 904, top: 452 });
   await act(async () => document.querySelector<HTMLButtonElement>('#close')!.click());
   await act(async () => document.querySelector<HTMLButtonElement>('#open')!.click());
-  expect(panel().style.left).toBe('1024px'); expect(panel().style.top).toBe('284px');
+  expect(panel().style.left).toBe('904px'); expect(panel().style.top).toBe('452px');
 });
 
 test('header tools stay clickable and their arrow keys do not move the surface', async () => {
   await open();
   const tool = document.querySelector<HTMLButtonElement>('#tool')!;
   await act(async () => { pointer(tool, 'pointerdown', 1100, 100); pointer(handle(), 'pointermove', 200, 200); key(tool, 'ArrowLeft'); });
-  expect(panel().style.left).toBe('1016px'); expect(panel().style.top).toBe('104px'); expect(panel().dataset.dragging).toBeUndefined();
+  expect(panel().style.left).toBe('896px'); expect(panel().style.top).toBe('104px'); expect(panel().dataset.dragging).toBeUndefined();
 });
 
 test('keyboard movement is available on the handle with a faster Shift step', async () => {
   await open();
   await act(async () => { handle().focus(); key(handle(), 'ArrowLeft'); key(handle(), 'ArrowDown', true); });
-  expect(panel().style.left).toBe('1006px'); expect(panel().style.top).toBe('144px');
-  expect(JSON.parse(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)!)).toEqual({ left: 1006, top: 144 });
+  expect(panel().style.left).toBe('886px'); expect(panel().style.top).toBe('144px');
+  expect(JSON.parse(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)!)).toEqual({ left: 886, top: 144 });
   expect(handle().getAttribute('aria-describedby')).toBeTruthy();
 });
 
@@ -128,7 +128,7 @@ test('mobile viewport and keyboard changes clamp the window and restore desktop 
   expect(panel().style.left).toBe('8px'); expect(panel().style.top).toBe('128px');
   expect(panel().style.width).toBe('374px'); expect(panel().style.height).toBe('284px');
   await act(async () => { viewport.width = 1440; viewport.height = 900; viewport.offsetTop = 0; viewportEvents.dispatchEvent(new Event('resize')); });
-  expect(panel().style.width).toBe('400px'); expect(panel().style.height).toBe('600px'); expect(panel().style.top).toBe('104px');
+  expect(panel().style.width).toBe('520px'); expect(panel().style.height).toBe('432px'); expect(panel().style.top).toBe('104px');
   expect(browser.localStorage.getItem(ASSISTANT_WINDOW_STORAGE_KEY)).toBeNull();
 });
 
@@ -206,7 +206,7 @@ test('keeps an ordinary modeless fallback when native popovers are unavailable',
   Object.defineProperties(browser.HTMLElement.prototype, { showPopover: { configurable: true, value: undefined }, hidePopover: { configurable: true, value: undefined } });
   try {
     await open(); expect(host().hasAttribute('popover')).toBe(false); expect(panel().isConnected).toBe(true);
-    await act(async () => key(handle(), 'ArrowLeft')); expect(panel().style.left).toBe('1006px');
+    await act(async () => key(handle(), 'ArrowLeft')); expect(panel().style.left).toBe('886px');
     await act(async () => key(panel().querySelector('textarea')!, 'Escape')); expect(panel()).toBeNull();
   } finally { installPopover(); }
 });

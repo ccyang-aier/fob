@@ -16,7 +16,9 @@
 
 ### 悬浮助手的界面与生命周期
 
-界面结构参考 [Kristaps Elsins 的 AI Agent chat widget](https://dribbble.com/shots/24512905-Chat-widget-for-AI-Agent) 的消息分层与贴底输入，以及 [Jeff Zheng 的 AI agent widget](https://dribbble.com/shots/25829668-AI-agent-widget-Daily-Design-29) 的轻量快捷提示；保留 Fob 字体、灰阶、共享控件和用户指定生成图标。视口默认窗口 400 × 600px，顶部 104px、右边 24px；空间不足时缩小并限制在桌面 16px / 窄屏 8px 安全边距内，不挤压正文。
+当前唯一视觉基准为 [Golo 的 AI Chat Interface in Light Theme](https://dribbble.com/shots/24101037-AI-Chat-Interface-in-Light-Theme)。沿用它的横向窗口、细标题栏、右对齐问题胶囊、轻描边回答、平铺问题建议和白底输入区，不再混用多个设计来源。默认 520 × 432px、10px 圆角、32px 标题栏，顶部 104px、右边 24px；空间不足时缩小并限制在桌面 16px / 窄屏 8px 安全边距内，不挤压正文。字体沿用产品 Inter 和中文回退，标题和正文均为 12px；保留 Fob 生成星、AI 浅蓝功能色以及真实权限与模型配置。
+
+空态只有四行可直接提交的问题建议，放在参考中的单个浅描边浮层内，沿用行内箭头及共享浅灰 hover；不再显示大图标、大标题、介绍段落或独立文档栏，文档名收进标题栏的截断标签。回答展示实际轮次时间，生成期间保留研究进度，完成后将检索步骤移到回答末尾。输入默认 44px、最高 120px，模型使用随内容收缩的小胶囊，范围和档位使用紧凑菜单，发送为 24px 细圆框；引用选区在输入框顶部显示为 30px 单行栏，文本截断但保留完整上下文，润色、翻译和移除操作仍可用。窄屏压缩到 76px 输入上限；建议浮层用自动上边距贴底，溢出时可从头到尾滚动，不用 `justify-content:flex-end` 将顶部挤到不可滚动区域。长文截断等真实状态仍按需显示。
 
 - `assistant-conversation.tsx` 编排现有私有会话与权限状态；`assistant-composer.tsx` 管输入、模型、范围、档位与选区；`assistant-history.tsx` 管搜索和共享确认式删除，入口仍由 `assistant-panel.tsx` 导出。
 - `assistant-window.tsx` 只管窗口、焦点和浮层生命周期；纯 `assistant-window-geometry.ts` 计算拖拽与 visualViewport 边界。标题栏支持指针捕获及方向键，Shift 加快；仅将位置存到 `fob.assistant.window.v1`，不把会话或问题存到该键。
