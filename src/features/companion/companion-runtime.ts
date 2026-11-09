@@ -2,6 +2,7 @@ import { createTranslator } from '@/lib/i18n/messages';
 import styles from './companion-character.module.css';
 import { createCompanionFur } from './companion-fur';
 import { createCompanionClickSequence } from './companion-click-sequence';
+import { companionParticleIcon } from './companion-particle-icon';
 import { messages, type CompanionAction } from './companion.messages';
 
 export interface CompanionState { label: string; mood: number; full: number; busy: boolean; speech: string | null }
@@ -129,8 +130,8 @@ export function createCompanionRuntime(root: HTMLElement, onChange: (state: Comp
   }
   function hearts(n: number) {
     for (let i = 0; i < n; i++) later(() => {
-      const h = particle('heart'); h.textContent = '♥';
-      h.style.left = (90 + Math.random() * 40) + 'px'; h.style.top = '60px'; h.style.setProperty('--dx', (Math.random() - .5) * 60 + 'px');
+      const h = particle('heart'); h.innerHTML = companionParticleIcon('heart');
+      h.style.left = (68 + Math.random() * 40) + 'px'; h.style.top = '60px'; h.style.setProperty('--dx', (Math.random() - .5) * 60 + 'px');
       later(() => removeParticle(h), 1500);
     }, i * 180);
   }
@@ -227,10 +228,10 @@ export function createCompanionRuntime(root: HTMLElement, onChange: (state: Comp
       setLabel('CANDY!');
       const colors = ['#ffb3c7', '#ffe29a', '#b5f0d0', '#b9d4ff', '#e2c6ff'];
       const c = particle('candy'), col = colors[Math.floor(Math.random() * colors.length)];
-      c.innerHTML = `<svg viewBox="-10 -10 20 20" width="18" height="18"><path d="M0-9 2.4-3.2 8.6-2.8 3.8 1.2 5.4 7.4 0 4 -5.4 7.4 -3.8 1.2 -8.6-2.8 -2.4-3.2Z" fill="${col}" stroke="#fff" stroke-width="1" stroke-linejoin="round"/></svg>`;
+      c.innerHTML = companionParticleIcon('candy'); c.style.color = col;
       const sx = 40 + Math.random() * 140; c.style.left = sx + 'px'; c.style.top = '-160px';
       setEyes('wide'); say('哇！', 900);
-      c.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: `translate(${101 - sx}px,260px) rotate(540deg)` }], { duration: 1100, easing: 'cubic-bezier(.5,0,.8,.6)', fill: 'forwards' });
+      c.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: `translate(${83 - sx}px,260px) rotate(540deg)` }], { duration: 1100, easing: 'cubic-bezier(.5,0,.8,.6)', fill: 'forwards' });
       const t0 = performance.now();
       const follow = () => {
         if (disposed || !c.isConnected) return;

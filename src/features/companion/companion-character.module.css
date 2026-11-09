@@ -50,11 +50,11 @@
   .bursting .burst-line{ animation:bl .45s ease-out; }
   @keyframes bl{ 0%{opacity:0;transform:translateY(-50%) scale(.6)} 30%{opacity:1} 100%{opacity:0;transform:translateY(-50%) scale(1.4)} }
 
-  .sleepMarks{ position:absolute; right:-2px; top:-8px; pointer-events:none; }
-  .zzz{ position:absolute; right:0; top:0; font-size:24px; font-weight:700; color:#858995; opacity:0; pointer-events:none; }
+  .sleepMarks{ position:absolute; right:2px; top:-4px; pointer-events:none; }
+  .zzz{ position:absolute; right:0; top:0; font-size:44px; line-height:1; font-weight:700; color:#858995; opacity:0; pointer-events:none; }
   .sleeping .zzz{ animation:zz 2.4s ease-in-out infinite; }
-  .zzz:nth-child(2){ animation-delay:.8s; right:-20px; top:-20px; font-size:28px; }
-  .zzz:nth-child(3){ animation-delay:1.6s; right:-40px; top:-40px; font-size:32px; }
+  .zzz:nth-child(2){ animation-delay:.8s; right:-22px; top:-30px; font-size:52px; }
+  .zzz:nth-child(3){ animation-delay:1.6s; right:-44px; top:-64px; font-size:60px; }
   @keyframes zz{ 0%{opacity:0;transform:translate(0,10px)} 40%{opacity:.8} 100%{opacity:0;transform:translate(14px,-22px)} }
 
   .dizzyStars{ position:absolute; z-index:5; left:50%; top:-14px; width:0; height:0; opacity:0; visibility:hidden; pointer-events:none; }
@@ -69,10 +69,10 @@
   @keyframes stars-face{ from{transform:rotateZ(0deg) rotateX(-66deg)} to{transform:rotateZ(-360deg) rotateX(-66deg)} }
 
   .mini{ position:absolute; width:26px; height:26px; pointer-events:none; z-index:4; }
-  .heart{ position:absolute; pointer-events:none; color:#ff6b8a; font-size:16px; z-index:6; animation:heart 1.4s ease-out forwards; }
+  .heart{ position:absolute; width:44px; height:44px; pointer-events:none; color:#ff6b8a; z-index:6; animation:heart 1.4s ease-out forwards; }
   @keyframes heart{ 0%{opacity:0;transform:translate(0,0) scale(.4)} 20%{opacity:1;transform:translate(0,-10px) scale(1)} 100%{opacity:0;transform:translate(var(--dx),-80px) scale(.8)} }
 
-  .candy{ position:absolute; width:18px; height:18px; z-index:6; pointer-events:none; }
+  .candy{ position:absolute; width:54px; height:54px; z-index:6; pointer-events:none; }
 
 @media (prefers-reduced-motion: reduce) {
   .character :is(.breath, .zzz, .tilt, .eye, .pupil, .face, .arc, .hop, .squash, .shadow, .blush, .burst-line, .heart),

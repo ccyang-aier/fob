@@ -62,7 +62,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
   useLayoutEffect(() => {
     if (!open || historyOpen) return;
     const node = input.current;
-    if (node) { node.style.height = '0px'; node.style.height = `${Math.max(26, Math.min(node.scrollHeight, 88))}px`; }
+    if (node) { node.style.height = '0px'; node.style.height = `${Math.max(28, Math.min(node.scrollHeight, 88))}px`; }
   }, [text, open, historyOpen]);
   useEffect(() => {
     if (!open || historyOpen) return;

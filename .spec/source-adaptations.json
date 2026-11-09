@@ -181,12 +181,20 @@
     "sha256": "579397cde986b610e3d26a4810282588a262f530d02d98893f99917ce4b5bff9"
   },
   "src/features/companion/companion-toolbar.tsx": {
-    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations.",
-    "sha256": "de71cddfe6c863addbc61eb06abe4a60f1ca06f48871bf1de5e3607b14149ef2"
+    "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Consolidate companion tools into actions, expressions and feeding, keeping petting and sleep in the action menu. See docs/companion-ai-chat.md.",
+    "sha256": "bc27b650d41369be9e1e229ce6151758b5082e290131d0dc52df444f11f0cc09"
   },
   "src/features/companion/companion-widget.module.css": {
-    "reason": "Keep the passive speech bubble positioned and readable in the viewport, preserving shared tooltip material and pointer pass-through; remove the replaced tooltip animation and reduced-motion branches.",
-    "sha256": "36e786d1f5f86224929eaaab9aeafaa5060686b7dd2a31ed3a8a0b6f32fc42b3"
+    "reason": "Keep the passive speech bubble positioned and readable in the viewport, preserving shared tooltip material and pointer pass-through; remove the replaced tooltip animation and reduced-motion branches. Size desktop and touch rails and their drag bounds for three companion tools. See docs/companion-ai-chat.md.",
+    "sha256": "bc71246d8e50e262459b597652682715a7382824107a08b8b52be8bbd0aed86b"
+  },
+  "src/features/companion/companion-character.module.css": {
+    "reason": "Enlarge hearts, star candy and sleep marks at the existing character scale so interaction feedback is readable; preserve the character geometry and animation behavior. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",
+    "sha256": "9794cc7639c098ae5d44da7e262dc4609c4e82d3f12df96be777f79edc68d8b8"
+  },
+  "src/features/companion/companion-runtime.ts": {
+    "reason": "Render enlarged heart and candy particles through official shared catalog glyphs and center their existing animation paths; preserve action state, timing, cleanup and interaction semantics. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",
+    "sha256": "afe9d05dca76a789f841f83cbf69f09d4e9439118bedaaebf9370829ccc575f0"
   },
   "src/features/knowledge/assets/components/asset-uploader.tsx": {
     "reason": "Use the approved official Font Awesome 7 Solid catalog and explicit Lucide controls with the shared 16/14/12px scale; retain existing data IDs, state semantics, navigation and operations. Allow document import to route text files into native body creation while keeping the existing attachment queue, integrity checks and file picker. Make the full import dropzone clickable and keyboard-accessible with a sibling file input, preserving drop, upload, progress and retry behavior.",
@@ -1652,8 +1660,8 @@
     "sha256": "9ac0e4ab6d90fff13489b397cb77e125d6102f010097005ab13d27a454a01536"
   },
   "src/features/companion/companion.messages.ts": {
-    "reason": "Add localized primary chat and preserved secondary interaction hints for the existing soot companion. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",
-    "sha256": "e3fffde73d78c6450b7b81a3ff61b6b90d5a51f54caeb585e684b8c0c160a8f4"
+    "reason": "Add localized primary chat and preserved secondary interaction hints for the existing soot companion. Group petting, hop, poof and sleep in the action menu, remove duplicate sleep from expressions, and label the direct feeding tool consistently in both locales. Preserve action IDs and existing capabilities. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",
+    "sha256": "d639005f85cf5dda4b3ab935c8fa1565a0d64db4cf57a993cdbc4d7a2f6915a6"
   },
   "src/features/companion/use-companion-drag.ts": {
     "reason": "Clamp the existing draggable companion inside visualViewport including keyboard offsets; restore desired user placement after transient viewport changes without toggling chat on drag. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",

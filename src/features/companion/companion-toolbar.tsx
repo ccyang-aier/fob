@@ -1,4 +1,4 @@
-import { Heart, Moon, Sparkle } from '@/components/icons';
+import { Sparkle } from '@/components/icons';
 import { motion, useIsPresent, type Variants } from 'motion/react';
 import { useTranslation } from '@/lib/i18n/react';
 import { CompanionActionMenu } from './companion-action-menu';
@@ -37,12 +37,10 @@ export function CompanionToolbar({ id, state, onFeed, onAction }: {
       animate="open"
       exit="closed"
     >
-      <CompanionToolButton icon={Sparkle} label={t('喂糖')} disabled={state.busy} loading={state.busy && state.label === 'CANDY!'} onClick={onFeed} />
-      <span className={styles.divider} role="separator" />
-      <CompanionToolButton icon={Heart} label={t('抚摸')} disabled={state.busy} onClick={() => onAction('happy')} />
-      <CompanionActionMenu group="expression" busy={state.busy} onAction={onAction} />
       <CompanionActionMenu group="motion" busy={state.busy} onAction={onAction} />
-      <CompanionToolButton icon={Moon} label={t('睡眠')} disabled={state.busy} onClick={() => onAction('sleep')} />
+      <CompanionActionMenu group="expression" busy={state.busy} onAction={onAction} />
+      <span className={styles.divider} role="separator" />
+      <CompanionToolButton icon={Sparkle} label={t('喂糖')} disabled={state.busy} loading={state.busy && state.label === 'CANDY!'} onClick={onFeed} />
     </motion.div>
   );
 }

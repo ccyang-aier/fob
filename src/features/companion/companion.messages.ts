@@ -13,7 +13,7 @@ export const messages = defineMessages({
   拖动: ['拖动小精灵', 'Move companion'],
   心情: ['心情', 'Mood'],
   饱腹: ['饱腹', 'Fullness'],
-  喂糖: ['喂一颗金平糖 ✦', 'Feed a star candy ✦'],
+  喂糖: ['喂食', 'Feed'],
   眨眼: ['眨眼', 'Blink'],
   眨单眼: ['眨单眼', 'Wink'],
   开心: ['开心', 'Happy'],
@@ -49,9 +49,8 @@ export const messages = defineMessages({
 export const companionExpressions = [
   ['blink', '眨眼'], ['wink', '眨单眼'], ['happy', '开心'], ['drowsy', '瞌睡'],
   ['curious', '好奇'], ['surprised', '惊讶'], ['shy', '害羞'], ['dizzy', '眩晕'],
-  ['sleep', '睡眠'],
 ] as const;
 export const companionMotions = [
-  ['hopAct', '跳跃'], ['poof', '炸毛'],
+  ['happy', '抚摸'], ['hopAct', '跳跃'], ['poof', '炸毛'], ['sleep', '睡眠'],
 ] as const;
 export type CompanionAction = typeof companionExpressions[number][0] | typeof companionMotions[number][0];
