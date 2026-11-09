@@ -125,7 +125,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
       </DropdownMenuContent></DropdownMenu>
       <button type="button" className={`fob-action ${styles.icon}`} aria-label={t('close')} onClick={onClose}><X size={16} aria-hidden /></button>
     </div>
-    <div className={styles.messages}>
+    <div key={chat.loading ? 'loading' : 'ready'} className={styles.messages}>
       <div ref={transcript} className={styles.transcript} role={historyOpen ? 'region' : 'log'} aria-label={t(historyOpen ? 'history' : 'conversation')} aria-live="off" onScroll={event => { const node = event.currentTarget, near = node.scrollHeight - node.scrollTop - node.clientHeight < 50; follow.current = near; setLatest(!near); }}>
         {historyOpen ? <div className={`${styles.answer} ${styles.history}`}>
           <div className={styles.historyHeader}><button type="button" className={`fob-action ${styles.icon}`} aria-label={t('back')} onClick={() => setHistory({ key, open: false, filter: '' })}><ArrowLeft size={14} aria-hidden /></button><h3>{t('history')}</h3></div>
