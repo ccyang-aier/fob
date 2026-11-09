@@ -9,6 +9,7 @@ export type CompanionChatContext = {
   userId: string | null;
   knowledgeBaseId: string | null;
   knowledgeBaseName: string;
+  canConfigureAI: boolean;
   document: CompanionDocumentContext | null;
 };
 

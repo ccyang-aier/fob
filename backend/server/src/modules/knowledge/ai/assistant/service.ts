@@ -16,6 +16,7 @@ import { knowledgeBase } from '../../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
 import { createGatewayAgentModel, createKnowledgeAgentTools, knowledgeAgentSystem, runKnowledgeAgent } from '../agent';
 import type { KnowledgeAgentSearchModels } from '../tools/types';
+import { requireAssistantConfiguration } from './configuration-access';
 
 const codeOf = (error: unknown) => error instanceof ModelGatewayError || error instanceof AssistantError ? error.code : 'provider_unavailable';
 export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway; preferences: AssistantPreferences; hocuspocus?: Hocuspocus; search?: KnowledgeAgentSearchModels }) {
@@ -159,12 +160,13 @@ export function createAssistantService(deps: { pool: Pool; gateway: ModelGateway
   }
   return { conversations, ask, apply, preferences: deps.preferences,
     async checkConnection(actor: KnowledgeRequestContext, connectionId: string, modelId: string, signal: AbortSignal) {
+      requireAssistantConfiguration(actor);
       const started = performance.now();
       const result = await deps.gateway.generate({ context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId }, settings: await deps.preferences.resolveFor(actor, { connectionId, modelId }), tier: 'fast', messages: [{ role: 'user', content: 'Reply OK.' }], maxOutputTokens: 256, maxRetries: 0, timeoutMs: 45000, signal });
       return { model: result.model.model, latencyMs: Math.max(0, Math.round(performance.now() - started)) };
     },
     async cancel(actor: KnowledgeRequestContext, id: string) { const task = active.get(id); if (task?.userId === actor.userId && task.knowledgeBaseId === actor.knowledgeBaseId) task.controller.abort(); await conversations.requestCancel(actor, id); },
-    async check(actor: KnowledgeRequestContext, signal: AbortSignal) { const result = await deps.gateway.generate({ context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId }, settings: await deps.preferences.resolve(actor), tier: 'fast', messages: [{ role: 'user', content: 'Reply OK.' }], maxOutputTokens: 256, maxRetries: 0, timeoutMs: 45000, signal }); return { model: result.model.model }; },
+    async check(actor: KnowledgeRequestContext, signal: AbortSignal) { requireAssistantConfiguration(actor); const result = await deps.gateway.generate({ context: { knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId }, settings: await deps.preferences.resolve(actor), tier: 'fast', messages: [{ role: 'user', content: 'Reply OK.' }], maxOutputTokens: 256, maxRetries: 0, timeoutMs: 45000, signal }); return { model: result.model.model }; },
   };
 }
 export type AssistantService = ReturnType<typeof createAssistantService>;

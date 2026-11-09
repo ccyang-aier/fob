@@ -5,12 +5,12 @@ export type CompanionDocumentPublication = { userId: string; knowledgeBaseId: st
 type Lease<T> = { token: symbol; sequence: number; value: T };
 
 export const emptyCompanionContext: CompanionChatContext = {
-  status: 'signed-out', userId: null, knowledgeBaseId: null, knowledgeBaseName: '', document: null,
+  status: 'signed-out', userId: null, knowledgeBaseId: null, knowledgeBaseName: '', canConfigureAI: false, document: null,
 };
 
 function equalContext(a: CompanionChatContext, b: CompanionChatContext) {
   return a.status === b.status && a.userId === b.userId && a.knowledgeBaseId === b.knowledgeBaseId && a.knowledgeBaseName === b.knowledgeBaseName
-    && a.document?.pageId === b.document?.pageId && a.document?.title === b.document?.title && a.document?.editable === b.document?.editable;
+    && a.canConfigureAI === b.canConfigureAI && a.document?.pageId === b.document?.pageId && a.document?.title === b.document?.title && a.document?.editable === b.document?.editable;
 }
 
 /** Independent publisher leases tolerate editor/host mount order and retained hidden tabs. */

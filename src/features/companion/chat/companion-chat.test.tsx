@@ -8,7 +8,7 @@ import type { CompanionChatContext, CompanionChatController } from './types';
 import type { TooltipProvider as Provider } from '@/components/ui/tooltip';
 
 const base = '10000000-0000-4000-8000-000000000001', page = '10000000-0000-4000-8000-000000000002', id = '10000000-0000-4000-8000-000000000003';
-const context: CompanionChatContext = { status: 'ready', userId: 'alice', knowledgeBaseId: base, knowledgeBaseName: 'Research', document: { pageId: page, title: 'Launch plan', editable: true } };
+const context: CompanionChatContext = { status: 'ready', userId: 'alice', knowledgeBaseId: base, knowledgeBaseName: 'Research', canConfigureAI: true, document: { pageId: page, title: 'Launch plan', editable: true } };
 const source: AssistantSource = { id: 2, pageId: page, blockId: 'intro', title: 'Launch plan', excerpt: 'Owner is Lin.' };
 const turn: AssistantTurn = { id, question: 'Who owns the launch?', answer: 'Lin owns it [2](fob-source:2).', mode: 'document', pageId: page, status: 'done', sources: [source], errorCode: null, createdAt: '2026-11-09T00:00:00.000Z', appliedPageId: null, model: 'model', inputTokens: 20, outputTokens: 10 };
 const conversation: AssistantConversation = { id, title: 'Launch owner', updatedAt: turn.createdAt, turns: [turn] };
@@ -65,6 +65,19 @@ async function menu(label: string) {
   const item = [...document.querySelectorAll<HTMLElement>('[role^="menuitem"]')].find(node => node.textContent === label)!;
   expect(item).toBeDefined(); await act(async () => { item.click(); await tick(); });
 }
+
+test('AI settings are absent from the menu and unconfigured notice for ordinary members', async () => {
+  await render({ context: { ...context, canConfigureAI: false }, chat: controller({ ready: false }) });
+  expect(document.body.textContent).not.toContain('AI connection settings');
+  await openMenu('More conversation actions');
+  expect(document.body.textContent).not.toContain('AI connection settings');
+  expect(document.body.textContent).toContain('Play with Coal');
+  expect(settingsOpened).toBe(0);
+});
+
+test('administrators retain the AI settings menu', async () => {
+  await render(); await openMenu('More conversation actions'); await menu('AI connection settings'); expect(settingsOpened).toBe(1);
+});
 function key(value: string, details: KeyboardEventInit = {}) { input().dispatchEvent(new KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true, ...details })); }
 
 test('Enter submits once, keeps the draft until server start and clears only accepted text', async () => {
@@ -109,7 +122,7 @@ test('signed-out and local scopes cannot send, and sign-in recovery never opens 
   expect(document.querySelector('a[href="/auth"]')?.textContent).toBe('Sign in'); expect(control('Send').disabled).toBe(true);
   await openMenu('More conversation actions');
   const setting = [...document.querySelectorAll<HTMLElement>('[role="menuitem"]')].find(item => item.textContent === 'AI connection settings')!;
-  expect(setting.hasAttribute('data-disabled')).toBe(true); expect(settingsOpened).toBe(0);
+  expect(setting).toBeUndefined(); expect(settingsOpened).toBe(0);
   await menu('Play with Coal'); expect(interacted).toBe(1);
   await act(async () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
   await render({ context: { ...context, status: 'local' } });

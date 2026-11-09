@@ -21,6 +21,7 @@ import { AboutSettings } from './about-settings';
 import { AppearanceSettings } from './appearance-settings';
 import { GeneralSettings } from './general-settings';
 import { AISettings } from './ai/ai-settings';
+import { useAIConfigurationAccess } from '@/features/knowledge/ai/use-ai-configuration-access';
 import styles from './settings-canvas.module.css';
 
 const SECTIONS: Array<SidebarRowItem & { id: SettingsSection; label: keyof typeof messages }> = [
@@ -38,6 +39,7 @@ export function SettingsCanvas({
   onSectionChange?: (section: SettingsSection) => void;
 }) {
   const { t: uiText, locale } = useTranslation(messages);
+  const canConfigureAI = useAIConfigurationAccess();
   const [section, setSection] = useState<SettingsSection>(initialSection);
   const [previousInitialSection, setPreviousInitialSection] = useState(initialSection);
   if (previousInitialSection !== initialSection) {
@@ -46,7 +48,8 @@ export function SettingsCanvas({
   }
   const [query, setQuery] = useState('');
   const { width, dragging, startResize } = useSidebarWidth();
-  const sections = SECTIONS.map((item) => ({ ...item, label: uiText(item.label) }));
+  const activeSection = section === 'ai' && !canConfigureAI ? 'appearance' : section;
+  const sections = SECTIONS.filter(item => item.id !== 'ai' || canConfigureAI).map((item) => ({ ...item, label: uiText(item.label) }));
   const normalizedQuery = query.trim().toLocaleLowerCase(locale);
   const visibleSections = normalizedQuery
     ? sections.filter((item) => item.label.toLocaleLowerCase(locale).includes(normalizedQuery))
@@ -98,7 +101,7 @@ export function SettingsCanvas({
                 key={item.id}
                 item={item}
                 className={cn(styles.sectionButton, !visibleSections.some(visible => visible.id === item.id) && styles.filteredOut)}
-                active={section === item.id}
+                active={activeSection === item.id}
                 onSelect={() => {
                   setSection(item.id as SettingsSection);
                   onSectionChange?.(item.id as SettingsSection);
@@ -122,11 +125,11 @@ export function SettingsCanvas({
         className={`${styles.main} bg-panel`}
         viewportClassName={`${styles.viewport} bg-panel`}
       >
-        {section === 'appearance' ? (
+        {activeSection === 'appearance' ? (
           <AppearanceSettings />
-        ) : section === 'general' ? (
+        ) : activeSection === 'general' ? (
           <GeneralSettings />
-        ) : section === 'ai' ? (
+        ) : activeSection === 'ai' ? (
           <AISettings />
         ) : (
           <AboutSettings />

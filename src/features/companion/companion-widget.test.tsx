@@ -73,7 +73,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   await act(async () => { root.render(null); for (const release of leases.splice(0)) release(); });
   for (const fn of Object.values(runtime)) fn.mockClear(); openSettings.mockClear(); requestOpenPageBlock.mockClear(); hookInputs = [];
-  leases.push(companionContextStore.workspace(Symbol(), { status: 'ready', userId, knowledgeBaseId, knowledgeBaseName: 'Actual workspace' }));
+  leases.push(companionContextStore.workspace(Symbol(), { status: 'ready', userId, knowledgeBaseId, knowledgeBaseName: 'Actual workspace', canConfigureAI: true }));
 });
 afterAll(async () => { await act(async () => root.unmount()); for (const release of leases.splice(0)) release(); await browser.happyDOM.abort(); mock.restore(); });
 const trigger = () => document.querySelector<HTMLElement>('[data-companion-drag]')!;
@@ -127,11 +127,11 @@ test('real workspace publications drive scope and source/settings callbacks with
   await click('Open source'); expect(requestOpenPageBlock.mock.calls).toEqual([[{ knowledgeBaseId, pageId: source.pageId, blockId: source.blockId }]]);
   await click('Open settings'); expect(openSettings.mock.calls).toEqual([['ai']]); expect(chat()).toBeNull(); expect(input().enabled).toBe(false);
   const nextUser = id(11), nextBase = id(12);
-  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'ready', userId: nextUser, knowledgeBaseId: nextBase, knowledgeBaseName: 'Next workspace' })); });
+  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'ready', userId: nextUser, knowledgeBaseId: nextBase, knowledgeBaseName: 'Next workspace', canConfigureAI: false })); });
   expect(input().scope).toEqual({ userId: nextUser, knowledgeBaseId: nextBase, pageId: null });
   await perform(() => trigger().click()); expect(document.querySelector('[data-test-document]')?.textContent).toBe('Next workspace');
-  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'local', userId: nextUser, knowledgeBaseId: nextBase, knowledgeBaseName: 'Local' })); });
+  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'local', userId: nextUser, knowledgeBaseId: nextBase, knowledgeBaseName: 'Local', canConfigureAI: false })); });
   expect(input().scope).toBeNull(); await click('Open source'); expect(requestOpenPageBlock.mock.calls).toHaveLength(1);
-  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'signed-out', userId: null, knowledgeBaseId: null, knowledgeBaseName: '' })); });
+  await perform(() => { leases.push(companionContextStore.workspace(Symbol(), { status: 'signed-out', userId: null, knowledgeBaseId: null, knowledgeBaseName: '', canConfigureAI: false })); });
   expect(input().scope).toBeNull(); expect(chat()).not.toBeNull(); expect(document.querySelector('[data-test-document]')?.textContent).toBe('');
 });

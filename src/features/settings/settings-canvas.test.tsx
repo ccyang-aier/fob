@@ -4,9 +4,11 @@ import { act } from 'react';
 import type { Root } from 'react-dom/client';
 import type { SettingsCanvas as Canvas } from './settings-canvas';
 import type { SettingsSection } from '@/lib/settings-navigation';
+import type { MemberRole } from '@fob/shared/resources';
 
 let browser: Window, root: Root, SettingsCanvas: typeof Canvas, changed: SettingsSection[];
 const labels = ['外观', '通用', 'AI 接入', '关于'];
+let role: MemberRole | null = 'owner', status = 'ready', source = 'server', sessionStatus = 'authenticated';
 
 beforeAll(async () => {
   browser = new Window({ url: 'http://localhost:3001/' });
@@ -15,6 +17,8 @@ beforeAll(async () => {
   globals.window = browser; globals.IS_REACT_ACT_ENVIRONMENT = true;
   globals.requestAnimationFrame = browser.requestAnimationFrame.bind(browser);
   globals.cancelAnimationFrame = browser.cancelAnimationFrame.bind(browser);
+  mock.module('@/features/identity/identity-context', () => ({ useIdentity: () => ({ session: { status: sessionStatus } }) }));
+  mock.module('@/features/knowledge/data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => ({ status, selectedKnowledgeBase: { source }, selectedKnowledgeBaseRole: role }) }));
   mock.module('./appearance-settings', () => ({ AppearanceSettings: () => <article>Appearance content</article> }));
   mock.module('./general-settings', () => ({ GeneralSettings: () => <article>General content</article> }));
   mock.module('./ai/ai-settings', () => ({ AISettings: () => <article>AI content</article> }));
@@ -22,7 +26,7 @@ beforeAll(async () => {
   SettingsCanvas = (await import('./settings-canvas')).SettingsCanvas;
   const { createRoot } = await import('react-dom/client'); const host = document.createElement('div'); document.body.append(host); root = createRoot(host);
 }, 20000);
-beforeEach(async () => { await act(async () => root.render(null)); changed = []; });
+beforeEach(async () => { await act(async () => root.render(null)); changed = []; role = 'owner'; status = 'ready'; source = 'server'; sessionStatus = 'authenticated'; });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 async function render() { await act(async () => root.render(<SettingsCanvas initialSection="ai" onSectionChange={section => changed.push(section)} />)); }
 const sectionButton = (label: string) => [...document.querySelectorAll<HTMLButtonElement>('nav button')].find(button => button.textContent?.trim() === label)!;
@@ -52,4 +56,22 @@ test('desktop resizing still updates the shared sidebar width after moving sizin
   expect(sidebar.style.getPropertyValue('--settings-sidebar-width')).toBe('280px');
   await act(async () => window.dispatchEvent(new PointerEvent('pointerup', { pointerId: 1, bubbles: true })));
   expect(handle.getAttribute('data-resizing')).toBeNull();
+});
+
+test.each(['member', 'viewer', 'guest', null] as const)('role %s cannot see or directly open AI settings, even through search', async value => {
+  role = value; await render();
+  expect(sectionButton('AI 接入')).toBeUndefined();
+  expect(document.querySelector('main')?.textContent).toBe('Appearance content');
+  const search = document.querySelector<HTMLInputElement>('input[aria-label="搜索设置"]')!;
+  await act(async () => { Object.getOwnPropertyDescriptor(browser.HTMLInputElement.prototype, 'value')!.set!.call(search, 'AI'); search.dispatchEvent(new Event('input', { bubbles: true })); });
+  expect(sectionButton('AI 接入')).toBeUndefined();
+  expect(document.body.textContent).not.toContain('AI content');
+});
+
+test('an administrator can configure AI; a library or permission change removes the open panel immediately', async () => {
+  role = 'admin'; await render(); expect(document.querySelector('main')?.textContent).toBe('AI content');
+  role = null; await render(); expect(sectionButton('AI 接入')).toBeUndefined(); expect(document.body.textContent).not.toContain('AI content');
+  role = 'owner'; source = 'local'; await render(); expect(sectionButton('AI 接入')).toBeUndefined();
+  source = 'server'; status = 'loading'; await render(); expect(sectionButton('AI 接入')).toBeUndefined();
+  status = 'ready'; sessionStatus = 'anonymous'; await render(); expect(sectionButton('AI 接入')).toBeUndefined();
 });

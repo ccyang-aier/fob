@@ -111,7 +111,7 @@ test('advisory locking enforces the 24-connection limit across concurrent reques
   expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(24); expect((await preferences.connections.list(actor))).toHaveLength(24);
   const rows = await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.select().from(modelCredential).where(and(eq(modelCredential.knowledgeBaseId, actor.knowledgeBaseId), eq(modelCredential.userId, actor.userId))));
   expect(rows).toHaveLength(24); expect(rows.every(row => !Buffer.from(row.encryptedSecret).toString().includes('synthetic-only'))).toBe(true);
-  await expect(preferences.connections.update(reader, randomUUID(), input('none'))).rejects.toThrow('configuration');
+  await expect(preferences.connections.update(reader, randomUUID(), input('none'))).rejects.toMatchObject({ code: 'INSUFFICIENT_SCOPE', status: 403 });
 });
 
 test('legacy approved Ollama becomes a visible keyless connection and deletion clears its defaults', async () => {

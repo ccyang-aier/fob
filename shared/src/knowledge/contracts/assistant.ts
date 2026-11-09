@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import { entityIdSchema, timestampSchema } from './primitives';
 import { modelEndpointSchema } from './models';
+import type { MemberRole } from '../../resources';
+
+/** AI connection management is scoped to the selected knowledge base. */
+export function canConfigureAssistant(role: MemberRole | null | undefined): boolean {
+  return role === 'owner' || role === 'admin';
+}
 
 export const assistantProviderSchema = z.enum(['default', 'zhipu-coding', 'zhipu-general', 'ollama', 'custom']);
 export const assistantPreferencesInputSchema = z.strictObject({

@@ -3,11 +3,12 @@ import { Window } from 'happy-dom';
 import { act } from 'react';
 import type { Root } from 'react-dom/client';
 import type { AssistantSettings } from '@fob/shared/knowledge/contracts';
+import type { MemberRole } from '@fob/shared/resources';
 import type { AISettings as Settings } from './ai-settings';
 
 type Session = { status: 'anonymous' | 'checking' } | { status: 'authenticated'; user: { id: string } };
 let browser: Window, root: Root, AISettings: typeof Settings, session: Session;
-let resources: { status: string; selectedKnowledgeBase: { id: string; name: string; source: 'local' | 'server' } | null; error: string | null; refreshKnowledgeBases(): void };
+let resources: { status: string; selectedKnowledgeBase: { id: string; name: string; source: 'local' | 'server' } | null; selectedKnowledgeBaseRole: MemberRole | null; error: string | null; refreshKnowledgeBases(): void };
 let requests: { base: string; signal?: AbortSignal; resolve(value: AssistantSettings): void; reject(error: Error): void }[];
 const configured: AssistantSettings = { provider: 'default', model: 'glm-5.3-flash', endpoint: 'https://model.test/v4', ready: true, hasCredential: false, ollamaAvailable: false, platformModel: 'glm-5.3-flash', calls: 7, inputTokens: 500, outputTokens: 100 };
 beforeAll(async () => {
@@ -19,26 +20,39 @@ beforeAll(async () => {
   mock.module('@/features/knowledge/data/knowledge-base-resources', () => ({ useKnowledgeBaseResources: () => resources }));
   mock.module('@/components/app-alert-provider', () => ({ useAppAlert: () => ({ notify: () => {} }) }));
   mock.module('@/features/knowledge/ai/assistant-api', () => ({ assistantApi: {
-    settings: (base: string, signal?: AbortSignal) => new Promise<AssistantSettings>((resolve, reject) => requests.push({ base, signal, resolve, reject })),
+    configuration: (base: string, signal?: AbortSignal) => new Promise<AssistantSettings>((resolve, reject) => requests.push({ base, signal, resolve, reject })),
   }, AssistantRequestError: class extends Error { constructor(readonly code: string) { super(code); } } }));
   AISettings = (await import('./ai-settings')).AISettings;
   const { createRoot } = await import('react-dom/client'); const host = document.createElement('div'); document.body.append(host); root = createRoot(host);
 }, 20000);
 beforeEach(async () => {
   await act(async () => root.render(null)); requests = []; session = { status: 'authenticated', user: { id: 'alice' } };
-  resources = { status: 'ready', selectedKnowledgeBase: null, error: null, refreshKnowledgeBases() {} };
+  resources = { status: 'ready', selectedKnowledgeBase: null, selectedKnowledgeBaseRole: 'owner', error: null, refreshKnowledgeBases() {} };
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
 async function render() { await act(async () => root.render(<AISettings />)); }
 async function resolve(request = requests.at(-1)!, value = configured) { await act(async () => { request.resolve(value); await new Promise(done => setTimeout(done, 10)); }); }
 
 test('does not request personal settings without a server knowledge base or authenticated account', async () => {
-  await render(); expect(document.body.textContent).toContain('请先选择一个知识库');
+  await render(); expect(document.body.textContent).toBe('');
   resources.selectedKnowledgeBase = { id: 'local-a', name: 'Local', source: 'local' };
-  await render(); expect(document.body.textContent).toContain('本机知识库暂不支持 AI 接入');
-  session = { status: 'anonymous' }; await render(); expect(document.body.textContent).toContain('登录后配置 AI');
-  session = { status: 'checking' }; await render(); expect(document.body.textContent).toContain('正在读取 AI 配置');
+  await render(); expect(document.body.textContent).toBe('');
+  session = { status: 'anonymous' }; await render(); expect(document.body.textContent).toBe('');
+  session = { status: 'checking' }; await render(); expect(document.body.textContent).toBe('');
   expect(requests).toHaveLength(0);
+});
+
+test.each(['member', 'viewer', 'guest', null] as const)('direct AI settings render does not mount or fetch configuration for %s', async role => {
+  resources.selectedKnowledgeBase = { id: 'server-a', name: 'One', source: 'server' };
+  resources.selectedKnowledgeBaseRole = role;
+  await render(); expect(document.body.textContent).toBe(''); expect(requests).toHaveLength(0);
+});
+
+test('revoking administrator permission unmounts settings and aborts its in-flight request', async () => {
+  resources.selectedKnowledgeBase = { id: 'server-a', name: 'One', source: 'server' }; resources.selectedKnowledgeBaseRole = 'admin';
+  await render(); const first = requests[0]; expect(first).toBeDefined();
+  resources.selectedKnowledgeBaseRole = 'member'; await render(); expect(first.signal?.aborted).toBe(true);
+  await resolve(first); expect(document.querySelector('[data-ai-connections]')).toBeNull(); expect(document.body.textContent).toBe('');
 });
 
 test('shows the actual account and knowledge-base scope before rendering saved settings', async () => {

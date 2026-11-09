@@ -124,7 +124,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
         <DropdownMenuItem disabled={!available || busy} onSelect={startNew}><Plus size={14} aria-hidden />{t('newConversation')}</DropdownMenuItem>
         <DropdownMenuItem disabled={!available || busy} onSelect={() => { setHistory({ key, open: true, filter: '' }); void chat.refresh(); }}><ClockCounterClockwise size={14} aria-hidden />{t('history')}</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem disabled={!available} onSelect={onSettings}><GearSix size={14} aria-hidden />{t('settings')}</DropdownMenuItem>
+        {available && context.canConfigureAI && <DropdownMenuItem onSelect={onSettings}><GearSix size={14} aria-hidden />{t('settings')}</DropdownMenuItem>}
         <DropdownMenuItem onSelect={onInteract}><Heart size={14} aria-hidden />{t('interact')}</DropdownMenuItem>
       </DropdownMenuContent></DropdownMenu>
       <button type="button" className={`fob-action ${styles.icon}`} aria-label={t('close')} onClick={onClose}><X size={16} aria-hidden /></button>
@@ -153,7 +153,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
             </div>
           </article>)}
           {!turns.length && (pending ? <p className={styles.loading} role="status">{t('loading')}</p> : <div className={styles.answer} data-companion-bubble="answer" data-tail><span className={styles.tail} aria-hidden="true" data-companion-tail /><p>{!available ? stateLabel : t('greeting')}</p>{context.status === 'signed-out' && <a className={styles.source} href="/auth">{t('signIn')}</a>}</div>)}
-          {available && !chat.settingsLoading && !chat.ready && <div className={styles.notice}><AppAlert tone="info" title={t('configuration')} action={<Button variant="ghost" size="sm" onClick={onSettings}>{t('settings')}</Button>} /></div>}
+          {available && !chat.settingsLoading && !chat.ready && <div className={styles.notice}><AppAlert tone="info" title={t(context.canConfigureAI ? 'configuration' : 'configurationManaged')} action={context.canConfigureAI ? <Button variant="ghost" size="sm" onClick={onSettings}>{t('settings')}</Button> : undefined} /></div>}
           {available && chat.errorCode && !(last?.status === 'failed' && last.errorCode === chat.errorCode) && <div className={styles.notice}><AppAlert tone="error" title={t(assistantErrorKey(chat.errorCode))} action={<Button variant="ghost" size="sm" onClick={() => void chat.refresh()}>{t('retry')}</Button>} /></div>}
           {chat.truncated && turns.length > 0 && <p className={styles.muted}>{t('truncated')}</p>}
         </>}

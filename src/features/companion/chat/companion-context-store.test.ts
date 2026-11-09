@@ -1,8 +1,16 @@
 import { expect, test } from 'bun:test';
 import { createCompanionContextStore, emptyCompanionContext, type CompanionWorkspaceContext } from './companion-context-store';
 
-const workspace = (userId = 'alice', knowledgeBaseId = 'library-a'): CompanionWorkspaceContext => ({ status: 'ready', userId, knowledgeBaseId, knowledgeBaseName: knowledgeBaseId });
+const workspace = (userId = 'alice', knowledgeBaseId = 'library-a'): CompanionWorkspaceContext => ({ status: 'ready', userId, knowledgeBaseId, knowledgeBaseName: knowledgeBaseId, canConfigureAI: false });
 const document = (userId = 'alice', knowledgeBaseId = 'library-a', pageId = 'page-a') => ({ userId, knowledgeBaseId, document: { pageId, title: pageId, editable: true } });
+
+test('permission changes publish a new snapshot even within the same account and library', () => {
+  const store = createCompanionContextStore(), owner = Symbol(); let notifications = 0;
+  store.subscribe(() => { notifications++; });
+  store.workspace(owner, { ...workspace(), canConfigureAI: true });
+  expect(store.getSnapshot().canConfigureAI).toBe(true);
+  store.workspace(owner, workspace()); expect(store.getSnapshot().canConfigureAI).toBe(false); expect(notifications).toBe(2);
+});
 
 test('accepts the active document before its workspace mounts without publishing an unauthenticated page', () => {
   const store = createCompanionContextStore();

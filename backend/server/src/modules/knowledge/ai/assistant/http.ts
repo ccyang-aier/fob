@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { createMiddleware } from 'hono/factory';
 import { cors } from 'hono/cors';
 import { bodyLimit } from 'hono/body-limit';
 import { stream } from 'hono/streaming';
@@ -9,6 +10,7 @@ import { requireKnowledgeRequest, knowledgeAccessErrorResponse } from '../../acc
 import { ModelGatewayError } from '../gateway';
 import { AssistantError } from './conversations';
 import type { AssistantService } from './service';
+import { requireAssistantConfiguration } from './configuration-access';
 
 export function createAssistantRoutes(deps: { authenticator: KnowledgeRequestAuthenticator; trustedOrigins: readonly string[]; service: AssistantService }) {
   const app = new Hono<{ Variables: { knowledge: KnowledgeRequestContext } }>(), base = '/api/knowledge/:knowledgeBaseId/assistant';
@@ -22,17 +24,24 @@ export function createAssistantRoutes(deps: { authenticator: KnowledgeRequestAut
   app.use(`${base}*`, requireKnowledgeRequest(deps.authenticator, context => context.req.param('knowledgeBaseId')!, ['read']));
   const id = (value: string) => entityIdSchema.parse(value);
   const { service } = deps;
+  const configure = createMiddleware<{ Variables: { knowledge: KnowledgeRequestContext } }>(async (context, next) => {
+    const actor = await deps.authenticator.refresh(context.get('knowledge'), ['read']);
+    requireAssistantConfiguration(actor);
+    context.set('knowledge', actor);
+    await next();
+  });
   app.get(`${base}/settings`, context => service.preferences.read(context.get('knowledge')).then(value => context.json(value)));
-  app.put(`${base}/settings`, async context => context.json(await service.preferences.save(await deps.authenticator.refresh(context.get('knowledge'), ['read']), await context.req.json())));
-  app.post(`${base}/check`, async context => context.json(await service.check(await deps.authenticator.refresh(context.get('knowledge'), ['read']), context.req.raw.signal)));
-  app.put(`${base}/selections`, async context => context.json(await service.preferences.saveSelections(await deps.authenticator.refresh(context.get('knowledge'), ['read']), assistantSelectionsSchema.parse(await context.req.json()))));
-  app.post(`${base}/connections`, async context => context.json(await service.preferences.connections.create(await deps.authenticator.refresh(context.get('knowledge'), ['read']), await context.req.json()), 201));
-  app.put(`${base}/connections/:id`, async context => context.json(await service.preferences.connections.update(await deps.authenticator.refresh(context.get('knowledge'), ['read']), id(context.req.param('id')), await context.req.json())));
-  app.delete(`${base}/connections/:id`, async context => { await service.preferences.connections.remove(await deps.authenticator.refresh(context.get('knowledge'), ['read']), id(context.req.param('id'))); return context.json({ removed: true }); });
-  app.get(`${base}/connections/:id/models`, async context => context.json(await service.preferences.connections.discover(context.get('knowledge'), id(context.req.param('id')), context.req.raw.signal)));
-  app.post(`${base}/connections/:id/test`, async context => {
+  app.get(`${base}/configuration`, configure, context => service.preferences.configuration(context.get('knowledge')).then(value => context.json(value)));
+  app.put(`${base}/settings`, configure, async context => context.json(await service.preferences.save(context.get('knowledge'), await context.req.json())));
+  app.post(`${base}/check`, configure, async context => context.json(await service.check(context.get('knowledge'), context.req.raw.signal)));
+  app.put(`${base}/selections`, configure, async context => context.json(await service.preferences.saveSelections(context.get('knowledge'), assistantSelectionsSchema.parse(await context.req.json()))));
+  app.post(`${base}/connections`, configure, async context => context.json(await service.preferences.connections.create(context.get('knowledge'), await context.req.json()), 201));
+  app.put(`${base}/connections/:id`, configure, async context => context.json(await service.preferences.connections.update(context.get('knowledge'), id(context.req.param('id')), await context.req.json())));
+  app.delete(`${base}/connections/:id`, configure, async context => { await service.preferences.connections.remove(context.get('knowledge'), id(context.req.param('id'))); return context.json({ removed: true }); });
+  app.get(`${base}/connections/:id/models`, configure, async context => context.json(await service.preferences.connections.discover(context.get('knowledge'), id(context.req.param('id')), context.req.raw.signal)));
+  app.post(`${base}/connections/:id/test`, configure, async context => {
     const input = z.strictObject({ modelId: z.string().trim().min(1).max(200) }).parse(await context.req.json());
-    return context.json(await service.checkConnection(await deps.authenticator.refresh(context.get('knowledge'), ['read']), id(context.req.param('id')), input.modelId, context.req.raw.signal));
+    return context.json(await service.checkConnection(context.get('knowledge'), id(context.req.param('id')), input.modelId, context.req.raw.signal));
   });
   app.get(`${base}/conversations`, async context => context.json(await service.conversations.list(context.get('knowledge'))));
   app.get(`${base}/conversations/:id`, async context => context.json(await service.conversations.get(context.get('knowledge'), id(context.req.param('id')))));

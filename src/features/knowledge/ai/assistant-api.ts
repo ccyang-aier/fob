@@ -24,6 +24,7 @@ async function request(knowledgeBaseId: string, path: string, init: RequestInit 
 }
 async function json<T>(base: string, path: string, schema: { parse(value: unknown): T }, init?: RequestInit) { return schema.parse(await (await request(base, path, init)).json()); }
 export const assistantApi = {
+  configuration: (base: string, signal?: AbortSignal) => json(base, 'configuration', assistantSettingsSchema, { signal }),
   settings: (base: string, signal?: AbortSignal) => json(base, 'settings', assistantSettingsSchema, { signal }),
   saveSettings: (base: string, input: AssistantPreferencesInput, signal?: AbortSignal) => json(base, 'settings', assistantSettingsSchema, { method: 'PUT', body: JSON.stringify(input), signal }),
   check: (base: string, signal?: AbortSignal) => json(base, 'check', z.object({ model: z.string() }), { method: 'POST', body: '{}', signal }),

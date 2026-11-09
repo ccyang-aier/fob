@@ -9,8 +9,8 @@ export function useCompanionChatContext() {
 
 export function usePublishCompanionWorkspace(value: CompanionWorkspaceContext) {
   const owner = useRef(Symbol('companion-workspace'));
-  const { status, userId, knowledgeBaseId, knowledgeBaseName } = value;
-  useLayoutEffect(() => companionContextStore.workspace(owner.current, { status, userId, knowledgeBaseId, knowledgeBaseName }), [status, userId, knowledgeBaseId, knowledgeBaseName]);
+  const { status, userId, knowledgeBaseId, knowledgeBaseName, canConfigureAI } = value;
+  useLayoutEffect(() => companionContextStore.workspace(owner.current, { status, userId, knowledgeBaseId, knowledgeBaseName, canConfigureAI }), [status, userId, knowledgeBaseId, knowledgeBaseName, canConfigureAI]);
 }
 
 export function usePublishCompanionDocument(value: CompanionDocumentPublication | null) {

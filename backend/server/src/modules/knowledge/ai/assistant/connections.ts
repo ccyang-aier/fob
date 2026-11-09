@@ -9,7 +9,7 @@ import { assistantConnection, assistantPreference } from '../../../../platform/d
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
 import type { ResourceTransaction } from '../../../../platform/database/resources/transaction';
 import type { KnowledgeRequestContext } from '../../access';
-import { requireKnowledgeScopes } from '../../access';
+import { requireAssistantConfiguration } from './configuration-access';
 import { createModelCredentialStore, ModelGatewayError } from '../gateway';
 import type { GatewayFetch, GatewayProvider, ModelCallContext } from '../gateway';
 import { normalizeConnectionEndpoint } from '../gateway/endpoint-policy';
@@ -57,7 +57,7 @@ export function createAssistantConnections(deps: {
     return Promise.all(rows.map(item => dto(actor, item)));
   }
   async function create(actor: KnowledgeRequestContext, raw: unknown) {
-    requireKnowledgeScopes(actor, ['read']);
+    requireAssistantConfiguration(actor);
     const input = assistantConnectionInputSchema.parse(raw), baseUrl = normalizeConnectionEndpoint(input.baseUrl, policy), id = randomUUID();
     return withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => {
       await lock(db, actor);
@@ -69,7 +69,7 @@ export function createAssistantConnections(deps: {
     });
   }
   async function update(actor: KnowledgeRequestContext, id: string, raw: unknown) {
-    requireKnowledgeScopes(actor, ['read']);
+    requireAssistantConfiguration(actor);
     const input = assistantConnectionInputSchema.parse(raw), baseUrl = normalizeConnectionEndpoint(input.baseUrl, policy);
     return withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => {
       await lock(db, actor);
@@ -101,7 +101,7 @@ export function createAssistantConnections(deps: {
     });
   }
   async function remove(actor: KnowledgeRequestContext, id: string) {
-    requireKnowledgeScopes(actor, ['read']);
+    requireAssistantConfiguration(actor);
     return withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => {
       await lock(db, actor);
       const previous = await row(actor, id, db), provider = connectionProviderId(id);
@@ -126,7 +126,7 @@ export function createAssistantConnections(deps: {
     return item ? { protocol: item.protocol, endpoints: [normalizeConnectionEndpoint(item.baseUrl, policy)], models: item.models.map(model => model.id), tiers: ['fast', 'smart'], fetch: transport(item.baseUrl) } : undefined;
   }
   async function discover(actor: KnowledgeRequestContext, id: string, signal: AbortSignal) {
-    requireKnowledgeScopes(actor, ['read']);
+    requireAssistantConfiguration(actor);
     const item = await row(actor, id);
     const credential = item.credentialId ? await deps.credentials.find(actor, item.credentialId, connectionProviderId(id)) : null;
     if (item.credentialId && !credential) throw new ModelGatewayError('credential_unavailable');

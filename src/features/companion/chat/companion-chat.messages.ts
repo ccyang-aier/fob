@@ -13,6 +13,7 @@ export const companionChatMessages = defineMessages({
   local: ['本机知识库暂不支持 AI 对话，请切换到服务端知识库。', 'AI chat is not available for local knowledge bases yet. Switch to a server knowledge base.'],
   contextError: ['知识库暂时不可用，请重新打开后再试。', 'This knowledge base is unavailable. Reopen it and try again.'],
   configuration: ['先连接一个模型，我们就能开始聊了。', 'Connect a model so we can start chatting.'], settings: ['AI 接入设置', 'AI connection settings'],
+  configurationManaged: ['AI 暂不可用，请联系知识库管理员。', 'AI is unavailable. Contact your knowledge base administrator.'],
   authFailed: ['模型凭据不可用，请检查 AI 接入设置。', 'The model credentials are unavailable. Check AI connection settings.'],
   rateLimited: ['模型服务有些忙，稍后再试。', 'The model service is busy. Try again shortly.'],
   timeout: ['等得有点久了，再试一次吧。', 'That took too long. Let’s try again.'],

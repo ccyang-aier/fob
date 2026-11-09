@@ -37,7 +37,10 @@ beforeAll(async () => {
   } });
 }, 60000);
 afterAll(async () => { await fixture?.close(); }, 30000);
-beforeEach(async () => { await fixture.resetJobs(); calls = []; checks = []; behaviour = 'normal'; });
+beforeEach(async () => {
+  await fixture.resetJobs(); calls = []; checks = []; behaviour = 'normal';
+  await fixture.admin.query('UPDATE resources.knowledge_base_member SET role=$1 WHERE knowledge_base_id=$2 AND user_id=$3', ['member', fixture.alpha.id, fixture.reader.identity.userId]);
+});
 function request(path: string, actor = fixture.owner, body?: unknown, method = 'POST', knowledgeBaseId = fixture.alpha.id) {
   return fetch(`${fixture.server.origin}/api/knowledge/${knowledgeBaseId}/assistant/${path}`, { method: body === undefined ? 'GET' : method, headers: { origin: fixture.server.webOrigin, cookie: actor.cookie, ...(body === undefined ? {} : { 'content-type': 'application/json' }) }, body: body === undefined ? undefined : JSON.stringify(body) });
 }
@@ -58,6 +61,57 @@ async function ask(pageId: string, actor = fixture.owner, extra: Record<string, 
 }
 function finished(events: AssistantStreamEvent[]) { const event = [...events].reverse().find(event => event.type === 'finish'); if (event?.type !== 'finish') throw new Error(JSON.stringify(events)); return event.turn; }
 function started(events: AssistantStreamEvent[]) { const event = events.find(event => event.type === 'start'); if (event?.type !== 'start') throw new Error(JSON.stringify(events)); return event.conversationId; }
+
+test.each(['member', 'viewer', 'guest'])('%s cannot read configuration or invoke any configuration action; runtime chat remains available', async role => {
+  await fixture.admin.query('UPDATE resources.knowledge_base_member SET role=$1 WHERE knowledge_base_id=$2 AND user_id=$3', [role, fixture.alpha.id, fixture.reader.identity.userId]);
+  const connectionId = randomUUID();
+  const operations: [string, unknown?, string?][] = [
+    ['configuration'], ['settings', { provider: 'default', model: '' }, 'PUT'], ['check', {}],
+    ['selections', { fast: null, smart: null }, 'PUT'], ['connections', {}],
+    [`connections/${connectionId}`, {}, 'PUT'], [`connections/${connectionId}`, {}, 'DELETE'],
+    [`connections/${connectionId}/models`], [`connections/${connectionId}/test`, { modelId: 'test-model' }],
+  ];
+  for (const [path, body, method] of operations) {
+    const response = await request(path, fixture.reader, body, method);
+    expect(response.status).toBe(403); expect(await response.json()).toMatchObject({ code: 'INSUFFICIENT_SCOPE' });
+  }
+  const context = await actorContext(fixture.reader);
+  expect(() => service.preferences.configuration(context)).toThrow('does not allow');
+  await expect(service.preferences.connections.create(context, {})).rejects.toThrow('does not allow');
+  await expect(service.preferences.saveSelections(context, { fast: null, smart: null })).rejects.toThrow('does not allow');
+  await expect(service.preferences.save(context, { provider: 'default', model: '' })).rejects.toThrow('does not allow');
+  expect(checks).toHaveLength(0);
+  expect((await request('settings', fixture.reader)).status).toBe(200);
+  behaviour = 'hello';
+  const response = await request('ask', fixture.reader, { requestId: randomUUID(), question: '你好', mode: 'knowledgeBase' });
+  expect(response.status).toBe(200);
+  expect(finished((await response.text()).trim().split('\n').map(line => JSON.parse(line) as AssistantStreamEvent)).status).toBe('done');
+  expect(calls).toHaveLength(1);
+});
+
+test('owners and administrators can manage AI, but another library ownership grants no access', async () => {
+  expect((await request('configuration')).status).toBe(200);
+  await fixture.admin.query('UPDATE resources.knowledge_base_member SET role=$1 WHERE knowledge_base_id=$2 AND user_id=$3', ['admin', fixture.alpha.id, fixture.reader.identity.userId]);
+  expect((await request('configuration', fixture.reader)).status).toBe(200);
+  const created = await request('connections', fixture.reader, { name: 'Administrator connection', protocol: 'openai-compatible', baseUrl: 'https://admin.example/v1', apiKey: 'synthetic-test-only', models: [{ id: 'admin-model', name: '' }] });
+  expect(created.status).toBe(201); const connection = await created.json() as { id: string };
+  expect((await request('selections', fixture.reader, { fast: { connectionId: connection.id, modelId: 'admin-model' }, smart: null }, 'PUT')).status).toBe(200);
+  expect((await request(`connections/${connection.id}/test`, fixture.reader, { modelId: 'admin-model' })).status).toBe(200);
+  expect((await request(`connections/${connection.id}`, fixture.reader, {}, 'DELETE')).status).toBe(200);
+  expect((await request('configuration', fixture.foreign)).status).toBe(401);
+  expect((await request('connections', fixture.foreign, {})).status).toBe(401);
+});
+
+test('an administrator downgrade is respected on the next configuration request and authority refresh', async () => {
+  await fixture.admin.query('UPDATE resources.knowledge_base_member SET role=$1 WHERE knowledge_base_id=$2 AND user_id=$3', ['admin', fixture.alpha.id, fixture.reader.identity.userId]);
+  const previous = await actorContext(fixture.reader); expect(previous.role).toBe('admin');
+  expect((await request('configuration', fixture.reader)).status).toBe(200);
+  await fixture.admin.query('UPDATE resources.knowledge_base_member SET role=$1 WHERE knowledge_base_id=$2 AND user_id=$3', ['member', fixture.alpha.id, fixture.reader.identity.userId]);
+  const current = await fixture.authenticator.refresh(previous, ['read']); expect(current.role).toBe('member');
+  await expect(service.preferences.connections.create(current, {})).rejects.toThrow('does not allow');
+  expect((await request('configuration', fixture.reader)).status).toBe(403);
+  expect((await request('selections', fixture.reader, { fast: null, smart: null }, 'PUT')).status).toBe(403);
+});
 
 test('an empty knowledge base supports page-less private chat, replay and restored follow-up history', async () => {
   const counts = await fixture.admin.query('SELECT count(*)::int AS count FROM resources.page WHERE knowledge_base_id=$1', [fixture.beta.id]);
@@ -174,7 +228,7 @@ test('model choices and encrypted personal credentials do not cross accounts or 
   const record = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(modelCredential).where(eq(modelCredential.userId, fixture.owner.identity.userId)))[0]!);
   expect(Buffer.from(record.encryptedSecret).toString()).not.toContain('temporary-model-secret');
   expect((await request('settings', fixture.owner, { provider: 'zhipu-coding', model: 'model', endpoint: 'http://127.0.0.1:22' }, 'PUT')).status).toBe(400);
-  expect((await request('settings', fixture.reader, { provider: 'zhipu-coding', model: 'model' }, 'PUT')).status).toBe(503);
+  expect((await request('settings', fixture.reader, { provider: 'zhipu-coding', model: 'model' }, 'PUT')).status).toBe(403);
   await request('settings', fixture.owner, { provider: 'default', model: '' }, 'PUT');
   expect((await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select().from(assistantPreference).where(and(eq(assistantPreference.userId, fixture.owner.identity.userId), eq(assistantPreference.knowledgeBaseId, fixture.alpha.id)))))[0]!.settings).toEqual({});
 });

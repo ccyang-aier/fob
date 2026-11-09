@@ -5,7 +5,7 @@ import type { AssistantModelSelection, AssistantSelections, ModelSettings, Assis
 import { assistantPreference, aiUsage } from '../../../../platform/database/resources/schema';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
 import type { KnowledgeRequestContext } from '../../access';
-import { requireKnowledgeScopes } from '../../access';
+import { requireAssistantConfiguration } from './configuration-access';
 import { createModelCredentialStore, ModelGatewayError } from '../gateway';
 import type { GatewayFetch } from '../gateway';
 import type { PlatformModels } from '../config';
@@ -59,7 +59,7 @@ export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; 
       connections: configured, selections, platformModels: { fast: deps.platform.defaults.fast?.model ?? null, smart: deps.platform.defaults.smart?.model ?? null }, ...usage };
   }
   async function saveSelections(actor: KnowledgeRequestContext, raw: unknown) {
-    requireKnowledgeScopes(actor, ['read']);
+    requireAssistantConfiguration(actor);
     const selections = assistantSelectionsSchema.parse(raw);
     await connections.migrateLegacyBindings(actor);
     await withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => {
@@ -75,6 +75,7 @@ export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; 
   }
   /** Compatibility endpoint; old callers now create/update a visible connection. */
   async function save(actor: KnowledgeRequestContext, raw: unknown) {
+    requireAssistantConfiguration(actor);
     const input = assistantPreferencesInputSchema.parse(raw);
     if (input.provider === 'default') return saveSelections(actor, { fast: null, smart: null });
     if (!input.model) throw new ModelGatewayError('invalid_request');
@@ -90,7 +91,7 @@ export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; 
     const selected = { connectionId: saved.id, modelId: input.model };
     return saveSelections(actor, { fast: selected, smart: selected });
   }
-  return { read, save, resolve: (actor: Actor) => resolveFor(actor), resolveFor, saveSelections, connections, credentials,
-    remove: (actor: KnowledgeRequestContext) => withKnowledgeBase(deps.pool, actor.knowledgeBaseId, db => db.delete(assistantPreference).where(condition(actor))) };
+  return { read, configuration: (actor: KnowledgeRequestContext) => { requireAssistantConfiguration(actor); return read(actor); }, save, resolve: (actor: Actor) => resolveFor(actor), resolveFor, saveSelections, connections, credentials,
+    remove: (actor: KnowledgeRequestContext) => { requireAssistantConfiguration(actor); return withKnowledgeBase(deps.pool, actor.knowledgeBaseId, db => db.delete(assistantPreference).where(condition(actor))); } };
 }
 export type AssistantPreferences = ReturnType<typeof createAssistantPreferences>;

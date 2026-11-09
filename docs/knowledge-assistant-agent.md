@@ -6,7 +6,7 @@
 
 全局设置 → AI 接入管理当前账户在当前知识库的多套个人服务商。每套连接独立配置名称、协议、Base URL、加密密钥和模型清单；支持公网 HTTPS 兼容服务与服务端明确批准的 Ollama 地址。空密钥保留原凭据，切回服务端默认保留个人连接，删除连接才清理其密钥和默认关联。连接测试使用真实 provider，usage 来自网关实际调用记录。
 
-AI 接入页的当前布局、服务切换与响应式设计见 [AI 接入设置](ui/ai-connections.md)。
+AI 接入仅向当前知识库的所有者与管理员开放，其他成员不显示设置菜单及煤球中的配置入口。配置读取与操作由服务端重新校验成员身份和角色；普通成员的 AI 对话能力保持原有授权边界。当前权限、布局、服务切换与响应式设计见 [AI 接入设置](ui/ai-connections.md)。
 
 服务端默认读取 `KNOWLEDGE_AI_API_KEY`、`KNOWLEDGE_AI_CHAT_BASE_URL`、`KNOWLEDGE_AI_MODEL`；本次环境使用 BigModel Coding URL 与 `glm-5.3-flash`。凭据不进入仓库、浏览器状态或日志。个人凭据使用 AES-GCM，密钥由部署的 Fob 认证 secret 加产品域分离摘要得到；多 API 节点使用一致认证配置，轮换后需重新录入个人凭据。
 
