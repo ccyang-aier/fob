@@ -10,7 +10,8 @@ import { withKnowledgeBase } from '../../../../platform/database/resources/trans
 import type { ResourceTransaction } from '../../../../platform/database/resources/transaction';
 import type { KnowledgeRequestContext } from '../../access';
 import { requireAssistantConfiguration } from './configuration-access';
-import { createModelCredentialStore, ModelGatewayError } from '../gateway';
+import { ModelGatewayError } from '../gateway';
+import { createKnowledgeBaseCredentialStore } from '../gateway/knowledge-base-credentials';
 import type { GatewayFetch, GatewayProvider, ModelCallContext } from '../gateway';
 import { normalizeConnectionEndpoint } from '../gateway/endpoint-policy';
 import { createPinnedProviderFetch } from '../gateway/pinned-fetch';
@@ -22,16 +23,16 @@ type Actor = Pick<KnowledgeRequestContext, 'knowledgeBaseId' | 'userId'>;
 type ConnectionRow = typeof assistantConnection.$inferSelect;
 export function createAssistantConnections(deps: {
   pool: Pool;
-  credentials: ReturnType<typeof createModelCredentialStore>;
+  credentials: ReturnType<typeof createKnowledgeBaseCredentialStore>;
   ollamaEndpoint?: string;
   /** Trusted test embedding only; product connections use pinned transport. */
   fetch?: GatewayFetch;
 }) {
   const approvedLocalEndpoints = deps.ollamaEndpoint ? [deps.ollamaEndpoint, ollamaEndpoint(deps.ollamaEndpoint)] : [];
   const policy = { approvedLocalEndpoints };
-  const own = (actor: Actor, id?: string) => and(eq(assistantConnection.knowledgeBaseId, actor.knowledgeBaseId), eq(assistantConnection.userId, actor.userId), id ? eq(assistantConnection.id, id) : undefined);
-  const preferenceOwn = (actor: Actor) => and(eq(assistantPreference.knowledgeBaseId, actor.knowledgeBaseId), eq(assistantPreference.userId, actor.userId));
-  const lock = (db: ResourceTransaction, actor: Actor) => db.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${`fob:assistant:settings:${actor.knowledgeBaseId}:${actor.userId}`},0))`);
+  const own = (actor: Actor, id?: string) => and(eq(assistantConnection.knowledgeBaseId, actor.knowledgeBaseId), id ? eq(assistantConnection.id, id) : undefined);
+  const preferenceOwn = (actor: Actor) => eq(assistantPreference.knowledgeBaseId, actor.knowledgeBaseId);
+  const lock = (db: ResourceTransaction, actor: Actor) => db.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${`fob:assistant:settings:${actor.knowledgeBaseId}`},0))`);
   const transport = (baseUrl: string, discovery = false) => deps.fetch ?? createPinnedProviderFetch(baseUrl, { ...policy, ...(discovery ? { allowedQueryParameters: ['limit', 'after_id'] } : {}) });
   async function row(actor: Actor, id: string, db?: ResourceTransaction): Promise<ConnectionRow> {
     if (!entityIdSchema.safeParse(id).success) throw new ModelGatewayError('invalid_request');
@@ -64,7 +65,7 @@ export function createAssistantConnections(deps: {
       const existing = await db.select({ id: assistantConnection.id }).from(assistantConnection).where(own(actor));
       if (existing.length >= 24) throw new ModelGatewayError('invalid_request');
       const credentialId = input.apiKey ? (await deps.credentials.create(actor, { provider: connectionProviderId(id), endpoint: baseUrl, apiKey: input.apiKey }, db)).id : null;
-      const [saved] = await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, id, name: input.name, protocol: input.protocol, baseUrl, credentialId, models: input.models }).returning();
+      const [saved] = await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, id, name: input.name, protocol: input.protocol, baseUrl, credentialId, models: input.models }).returning();
       return dto(actor, saved!, db);
     });
   }
@@ -148,7 +149,7 @@ export function createAssistantConnections(deps: {
         if (matching) continue;
         if (existing.length >= 24) throw new ModelGatewayError('configuration');
         const modelIds = [...new Set(localBindings.filter(value => value?.source === 'ollama' && ollamaEndpoint(value.endpoint) === baseUrl).map(value => value!.model))];
-        const [saved] = await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, id: randomUUID(), name: 'Ollama', protocol: 'openai-compatible', baseUrl, models: modelIds.map(model => ({ id: model, name: '' })) }).returning();
+        const [saved] = await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, id: randomUUID(), name: 'Ollama', protocol: 'openai-compatible', baseUrl, models: modelIds.map(model => ({ id: model, name: '' })) }).returning();
         existing.push(saved!);
       }
       let changed = false;
@@ -164,7 +165,7 @@ export function createAssistantConnections(deps: {
           const preset = assistantProviders[current.provider as keyof typeof assistantProviders], baseUrl = normalizeConnectionEndpoint(credential.endpoint ?? preset.endpoints[0], policy), id = randomUUID();
           const saved = await deps.credentials.create(actor, { provider: connectionProviderId(id), endpoint: baseUrl, apiKey: credential.apiKey }, db);
           const modelIds = [...new Set(Object.values(settings).filter(value => value?.source === 'byok' && value.provider === current.provider && value.credentialId === current.credentialId).map(value => value!.model))];
-          await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, id, name: current.provider === 'zhipu-coding' ? '智谱 Coding' : '智谱', protocol: preset.protocol, baseUrl, credentialId: saved.id, models: modelIds.map(model => ({ id: model, name: '' })) });
+          await db.insert(assistantConnection).values({ knowledgeBaseId: actor.knowledgeBaseId, id, name: current.provider === 'zhipu-coding' ? '智谱 Coding' : '智谱', protocol: preset.protocol, baseUrl, credentialId: saved.id, models: modelIds.map(model => ({ id: model, name: '' })) });
           next = { id, credentialId: saved.id }; migrated.set(identity, next);
         }
         settings[tier] = { source: 'byok', provider: connectionProviderId(next.id), credentialId: next.credentialId, model: current.model }; changed = true;

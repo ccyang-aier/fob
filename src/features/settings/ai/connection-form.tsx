@@ -24,7 +24,7 @@ export function AIConnectionForm({ compact = false, onCancel, ...options }: AICo
   function select(id: string) { setSelectedId(id); setEditorSession(current => current + 1); }
   const count = new Intl.NumberFormat(locale);
   return <div data-ai-connections className={cn(styles.manager, compact && styles.compact)}>
-    {compact && <p className={styles.hint}>{t('personalScope')}</p>}
+    {compact && <p className={styles.hint}>{t('sharedScope')}</p>}
     <section className={styles.defaults} aria-label={t('defaults')}>
       <h3>{t('defaults')}</h3>
       <div className={styles.defaultChoices}>{(['fast', 'smart'] as const).map(tier => {

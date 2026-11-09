@@ -25,19 +25,19 @@ export function AISettings() {
   if (!canConfigureAI || session.status !== 'authenticated' || !base || base.source !== 'server') return null;
   return <div className={styles.page}>
     <PanelHeader title={t('title')} />
-    <KnowledgeQueryProvider key={`${session.user.id}:${base.id}`}><ScopedAISettings knowledgeBaseId={base.id} knowledgeBaseName={base.name} userId={session.user.id} /></KnowledgeQueryProvider>
+    <KnowledgeQueryProvider key={`${session.user.id}:${base.id}`}><ScopedAISettings knowledgeBaseId={base.id} knowledgeBaseName={base.name} /></KnowledgeQueryProvider>
   </div>;
 }
 
-function ScopedAISettings({ knowledgeBaseId, knowledgeBaseName, userId }: { knowledgeBaseId: string; knowledgeBaseName: string; userId: string }) {
+function ScopedAISettings({ knowledgeBaseId, knowledgeBaseName }: { knowledgeBaseId: string; knowledgeBaseName: string }) {
   const { t } = useTranslation(aiSettingsMessages);
   const client = useQueryClient();
-  const queryKey = [knowledgeBaseId, 'knowledge', 'pages', 'assistant', userId, 'settings'] as const;
+  const queryKey = [knowledgeBaseId, 'knowledge', 'pages', 'assistant', 'configuration'] as const;
   const settings = useQuery({ queryKey, queryFn: ({ signal }) => assistantApi.configuration(knowledgeBaseId, signal), retry: false });
   return <>
-    <div className={styles.context}><p className={styles.scope}>{t('scope', { name: knowledgeBaseName })}</p><p className={styles.hint}>{t('personalScope')}</p></div>
+    <div className={styles.context}><p className={styles.scope}>{t('scope', { name: knowledgeBaseName })}</p><p className={styles.hint}>{t('sharedScope')}</p></div>
     {settings.isPending ? <p className={styles.loading} role="status">{t('loading')}</p>
       : settings.isError ? <div className={styles.empty}><AppAlert tone="error" title={t(assistantErrorKey(settings.error instanceof AssistantRequestError ? settings.error.code : 'failed'))} action={<Button variant="ghost" size="sm" onClick={() => void settings.refetch()}>{t('retry')}</Button>} /></div>
-        : <AIConnectionForm knowledgeBaseId={knowledgeBaseId} userId={userId} value={settings.data} onSaved={value => { client.setQueryData(queryKey, value); void settings.refetch(); }} onChecked={() => void settings.refetch()} />}
+        : <AIConnectionForm knowledgeBaseId={knowledgeBaseId} value={settings.data} onSaved={value => { client.setQueryData(queryKey, value); void settings.refetch(); }} onChecked={() => void settings.refetch()} />}
   </>;
 }

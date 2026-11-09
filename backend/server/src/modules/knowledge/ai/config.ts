@@ -5,7 +5,7 @@ import type { ModelBinding, ModelSettings, ModelTier } from '@fob/shared/knowled
 export interface ModelCredential {
   id: string;
   knowledgeBaseId: string;
-  userId: string;
+  userId: string | null;
   provider: string;
   apiKey: string;
   endpoint?: string;
@@ -26,7 +26,7 @@ export interface ResolvedModel {
   apiKey?: string;
 }
 
-/** A knowledgeBase chooses public bindings; secrets are resolved for the initiating user. */
+/** Shared keys belong to the knowledge base; legacy account keys remain account-bound. */
 export function resolveModel(input: {
   tier: ModelTier;
   knowledgeBaseId: string;
@@ -47,7 +47,7 @@ export function resolveModel(input: {
     if (!provider?.apiKey) throw new Error(`Platform provider is not configured: ${binding.provider}`);
     return { ...common, provider: binding.provider, apiKey: provider.apiKey, endpoint: provider.endpoint ? modelEndpointSchema.parse(provider.endpoint) : undefined };
   }
-  const credential = input.credentials.find((item) => item.id === binding.credentialId && item.knowledgeBaseId === input.knowledgeBaseId && item.userId === input.userId && item.provider === binding.provider && item.revokedAt === null);
+  const credential = input.credentials.find((item) => item.id === binding.credentialId && item.knowledgeBaseId === input.knowledgeBaseId && (item.userId === null || item.userId === input.userId) && item.provider === binding.provider && item.revokedAt === null);
   if (!credential?.apiKey) throw new Error('Model credential is unavailable for this user and knowledgeBase');
   return { ...common, provider: binding.provider, apiKey: credential.apiKey, endpoint: credential.endpoint ? modelEndpointSchema.parse(credential.endpoint) : undefined };
 }

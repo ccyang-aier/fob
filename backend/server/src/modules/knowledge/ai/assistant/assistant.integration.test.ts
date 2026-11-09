@@ -7,7 +7,7 @@ import { knowledgeSchema } from '@fob/shared/knowledge/schema';
 import { collectSuggestions } from '@fob/shared/knowledge/schema/suggestions';
 import { createPermissionsFixture, type PermissionsFixture, type PermissionTestActor } from '../../permissions/permissions-test-fixture';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
-import { docState, page, aiTask, assistantPreference, modelCredential } from '../../../../platform/database/resources/schema';
+import { docState, page, aiTask, aiUsage, assistantPreference, knowledgeBaseModelCredential as modelCredential } from '../../../../platform/database/resources/schema';
 import { prosemirrorDocToYDoc, yStateToProseMirrorDoc } from '../../import-export/y-encoding';
 import { refreshPageBlockIndex } from '../../search/indexer';
 import { replaceAuthorizedPageAcl } from '../../permissions';
@@ -170,7 +170,7 @@ test('private provider HTTP lifecycle routes explicit and default model choices 
   const selected = await request('selections', fixture.owner, { fast: selection, smart: null }, 'PUT'); expect(selected.status).toBe(200);
   expect(assistantSettingsSchema.parse(await selected.json()).selections?.fast).toEqual(selection);
   const foreignSettings = assistantSettingsSchema.parse(await (await request('settings', fixture.reader)).json());
-  expect(foreignSettings.connections).toEqual([]);
+  expect(foreignSettings.connections).toHaveLength(1); expect(foreignSettings.selections?.fast).toEqual(selection);
   expect((await request(`connections/${connection.id}/test`, fixture.reader, { modelId: 'chosen-model' })).status).not.toBe(200);
   const checked = await request(`connections/${connection.id}/test`, fixture.owner, { modelId: 'chosen-model' }); expect(checked.status).toBe(200);
   expect(await checked.json()).toMatchObject({ model: 'chosen-model' }); expect(checks).toHaveLength(1);
@@ -181,11 +181,46 @@ test('private provider HTTP lifecycle routes explicit and default model choices 
   const tree = await fixture.tree({ parents: [null] }); await seed(tree.root, 'Provider choice', 'Synthetic content.'); await fixture.drain();
   const events = await ask(tree.root.pageId, fixture.owner, { selection }); expect(finished(events).status).toBe('done');
   expect(calls.at(-1)!.settings.fast).toMatchObject({ source: 'byok', model: 'chosen-model' });
+  const memberEvents = await ask(tree.root.pageId, fixture.reader);
+  expect(finished(memberEvents).status).toBe('done');
+  expect(calls.at(-1)!.settings.fast).toMatchObject({ source: 'byok', model: 'chosen-model' });
+  expect(calls.at(-1)!.context.userId).toBe(fixture.reader.identity.userId);
+  expect((await request(`conversations/${started(memberEvents)}`, fixture.owner)).status).toBe(404);
   const { apiKey: _secret, ...publicInput } = input;
   expect((await request(`connections/${connection.id}`, fixture.owner, { ...publicInput, name: 'Renamed' }, 'PUT')).status).toBe(200);
   expect((await request(`connections/${connection.id}`, fixture.owner, {}, 'DELETE')).status).toBe(200);
   const current = assistantSettingsSchema.parse(await (await request('settings')).json());
   expect(current.connections).toEqual([]); expect(current.selections?.fast).toBeNull(); expect(current.platformModels?.fast).toBe('test-model');
+});
+
+test('another administrator can maintain the same connection and defaults after its creator leaves the knowledge base', async () => {
+  const input = { name: 'Shared', protocol: 'openai-compatible', baseUrl: 'https://shared.example/v1', apiKey: 'synthetic-shared-key', models: [{ id: 'shared-model', name: '' }] };
+  const created = await request('connections', fixture.owner, input); expect(created.status).toBe(201);
+  const connection = await created.json() as { id: string };
+  await fixture.admin.query("UPDATE resources.knowledge_base_member SET role='admin' WHERE knowledge_base_id=$1 AND user_id=$2", [fixture.alpha.id, fixture.reader.identity.userId]);
+  try {
+    expect((await request('selections', fixture.reader, { fast: { connectionId: connection.id, modelId: 'shared-model' }, smart: { connectionId: connection.id, modelId: 'shared-model' } }, 'PUT')).status).toBe(200);
+    const { apiKey: _key, ...publicInput } = input;
+    expect((await request(`connections/${connection.id}`, fixture.reader, { ...publicInput, name: 'Maintained by another admin' }, 'PUT')).status).toBe(200);
+    await fixture.admin.query('DELETE FROM resources.knowledge_base_member WHERE knowledge_base_id=$1 AND user_id=$2', [fixture.alpha.id, fixture.owner.identity.userId]);
+    expect((await request('configuration', fixture.owner)).status).toBe(401);
+    const current = assistantSettingsSchema.parse(await (await request('configuration', fixture.reader)).json());
+    expect(current.ready).toBe(true); expect(current.connections?.find(item => item.id === connection.id)?.hasCredential).toBe(true);
+    expect((await request(`connections/${connection.id}/test`, fixture.reader, { modelId: 'shared-model' })).status).toBe(200);
+    expect(checks.at(-1)!.context.userId).toBe(fixture.reader.identity.userId);
+  } finally {
+    await fixture.admin.query("INSERT INTO resources.knowledge_base_member(knowledge_base_id,user_id,role) VALUES ($1,$2,'owner') ON CONFLICT(knowledge_base_id,user_id) DO UPDATE SET role='owner'", [fixture.alpha.id, fixture.owner.identity.userId]);
+    await request(`connections/${connection.id}`, fixture.owner, {}, 'DELETE');
+  }
+});
+
+test('administrator usage summarizes the knowledge base while retaining the initiating user on every usage record', async () => {
+  const before = assistantSettingsSchema.parse(await (await request('configuration')).json());
+  const records = [fixture.owner, fixture.reader].map((actor, index) => ({ knowledgeBaseId: fixture.alpha.id, id: randomUUID(), userId: actor.identity.userId, operation: 'generate', status: 'success', tier: 'fast' as const, inputTokens: 10 + index, outputTokens: 4 + index, durationMs: 3 }));
+  await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.insert(aiUsage).values(records));
+  const after = assistantSettingsSchema.parse(await (await request('configuration')).json());
+  expect(after.calls).toBe(before.calls + 2); expect(after.inputTokens).toBe(before.inputTokens + 21); expect(after.outputTokens).toBe(before.outputTokens + 9);
+  expect((await fixture.admin.query('SELECT user_id FROM resources.ai_usage WHERE knowledge_base_id=$1 AND id=ANY($2::uuid[]) ORDER BY user_id', [fixture.alpha.id, records.map(item => item.id)])).rows.map(item => item.user_id).sort()).toEqual(records.map(item => item.userId).sort());
 });
 
 test('real HTTP ask persists a private conversation, validates sources and writes one reviewable suggestion', async () => {
@@ -220,17 +255,18 @@ test('knowledge-wide retrieval excludes private documents and history is redacte
   expect(hidden.turns[0]!.status).toBe('unavailable'); expect(hidden.turns[0]!.answer).toBe(''); expect(hidden.turns[0]!.question).toBe(''); expect(hidden.turns[0]!.sources).toEqual([]);
 });
 
-test('model choices and encrypted personal credentials do not cross accounts or knowledge bases', async () => {
+test('all members use the knowledge-base defaults without personal setup while keys stay encrypted and library-scoped', async () => {
   const before = assistantSettingsSchema.parse(await (await request('settings')).json()); expect(before.ready).toBe(true); expect(JSON.stringify(before)).not.toContain('synthetic-test-only');
   const changed = await request('settings', fixture.owner, { provider: 'zhipu-coding', model: 'glm-5.3-flash', apiKey: 'temporary-model-secret' }, 'PUT'); expect(changed.status).toBe(200);
   const owner = assistantSettingsSchema.parse(await changed.json()); expect(owner.hasCredential).toBe(true); expect(JSON.stringify(owner)).not.toContain('temporary-model-secret');
-  const reader = assistantSettingsSchema.parse(await (await request('settings', fixture.reader)).json()); expect(reader.provider).toBe('default'); expect(reader.hasCredential).toBe(false);
-  const record = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(modelCredential).where(eq(modelCredential.userId, fixture.owner.identity.userId)))[0]!);
+  const reader = assistantSettingsSchema.parse(await (await request('settings', fixture.reader)).json()); expect(reader.provider).toBe(owner.provider); expect(reader.hasCredential).toBe(true); expect(reader.selections).toEqual(owner.selections);
+  const foreign = assistantSettingsSchema.parse(await (await request('settings', fixture.foreign, undefined, 'GET', fixture.beta.id)).json()); expect(foreign.provider).toBe('default'); expect(foreign.hasCredential).toBe(false);
+  const record = await withKnowledgeBase(fixture.pool, fixture.alpha.id, async db => (await db.select().from(modelCredential).where(eq(modelCredential.knowledgeBaseId, fixture.alpha.id)))[0]!);
   expect(Buffer.from(record.encryptedSecret).toString()).not.toContain('temporary-model-secret');
   expect((await request('settings', fixture.owner, { provider: 'zhipu-coding', model: 'model', endpoint: 'http://127.0.0.1:22' }, 'PUT')).status).toBe(400);
   expect((await request('settings', fixture.reader, { provider: 'zhipu-coding', model: 'model' }, 'PUT')).status).toBe(403);
   await request('settings', fixture.owner, { provider: 'default', model: '' }, 'PUT');
-  expect((await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select().from(assistantPreference).where(and(eq(assistantPreference.userId, fixture.owner.identity.userId), eq(assistantPreference.knowledgeBaseId, fixture.alpha.id)))))[0]!.settings).toEqual({});
+  expect((await withKnowledgeBase(fixture.pool, fixture.alpha.id, db => db.select().from(assistantPreference).where(eq(assistantPreference.knowledgeBaseId, fixture.alpha.id))))[0]!.settings).toEqual({});
 });
 
 test('cancellation preserves the partial answer and the server rejects a forged answer payload', async () => {

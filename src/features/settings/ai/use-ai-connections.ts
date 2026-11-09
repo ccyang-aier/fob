@@ -11,13 +11,13 @@ import { publishAISettingsChanged } from './connection-state';
 
 export type AISettingsClient = Pick<typeof assistantApi, 'createConnection' | 'updateConnection' | 'removeConnection' | 'testConnection' | 'discoverModels' | 'saveSelections'>;
 export type AIConnectionOptions = {
-  knowledgeBaseId: string; userId: string; value: AssistantSettings;
+  knowledgeBaseId: string; value: AssistantSettings;
   onSaved?(value: AssistantSettings): void; onChecked?(): void; onDone?(): void;
   client?: AISettingsClient;
 };
 
-/** All persisted changes use the same account/KB fence and request lifecycle. */
-export function useAIConnections({ knowledgeBaseId, userId, value, onSaved, onChecked, client = assistantApi }: AIConnectionOptions) {
+/** Settings belong to the knowledge base; the parent resets requests on identity changes. */
+export function useAIConnections({ knowledgeBaseId, value, onSaved, onChecked, client = assistantApi }: AIConnectionOptions) {
   const { t } = useTranslation(aiSettingsMessages), { notify } = useAppAlert();
   const [settings, setSettings] = useState(value), [previous, setPrevious] = useState(value);
   if (previous !== value) { setPrevious(value); setSettings(value); }
@@ -39,7 +39,7 @@ export function useAIConnections({ knowledgeBaseId, userId, value, onSaved, onCh
     } finally { pending.current = false; controller.current = null; if (active.current) setBusy(null); }
   }
   function publish(next: AssistantSettings) {
-    setSettings(next); onSaved?.(next); publishAISettingsChanged(knowledgeBaseId, userId);
+    setSettings(next); onSaved?.(next); publishAISettingsChanged(knowledgeBaseId);
   }
   async function saveConnection(id: string | null, input: AssistantConnectionInput) {
     const connection = await run(`save:${id ?? 'new'}`, signal => id ? client.updateConnection(knowledgeBaseId, id, input, signal) : client.createConnection(knowledgeBaseId, input, signal));

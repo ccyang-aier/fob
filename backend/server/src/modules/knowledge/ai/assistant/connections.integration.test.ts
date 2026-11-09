@@ -6,7 +6,7 @@ import type { AssistantConnectionInput } from '@fob/shared/knowledge/contracts';
 import type { KnowledgeRequestContext } from '../../access';
 import { createPermissionsFixture, type PermissionsFixture } from '../../permissions/permissions-test-fixture';
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
-import { assistantConnection, assistantPreference, modelCredential } from '../../../../platform/database/resources/schema';
+import { assistantConnection, assistantPreference, knowledgeBaseModelCredential as modelCredential } from '../../../../platform/database/resources/schema';
 import { createAssistantPreferences, type AssistantPreferences } from './preferences';
 import { createModelGateway } from '../gateway';
 import type { GatewayFetch } from '../gateway';
@@ -38,17 +38,21 @@ beforeEach(async () => {
 function gateway() { return createModelGateway({ platform, providers: {}, credentials: preferences.credentials, resolveProvider: preferences.connections.definition }); }
 const modelContext = () => ({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId });
 
-test('multiple private connections bind independently and credentials never enter public DTOs', async () => {
+test('knowledge-base connections and encrypted keys serve every member while remaining isolated from other libraries', async () => {
   const first = await preferences.connections.create(actor, input('first')), second = await preferences.connections.create(actor, input('second'));
   const settings = await preferences.saveSelections(actor, { fast: { connectionId: first.id, modelId: 'first-model' }, smart: { connectionId: second.id, modelId: 'second-model' } });
   expect(settings.provider).toBe('custom'); expect(settings.connections).toHaveLength(2); expect(settings.ready).toBe(true);
   expect(JSON.stringify(assistantSettingsSchema.parse(settings))).not.toContain('synthetic-only'); expect(JSON.stringify(settings)).not.toContain('credentialId');
-  expect(await preferences.connections.list(reader)).toEqual([]);
-  await expect(preferences.connections.binding(reader, { connectionId: first.id, modelId: 'first-model' })).rejects.toThrow('configuration');
-  expect(await preferences.connections.definition(reader, connectionProviderId(first.id))).toBeUndefined();
-  const resolved = await preferences.resolveFor(actor);
-  await gateway().generate({ context: modelContext(), settings: resolved, tier: 'fast', messages: [{ role: 'user', content: 'Test' }], maxOutputTokens: 20 });
-  await gateway().generate({ context: modelContext(), settings: resolved, tier: 'smart', messages: [{ role: 'user', content: 'Test' }], maxOutputTokens: 20 });
+  expect(await preferences.connections.list(reader)).toHaveLength(2);
+  expect(await preferences.connections.binding(reader, { connectionId: first.id, modelId: 'first-model' })).toMatchObject({ source: 'byok', model: 'first-model' });
+  expect(await preferences.connections.definition(reader, connectionProviderId(first.id))).toBeDefined();
+  const foreign = { ...reader, knowledgeBaseId: fixture.beta.id };
+  expect(await preferences.connections.list(foreign)).toEqual([]);
+  expect(await preferences.connections.definition(foreign, connectionProviderId(first.id))).toBeUndefined();
+  const resolved = await preferences.resolveFor(reader);
+  expect(resolved).toEqual(await preferences.resolveFor(actor));
+  await gateway().generate({ context: { knowledgeBaseId: reader.knowledgeBaseId, userId: reader.userId }, settings: resolved, tier: 'fast', messages: [{ role: 'user', content: 'Test' }], maxOutputTokens: 20 });
+  await gateway().generate({ context: { knowledgeBaseId: reader.knowledgeBaseId, userId: reader.userId }, settings: resolved, tier: 'smart', messages: [{ role: 'user', content: 'Test' }], maxOutputTokens: 20 });
   expect(requests.map(item => item.headers.get('authorization'))).toEqual(['Bearer first-synthetic-only', 'Bearer second-synthetic-only']);
 });
 
@@ -81,7 +85,7 @@ test('updating endpoint re-encrypts its key, preserves other connections and cle
 
 test('legacy single-provider settings migrate without losing keys or model choices', async () => {
   const secret = await preferences.credentials.create(actor, { provider: 'zhipu-coding', endpoint: 'https://open.bigmodel.cn/api/coding/paas/v4', apiKey: 'legacy-synthetic-key' });
-  await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, settings: { fast: { source: 'byok', provider: 'zhipu-coding', credentialId: secret.id, model: 'fast-old' }, smart: { source: 'byok', provider: 'zhipu-coding', credentialId: secret.id, model: 'smart-old' } } }));
+  await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, settings: { fast: { source: 'byok', provider: 'zhipu-coding', credentialId: secret.id, model: 'fast-old' }, smart: { source: 'byok', provider: 'zhipu-coding', credentialId: secret.id, model: 'smart-old' } } }));
   const settings = await preferences.read(actor); expect(settings.connections).toHaveLength(1); expect(settings.connections?.[0]?.models.map(model => model.id)).toEqual(['fast-old', 'smart-old']);
   expect(settings.selections?.fast?.modelId).toBe('fast-old'); expect(settings.selections?.smart?.modelId).toBe('smart-old');
   const next = (await preferences.resolveFor(actor)).fast!;
@@ -106,17 +110,24 @@ test('model discovery is bounded and authenticated; invalid configuration cannot
   await expect(preferences.connections.create(actor, input('unsafe', { baseUrl: 'http://169.254.169.254/latest' }))).rejects.toThrow('endpoint_denied');
 });
 
-test('advisory locking enforces the 24-connection limit across concurrent requests and encrypted rows stay scoped', async () => {
-  const results = await Promise.allSettled(Array.from({ length: 26 }, (_, i) => preferences.connections.create(actor, input(`p${i}`))));
+test('knowledge-base locking enforces the shared 24-connection limit across two concurrent administrators', async () => {
+  await fixture.admin.query("UPDATE resources.knowledge_base_member SET role='admin' WHERE knowledge_base_id=$1 AND user_id=$2", [fixture.alpha.id, fixture.reader.identity.userId]);
+  let results: PromiseSettledResult<unknown>[];
+  try {
+    const administrator = await fixture.authenticator.authenticate(new Request(fixture.server.origin, { headers: { origin: fixture.server.webOrigin, cookie: fixture.reader.cookie } }), fixture.alpha.id);
+    results = await Promise.allSettled(Array.from({ length: 26 }, (_, i) => preferences.connections.create(i % 2 ? administrator : actor, input(`p${i}`))));
+  } finally {
+    await fixture.admin.query("UPDATE resources.knowledge_base_member SET role='member' WHERE knowledge_base_id=$1 AND user_id=$2", [fixture.alpha.id, fixture.reader.identity.userId]);
+  }
   expect(results.filter(result => result.status === 'fulfilled')).toHaveLength(24); expect((await preferences.connections.list(actor))).toHaveLength(24);
-  const rows = await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.select().from(modelCredential).where(and(eq(modelCredential.knowledgeBaseId, actor.knowledgeBaseId), eq(modelCredential.userId, actor.userId))));
+  const rows = await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.select().from(modelCredential).where(eq(modelCredential.knowledgeBaseId, actor.knowledgeBaseId)));
   expect(rows).toHaveLength(24); expect(rows.every(row => !Buffer.from(row.encryptedSecret).toString().includes('synthetic-only'))).toBe(true);
   await expect(preferences.connections.update(reader, randomUUID(), input('none'))).rejects.toMatchObject({ code: 'INSUFFICIENT_SCOPE', status: 403 });
 });
 
 test('legacy approved Ollama becomes a visible keyless connection and deletion clears its defaults', async () => {
   const local = createAssistantPreferences({ pool: fixture.pool, key: new Uint8Array(32).fill(7), platform, ollamaEndpoint: 'http://127.0.0.1:11434' });
-  await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, settings: { fast: { source: 'ollama', endpoint: 'http://127.0.0.1:11434', model: 'local-model' } } }));
+  await withKnowledgeBase(fixture.pool, actor.knowledgeBaseId, db => db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, settings: { fast: { source: 'ollama', endpoint: 'http://127.0.0.1:11434', model: 'local-model' } } }));
   const settings = await local.read(actor), connection = settings.connections![0]!;
   expect(connection.hasCredential).toBe(false); expect(settings.ready).toBe(true); expect(settings.selections?.fast).toEqual({ connectionId: connection.id, modelId: 'local-model' });
   expect((await local.resolveFor(actor, { connectionId: connection.id, modelId: 'local-model' })).fast?.source).toBe('ollama');

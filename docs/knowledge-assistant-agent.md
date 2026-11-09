@@ -4,13 +4,13 @@
 
 ## 接入与使用
 
-全局设置 → AI 接入管理当前账户在当前知识库的多套个人服务商。每套连接独立配置名称、协议、Base URL、加密密钥和模型清单；支持公网 HTTPS 兼容服务与服务端明确批准的 Ollama 地址。空密钥保留原凭据，切回服务端默认保留个人连接，删除连接才清理其密钥和默认关联。连接测试使用真实 provider，usage 来自网关实际调用记录。
+全局设置 → AI 接入管理当前知识库的共享模型服务。管理员配置一次，所有成员直接使用；连接与默认模型不按账户划分。每套连接独立配置名称、协议、Base URL、加密密钥和模型清单；支持公网 HTTPS 兼容服务与服务端明确批准的 Ollama 地址。空密钥保留原凭据，切回服务端默认保留知识库连接，删除连接才清理其密钥和默认关联。连接测试使用真实 provider，usage 来自网关实际调用记录，并按知识库汇总所有成员的用量。
 
 AI 接入仅向当前知识库的所有者与管理员开放，其他成员不显示设置菜单及煤球中的配置入口。配置读取与操作由服务端重新校验成员身份和角色；普通成员的 AI 对话能力保持原有授权边界。当前权限、布局、服务切换与响应式设计见 [AI 接入设置](ui/ai-connections.md)。
 
-服务端默认读取 `KNOWLEDGE_AI_API_KEY`、`KNOWLEDGE_AI_CHAT_BASE_URL`、`KNOWLEDGE_AI_MODEL`；本次环境使用 BigModel Coding URL 与 `glm-5.3-flash`。凭据不进入仓库、浏览器状态或日志。个人凭据使用 AES-GCM，密钥由部署的 Fob 认证 secret 加产品域分离摘要得到；多 API 节点使用一致认证配置，轮换后需重新录入个人凭据。
+服务端默认读取 `KNOWLEDGE_AI_API_KEY`、`KNOWLEDGE_AI_CHAT_BASE_URL`、`KNOWLEDGE_AI_MODEL`；本次环境使用 BigModel Coding URL 与 `glm-5.3-flash`。凭据不进入仓库、浏览器状态或日志。知识库凭据使用 AES-GCM，密钥由部署的 Fob 认证 secret 加产品域分离摘要得到；多 API 节点使用一致认证配置，轮换后需重新录入凭据。
 
-现有数据库执行一次幂等升级：`bun --env-file=.env.fob.local backend/server/scripts/upgrade-assistant.ts`。新数据库直接使用当前规范 schema，表拥有组合作用域外键、FORCE RLS 与应用角色授权。
+现有数据库执行幂等升级：`bun --env-file=.env.fob.local backend/server/scripts/upgrade-assistant.ts`，需使用原 Fob 认证 secret 才能重新加密已有密钥。升级优先采用仍在库中的所有者配置；没有所有者配置时采用管理员配置（优先最近更新，再按加入时间和用户 ID 确定唯一来源），不合并冲突的账户默认模型，也不自动共享普通成员的私有凭据。连接 ID 与默认绑定保留，密钥重新绑定知识库身份加密。旧账户连接及偏好完整迁入仅数据库管理员可访问的 `fob_archive`；旧账户凭据仍保留在原加密存储。升级全程同事务，错误回滚，重复执行不覆盖现有知识库配置。新数据库直接使用当前规范 schema，表拥有组合作用域外键、FORCE RLS 与应用角色授权。
 
 正文 `/` 菜单顶部提供「生成」「创建可视化」；生成内容保留为块内草稿，可停止、提出修改要求、撤销或采纳，采纳后成为普通文档块。可视化输出原生 Mermaid 节点。旧独立聊天弹窗及其文档顶栏和选区入口已按用户要求删除。用户选定煤球 UX 方案 1 后，聊天改由点击全局煤球精灵打开锚定在精灵附近的轻量气泡，作为当前唯一聊天入口。
 
@@ -43,7 +43,7 @@ AI 接入仅向当前知识库的所有者与管理员开放，其他成员不�
 | `packages/agent/src/agent-loop.ts` 的 `runLoop`、`streamAssistantResponse` | 模型轮次与工具结果继续循环；在模型调用边界转换消息 | `ai/agent/harness.ts`、`model-adapter.ts` |
 | 同文件的 `prepareToolCall`、`executeToolCallsSequential`、`finalizeExecutedToolCall` | 参数验证、调用前后钩子、顺序执行及工具生命周期 | `knowledge-tools.ts` 复用 Zod/ACL handler；harness 的 `check`、`onTool` |
 | `packages/agent/src/types.ts` 的 `StreamFn`、`PrepareRequest`、`AgentLoopConfig` | 注入模型流、运行状态与生命周期；执行器不绑定模型供应商 | `types.ts` 的 `AgentModel`、`AgentReadTool`、`AgentRunOptions` |
-| `packages/ai/src/models.ts` 的 provider/stream/auth 分层 | 模型 API、认证和请求观测归一 | 继续使用 Fob `ModelGateway`，在每一轮重新解析个人设置与受控凭据 |
+| `packages/ai/src/models.ts` 的 provider/stream/auth 分层 | 模型 API、认证和请求观测归一 | 继续使用 Fob `ModelGateway`，在每一轮重新解析知识库设置与受控凭据 |
 | `packages/ai/src/providers/zai-coding-cn.ts` | 智谱 Coding 的 OpenAI Completions 协议与官方 endpoint | Fob gateway 的受控 endpoint 和 provider 配置 |
 | `packages/ai/src/api/openai-completions.ts`、`utils/validation.ts`、`utils/abort.ts` | 工具消息适配、参数校验、流式事件、中断后的 Promise 处理 | Gateway 的 AI SDK 协议边界；严格 Zod 验证；`budget.ts` 的可取消等待 |
 
@@ -91,7 +91,7 @@ sequenceDiagram
 | --- | --- |
 | `assistant/context.ts` | 有当前页时授权读取权威正文；知识库无页时建立空上下文和来源账本，按需检索 |
 | `agent/harness.ts` | 有界模型/工具循环、消息配对、工具执行顺序、累计 usage、停止和错误边界 |
-| `agent/model-adapter.ts` | 将 harness 的模型接口映射到现有 Gateway；每步重新解析个人设置 |
+| `agent/model-adapter.ts` | 将 harness 的模型接口映射到现有 Gateway；每步重新解析知识库设置 |
 | `agent/knowledge-tools.ts` | 复用产品/MCP 的只读 schema 与 handler，增加范围收敛、真实关键词降级、输出投影 |
 | `agent/sources.ts` | 正文块来源验真/去重，以及独立的模型可见页面账本 |
 | `agent/budget.ts` | Unicode 安全的 UTF-8 裁剪、JSON 投影和可取消等待 |
@@ -122,9 +122,9 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 
 ## 多服务商连接与模型绑定
 
-个人配置使用 `assistant_connection(knowledge_base_id,user_id,id)` 保存独立连接。每个账户在每个知识库最多 24 个连接，每连接最多配置 100 个模型；连接名称、协议、Base URL、模型 ID/显示名称和凭据引用彼此独立。公共 DTO 只返回 `hasCredential`，不返回 API key、密文或 credential ID。API key 继续使用已有 AES-256-GCM credential store，附加认证数据绑定知识库、用户、凭据 ID、私有 provider ID 与 endpoint；更换 Base URL、协议或 key 时重新加密并撤销旧凭据。删除一个连接只撤销它自己的 key，并清除引用它的默认绑定。
+知识库配置使用 `knowledge_base_ai_connection(knowledge_base_id,id)` 保存共享连接，`knowledge_base_ai_settings(knowledge_base_id)` 保存唯一默认设置，`knowledge_base_ai_credential(knowledge_base_id,id)` 保存加密密钥。这三张表均无用户外键，管理员离开或更换后配置仍然有效。每个知识库最多 24 个连接，每连接最多配置 100 个模型；保存、修改、删除与迁移使用同一知识库级 advisory lock。公共 DTO 只返回 `hasCredential`，不返回 API key、密文或 credential ID。AES-256-GCM 的附加认证数据绑定知识库、空账户标记、凭据 ID、provider ID 与 endpoint；更换 Base URL、协议或 key 时重新加密并撤销旧凭据。历史账户凭据格式保持兼容，不允许跨账户读取，也不会作为当前配置的隐式回退。删除一个连接只撤销它自己的 key，并清除全库引用它的默认绑定。
 
-`assistant_preference.settings` 保留现有纯 `ModelSettings`，fast/smart 可以绑定不同连接及模型。`resolveFor(actor, selection?)` 校验连接归属和模型是否已配置；本轮临时选择只覆盖这一次请求，不修改默认绑定。连接或模型缺失、密钥不可用都返回真实配置错误。旧单服务商设置在服务端事务中迁为可见连接，保留 fast/smart 原模型和密钥；旧的、服务器已批准的 Ollama 设置也迁为可见的无 key 连接。
+`knowledge_base_ai_settings.settings` 保留现有纯 `ModelSettings`，fast/smart 可以绑定不同连接及模型。`resolveFor(actor, selection?)` 按知识库校验连接归属和模型是否已配置；本轮临时选择只覆盖这一次请求，不修改共享默认绑定。煤球对话和文档生成共用该解析器，Gateway 的调用上下文仍携带实际发起者，以保留用量、页面 ACL 和会话归属。连接或模型缺失、密钥不可用都返回真实配置错误。迁入的旧单服务商设置在服务端事务中转为可见连接，保留 fast/smart 原模型和密钥；旧的、服务器已批准的 Ollama 设置也迁为可见的无 key 连接。
 
 模型协议有三个真实实现，不进行协议伪装：
 
@@ -136,7 +136,7 @@ Harness 不直接依赖数据库、HTTP、密码或协作文档写入。模型�
 
 实现依据 [AI SDK v7 OpenAI provider 文档](https://ai-sdk.dev/providers/ai-sdk-providers/openai) 与 [OpenAI Compatible provider 文档](https://ai-sdk.dev/providers/openai-compatible-providers)。`@ai-sdk/openai` 固定为 4.0.77，与现有 `ai@7.0.116` 使用同一 `@ai-sdk/provider@4.0.18`，避免只升级某个 adapter 后产生协议类型漂移。
 
-静态平台配置继续使用服务器的受控 endpoint。个人连接以 `fob-connection-<uuid>` 作为私有 provider ID，Gateway 每次调用通过 `resolveProvider(context,providerId)` 按当前用户和知识库解析定义，验证 endpoint、模型清单与凭据；不修改共享 provider registry，也不临时切换全局默认模型。连接测试走同一个 Gateway 和用量记录，指定一个已配置模型真实调用，不能用“字段齐全”代替成功连接。
+静态平台配置继续使用服务器的受控 endpoint。知识库连接以 `fob-connection-<uuid>` 作为 provider ID，Gateway 每次调用通过 `resolveProvider(context,providerId)` 按当前知识库解析定义，验证 endpoint、模型清单与凭据；不修改部署级 provider registry，也不临时切换其他知识库的默认模型。连接测试走同一个 Gateway 和用量记录，指定一个已配置模型真实调用，不能用“字段齐全”代替成功连接。
 
 自定义 Base URL 支持公开 HTTPS 地址。保存时验证 URL 语法、保留主机名和字面 IP；每次实际请求前重新解析全部 DNS 结果，任一私网、环回、链路本地、文档/保留或转译地址即拒绝。新的 Node `http(s)` socket 通过自定义 lookup 固定到刚验证的公网 IP，HTTP Host/TLS SNI 保持原 hostname，关闭连接池复用和地址二次选择。用户无法通过环境代理、DNS 重绑或 redirect 把带 key 的请求送入内部网络。HTTP 或私网地址只允许精确匹配服务器预先批准的 Ollama endpoint，网页不能自行扩展这个范围。
 

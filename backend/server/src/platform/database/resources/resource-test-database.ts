@@ -66,7 +66,7 @@ export async function seedResourceTestData(admin: Pool) {
   const ids = {
     knowledgeBase: randomUUID(), teamspace: randomUUID(), group: randomUUID(), page: randomUUID(), database: randomUUID(), row: randomUUID(),
     checkpoint: randomUUID(), thread: randomUUID(), comment: randomUUID(), task: randomUUID(), usage: randomUUID(),
-    notification: randomUUID(), outbox: randomUUID(), pat: randomUUID(), share: randomUUID(), credential: randomUUID(),
+    notification: randomUUID(), outbox: randomUUID(), pat: randomUUID(), share: randomUUID(), credential: randomUUID(), connection: randomUUID(),
   };
   const resources = [
     { knowledgeBaseId: randomUUID(), userId: randomUUID(), name: 'Resource Alpha' },
@@ -90,6 +90,7 @@ export async function seedResourceTestData(admin: Pool) {
       await db.insert(tables.groupMember).values({ knowledgeBaseId, groupId: ids.group, userId });
 
       await db.insert(tables.teamspace).values({ knowledgeBaseId, id: ids.teamspace, name: 'Team', defaultAccess: 'view' });
+      await db.insert(tables.teamspaceMemberAccess).values({ knowledgeBaseId, teamspaceId: ids.teamspace, userId, level: 'full' });
       const metadata = { knowledgeBaseId, teamspaceId: ids.teamspace, createdBy: userId };
       await db.insert(tables.page).values([
         { ...metadata, id: ids.page, kind: 'doc', path: ids.page.replaceAll('-', '_'), position: 'a0', title: `${name} document` },
@@ -131,6 +132,13 @@ export async function seedResourceTestData(admin: Pool) {
       await db.insert(tables.personalAccessToken).values({ knowledgeBaseId, id: ids.pat, userId, name: 'Test', tokenHash: 'b'.repeat(64), scopes: ['read'] });
       await db.insert(tables.shareLink).values({ ...scope, id: ids.share, tokenHash: 'c'.repeat(64), createdBy: userId });
       await db.insert(tables.modelCredential).values({ knowledgeBaseId, id: ids.credential, userId, provider: 'openai', encryptedSecret: new Uint8Array([1, 2, 3]) });
+      await db.insert(tables.knowledgeBaseModelCredential).values({ knowledgeBaseId, id: ids.credential, provider: 'openai', encryptedSecret: new Uint8Array([1, 2, 3]) });
+      await db.insert(tables.assistantConnection).values({ knowledgeBaseId, id: ids.connection, name: 'Shared provider', protocol: 'openai-compatible', baseUrl: 'https://shared.example/v1', credentialId: ids.credential, models: [{ id: 'shared-model', name: '' }] });
+      await db.insert(tables.assistantPreference).values({ knowledgeBaseId, settings: {} });
+      await db.insert(tables.documentVisit).values({ ...scope, userId });
+      await db.insert(tables.documentEdit).values({ ...scope, id: ids.comment, userId });
+      await db.insert(tables.documentInvitation).values({ ...scope, id: ids.comment, email: 'reader@resource.test', tokenHash: 'e'.repeat(64), invitedBy: userId, expiresAt: new Date(Date.now() + 86_400_000) });
+      await db.insert(tables.documentLike).values({ ...scope, userId });
     }
     await client.query('COMMIT');
     return { resources, ids };

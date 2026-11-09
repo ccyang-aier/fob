@@ -17,7 +17,7 @@ export function validConnectionDraft(draft: ConnectionDraft) {
 export function hasConnectionChanges(draft: ConnectionDraft, saved?: AssistantConnection) {
   return !saved || JSON.stringify(connectionInput(draft)) !== JSON.stringify(connectionInput(connectionDraft(saved)));
 }
-/** Account/KB identifiers only; credentials never enter browser storage or events. */
-export function publishAISettingsChanged(knowledgeBaseId: string, userId: string) {
-  window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { knowledgeBaseId, userId } }));
+/** Configuration changes apply to every member; events carry only the knowledge-base ID. */
+export function publishAISettingsChanged(knowledgeBaseId: string) {
+  window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { knowledgeBaseId } }));
 }

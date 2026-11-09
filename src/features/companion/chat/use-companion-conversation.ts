@@ -16,10 +16,10 @@ export function useCompanionConversation(scope: CompanionChatScope | null, enabl
   useEffect(() => () => session.dispose(), [session]);
   useEffect(() => {
     const focus = () => { if (enabled && !document.hidden) void session.refresh(); };
-    const changed = (event: Event) => { const detail = (event as CustomEvent<{ userId: string; knowledgeBaseId: string }>).detail; if (enabled && detail?.userId === userId && detail.knowledgeBaseId === knowledgeBaseId) void session.refresh(); };
+    const changed = (event: Event) => { const detail = (event as CustomEvent<{ knowledgeBaseId: string }>).detail; if (enabled && detail?.knowledgeBaseId === knowledgeBaseId) void session.refresh(); };
     window.addEventListener('focus', focus); document.addEventListener('visibilitychange', focus); window.addEventListener('fob:assistant-settings-changed', changed);
     return () => { window.removeEventListener('focus', focus); document.removeEventListener('visibilitychange', focus); window.removeEventListener('fob:assistant-settings-changed', changed); };
-  }, [session, enabled, userId, knowledgeBaseId]);
+  }, [session, enabled, knowledgeBaseId]);
   // Before layout effects reset the engine, an account/library transition must
   // synchronously hide every previous private field from the rendered tree.
   const visible = state.key === key ? state : emptyCompanionConversation;

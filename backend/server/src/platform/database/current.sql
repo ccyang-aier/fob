@@ -123,9 +123,8 @@ CREATE TABLE "resources"."asset" (
 	CONSTRAINT "asset_derived_object" CHECK (jsonb_typeof("resources"."asset"."derived") = 'object' AND "resources"."asset"."derived"->>'status' IS NOT NULL AND "resources"."asset"."derived"->>'status' IN ('pending', 'processing', 'ready', 'failed'))
 );
 
-CREATE TABLE "resources"."assistant_connection" (
+CREATE TABLE "resources"."knowledge_base_ai_connection" (
 	"knowledge_base_id" uuid NOT NULL,
-	"user_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
 	"name" varchar(80) NOT NULL,
 	"protocol" varchar(32) NOT NULL,
@@ -134,17 +133,16 @@ CREATE TABLE "resources"."assistant_connection" (
 	"models" jsonb DEFAULT '[]'::jsonb NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "assistant_connection_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
-	CONSTRAINT "assistant_connection_protocol_valid" CHECK ("resources"."assistant_connection"."protocol" IN ('openai-compatible','openai-responses','anthropic')),
-	CONSTRAINT "assistant_connection_models_bounded" CHECK (jsonb_typeof("resources"."assistant_connection"."models")='array' AND jsonb_array_length("resources"."assistant_connection"."models") <= 100)
+	CONSTRAINT "knowledge_base_ai_connection_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "knowledge_base_ai_connection_protocol_valid" CHECK ("resources"."knowledge_base_ai_connection"."protocol" IN ('openai-compatible','openai-responses','anthropic')),
+	CONSTRAINT "knowledge_base_ai_connection_models_bounded" CHECK (jsonb_typeof("resources"."knowledge_base_ai_connection"."models")='array' AND jsonb_array_length("resources"."knowledge_base_ai_connection"."models") <= 100)
 );
 
-CREATE TABLE "resources"."assistant_preference" (
+CREATE TABLE "resources"."knowledge_base_ai_settings" (
 	"knowledge_base_id" uuid NOT NULL,
-	"user_id" uuid NOT NULL,
 	"settings" jsonb DEFAULT '{}'::jsonb NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
-	CONSTRAINT "assistant_preference_knowledge_base_id_user_id_pk" PRIMARY KEY("knowledge_base_id","user_id")
+	CONSTRAINT "knowledge_base_ai_settings_knowledge_base_id_pk" PRIMARY KEY("knowledge_base_id")
 );
 
 CREATE TABLE "resources"."backlink" (
@@ -393,6 +391,19 @@ CREATE TABLE "resources"."knowledge_base_invitation" (
 	CONSTRAINT "knowledge_base_invitation_state" CHECK (("resources"."knowledge_base_invitation"."accepted_at" IS NULL OR "resources"."knowledge_base_invitation"."revoked_at" IS NULL) AND ("resources"."knowledge_base_invitation"."accepted_by" IS NULL OR "resources"."knowledge_base_invitation"."accepted_at" IS NOT NULL))
 );
 
+CREATE TABLE "resources"."knowledge_base_ai_credential" (
+	"knowledge_base_id" uuid NOT NULL,
+	"id" uuid NOT NULL,
+	"provider" varchar(80) NOT NULL,
+	"encrypted_secret" "bytea" NOT NULL,
+	"endpoint" text,
+	"revoked_at" timestamp with time zone,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "knowledge_base_ai_credential_knowledge_base_id_id_pk" PRIMARY KEY("knowledge_base_id","id"),
+	CONSTRAINT "knowledge_base_ai_credential_secret_not_empty" CHECK (octet_length("resources"."knowledge_base_ai_credential"."encrypted_secret") > 0)
+);
+
 CREATE TABLE "resources"."knowledge_subscription" (
 	"knowledge_base_id" uuid NOT NULL,
 	"id" uuid NOT NULL,
@@ -608,11 +619,9 @@ ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_knowledge_base_id_kn
 ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."ai_usage" ADD CONSTRAINT "ai_usage_task_fk" FOREIGN KEY ("knowledge_base_id","task_id") REFERENCES "resources"."ai_task"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."asset" ADD CONSTRAINT "asset_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."assistant_connection" ADD CONSTRAINT "assistant_connection_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."assistant_connection" ADD CONSTRAINT "assistant_connection_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."assistant_connection" ADD CONSTRAINT "assistant_connection_credential_fk" FOREIGN KEY ("knowledge_base_id","credential_id") REFERENCES "resources"."model_credential"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
-ALTER TABLE "resources"."assistant_preference" ADD CONSTRAINT "assistant_preference_knowledge_base_id_knowledge_base_id_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
-ALTER TABLE "resources"."assistant_preference" ADD CONSTRAINT "assistant_preference_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "auth"."user"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_base_ai_connection" ADD CONSTRAINT "kb_ai_connection_base_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_base_ai_connection" ADD CONSTRAINT "knowledge_base_ai_connection_credential_fk" FOREIGN KEY ("knowledge_base_id","credential_id") REFERENCES "resources"."knowledge_base_ai_credential"("knowledge_base_id","id") ON DELETE no action ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_base_ai_settings" ADD CONSTRAINT "kb_ai_settings_base_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."backlink" ADD CONSTRAINT "backlink_source_page_fk" FOREIGN KEY ("knowledge_base_id","src_page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."backlink" ADD CONSTRAINT "backlink_target_page_fk" FOREIGN KEY ("dst_knowledge_base_id","dst_page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."block_embedding_model" ADD CONSTRAINT "block_embedding_model_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
@@ -644,6 +653,7 @@ ALTER TABLE "resources"."group_member" ADD CONSTRAINT "group_member_membership_f
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_invited_by_user_id_fk" FOREIGN KEY ("invited_by") REFERENCES "auth"."user"("id") ON DELETE no action ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_accepted_by_user_id_fk" FOREIGN KEY ("accepted_by") REFERENCES "auth"."user"("id") ON DELETE set null ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_base_invitation" ADD CONSTRAINT "knowledge_base_invitation_library_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
+ALTER TABLE "resources"."knowledge_base_ai_credential" ADD CONSTRAINT "kb_ai_credential_base_fk" FOREIGN KEY ("knowledge_base_id") REFERENCES "resources"."knowledge_base"("id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_member_fk" FOREIGN KEY ("knowledge_base_id","user_id") REFERENCES "resources"."knowledge_base_member"("knowledge_base_id","user_id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_page_fk" FOREIGN KEY ("knowledge_base_id","page_id") REFERENCES "resources"."page"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
 ALTER TABLE "resources"."knowledge_subscription" ADD CONSTRAINT "knowledge_subscription_folder_fk" FOREIGN KEY ("knowledge_base_id","teamspace_id") REFERENCES "resources"."teamspace"("knowledge_base_id","id") ON DELETE cascade ON UPDATE no action;
@@ -682,7 +692,6 @@ CREATE INDEX "ai_usage_knowledge_base_time_idx" ON "resources"."ai_usage" USING 
 CREATE INDEX "ai_usage_task_idx" ON "resources"."ai_usage" USING btree ("knowledge_base_id","task_id");
 CREATE INDEX "ai_usage_user_idx" ON "resources"."ai_usage" USING btree ("user_id");
 CREATE INDEX "ai_usage_outcome_idx" ON "resources"."ai_usage" USING btree ("knowledge_base_id","status","created_at");
-CREATE INDEX "assistant_connection_owner_idx" ON "resources"."assistant_connection" USING btree ("knowledge_base_id","user_id");
 CREATE INDEX "backlink_destination_idx" ON "resources"."backlink" USING btree ("dst_knowledge_base_id","dst_page_id","dst_block_id");
 CREATE INDEX "block_embedding_staging_model_idx" ON "resources"."block_embedding_staging" USING btree ("knowledge_base_id","embed_model","embed_dimensions");
 CREATE INDEX "block_index_principals_gin_idx" ON "resources"."block_index" USING gin ("principals");

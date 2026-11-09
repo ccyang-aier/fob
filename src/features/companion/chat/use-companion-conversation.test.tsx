@@ -61,9 +61,9 @@ test('runs without identity/query providers and hides private data during the fi
 
 test('refreshes only its own visible scope on settings/focus events and removes listeners on unmount', async () => {
   await render(); expect(settingsCalls).toHaveLength(1);
-  await act(async () => { window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { userId: id(99), knowledgeBaseId: id(2) } })); await flush(); });
+  await act(async () => { window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { knowledgeBaseId: id(99) } })); await flush(); });
   expect(settingsCalls).toHaveLength(1);
-  await act(async () => { window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { userId: id(1), knowledgeBaseId: id(2) } })); window.dispatchEvent(new Event('focus')); await flush(); });
+  await act(async () => { window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { userId: id(99), knowledgeBaseId: id(2) } })); window.dispatchEvent(new Event('focus')); await flush(); });
   expect(settingsCalls).toHaveLength(2);
   enabled = false; await render();
   await act(async () => { window.dispatchEvent(new Event('focus')); window.dispatchEvent(new CustomEvent('fob:assistant-settings-changed', { detail: { userId: id(1), knowledgeBaseId: id(2) } })); await flush(); });

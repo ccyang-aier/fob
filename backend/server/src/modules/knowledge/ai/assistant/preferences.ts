@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import type { Pool } from 'pg';
 import { assistantPreferencesInputSchema, assistantSelectionsSchema } from '@fob/shared/knowledge/contracts';
 import type { AssistantModelSelection, AssistantSelections, ModelSettings, AssistantSettings } from '@fob/shared/knowledge/contracts';
@@ -6,7 +6,8 @@ import { assistantPreference, aiUsage } from '../../../../platform/database/reso
 import { withKnowledgeBase } from '../../../../platform/database/resources/transaction';
 import type { KnowledgeRequestContext } from '../../access';
 import { requireAssistantConfiguration } from './configuration-access';
-import { createModelCredentialStore, ModelGatewayError } from '../gateway';
+import { ModelGatewayError } from '../gateway';
+import { createKnowledgeBaseCredentialStore } from '../gateway/knowledge-base-credentials';
 import type { GatewayFetch } from '../gateway';
 import type { PlatformModels } from '../config';
 import { ollamaEndpoint } from '../gateway/providers';
@@ -16,9 +17,9 @@ export { assistantProviders } from './connection-presets';
 
 type Actor = Pick<KnowledgeRequestContext, 'knowledgeBaseId' | 'userId'>;
 export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; platform: PlatformModels; ollamaEndpoint?: string; fetch?: GatewayFetch }) {
-  const credentials = createModelCredentialStore(deps.pool, deps.key);
+  const credentials = createKnowledgeBaseCredentialStore(deps.pool, deps.key);
   const connections = createAssistantConnections({ pool: deps.pool, credentials, ollamaEndpoint: deps.ollamaEndpoint, fetch: deps.fetch });
-  const condition = (actor: Actor) => and(eq(assistantPreference.knowledgeBaseId, actor.knowledgeBaseId), eq(assistantPreference.userId, actor.userId));
+  const condition = (actor: Actor) => eq(assistantPreference.knowledgeBaseId, actor.knowledgeBaseId);
   const load = (actor: Actor) => withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => (await db.select().from(assistantPreference).where(condition(actor)))[0]?.settings ?? {});
   async function resolveFor(actor: Actor, selection?: AssistantModelSelection): Promise<ModelSettings> {
     await connections.migrateLegacyBindings(actor);
@@ -52,7 +53,7 @@ export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; 
     const ready = Boolean(binding && (binding.source === 'platform' ? deps.platform.providers[binding.provider]?.apiKey : binding.source === 'ollama' ? deps.ollamaEndpoint && ollamaEndpoint(binding.endpoint) === ollamaEndpoint(deps.ollamaEndpoint) : credential && (!selectedConnection || selectedConnection.models.some(model => model.id === binding.model))));
     const usage = await withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => (await db.select({
       calls: sql<number>`count(*)::int`, inputTokens: sql<number>`coalesce(sum(${aiUsage.inputTokens}),0)::float8`, outputTokens: sql<number>`coalesce(sum(${aiUsage.outputTokens}),0)::float8`,
-    }).from(aiUsage).where(and(eq(aiUsage.knowledgeBaseId, actor.knowledgeBaseId), eq(aiUsage.userId, actor.userId))))[0]!);
+    }).from(aiUsage).where(eq(aiUsage.knowledgeBaseId, actor.knowledgeBaseId)))[0]!);
     return { provider: !own ? 'default' : own.source === 'ollama' ? 'ollama' : own.source === 'byok' && connectionIdFromProvider(own.provider) ? 'custom' : own.source === 'byok' && own.provider === 'zhipu-general' ? 'zhipu-general' : 'zhipu-coding',
       model: binding?.model ?? '', endpoint: own?.source === 'ollama' ? own.endpoint : credential?.endpoint ?? (binding?.source === 'platform' ? deps.platform.providers[binding.provider]?.endpoint ?? null : null),
       ready, hasCredential: Boolean(credential), ollamaAvailable: Boolean(deps.ollamaEndpoint), platformModel: platform?.model ?? null,
@@ -63,13 +64,13 @@ export function createAssistantPreferences(deps: { pool: Pool; key: Uint8Array; 
     const selections = assistantSelectionsSchema.parse(raw);
     await connections.migrateLegacyBindings(actor);
     await withKnowledgeBase(deps.pool, actor.knowledgeBaseId, async db => {
-      await db.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${'fob:assistant:settings:' + actor.knowledgeBaseId + ':' + actor.userId},0))`);
+      await db.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${'fob:assistant:settings:' + actor.knowledgeBaseId},0))`);
       const settings: ModelSettings = { ...((await db.select().from(assistantPreference).where(condition(actor)))[0]?.settings ?? {}) };
       for (const tier of ['fast', 'smart'] as const) {
         if (selections[tier] === null) delete settings[tier];
         else settings[tier] = await connections.binding(actor, selections[tier]!, db);
       }
-      await db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, userId: actor.userId, settings }).onConflictDoUpdate({ target: [assistantPreference.knowledgeBaseId, assistantPreference.userId], set: { settings, updatedAt: new Date() } });
+      await db.insert(assistantPreference).values({ knowledgeBaseId: actor.knowledgeBaseId, settings }).onConflictDoUpdate({ target: [assistantPreference.knowledgeBaseId], set: { settings, updatedAt: new Date() } });
     });
     return read(actor);
   }

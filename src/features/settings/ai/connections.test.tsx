@@ -36,7 +36,7 @@ beforeEach(async () => {
   };
 });
 afterAll(async () => { await act(async () => root.unmount()); await browser.happyDOM.abort(); mock.restore(); });
-async function render(value = configured()) { await act(async () => root.render(<AIConnectionForm key={++sequence} knowledgeBaseId="kb-a" userId="alice" value={value} client={client} onSaved={value => saved.push(value)} />)); }
+async function render(value = configured()) { await act(async () => root.render(<AIConnectionForm key={++sequence} knowledgeBaseId="kb-a" value={value} client={client} onSaved={value => saved.push(value)} />)); }
 function button(label: string, last = false) { const items = [...document.querySelectorAll<HTMLButtonElement>('button')].filter(node => node.getAttribute('aria-label') === label || node.textContent?.trim() === label); return last ? items.at(-1)! : items[0]!; }
 async function click(label: string, last = false) { await act(async () => button(label, last).click()); }
 async function input(name: string, text: string) { const field = document.querySelector<HTMLInputElement>(`input[name="${name}"]`)!; await fill(field, text); }
@@ -67,7 +67,7 @@ test('creates a provider with its models, clears the saved secret and publishes 
   await input('fob-new-model-id', 'my-model'); await input('fob-new-model-name', '我的模型'); await click('添加模型'); await click('保存');
   expect(mutations[0]?.input).toEqual({ name: '自有服务', protocol: 'openai-compatible', baseUrl: 'https://example.test/v1', apiKey: 'synthetic-provider-key', models: [{ id: 'my-model', name: '我的模型' }] });
   expect(document.querySelector<HTMLInputElement>('[name="fob-connection-key"]')!.value).toBe(''); expect(saved.at(-1)?.connections).toHaveLength(2);
-  expect(events).toEqual([{ knowledgeBaseId: 'kb-a', userId: 'alice' }]); expect(JSON.stringify(events)).not.toContain('key'); expect(localStorage.length).toBe(0);
+  expect(events).toEqual([{ knowledgeBaseId: 'kb-a' }]); expect(JSON.stringify(events)).not.toContain('key'); expect(localStorage.length).toBe(0);
   expect(JSON.stringify(saved)).not.toContain('synthetic-provider-key');
 });
 

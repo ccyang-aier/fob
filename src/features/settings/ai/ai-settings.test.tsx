@@ -55,18 +55,18 @@ test('revoking administrator permission unmounts settings and aborts its in-flig
   await resolve(first); expect(document.querySelector('[data-ai-connections]')).toBeNull(); expect(document.body.textContent).toBe('');
 });
 
-test('shows the actual account and knowledge-base scope before rendering saved settings', async () => {
+test('shows shared knowledge-base configuration and aggregate usage', async () => {
   resources.selectedKnowledgeBase = { id: 'server-a', name: '产品研发', source: 'server' }; await render();
-  expect(requests.map(request => request.base)).toEqual(['server-a']); expect(document.body.textContent).toContain('当前账户 · 产品研发');
+  expect(requests.map(request => request.base)).toEqual(['server-a']); expect(document.body.textContent).toContain('当前知识库 · 产品研发');
   await resolve(); expect(document.querySelector('[data-ai-connections]')?.textContent).toContain('glm-5.3-flash');
-  expect(document.body.textContent).toContain('500'); expect(document.body.textContent).toContain('仅用于你在当前知识库');
+  expect(document.body.textContent).toContain('500'); expect(document.body.textContent).toContain('所有成员共享使用'); expect(document.body.textContent).toContain('所有成员累计');
 });
 
 test('switching knowledge bases cancels old requests and cannot display the previous account settings', async () => {
   resources.selectedKnowledgeBase = { id: 'server-a', name: 'One', source: 'server' }; await render(); const first = requests[0];
   resources.selectedKnowledgeBase = { id: 'server-b', name: 'Two', source: 'server' }; await render(); expect(first.signal?.aborted).toBe(true);
   await resolve(first, { ...configured, model: 'outgoing-account-model' }); expect(document.body.textContent).not.toContain('outgoing-account-model');
-  await resolve(); expect(document.body.textContent).toContain('当前账户 · Two');
+  await resolve(); expect(document.body.textContent).toContain('当前知识库 · Two');
   session = { status: 'authenticated', user: { id: 'bob' } }; await render();
   expect(requests.map(request => request.base)).toEqual(['server-a', 'server-b', 'server-b']);
   expect(document.querySelector('[data-ai-connections]')).toBeNull();

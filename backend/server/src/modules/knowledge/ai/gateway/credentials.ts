@@ -8,7 +8,7 @@ import type { ResourceTransaction } from '../../../../platform/database/resource
 import { ModelGatewayError } from './errors';
 import type { ModelCallContext } from './types';
 
-interface CredentialIdentity extends ModelCallContext { id: string; provider: string; endpoint: string | null }
+interface CredentialIdentity extends Omit<ModelCallContext, 'userId'> { userId: string | null; id: string; provider: string; endpoint: string | null }
 const aad = (identity: CredentialIdentity) => Buffer.from(JSON.stringify([identity.knowledgeBaseId, identity.userId, identity.id, identity.provider, identity.endpoint]));
 
 /** Single current AES-256-GCM format: nonce(12) | authTag(16) | ciphertext. */

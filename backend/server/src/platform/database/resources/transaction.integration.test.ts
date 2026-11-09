@@ -6,10 +6,12 @@ import { group, resourceTables, knowledgeBase, page, docState, modelCredential }
 import { ResourceTransactionAbortedError, readKnowledgeBaseResource, withKnowledgeBase } from './transaction';
 import { createResourceTestDatabase, seedResourceTestData } from './resource-test-database';
 import type { ResourceTestDatabase } from './resource-test-database';
+import { resourcePoliciesForTable } from './rls';
 
 let database: ResourceTestDatabase;
 let data: Awaited<ReturnType<typeof seedResourceTestData>>;
-const knowledgeTables = resourceTables.filter(table => table === knowledgeBase || getTableConfig(table).columns.some(column => column.name === 'knowledge_base_id'));
+// Account transfers carry a knowledge-base reference but have their own identity policy.
+const knowledgeTables = resourceTables.filter(table => resourcePoliciesForTable(table).some(policy => policy.name === 'knowledge_base_scope'));
 const scopeColumn = (table: typeof knowledgeBase | typeof resourceTables[number]) => sql.identifier(table === knowledgeBase ? 'id' : 'knowledge_base_id');
 
 function postgresError(error: unknown): { code: string; message: string } | undefined {

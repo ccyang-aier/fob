@@ -1616,8 +1616,8 @@
     "sha256": "0bd1c6685c10d1122c7642684e48cf090e7e5ea227aae9453a40cce0434ee6b5"
   },
   "backend/server/src/modules/knowledge/ai/gateway/credentials.ts": {
-    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
-    "sha256": "f5b5f0f19ed537f4151a15875911d94bf320a44f1ebe9810b56398ffcaa4cce1"
+    "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md. Support knowledge-base-owned AI credentials with an explicit null account cipher identity while preserving legacy private-key isolation. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-base-ai-config.md.",
+    "sha256": "f05bdacf52e2a12b3e511332da9a9b78a5cc5c2e37a0ad6c65f6168eeb115bc6"
   },
   "backend/server/src/modules/knowledge/ai/streaming.integration.test.ts": {
     "reason": " Complete provider-backed AI generation, scoped private knowledge assistant, settings and reference-aligned draft review. Preserve knowledge-base ACL, authoritative body and shared contract boundaries. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-assistant-agent.md.",
@@ -1666,5 +1666,9 @@
   "src/features/companion/use-companion-drag.ts": {
     "reason": "Clamp the existing draggable companion inside visualViewport including keyboard offsets; restore desired user placement after transient viewport changes without toggling chat on drag. See docs/companion-ai-chat.md and .spec/tasks/companion-ai-chat.md.",
     "sha256": "b5eef2011a0b80fa13d98a53db9e04db8b58122d4bf3ee88e80fba0910494c28"
+  },
+  "backend/server/src/modules/knowledge/ai/config.ts": {
+    "reason": " Support knowledge-base-owned AI credentials with an explicit null account cipher identity while preserving legacy private-key isolation. See docs/knowledge-assistant-agent.md and .spec/tasks/knowledge-base-ai-config.md.",
+    "sha256": "da775dcc17a78c604e5eb16f6b4fefac6cd336edc9cb6cb84e537b74aad02ea9"
   }
 }
