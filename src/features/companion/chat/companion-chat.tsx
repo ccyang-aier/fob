@@ -14,6 +14,7 @@ import { assistantErrorKey } from '@/features/knowledge/ai/errors';
 import { CompanionChatAnswer, citedCompanionSources } from './companion-chat-answer';
 import { companionChatMessages } from './companion-chat.messages';
 import { useCompanionChatPlacement } from './use-companion-chat-placement';
+import { followCompanionBubbleLayout, useCompanionBubbleEntrance } from './use-companion-bubble-entrance';
 import type { CompanionChatContext, CompanionChatController, CompanionChatMode } from './types';
 import styles from './companion-chat.module.css';
 
@@ -56,6 +57,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
   const historyOpen = history.key === key && history.open, filter = history.key === key ? history.filter : '';
   const removeId = deletion.key === key ? deletion.id : null, removing = deletion.key === key && deletion.pending;
   const busy = chat.busy || submitting === key, available = context.status === 'ready';
+  const pending = available && (chat.loading || !chat.conversation && chat.settingsLoading);
   const turns = available && !chat.loading ? chat.conversation?.turns ?? [] : [];
   const last = turns.at(-1);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
@@ -69,11 +71,13 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
     const frame = requestAnimationFrame(() => input.current?.focus({ preventScroll: true }));
     return () => cancelAnimationFrame(frame);
   }, [open, historyOpen, key]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open || historyOpen || !follow.current) return;
-    const frame = requestAnimationFrame(() => transcript.current?.scrollTo({ top: transcript.current.scrollHeight }));
-    return () => cancelAnimationFrame(frame);
+    const node = transcript.current;
+    if (node?.hasAttribute('data-bubble-opening')) followCompanionBubbleLayout(node);
+    else if (node) node.scrollTo({ top: node.scrollHeight });
   }, [open, historyOpen, last?.answer, last?.status, turns.length]);
+  useCompanionBubbleEntrance({ transcriptRef: transcript, followRef: follow, open, pending, historyOpen, conversationKey: `${key}:${chat.conversation?.id ?? 'empty'}` });
 
   async function send() {
     const question = text.trim(), requestKey = key;
@@ -108,7 +112,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
   const stateLabel = context.status === 'checking' ? t('checking') : context.status === 'signed-out' ? t('signedOut') : context.status === 'local' ? t('local') : context.status === 'error' ? t('contextError') : t('noLibrary');
   const results = chat.conversations.filter(item => item.title.toLocaleLowerCase(locale).includes(filter.trim().toLocaleLowerCase(locale)));
   if (!open) return null;
-  return <div ref={surface} className={styles.chat} role="dialog" aria-modal="false" aria-label={t('chat')} data-companion-chat onKeyDown={escape}>
+  return <div ref={surface} className={styles.chat} role="dialog" aria-modal="false" aria-label={t('chat')} data-companion-chat data-chat-pending={pending || undefined} onKeyDown={escape}>
     <div className={styles.controls}>
       <DropdownMenu><DropdownMenuTrigger className={styles.scope} aria-label={t('scope')} title={mode === 'document' ? context.document?.title : context.knowledgeBaseName} disabled={!available || busy}><span>{t(mode === 'document' ? 'document' : 'knowledgeBase')}</span><CaretDown size={10} aria-hidden /></DropdownMenuTrigger><DropdownMenuContent density="compact" align="end" className={styles.menu}>
         <DropdownMenuRadioGroup value={mode} onValueChange={next => setChoice({ key, mode: next as CompanionChatMode })}>
@@ -125,8 +129,8 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
       </DropdownMenuContent></DropdownMenu>
       <button type="button" className={`fob-action ${styles.icon}`} aria-label={t('close')} onClick={onClose}><X size={16} aria-hidden /></button>
     </div>
-    <div key={chat.loading ? 'loading' : 'ready'} className={styles.messages}>
-      <div ref={transcript} className={styles.transcript} role={historyOpen ? 'region' : 'log'} aria-label={t(historyOpen ? 'history' : 'conversation')} aria-live="off" onScroll={event => { const node = event.currentTarget, near = node.scrollHeight - node.scrollTop - node.clientHeight < 50; follow.current = near; setLatest(!near); }}>
+    <div className={styles.messages}>
+      <div ref={transcript} className={styles.transcript} role={historyOpen ? 'region' : 'log'} aria-label={t(historyOpen ? 'history' : 'conversation')} aria-live="off" aria-busy={pending || undefined} onScroll={event => { const node = event.currentTarget; if (node.hasAttribute('data-bubble-opening')) return; const near = node.scrollHeight - node.scrollTop - node.clientHeight < 50; follow.current = near; setLatest(!near); }}>
         {historyOpen ? <div className={`${styles.answer} ${styles.history}`}>
           <div className={styles.historyHeader}><button type="button" className={`fob-action ${styles.icon}`} aria-label={t('back')} onClick={() => setHistory({ key, open: false, filter: '' })}><ArrowLeft size={14} aria-hidden /></button><h3>{t('history')}</h3></div>
           <input className={styles.search} type="search" value={filter} aria-label={t('search')} placeholder={t('search')} onChange={event => setHistory({ key, open: true, filter: event.target.value })} />
@@ -137,8 +141,8 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
           {removeId && <div className={styles.confirmation}><AppAlert tone="warning" title={t('removeConfirm')} description={t('removeDescription')} action={<><Button variant="ghost" size="sm" disabled={removing} onClick={() => setDeletion({ key, id: null, pending: false })}>{t('cancel')}</Button><Button variant="ghost" size="sm" loading={removing} onClick={() => void remove()}>{t('remove')}</Button></>} /></div>}
         </div> : <>
           {turns.map((turn, index) => <article className={styles.turn} key={turn.id}>
-            {turn.status !== 'unavailable' && <div className={styles.question}>{turn.question}</div>}
-            <div className={styles.answer} data-tail={index === turns.length - 1 || undefined} data-has-actions={turn.status !== 'unavailable' && turn.status !== 'running' || undefined}>
+            {turn.status !== 'unavailable' && <div className={styles.question} data-companion-bubble="question">{turn.question}</div>}
+            <div className={styles.answer} data-companion-bubble="answer" data-tail={index === turns.length - 1 || undefined} data-has-actions={turn.status !== 'unavailable' && turn.status !== 'running' || undefined}>
               {index === turns.length - 1 && <span className={styles.tail} aria-hidden="true" data-companion-tail />}
               <div className={styles.answerBody}>
               {turn.status === 'unavailable' ? <p className={styles.muted}>{t('unavailable')}</p> : turn.answer ? <CompanionChatAnswer text={turn.answer} sources={turn.sources} onSource={onSource} unavailableLabel={t('sourceUnavailable')} /> : <p className={turn.status === 'running' ? styles.thinking : styles.muted} role="status">{t(turn.status === 'running' ? 'thinking' : turn.status === 'cancelled' ? 'stopped' : 'failed')}{turn.status === 'running' && <span className={styles.dots} aria-hidden><i /><i /><i /></span>}</p>}
@@ -148,7 +152,7 @@ export function CompanionChat({ open, anchor, context, chat, onClose, onSource, 
               {turn.status !== 'unavailable' && <><SourceLinks turn={turn} onSource={onSource} />{turn.status !== 'running' && <AnswerActions turn={turn} chat={chat} />}</>}
             </div>
           </article>)}
-          {!turns.length && <div className={styles.answer} data-tail><span className={styles.tail} aria-hidden="true" data-companion-tail /><p role={chat.loading || chat.settingsLoading ? 'status' : undefined}>{!available ? stateLabel : chat.loading || chat.settingsLoading ? t('loading') : t('greeting')}</p>{context.status === 'signed-out' && <a className={styles.source} href="/auth">{t('signIn')}</a>}</div>}
+          {!turns.length && (pending ? <p className={styles.loading} role="status">{t('loading')}</p> : <div className={styles.answer} data-companion-bubble="answer" data-tail><span className={styles.tail} aria-hidden="true" data-companion-tail /><p>{!available ? stateLabel : t('greeting')}</p>{context.status === 'signed-out' && <a className={styles.source} href="/auth">{t('signIn')}</a>}</div>)}
           {available && !chat.settingsLoading && !chat.ready && <div className={styles.notice}><AppAlert tone="info" title={t('configuration')} action={<Button variant="ghost" size="sm" onClick={onSettings}>{t('settings')}</Button>} /></div>}
           {available && chat.errorCode && !(last?.status === 'failed' && last.errorCode === chat.errorCode) && <div className={styles.notice}><AppAlert tone="error" title={t(assistantErrorKey(chat.errorCode))} action={<Button variant="ghost" size="sm" onClick={() => void chat.refresh()}>{t('retry')}</Button>} /></div>}
           {chat.truncated && turns.length > 0 && <p className={styles.muted}>{t('truncated')}</p>}

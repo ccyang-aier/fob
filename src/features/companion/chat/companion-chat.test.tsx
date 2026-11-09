@@ -92,6 +92,18 @@ test('closing and reopening preserves a draft; another account and knowledge bas
   expect(input().value).toBe(''); expect(control('Conversation sources').textContent).toContain('Knowledge base');
 });
 
+test('restoring history keeps the scroll host and draft stable, and streaming does not remount bubbles', async () => {
+  await render({ chat: controller({ loading: true, settingsLoading: true }) });
+  const scrollHost = document.querySelector('[role="log"]'), composer = input();
+  expect(document.querySelector('[data-companion-bubble]')).toBeNull();
+  await type('Keep this draft');
+  await render({ chat: controller({ conversation }) });
+  const answer = document.querySelector('[data-companion-bubble="answer"]');
+  expect(document.querySelector('[role="log"]')).toBe(scrollHost); expect(input()).toBe(composer); expect(input().value).toBe('Keep this draft');
+  await render({ chat: controller({ busy: true, conversation: { ...conversation, turns: [{ ...turn, status: 'running', answer: 'A longer streamed answer.' }] } }) });
+  expect(document.querySelector('[role="log"]')).toBe(scrollHost); expect(document.querySelector('[data-companion-bubble="answer"]')).toBe(answer);
+});
+
 test('signed-out and local scopes cannot send, and sign-in recovery never opens AI settings', async () => {
   await render({ context: { ...context, status: 'signed-out', userId: null, document: null } });
   expect(document.querySelector('a[href="/auth"]')?.textContent).toBe('Sign in'); expect(control('Send').disabled).toBe(true);
