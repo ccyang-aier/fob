@@ -43,17 +43,21 @@
     --bubble-shape:shape(from 20px 0,
       line to calc(100% - 20px) 0,
       curve to 100% 20px with 100% 0,
-      line to 100% calc(100% - 34px),
-      curve to calc(100% - 6px) calc(100% - 3px) with 100% calc(100% - 19px) / calc(100% - 18px) calc(100% - 10px),
-      curve to calc(100% - 9px) 100% with calc(100% - 2px) calc(100% + 1px) / calc(100% - 5px) calc(100% + 1px),
-      curve to calc(100% - 42px) calc(100% - 14px) with calc(100% - 28px) calc(100% - 1px) / calc(100% - 30px) calc(100% - 14px),
-      line to 20px calc(100% - 14px),
-      curve to 0 calc(100% - 34px) with 0 calc(100% - 14px),
+      line to 100% calc(100% - 32px),
+      curve to calc(100% - 20px) calc(100% - 12px) with 100% calc(100% - 12px),
+      line to calc(100% - 24px) calc(100% - 12px),
+      curve to calc(100% - 27px) calc(100% - 10px) with calc(100% - 26px) calc(100% - 12px),
+      line to calc(100% - 31px) calc(100% - 4px),
+      curve to calc(100% - 34px) calc(100% - 4px) with calc(100% - 32.5px) calc(100% - 2px),
+      line to calc(100% - 38px) calc(100% - 10px),
+      curve to calc(100% - 41px) calc(100% - 12px) with calc(100% - 39px) calc(100% - 12px),
+      line to 20px calc(100% - 12px),
+      curve to 0 calc(100% - 32px) with 0 calc(100% - 12px),
       line to 0 20px,
       curve to 20px 0 with 0 0, close);
     position:absolute;
     z-index:-1;
-    inset:0 0 -14px;
+    inset:0 0 -12px;
     display:block;
     pointer-events:none;
     filter:var(--floating-contour-shadow);
@@ -61,7 +65,7 @@
   .tail::before,.tail::after { content:''; position:absolute; inset:0; background:var(--companion-border); clip-path:var(--bubble-shape); }
   .tail::after { inset:1px; background:var(--panel); }
   .chat[data-side=right] .tail { transform:scaleX(-1); }
-  .chat[data-tail-up=true] .tail { inset:-14px 0 0; transform:scaleY(-1); }
+  .chat[data-tail-up=true] .tail { inset:-12px 0 0; transform:scaleY(-1); }
   .chat[data-side=right][data-tail-up=true] .tail { transform:scale(-1); }
 }
 .answer p { margin:0 0 8px; }
