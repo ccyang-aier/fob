@@ -34,7 +34,7 @@
 .turn { margin-bottom:16px; overflow-wrap:anywhere; }
 .turn:last-child { margin-bottom:0; }
 .question { width:fit-content; max-width:86%; margin:0 0 10px auto; padding:8px 14px; border:0; border-radius:20px; background:var(--interaction-hover-bg); color:var(--ink); white-space:pre-wrap; font-size:13px; line-height:1.6; }
-.answer { position:relative; width:100%; min-width:0; padding:12px 16px; border:1px solid var(--companion-border); border-radius:20px; background:var(--panel); color:var(--ink); box-shadow:var(--floating-shadow); }
+.answer { position:relative; width:100%; min-width:0; padding:12px 16px; border:1px solid var(--companion-border); border-radius:20px; background:var(--panel); color:var(--ink); box-shadow:var(--companion-answer-shadow); }
 .tail { display:none; }
 /* One continuous silhouette gives the body and curved tail the same border and shadow. */
 @supports (clip-path:shape(from 0 0, line to 100% 0, line to 100% 100%, close)) {
@@ -46,10 +46,10 @@
       line to 100% calc(100% - 32px),
       curve to calc(100% - 20px) calc(100% - 12px) with 100% calc(100% - 12px),
       line to calc(100% - 24px) calc(100% - 12px),
-      curve to calc(100% - 27px) calc(100% - 10px) with calc(100% - 26px) calc(100% - 12px),
-      line to calc(100% - 31px) calc(100% - 4px),
-      curve to calc(100% - 34px) calc(100% - 4px) with calc(100% - 32.5px) calc(100% - 2px),
-      line to calc(100% - 38px) calc(100% - 10px),
+      curve to calc(100% - 25px) calc(100% - 10px) with calc(100% - 26px) calc(100% - 12px),
+      line to calc(100% - 23px) calc(100% - 4px),
+      curve to calc(100% - 26px) calc(100% - 4px) with calc(100% - 22.5px) calc(100% - 2px),
+      line to calc(100% - 36px) calc(100% - 10px),
       curve to calc(100% - 41px) calc(100% - 12px) with calc(100% - 39px) calc(100% - 12px),
       line to 20px calc(100% - 12px),
       curve to 0 calc(100% - 32px) with 0 calc(100% - 12px),
@@ -60,7 +60,7 @@
     inset:0 0 -12px;
     display:block;
     pointer-events:none;
-    filter:var(--floating-contour-shadow);
+    filter:var(--companion-answer-contour-shadow);
   }
   .tail::before,.tail::after { content:''; position:absolute; inset:0; background:var(--companion-border); clip-path:var(--bubble-shape); }
   .tail::after { inset:1px; background:var(--panel); }

@@ -55,9 +55,12 @@
   --floating-shadow:
     0 1px 2px rgba(18, 18, 18, 0.06),
     0 9px 24px -10px rgba(18, 18, 18, 0.22);
-  --floating-contour-shadow:
-    drop-shadow(0 1px 1px rgba(18, 18, 18, 0.06))
-    drop-shadow(0 8px 10px rgba(18, 18, 18, 0.12));
+  --companion-answer-shadow:
+    0 1px 2px rgba(18, 18, 18, 0.04),
+    0 3px 6px -2px rgba(18, 18, 18, 0.08);
+  --companion-answer-contour-shadow:
+    drop-shadow(0 1px 1px rgba(18, 18, 18, 0.04))
+    drop-shadow(0 2px 3px rgba(18, 18, 18, 0.06));
   /* 菜单贴近触发位置：短接触阴影 + 紧凑投影，不使用大范围柔光。 */
   --menu-border: rgba(24, 24, 24, 0.2);
   --menu-shadow:
@@ -174,9 +177,12 @@ html[data-theme="dark"] {
   --floating-shadow:
     0 1px 2px rgba(0, 0, 0, 0.32),
     0 10px 28px -10px rgba(0, 0, 0, 0.62);
-  --floating-contour-shadow:
-    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.32))
-    drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+  --companion-answer-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.18),
+    0 3px 6px -2px rgba(0, 0, 0, 0.22);
+  --companion-answer-contour-shadow:
+    drop-shadow(0 1px 1px rgba(0, 0, 0, 0.18))
+    drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
   --menu-border: rgba(237, 237, 237, 0.24);
   --menu-shadow:
     0 1px 2px rgba(0, 0, 0, 0.213),
