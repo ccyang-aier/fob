@@ -52,6 +52,16 @@ test('uses a readonly server source, real usage and shared menus without native 
   await closeMenu(); expect(mutations).toHaveLength(0);
 });
 
+test('a lone server connection opens directly and a new provider draft can return without saving', async () => {
+  await render({ ...configured(), connections: [] });
+  expect(document.querySelector('nav[aria-label="模型服务"]')).toBeNull();
+  await click('添加服务商'); await input('fob-connection-name', 'Unsaved layout check');
+  expect(document.querySelector('nav[aria-label="模型服务"]')).not.toBeNull();
+  await service('服务端默认');
+  expect(document.querySelector('[name="fob-connection-name"]')).toBeNull(); expect(document.querySelector('nav[aria-label="模型服务"]')).toBeNull();
+  expect(mutations).toHaveLength(0);
+});
+
 test('creates a provider with its models, clears the saved secret and publishes only scope IDs', async () => {
   await render(); await click('添加服务商'); await input('fob-connection-name', '自有服务'); await input('fob-connection-base-url', 'https://example.test/v1'); await input('fob-connection-key', 'synthetic-provider-key');
   await input('fob-new-model-id', 'my-model'); await input('fob-new-model-name', '我的模型'); await click('添加模型'); await click('保存');

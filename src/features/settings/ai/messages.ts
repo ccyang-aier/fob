@@ -3,6 +3,8 @@ import { defineMessages } from '@/lib/i18n/messages';
 export const aiSettingsMessages = defineMessages({
   defaults: ['默认模型', 'Default models'],
   fast: ['快速', 'Fast'], smart: ['深度', 'Deep'],
+  fastHint: ['日常问答与轻量任务', 'Everyday questions and quick tasks'],
+  smartHint: ['复杂推理与深入分析', 'Complex reasoning and deeper analysis'],
   connections: ['模型服务', 'Model services'],
   addConnection: ['添加服务商', 'Add provider'],
   newConnection: ['新服务商', 'New provider'],
@@ -37,7 +39,8 @@ export const aiSettingsMessages = defineMessages({
   connectionDeleted: ['服务商已删除', 'Provider deleted'],
   defaultsSaved: ['默认模型已更新', 'Default models updated'],
   readOnlySource: ['服务端配置 · 只读', 'Server configuration · Read only'],
-  platformDescription: ['使用管理员在服务端配置的模型。个人密钥不会显示在此处。', 'Uses models configured by your administrator. Personal credentials are not shown here.'],
+  platformDescription: ['由服务端统一提供，无需配置个人密钥。', 'Provided by your server. No personal API key is required.'],
+  readOnly: ['只读', 'Read only'],
   unavailableConnection: ['服务商不可用', 'Provider unavailable'],
   invalidEndpoint: ['此服务地址不可用，请检查 Base URL。', 'This endpoint is unavailable. Check the base URL.'],
   modelNotFound: ['服务商没有此模型，请检查模型 ID。', 'The provider does not offer this model. Check the model ID.'],

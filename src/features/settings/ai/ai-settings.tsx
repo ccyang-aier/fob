@@ -41,8 +41,7 @@ function ScopedAISettings({ knowledgeBaseId, knowledgeBaseName, userId }: { know
   const queryKey = [knowledgeBaseId, 'knowledge', 'pages', 'assistant', userId, 'settings'] as const;
   const settings = useQuery({ queryKey, queryFn: ({ signal }) => assistantApi.settings(knowledgeBaseId, signal), retry: false });
   return <>
-    <p className={styles.scope}>{t('scope', { name: knowledgeBaseName })}</p>
-    <p className={styles.hint}>{t('personalScope')}</p>
+    <div className={styles.context}><p className={styles.scope}>{t('scope', { name: knowledgeBaseName })}</p><p className={styles.hint}>{t('personalScope')}</p></div>
     {settings.isPending ? <p className={styles.loading} role="status">{t('loading')}</p>
       : settings.isError ? <div className={styles.empty}><AppAlert tone="error" title={t(assistantErrorKey(settings.error instanceof AssistantRequestError ? settings.error.code : 'failed'))} action={<Button variant="ghost" size="sm" onClick={() => void settings.refetch()}>{t('retry')}</Button>} /></div>
         : <AIConnectionForm knowledgeBaseId={knowledgeBaseId} userId={userId} value={settings.data} onSaved={value => { client.setQueryData(queryKey, value); void settings.refetch(); }} onChecked={() => void settings.refetch()} />}

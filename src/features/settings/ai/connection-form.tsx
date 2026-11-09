@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus } from '@/components/icons';
+import { Cloud, GenerateStar, Lightning, LockSimple, Plus } from '@/components/icons';
 import { AppAlert } from '@/components/app-alert';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
@@ -27,22 +27,26 @@ export function AIConnectionForm({ compact = false, onCancel, ...options }: AICo
     {compact && <p className={styles.hint}>{t('personalScope')}</p>}
     <section className={styles.defaults} aria-label={t('defaults')}>
       <h3>{t('defaults')}</h3>
-      <div className={styles.defaultChoices}>{(['fast', 'smart'] as const).map(tier => <div className={styles.defaultField} key={tier}>
-        <span>{t(tier)}</span><AIModelPicker label={`${t('defaults')} · ${t(tier)}`} defaultLabel={platform[tier] ? `${t('platform')} · ${platform[tier]}` : `${t('platform')} · ${t('notConfigured')}`} connections={connections} value={selections[tier]} disabled={Boolean(busy)} className={styles.defaultPicker} onChange={value => void controller.saveSelections({ ...selections, [tier]: value })} />
-      </div>)}</div>
+      <div className={styles.defaultChoices}>{(['fast', 'smart'] as const).map(tier => {
+        const Icon = tier === 'fast' ? Lightning : GenerateStar;
+        return <div className={styles.defaultField} key={tier}>
+          <div className={styles.defaultLabel}><Icon size={16} aria-hidden /><div><span>{t(tier)}</span><small>{t(tier === 'fast' ? 'fastHint' : 'smartHint')}</small></div></div>
+          <AIModelPicker label={`${t('defaults')} · ${t(tier)}`} defaultLabel={platform[tier] ? `${t('platform')} · ${platform[tier]}` : `${t('platform')} · ${t('notConfigured')}`} connections={connections} value={selections[tier]} disabled={Boolean(busy)} className={styles.defaultPicker} onChange={value => void controller.saveSelections({ ...selections, [tier]: value })} />
+        </div>;
+      })}</div>
     </section>
     <section className={styles.connectionSection} aria-label={t('connections')}>
-      <header className={styles.sectionHeader}><h3>{t('connections')}</h3><Button type="button" variant="outline" size="sm" disabled={Boolean(busy) || connections.length >= 24} onClick={() => select('new')}><Plus size={14} aria-hidden />{t('addConnection')}</Button></header>
+      <header className={styles.sectionHeader}><h3>{t('connections')}</h3><Button type="button" variant="ghost" size="sm" disabled={Boolean(busy) || connections.length >= 24} onClick={() => select('new')}><Plus size={14} aria-hidden />{t('addConnection')}</Button></header>
       <div className={styles.workspace}>
-        <nav className={styles.connectionList} aria-label={t('connections')}>
+        {(connections.length > 0 || selectedId === 'new') && <nav className={styles.connectionList} aria-label={t('connections')}>
           <button type="button" data-surface="plain" className={`fob-action ${styles.connectionRow}`} aria-pressed={selectedId === 'platform'} disabled={Boolean(busy)} onClick={() => select('platform')}><span className={styles.connectionTitle}>{t('platform')}<small>{platformModelCount}</small></span><span className={styles.connectionMeta}>{t('readOnlySource')}</span></button>
           {connections.map(connection => <button type="button" key={connection.id} data-surface="plain" className={`fob-action ${styles.connectionRow}`} aria-pressed={selectedId === connection.id} disabled={Boolean(busy)} onClick={() => select(connection.id)}><span className={styles.connectionTitle}><span>{connection.name}</span><small>{connection.models.length}</small></span><span className={styles.connectionMeta}>{protocolLabels[connection.protocol]}</span></button>)}
           {selectedId === 'new' && <button type="button" data-surface="plain" className={`fob-action ${styles.connectionRow}`} aria-pressed disabled={Boolean(busy)} onClick={() => {}}><span className={styles.connectionTitle}>{t('newConnection')}</span><span className={styles.connectionMeta}>{t('unsaved')}</span></button>}
-        </nav>
+        </nav>}
         {selectedId === 'new' || selected ? <ConnectionEditor key={editorSession} connection={selected} controller={controller} onCreated={setSelectedId} onRemoved={() => select('platform')} /> : <section className={styles.editor} aria-label={t('platform')}>
-          <header className={styles.sectionHeader}><h3>{t('platform')}</h3><span className={styles.sourceTag}>{t('readOnlySource')}</span></header>
+          <header className={styles.sectionHeader}><div className={styles.providerHeading}><Cloud size={16} aria-hidden /><h3>{t('platform')}</h3></div><span className={styles.sourceTag}>{t('readOnly')}</span></header>
           <dl className={styles.platformModels}>{(['fast', 'smart'] as const).map(tier => <div key={tier}><dt>{t(tier)}</dt><dd>{platform[tier] ?? t('notConfigured')}</dd></div>)}</dl>
-          <p className={styles.hint}>{t('platformDescription')}</p>
+          <p className={styles.providerNote}><LockSimple size={12} aria-hidden />{t(platformModelCount ? 'platformDescription' : 'missingPlatform')}</p>
         </section>}
       </div>
     </section>
